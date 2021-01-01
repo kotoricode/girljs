@@ -109,9 +109,11 @@ export const render = (scene) =>
     gl.bindFramebuffer(ENUM_GL.FRAMEBUFFER, null);
     gl.useProgram(view.program);
     gl.bindTexture(ENUM_GL.TEXTURE_2D, framebufferTexture);
+
     gl.bindVertexArray(view.vao);
     gl.drawArrays(ENUM_GL.TRIANGLES, 0, 6);
     gl.bindVertexArray(null);
+
     gl.bindTexture(ENUM_GL.TEXTURE_2D, null);
 };
 

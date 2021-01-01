@@ -10,7 +10,6 @@ import fsTiled    from "./shaders/frag-tiled.glsl";
 import * as ENUM_GL from "./enum-gl";
 import * as CONST from "./const";
 import { bindModelBuffer } from "./model";
-import { unbindBuffer } from "./util";
 
 const createShader = (prog, shaderId, shaderDef) =>
 {
@@ -72,7 +71,7 @@ export const createProgramData = (programId, attrData) =>
     }
 
     gl.bindVertexArray(null);
-    unbindBuffer();
+    gl.bindBuffer(ENUM_GL.ARRAY_BUFFER, null);
 
     // Uniforms
     const uniforms = new Map();

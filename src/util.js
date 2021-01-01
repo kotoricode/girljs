@@ -25,8 +25,3 @@ export const mod = (value, modulo) =>
 {
     return ((value % modulo) + modulo) % modulo;
 };
-
-export const unbindBuffer = () =>
-{
-    gl.bindBuffer(ENUM_GL.ARRAY_BUFFER, null);
-};

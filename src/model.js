@@ -2,7 +2,6 @@ import { gl } from "./dom";
 
 import * as ENUM_GL from "./enum-gl";
 import * as CONST from "./const";
-import { unbindBuffer } from "./util";
 
 export const bindModelBuffer = () =>
 {
@@ -116,7 +115,7 @@ gl.bufferData(
     ENUM_GL.STATIC_DRAW
 );
 
-unbindBuffer();
+gl.bindBuffer(ENUM_GL.ARRAY_BUFFER, null);
 
 export const getModel = (modelId) =>
 {
