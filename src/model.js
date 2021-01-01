@@ -73,9 +73,9 @@ const models = new Map(),
       bufferData = [],
       bytes = Float32Array.BYTES_PER_ELEMENT;
 
-for (const [id, data] of modelData)
+for (const [id, { mesh, uv, idx }] of modelData)
 {
-    const idxLen = data.idx.length;
+    const idxLen = idx.length;
 
     const meshStart = bufferData.length,
           idxLen2 = idxLen * 2;
@@ -87,35 +87,35 @@ for (const [id, data] of modelData)
         meshOffset: meshStart * bytes,
         uvOffset: uvStart * bytes,
         numVertices: idxLen,
-        uvCoords: data.uv
+        uvCoords: uv
     });
 
     for (let i = 0; i < idxLen2; i++)
     {
-        const index = 2 * data.idx[i >> 1] + i % 2;
+        const index = 2 * idx[i >> 1] + i % 2;
 
-        bufferData[meshStart+i] = data.mesh[index];
-        bufferData[uvStart+i] = data.uv[index];
+        bufferData[meshStart+i] = mesh[index];
+        bufferData[uvStart+i] = uv[index];
     }
 }
 
 const buffer = gl.createBuffer();
+const typedByfferData = new Float32Array(bufferData);
+
 gl.bindBuffer(ENUM_GL.ARRAY_BUFFER, buffer);
 
 gl.bufferData(
     ENUM_GL.ARRAY_BUFFER,
-    new Float32Array(bufferData),
+    typedByfferData,
     ENUM_GL.STATIC_DRAW
 );
 
-export const getModel = (en) =>
+export const getModel = (modelId) =>
 {
-    const data = models.get(en);
-
-    if (!data)
+    if (!models.has(modelId))
     {
-        throw Error;
+        throw modelId;
     }
 
-    return data;
+    return models.get(modelId);
 };
