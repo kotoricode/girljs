@@ -9,7 +9,8 @@ import fsTiled    from "./shaders/frag-tiled.glsl";
 
 import * as ENUM_GL from "./enum-gl";
 import * as CONST from "./const";
-import { bindModelBuffer, unbindModelBuffer } from "./model";
+import { bindModelBuffer } from "./model";
+import { unbindBuffer } from "./util";
 
 const createShader = (prog, shaderId, shaderDef) =>
 {
@@ -51,7 +52,7 @@ export const createProgramData = (programId, attrData) =>
 {
     const {
         program,
-        setUniFuncs,
+        uniSetters,
         uniDefaults,
         attrLocations,
         attributes
@@ -71,7 +72,7 @@ export const createProgramData = (programId, attrData) =>
     }
 
     gl.bindVertexArray(null);
-    unbindModelBuffer();
+    unbindBuffer();
 
     // Uniforms
     const uniforms = new Map();
@@ -83,7 +84,7 @@ export const createProgramData = (programId, attrData) =>
 
     return {
         program,
-        setUniFuncs,
+        uniSetters,
         vao,
         uniforms
     };
@@ -172,7 +173,7 @@ for (const [id, data] of programDef)
 
     // Uniforms
     const uniDefaults = new Map(),
-          setUniFuncs = new Map();
+          uniSetters = new Map();
 
     for (const vertFrag of Object.values(data))
     {
@@ -188,7 +189,7 @@ for (const [id, data] of programDef)
                 uniDefaults.set(name, defValueArr);
                 const loc = gl.getUniformLocation(program, name);
 
-                setUniFuncs.set(name, (values) =>
+                uniSetters.set(name, (values) =>
                 {
                     gl[type](loc, ...values);
                 });
@@ -208,7 +209,7 @@ for (const [id, data] of programDef)
     programData.set(id, {
         program,
         uniDefaults,
-        setUniFuncs,
+        uniSetters,
         attributes,
         attrLocations
     });

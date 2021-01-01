@@ -24,7 +24,7 @@ export class Drawable extends Component
 
     initProgram(attrData)
     {
-        this.progData = createProgramData(
+        this.programData = createProgramData(
             this.programId,
             attrData
         );
@@ -60,7 +60,7 @@ export class Drawable extends Component
 
     setUniform(name, values)
     {
-        if (!this.progData.uniforms.has(name))
+        if (!this.programData.uniforms.has(name))
         {
             throw name;
         }
@@ -70,17 +70,17 @@ export class Drawable extends Component
             throw values;
         }
 
-        this.progData.uniforms.set(name, values);
+        this.programData.uniforms.set(name, values);
     }
 
     setUniformIndex(name, idx, value)
     {
-        if (!this.progData.uniforms.has(name))
+        if (!this.programData.uniforms.has(name))
         {
             throw name;
         }
 
-        const values = this.progData.uniforms.get(name);
+        const values = this.programData.uniforms.get(name);
 
         if (idx >= values.length)
         {

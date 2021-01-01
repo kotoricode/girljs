@@ -1,7 +1,7 @@
 import { gl, resizePub } from "./dom";
 import { Drawable } from "./components/drawable";
 import { createProgramData } from "./program";
-import { bindModelBuffer, getModel } from "./model";
+import { getModel } from "./model";
 
 import * as CONST from "./const";
 import * as ENUM_GL from "./enum-gl";
@@ -35,7 +35,7 @@ const createFramebufferTexture = () =>
     return texture;
 };
 
-const getViewProgData = () =>
+const getViewProgramData = () =>
 {
     const model = getModel(CONST.MODEL_IMAGE);
 
@@ -51,7 +51,7 @@ let framebufferTexture = createFramebufferTexture();
 let isCanvasResized;
 resizePub.subscribe(CONST.EVENT_RESIZE, () => isCanvasResized = true);
 
-const view = getViewProgData();
+const view = getViewProgramData();
 
 gl.enable(ENUM_GL.BLEND);
 gl.blendFunc(ENUM_GL.SRC_ALPHA, ENUM_GL.ONE_MINUS_SRC_ALPHA);
@@ -121,10 +121,9 @@ const renderQueue = (queueId) =>
 
     let oldTexture, oldProgram;
 
-    for (const draw of queue)
+    for (const { programData, texture, model } of queue)
     {
-        const { progData, texture, model } = draw;
-        const { program, uniforms, setUniFuncs, vao } = progData;
+        const { program, uniforms, uniSetters, vao } = programData;
 
         if (oldProgram !== program)
         {
@@ -140,7 +139,7 @@ const renderQueue = (queueId) =>
 
         for (const [key, value] of uniforms.entries())
         {
-            setUniFuncs.get(key)(value);
+            uniSetters.get(key)(value);
         }
 
         gl.bindVertexArray(vao);

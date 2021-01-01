@@ -2,21 +2,11 @@ import { gl } from "./dom";
 
 import * as ENUM_GL from "./enum-gl";
 import * as CONST from "./const";
+import { unbindBuffer } from "./util";
 
 export const bindModelBuffer = () =>
 {
     gl.bindBuffer(ENUM_GL.ARRAY_BUFFER, buffer);
-
-    gl.bufferData(
-        ENUM_GL.ARRAY_BUFFER,
-        typedByfferData,
-        ENUM_GL.STATIC_DRAW
-    );
-};
-
-export const unbindModelBuffer = () =>
-{
-    gl.bindBuffer(ENUM_GL.ARRAY_BUFFER, null);
 };
 
 const modelData = new Map([
@@ -116,7 +106,17 @@ for (const [id, { mesh, uv, idx }] of modelData)
 }
 
 const buffer = gl.createBuffer();
-const typedByfferData = new Float32Array(bufferData);
+const typedBufferData = new Float32Array(bufferData);
+
+bindModelBuffer();
+
+gl.bufferData(
+    ENUM_GL.ARRAY_BUFFER,
+    typedBufferData,
+    ENUM_GL.STATIC_DRAW
+);
+
+unbindBuffer();
 
 export const getModel = (modelId) =>
 {

@@ -1,3 +1,6 @@
+import { gl } from "./dom";
+import * as ENUM_GL from "./enum-gl";
+
 const math = Math;
 
 export const DEG_2_RAD = math.PI / 180;
@@ -21,4 +24,9 @@ export const lerp = (start, end, amount) =>
 export const mod = (value, modulo) =>
 {
     return ((value % modulo) + modulo) % modulo;
+};
+
+export const unbindBuffer = () =>
+{
+    gl.bindBuffer(ENUM_GL.ARRAY_BUFFER, null);
 };
