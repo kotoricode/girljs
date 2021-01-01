@@ -1,4 +1,4 @@
-import { Point } from "@pixi/math";
+import { Vector2 } from "./math/vector2";
 
 export class PathNode
 {
@@ -6,7 +6,7 @@ export class PathNode
     {
         this.score = 0;
         this.comeFrom = null;
-        this.position = new Point(x, y);
+        this.position = new Vector2(x, y);
         this.adjacent = new Map(); // <adjacent, distanceTo>
 
         this.isAdjacentToStart = false;

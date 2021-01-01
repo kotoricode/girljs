@@ -1,4 +1,4 @@
-import { Point } from "@pixi/math";
+import { Vector2 } from "./math/vector2";
 
 export class CircleCollider
 {
@@ -8,8 +8,8 @@ export class CircleCollider
         this.radius2 = radius ** 2;
         this.diameter = radius * 2;
 
-        this.center = new Point(x, y);
-        this.anchor = new Point(anchorX, anchorY);
+        this.center = new Vector2(x, y);
+        this.anchor = new Vector2(anchorX, anchorY);
     }
 
     hasPoint(vec2)

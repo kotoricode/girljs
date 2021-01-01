@@ -1,6 +1,5 @@
-import { Point } from "@pixi/math";
-
 import { Segment } from "./segment";
+import { Vector3 } from "./vector3";
 
 export class Polygon
 {
@@ -13,7 +12,7 @@ export class Polygon
         }
 
         this.points = points;
-        this.activeSegment = new Segment(new Point(), new Point());
+        this.activeSegment = new Segment(new Vector3(), new Vector3());
 
         this.intersections = [];
         this.idx = -1;
