@@ -100,13 +100,12 @@ for (const [id, { mesh, uv, idx }] of modelData)
 }
 
 const buffer = gl.createBuffer();
-const typedBufferData = new Float32Array(bufferData);
 
 gl.bindBuffer(ENUM_GL.ARRAY_BUFFER, buffer);
 
 gl.bufferData(
     ENUM_GL.ARRAY_BUFFER,
-    typedBufferData,
+    new Float32Array(bufferData),
     ENUM_GL.STATIC_DRAW
 );
 
@@ -125,5 +124,4 @@ export const getModel = (modelId) =>
 export const getModelBuffer = () =>
 {
     return buffer;
-}
-;
+};

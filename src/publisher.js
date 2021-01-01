@@ -2,17 +2,17 @@ export class Publisher
 {
     constructor()
     {
-        this.events = {};
+        this.events = new Map();
     }
 
     subscribe(event, func, isInstant=true)
     {
-        if (!(event in this.events))
+        if (!this.events.has(event))
         {
             this.events[event] = new Set();
         }
 
-        this.events[event].add(func);
+        this.events.get(event).add(func);
 
         if (isInstant)
         {
@@ -22,9 +22,9 @@ export class Publisher
 
     emit(event)
     {
-        if (event in this.events)
+        if (this.events.has(event))
         {
-            const funcs = this.events[event];
+            const funcs = this.events.get(event);
 
             for (const func of funcs)
             {
@@ -35,9 +35,9 @@ export class Publisher
 
     unsubscribe(event, func)
     {
-        if (event in this.events)
+        if (this.events.has(event))
         {
-            const funcs = this.events[event];
+            const funcs = this.events.get(event);
             funcs.delete(func);
         }
     }

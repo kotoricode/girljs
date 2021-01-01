@@ -7,7 +7,7 @@ const createGain = (id, parent) =>
 {
     const gainObj = context.createGain();
     gainObj.connect(parent);
-    gains[id] = gainObj;
+    gains.set(id, gainObj);
     optionsPublisher.subscribe(id, () => gainObj.gain.value = getOption(id));
 
     return gainObj;
@@ -30,7 +30,7 @@ export const setVolume = (id, value) =>
         throw Error;
     }
 
-    gains[id].gain.value = value;
+    gains.get(id).gain.value = value;
 };
 
 export const audioWaitClick = () =>
@@ -53,7 +53,7 @@ const music = new Audio();
 music.loop = true;
 music.addEventListener("canplaythrough", music.play);
 
-const gains = {};
+const gains = new Map();
 
 let context;
 let nowPlaying;
