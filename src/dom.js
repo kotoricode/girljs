@@ -2,18 +2,6 @@ import { Publisher } from "./publisher";
 
 import * as CONST from "./const";
 
-// export const getDom = (id) =>
-// {
-//     const elem = window.document.getElementById(id);
-
-//     if (!elem)
-//     {
-//         throw id;
-//     }
-
-//     return elem;
-// };
-
 export const storage = window.localStorage;
 
 const canvas = window.document.getElementById("canvas");

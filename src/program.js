@@ -63,7 +63,7 @@ export const createProgramData = (programId, attrData) =>
 
     for (const [name, defaults] of Object.entries(attributes))
     {
-        const loc = attrLocations[name];
+        const loc = attrLocations.get(name);
         gl.enableVertexAttribArray(loc);
         gl.vertexAttribPointer(loc, ...defaults, attrData[name]);
     }
@@ -71,11 +71,11 @@ export const createProgramData = (programId, attrData) =>
     gl.bindVertexArray(null);
 
     // Uniforms
-    const uniforms = {};
+    const uniforms = new Map();
 
-    for (const [name, defaults] of Object.entries(uniDefaults))
+    for (const [name, defaults] of uniDefaults.entries())
     {
-        uniforms[name] = defaults.slice();
+        uniforms.set(name, defaults.slice());
     }
 
     return {
@@ -168,8 +168,8 @@ for (const [id, data] of programDef)
     const program = createProgram(data.vert, data.frag);
 
     // Uniforms
-    const uniDefaults = {},
-          setUniFuncs = {};
+    const uniDefaults = new Map(),
+          setUniFuncs = new Map();
 
     for (const vertFrag of Object.values(data))
     {
@@ -180,26 +180,26 @@ for (const [id, data] of programDef)
 
         for (const [type, typeObj] of Object.entries(vertFrag.uniforms))
         {
-            for (const [uniName, defValueArr] of Object.entries(typeObj))
+            for (const [name, defValueArr] of Object.entries(typeObj))
             {
-                uniDefaults[uniName] = defValueArr;
-                const loc = gl.getUniformLocation(program, uniName);
+                uniDefaults.set(name, defValueArr);
+                const loc = gl.getUniformLocation(program, name);
 
-                setUniFuncs[uniName] = (values) =>
+                setUniFuncs.set(name, (values) =>
                 {
                     gl[type](loc, ...values);
-                };
+                });
             }
         }
     }
 
     // Attributes
     const attributes = data.vert.attributes,
-          attrLocations = {};
+          attrLocations = new Map();
 
-    for (const attrName of Object.keys(attributes))
+    for (const name of Object.keys(attributes))
     {
-        attrLocations[attrName] = gl.getAttribLocation(program, attrName);
+        attrLocations.set(name, gl.getAttribLocation(program, name));
     }
 
     programData.set(id, {

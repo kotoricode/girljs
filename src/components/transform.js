@@ -17,8 +17,9 @@ export class Transform extends Component
             translation: new Vector3(tx, ty, tz)
         };
 
+        // Set by scenegraph
         this.world = {
-            scale: new Vector3(1, 1, 1),
+            scale: new Vector3(),
             rotation: new Quaternion(),
             translation: new Vector3()
         };

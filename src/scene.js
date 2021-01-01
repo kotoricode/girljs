@@ -22,7 +22,9 @@ export class Scene
         /** @const {Map<string, Entity>} */
         this.entities = new Map();
 
+        /** @const {Map<number, Set>} */
         this.cached = new Map();
+
         this.root = new Entity(CONST.ENTITY_ROOT);
 
         this.addCam();

@@ -60,9 +60,7 @@ export class Drawable extends Component
 
     setUniform(name, values)
     {
-        const { uniforms } = this.progData;
-
-        if (!(name in uniforms))
+        if (!this.progData.uniforms.has(name))
         {
             throw name;
         }
@@ -72,17 +70,17 @@ export class Drawable extends Component
             throw values;
         }
 
-        uniforms[name] = values;
+        this.progData.uniforms.set(name, values);
     }
 
     setUniformIndex(name, idx, value)
     {
-        if (!(name in this.progData.uniforms))
+        if (!this.progData.uniforms.has(name))
         {
             throw name;
         }
 
-        const values = this.progData.uniforms[name];
+        const values = this.progData.uniforms.get(name);
 
         if (idx >= values.length)
         {

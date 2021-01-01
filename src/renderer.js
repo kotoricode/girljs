@@ -56,10 +56,10 @@ const view = getViewProgData();
 gl.enable(ENUM_GL.BLEND);
 gl.blendFunc(ENUM_GL.SRC_ALPHA, ENUM_GL.ONE_MINUS_SRC_ALPHA);
 
-const queues = {
-    [CONST.PROGRAM_SPRITE]: [],
-    [CONST.PROGRAM_TILED]: []
-};
+const queues = new Map([
+    [CONST.PROGRAM_SPRITE, []],
+    [CONST.PROGRAM_TILED, []]
+]);
 
 export const render = (scene) =>
 {
@@ -67,7 +67,8 @@ export const render = (scene) =>
     {
         if (draw.isVisible)
         {
-            queues[draw.programId].push(draw);
+            const queue = queues.get(draw.programId);
+            queue.push(draw);
         }
     }
 
@@ -116,7 +117,7 @@ export const render = (scene) =>
 
 const renderQueue = (queueId) =>
 {
-    const queue = queues[queueId];
+    const queue = queues.get(queueId);
 
     let oldTexture, oldProgram;
 
@@ -137,9 +138,9 @@ const renderQueue = (queueId) =>
             oldTexture = texture;
         }
 
-        for (const [key, value] of Object.entries(uniforms))
+        for (const [key, value] of uniforms.entries())
         {
-            setUniFuncs[key](value);
+            setUniFuncs.get(key)(value);
         }
 
         gl.bindVertexArray(vao);

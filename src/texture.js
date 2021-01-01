@@ -49,29 +49,26 @@ const createImageTexture = (src, parami) =>
     return texture;
 };
 
+const filterLinearLinear = [
+    [ENUM_GL.TEXTURE_MAG_FILTER, ENUM_GL.LINEAR],
+    [ENUM_GL.TEXTURE_MIN_FILTER, ENUM_GL.LINEAR]
+];
+
 const textures = new Map([
     [CONST.TEXTURE_POLY, createImageTexture(
-        CONST.TEXTURE_POLY, [
-            [ENUM_GL.TEXTURE_MAG_FILTER, ENUM_GL.LINEAR],
-            [ENUM_GL.TEXTURE_MIN_FILTER, ENUM_GL.LINEAR]
-        ]
+        CONST.TEXTURE_POLY, filterLinearLinear
     )],
     [CONST.TEXTURE_SPRITE, createImageTexture(
-        CONST.TEXTURE_SPRITE, [
-            [ENUM_GL.TEXTURE_MAG_FILTER, ENUM_GL.LINEAR],
-            [ENUM_GL.TEXTURE_MIN_FILTER, ENUM_GL.LINEAR]
-        ]
+        CONST.TEXTURE_SPRITE, filterLinearLinear
     )]
 ]);
 
 export const getTexture = (textureId) =>
 {
-    const data = textures.get(textureId);
-
-    if (!data)
+    if (!textures.has(textureId))
     {
         throw Error;
     }
 
-    return data;
+    return textures.get(textureId);
 };
