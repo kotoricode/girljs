@@ -1,29 +1,63 @@
-const events = new Map();
+const eventSubs = new Map();
 
 export const publish = (event) =>
 {
-    if (events.has(event))
+    if (eventSubs.has(event))
     {
-        const funcs = events.get(event);
+        const subs = eventSubs.get(event);
 
-        for (const func of funcs)
+        for (const func of subs)
         {
             func();
         }
     }
 };
 
-export const subscribe = (event, func, isInstant=true) =>
+export const subscribe = (event, subFunc, isInstant=true) =>
 {
-    if (!events.has(event))
+    if (typeof subFunc !== "function")
     {
-        events.set(event, new Set());
+        throw Error;
     }
 
-    events.get(event).add(func);
+    if (!eventSubs.has(event))
+    {
+        eventSubs.set(event, new Set());
+    }
+
+    const subs = eventSubs.get(event);
+
+    if (subs.has(subFunc))
+    {
+        throw Error;
+    }
+
+    subs.add(subFunc);
 
     if (isInstant)
     {
-        func();
+        subFunc();
+    }
+};
+
+export const unsubscribe = (event, subFunc) =>
+{
+    if (!eventSubs.has(event))
+    {
+        throw Error;
+    }
+
+    const subs = eventSubs.get(event);
+
+    if (!subs.has(subFunc))
+    {
+        throw Error;
+    }
+
+    subs.delete(subFunc);
+
+    if (!subs.size)
+    {
+        eventSubs.delete(subs);
     }
 };
