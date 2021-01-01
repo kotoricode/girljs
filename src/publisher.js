@@ -2,44 +2,43 @@ export class Publisher
 {
     constructor()
     {
-        this.topic = {};
+        this.events = {};
     }
 
-    subTopic(topic, sub, isInstant=true)
+    subscribe(event, func, isInstant=true)
     {
-        if (!(topic in this.topic))
+        if (!(event in this.events))
         {
-            this.topic[topic] = new Set();
+            this.events[event] = new Set();
         }
 
-        this.topic[topic].add(sub);
+        this.events[event].add(func);
 
         if (isInstant)
         {
-            sub();
+            func();
         }
     }
 
-    fire(topic)
+    emit(event)
     {
-        const subs = this.topic[topic];
-
-        if (subs)
+        if (event in this.events)
         {
-            for (const sub of subs)
+            const funcs = this.events[event];
+
+            for (const func of funcs)
             {
-                sub();
+                func();
             }
         }
     }
 
-    unsubTopic(topic, sub)
+    unsubscribe(event, func)
     {
-        const subs = this.topic[topic];
-
-        if (subs)
+        if (event in this.events)
         {
-            subs.delete(sub);
+            const funcs = this.events[event];
+            funcs.delete(func);
         }
     }
 }

@@ -3,7 +3,7 @@ import { Publisher } from "./publisher";
 
 import * as CONST from "./const";
 
-export const optsPub = new Publisher();
+export const optionsPublisher = new Publisher();
 
 const data = {
     [CONST.OPTION_MASTER]: 0.5,
@@ -19,7 +19,7 @@ export const getOption = (key) =>
 export const setOption = (key, value) =>
 {
     data[key] = value;
-    optsPub.fire(key);
+    optionsPublisher.emit(key);
 };
 
 export const saveOptions = (...keys) =>
@@ -49,7 +49,6 @@ for (const key of Object.keys(data))
         try
         {
             data[key] = JSON.parse(stored);
-            continue;
         }
         catch
         {

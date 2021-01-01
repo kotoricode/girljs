@@ -49,7 +49,7 @@ const onResize = () =>
             canvas.height = height;
 
             gl.viewport(0, 0, width, height);
-            resizePub.fire(CONST.EVENT_RESIZE);
+            resizePub.emit(CONST.EVENT_RESIZE);
         }
     }
 

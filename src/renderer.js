@@ -49,7 +49,7 @@ const framebuffer = gl.createFramebuffer();
 let framebufferTexture = createFramebufferTexture();
 
 let isCanvasResized;
-resizePub.subTopic(CONST.EVENT_RESIZE, () => isCanvasResized = true);
+resizePub.subscribe(CONST.EVENT_RESIZE, () => isCanvasResized = true);
 
 const view = getViewProgData();
 
@@ -118,23 +118,23 @@ const renderQueue = (queueId) =>
 {
     const queue = queues[queueId];
 
-    let prevTex, prevProg;
+    let oldTexture, oldProgram;
 
     for (const draw of queue)
     {
         const { progData, texture, model } = draw;
         const { program, uniforms, setUniFuncs, vao } = progData;
 
-        if (prevProg !== program)
+        if (oldProgram !== program)
         {
             gl.useProgram(program);
-            prevProg = program;
+            oldProgram = program;
         }
 
-        if (prevTex !== texture)
+        if (oldTexture !== texture)
         {
             gl.bindTexture(ENUM_GL.TEXTURE_2D, texture);
-            prevTex = texture;
+            oldTexture = texture;
         }
 
         for (const [key, value] of Object.entries(uniforms))

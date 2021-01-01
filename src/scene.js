@@ -30,9 +30,9 @@ export class Scene
         this.addPlayer();
     }
 
-    static * yieldComponents(entity, comps)
+    static * yieldComponents(entity, components)
     {
-        for (const comp of comps)
+        for (const comp of components)
         {
             yield entity.components.get(comp);
         }
@@ -100,21 +100,21 @@ export class Scene
         return this.cached.get(flags);
     }
 
-    getEntity(id)
+    getEntity(entityId)
     {
-        if (!this.entities.has(id))
+        if (!this.entities.has(entityId))
         {
-            throw id;
+            throw entityId;
         }
 
-        return this.entities.get(id);
+        return this.entities.get(entityId);
     }
 
-    * all(...comps)
+    * all(...components)
     {
-        for (const entity of this.getEntities(comps))
+        for (const entity of this.getEntities(components))
         {
-            yield Scene.yieldComponents(entity, comps);
+            yield Scene.yieldComponents(entity, components);
         }
     }
 
@@ -141,11 +141,11 @@ export class Scene
         }
     }
 
-    one(id, ...comps)
+    one(entityId, ...components)
     {
-        const entity = this.getEntity(id);
+        const entity = this.getEntity(entityId);
 
-        return Scene.yieldComponents(entity, comps);
+        return Scene.yieldComponents(entity, components);
     }
 
     update(dt)

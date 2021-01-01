@@ -1,7 +1,7 @@
 // https://www.w3.org/TR/css-color-4/#color-conversion-code
 // http://www.brucelindbloom.com/index.html?Math.html
 import { GameArray } from "../game-array";
-import { clamp, deg2rad } from "../util";
+import { clamp, DEG_2_RAD } from "../util";
 
 const cbEpsilon = 6 / 29;
 const iKappa = (cbEpsilon * 0.5) ** 3;
@@ -34,7 +34,7 @@ export class Color extends GameArray
               c500 = lch[1] * 2e-3;
 
         const fy = (l + 16) / 116,
-              hr = lch[2] * deg2rad;
+              hr = lch[2] * DEG_2_RAD;
 
         const x = invFunc(fy + Math.cos(hr)*c500) * 0.950489,
               y = (l > 8) ? fy**3 : iKappa*l,

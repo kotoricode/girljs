@@ -1,13 +1,14 @@
-import { optsPub, getOption } from "./options";
+import { optionsPublisher, getOption } from "./options";
 
 import * as CONST from "./const";
+import { ONE_TIME_LISTENER } from "./util";
 
 const createGain = (id, parent) =>
 {
     const gainObj = context.createGain();
     gainObj.connect(parent);
     gains[id] = gainObj;
-    optsPub.subTopic(id, () => gainObj.gain.value = getOption(id));
+    optionsPublisher.subscribe(id, () => gainObj.gain.value = getOption(id));
 
     return gainObj;
 };
@@ -37,14 +38,15 @@ export const audioWaitClick = () =>
     window.addEventListener("click", () =>
     {
         context = new AudioContext();
+        const dest = context.destination;
 
-        const gainMaster = createGain(CONST.OPTION_MASTER, context.destination);
+        const gainMaster = createGain(CONST.OPTION_MASTER, dest);
         const gainMusic = createGain(CONST.OPTION_MUSIC, gainMaster);
         createGain(CONST.OPTION_SOUND, gainMaster);
 
         context.createMediaElementSource(music).connect(gainMusic);
         setMusic(CONST.AUDIO_OMOIDE);
-    }, { once: true });
+    }, ONE_TIME_LISTENER);
 };
 
 const music = new Audio();

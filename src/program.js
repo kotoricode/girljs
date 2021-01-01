@@ -20,9 +20,9 @@ const createShader = (prog, shaderId, shaderDef) =>
     return shader;
 };
 
-const deleteShader = (prog, shader) =>
+const deleteShader = (program, shader) =>
 {
-    gl.detachShader(prog, shader);
+    gl.detachShader(program, shader);
     gl.deleteShader(shader);
 };
 

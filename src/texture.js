@@ -5,12 +5,12 @@ import * as CONST from "./const";
 
 const createImageTexture = (src, parami) =>
 {
-    const tex = gl.createTexture();
-    const img = new Image();
+    const texture = gl.createTexture();
+    const image = new Image();
 
-    img.onload = () =>
+    image.onload = () =>
     {
-        gl.bindTexture(ENUM_GL.TEXTURE_2D, tex);
+        gl.bindTexture(ENUM_GL.TEXTURE_2D, texture);
 
         gl.texImage2D(
             ENUM_GL.TEXTURE_2D,
@@ -18,7 +18,7 @@ const createImageTexture = (src, parami) =>
             ENUM_GL.RGBA,
             ENUM_GL.RGBA,
             ENUM_GL.UNSIGNED_BYTE,
-            img
+            image
         );
 
         for (const [key, value] of parami)
@@ -39,14 +39,14 @@ const createImageTexture = (src, parami) =>
         gl.bindTexture(ENUM_GL.TEXTURE_2D, null);
     };
 
-    img.onerror = () =>
+    image.onerror = () =>
     {
         throw Error;
     };
 
-    img.src = `${CONST.PATH_IMG}${src}`;
+    image.src = `${CONST.PATH_IMG}${src}`;
 
-    return tex;
+    return texture;
 };
 
 const textures = new Map([
@@ -64,9 +64,9 @@ const textures = new Map([
     )]
 ]);
 
-export const getTexture = (en) =>
+export const getTexture = (textureId) =>
 {
-    const data = textures.get(en);
+    const data = textures.get(textureId);
 
     if (!data)
     {
