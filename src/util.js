@@ -1,6 +1,3 @@
-import { gl } from "./dom";
-import * as ENUM_GL from "./enum-gl";
-
 const math = Math;
 
 export const DEG_2_RAD = math.PI / 180;

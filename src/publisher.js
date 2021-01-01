@@ -9,7 +9,7 @@ export class Publisher
     {
         if (!this.events.has(event))
         {
-            this.events[event] = new Set();
+            this.events.set(event, new Set());
         }
 
         this.events.get(event).add(func);
