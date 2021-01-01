@@ -1,44 +1,29 @@
-export class Publisher
+const events = new Map();
+
+export const publish = (event) =>
 {
-    constructor()
+    if (events.has(event))
     {
-        this.events = new Map();
-    }
+        const funcs = events.get(event);
 
-    subscribe(event, func, isInstant=true)
-    {
-        if (!this.events.has(event))
-        {
-            this.events.set(event, new Set());
-        }
-
-        this.events.get(event).add(func);
-
-        if (isInstant)
+        for (const func of funcs)
         {
             func();
         }
     }
+};
 
-    emit(event)
+export const subscribe = (event, func, isInstant=true) =>
+{
+    if (!events.has(event))
     {
-        if (this.events.has(event))
-        {
-            const funcs = this.events.get(event);
-
-            for (const func of funcs)
-            {
-                func();
-            }
-        }
+        events.set(event, new Set());
     }
 
-    unsubscribe(event, func)
+    events.get(event).add(func);
+
+    if (isInstant)
     {
-        if (this.events.has(event))
-        {
-            const funcs = this.events.get(event);
-            funcs.delete(func);
-        }
+        func();
     }
-}
+};

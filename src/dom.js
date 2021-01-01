@@ -1,6 +1,5 @@
-import { Publisher } from "./publisher";
-
 import * as CONST from "./const";
+import { publish } from "./publisher";
 
 export const storage = window.localStorage;
 
@@ -16,8 +15,6 @@ export const canvasMaxWidth = 1280,
 export const canvasAspect = canvasMaxWidth / canvasMaxHeight;
 
 let canvasRect;
-
-export const resizePub = new Publisher();
 
 const onResize = () =>
 {
@@ -37,7 +34,7 @@ const onResize = () =>
             canvas.height = height;
 
             gl.viewport(0, 0, width, height);
-            resizePub.emit(CONST.EVENT_RESIZE);
+            publish(CONST.EVENT_RESIZE);
         }
     }
 

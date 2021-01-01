@@ -1,4 +1,5 @@
-import { optionsPublisher, getOption } from "./options";
+import { getOption } from "./options";
+import { subscribe } from "./publisher";
 
 import * as CONST from "./const";
 import { ONE_TIME_LISTENER } from "./util";
@@ -8,7 +9,7 @@ const createGain = (id, parent) =>
     const gainObj = context.createGain();
     gainObj.connect(parent);
     gains.set(id, gainObj);
-    optionsPublisher.subscribe(id, () => gainObj.gain.value = getOption(id));
+    subscribe(id, () => gainObj.gain.value = getOption(id));
 
     return gainObj;
 };

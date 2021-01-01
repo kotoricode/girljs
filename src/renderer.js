@@ -1,7 +1,8 @@
-import { gl, resizePub } from "./dom";
+import { gl } from "./dom";
 import { Drawable } from "./components/drawable";
 import { createProgramData } from "./program";
 import { getModel } from "./model";
+import { subscribe } from "./publisher";
 
 import * as CONST from "./const";
 import * as ENUM_GL from "./enum-gl";
@@ -49,7 +50,7 @@ const framebuffer = gl.createFramebuffer();
 let framebufferTexture = createFramebufferTexture();
 
 let isCanvasResized;
-resizePub.subscribe(CONST.EVENT_RESIZE, () => isCanvasResized = true);
+subscribe(CONST.EVENT_RESIZE, () => isCanvasResized = true);
 
 const view = getViewProgramData();
 

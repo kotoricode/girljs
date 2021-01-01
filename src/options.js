@@ -1,9 +1,6 @@
 import { storage } from "./dom";
-import { Publisher } from "./publisher";
-
 import * as CONST from "./const";
-
-export const optionsPublisher = new Publisher();
+import { publish } from "./publisher";
 
 const data = {
     [CONST.OPTION_MASTER]: 0.5,
@@ -19,7 +16,7 @@ export const getOption = (key) =>
 export const setOption = (key, value) =>
 {
     data[key] = value;
-    optionsPublisher.emit(key);
+    publish(key);
 };
 
 export const saveOptions = (...keys) =>
