@@ -1,7 +1,7 @@
 import { gl, resizePub } from "./dom";
 import { Drawable } from "./components/drawable";
 import { createProgramData } from "./program";
-import { getModel } from "./model";
+import { bindModelBuffer, getModel } from "./model";
 
 import * as CONST from "./const";
 import * as ENUM_GL from "./enum-gl";

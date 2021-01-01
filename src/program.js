@@ -9,6 +9,7 @@ import fsTiled    from "./shaders/frag-tiled.glsl";
 
 import * as ENUM_GL from "./enum-gl";
 import * as CONST from "./const";
+import { bindModelBuffer, unbindModelBuffer } from "./model";
 
 const createShader = (prog, shaderId, shaderDef) =>
 {
@@ -60,6 +61,7 @@ export const createProgramData = (programId, attrData) =>
     const vao = gl.createVertexArray();
 
     gl.bindVertexArray(vao);
+    bindModelBuffer();
 
     for (const [name, defaults] of Object.entries(attributes))
     {
@@ -69,6 +71,7 @@ export const createProgramData = (programId, attrData) =>
     }
 
     gl.bindVertexArray(null);
+    unbindModelBuffer();
 
     // Uniforms
     const uniforms = new Map();
