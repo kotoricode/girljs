@@ -1,5 +1,5 @@
 import * as CONST from "./const";
-import { Vector2 } from "./math/vector2";
+import { Vector3 } from "./math/vector3";
 import { publish } from "./publisher";
 
 export const storage = window.localStorage;
@@ -65,7 +65,7 @@ for (const resizeEvent of ["DOMContentLoaded", "load", "resize"])
     Mouse
 ------------------------------------------------------------------------------*/
 export const mouse = {
-    clipCoords: new Vector2(0, 0),
+    clipCoords: new Vector3(),
     isClick: false
 };
 

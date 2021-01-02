@@ -1,4 +1,4 @@
-import { Vector2 } from "../math/vector2";
+import { Vector3 } from "../math/vector3";
 import { Component } from "./component";
 
 export class Ground extends Component
@@ -6,7 +6,7 @@ export class Ground extends Component
     constructor(minx, maxx, miny, maxy)
     {
         super();
-        this.min = new Vector2(minx, miny);
-        this.max = new Vector2(maxx, maxy);
+        this.min = new Vector3(minx, miny, 0);
+        this.max = new Vector3(maxx, maxy, 0);
     }
 }

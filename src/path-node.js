@@ -1,4 +1,4 @@
-import { Vector2 } from "./math/vector2";
+import { Vector3 } from "./math/vector3";
 
 export class PathNode
 {
@@ -6,7 +6,7 @@ export class PathNode
     {
         this.score = 0;
         this.comeFrom = null;
-        this.position = new Vector2(x, y);
+        this.position = new Vector3(x, y, 0);
         this.adjacent = new Map(); // <adjacent, distanceTo>
 
         this.isAdjacentToStart = false;

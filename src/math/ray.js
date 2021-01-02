@@ -1,11 +1,10 @@
-import { Vector2 } from "./vector2";
 import { Vector3 } from "./vector3";
 
 export class Ray
 {
     constructor(x, y)
     {
-        this.position = new Vector2(x, y);
+        this.position = new Vector3(x, y, 0);
         this.numHits = 0;
         this.hit = [];
     }
