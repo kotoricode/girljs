@@ -120,7 +120,7 @@ const renderQueue = (queueId) =>
 
     let oldTexture, oldProgram;
 
-    for (const { programData, texture, model } of queue)
+    for (const { programData, texture } of queue)
     {
         const { program, uniforms, uniSetters, vao } = programData;
 
