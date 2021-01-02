@@ -1,21 +1,22 @@
-const path = require("path");
 const TerserPlugin = require("terser-webpack-plugin");
+const {
+    shaderFileRegex,
+    propMangleRegex,
+    jsFileRegex,
+    entry,
+    output,
+    rawLoader
+} = require("./webpack-template");
 
 module.exports = {
     mode: "production",
-    entry: "./src/main.js",
-    output: {
-        filename: "main.js",
-        path: path.resolve("dist"),
-    },
+    entry,
+    output,
     module: {
         rules: [
+            rawLoader,
             {
-                test: /\.(?:glsl)$/i,
-                loader: "raw-loader"
-            },
-            {
-                test: /\.(?:glsl)$/i,
+                test: shaderFileRegex,
                 loader: "string-replace-loader",
                 options: {
                     multiple: [
@@ -32,12 +33,12 @@ module.exports = {
         minimize: true,
         minimizer: [
             new TerserPlugin({
-                test: /\.js(\?.*)?$/i,
+                test: jsFileRegex,
                 terserOptions: {
                     mangle: {
                         toplevel: true,
                         properties: {
-                            regex: /^(?!([au]_|uniform)).+$/i,
+                            regex: propMangleRegex,
                         },
                     },
                     module: true
