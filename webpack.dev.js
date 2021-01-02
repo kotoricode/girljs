@@ -2,7 +2,7 @@ const {
     entry,
     output,
     rawLoader
-} = require("./webpack-template");
+} = require("./webpack-common");
 
 module.exports = {
     mode: "development",
