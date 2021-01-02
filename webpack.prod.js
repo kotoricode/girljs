@@ -38,7 +38,6 @@ module.exports = {
                         toplevel: true,
                         properties: {
                             regex: /^(?!([au]_|uniform)).+$/i,
-                            reserved: []
                         },
                     },
                     module: true
