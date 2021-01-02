@@ -1,6 +1,7 @@
-import { storage } from "./dom";
 import * as CONST from "./const";
 import { publish } from "./publisher";
+
+const storage = window.localStorage;
 
 const data = {
     [CONST.OPTION_MASTER]: 0.5,
@@ -25,7 +26,7 @@ export const saveOptions = (...keys) =>
     {
         if (!(key in data))
         {
-            throw ReferenceError();
+            throw Error;
         }
 
         const value = data[key];

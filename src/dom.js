@@ -2,29 +2,27 @@ import * as CONST from "./const";
 import { Vector3 } from "./math/vector3";
 import { publish } from "./publisher";
 
-export const storage = window.localStorage;
-
-const gameCanvas = window.document.getElementById("gameCanvas");
-export const gl = gameCanvas.getContext("webgl2", { alpha: false });
-
 const container = window.document.getElementById("container");
-
+const gameCanvas = window.document.getElementById("gameCanvas");
 const uiCanvas = window.document.getElementById("uiCanvas");
+
+export const gl = gameCanvas.getContext("webgl2", { alpha: false });
+const ui = uiCanvas.getContext("2d");
+
 const uiStyle = uiCanvas.style;
-const uiCtx = uiCanvas.getContext("2d");
 
-uiCtx.beginPath();
-uiCtx.arc(75, 75, 50, 0, Math.PI * 2, true); // Outer circle
-uiCtx.moveTo(110, 75);
-uiCtx.arc(75, 75, 35, 0, Math.PI, false); // Mouth (clockwise)
-uiCtx.moveTo(65, 65);
-uiCtx.arc(60, 65, 5, 0, Math.PI * 2, true); // Left eye
-uiCtx.moveTo(95, 65);
-uiCtx.arc(90, 65, 5, 0, Math.PI * 2, true); // Right eye
-uiCtx.stroke();
+ui.beginPath();
+ui.arc(75, 75, 50, 0, Math.PI * 2, true); // Outer circle
+ui.moveTo(110, 75);
+ui.arc(75, 75, 35, 0, Math.PI, false); // Mouth (clockwise)
+ui.moveTo(65, 65);
+ui.arc(60, 65, 5, 0, Math.PI * 2, true); // Left eye
+ui.moveTo(95, 65);
+ui.arc(90, 65, 5, 0, Math.PI * 2, true); // Right eye
+ui.stroke();
 
-uiCtx.fillStyle = "white";
-uiCtx.fillRect(0, 0, uiCanvas.width, uiCanvas.height);
+ui.fillStyle = "white";
+ui.fillRect(0, 0, uiCanvas.width, uiCanvas.height);
 
 /*------------------------------------------------------------------------------
     Canvas area
@@ -85,9 +83,11 @@ const onClick = (e) =>
 };
 
 container.addEventListener("click", (e) => onClick(e));
-container.addEventListener("contextmenu", (e) => e.preventDefault());
 
 uiCanvas.addEventListener("click", (e) =>
 {
+    e.preventDefault();
     e.stopPropagation();
 });
+
+container.addEventListener("contextmenu", (e) => e.preventDefault());
