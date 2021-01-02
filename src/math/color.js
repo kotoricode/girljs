@@ -1,6 +1,6 @@
 // https://www.w3.org/TR/css-color-4/#color-conversion-code
 // http://www.brucelindbloom.com/index.html?Math.html
-import { GameArray } from "../game-array";
+import { SettableArray } from "../settable-array";
 import { clamp, DEG_2_RAD } from "../util";
 
 const cbEpsilon = 6 / 29;
@@ -21,7 +21,7 @@ const invFunc = (value) =>
     return (value > cbEpsilon) ? value**3 : iKappa*(116*value - 16);
 };
 
-export class Color extends GameArray
+export class Color extends SettableArray
 {
     constructor(l=0, c=0, h=0)
     {

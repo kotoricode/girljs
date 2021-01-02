@@ -1,6 +1,6 @@
-import { GameArray } from "../game-array";
+import { SettableArray } from "../settable-array";
 
-export class Matrix4 extends GameArray
+export class Matrix4 extends SettableArray
 {
     constructor()
     {

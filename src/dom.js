@@ -7,6 +7,8 @@ export const storage = window.localStorage;
 const gameCanvas = window.document.getElementById("gameCanvas");
 export const gl = gameCanvas.getContext("webgl2", { alpha: false });
 
+const container = window.document.getElementById("container");
+
 const uiCanvas = window.document.getElementById("uiCanvas");
 const uiStyle = uiCanvas.style;
 const uiCtx = uiCanvas.getContext("2d");
@@ -20,6 +22,9 @@ uiCtx.arc(60, 65, 5, 0, Math.PI * 2, true); // Left eye
 uiCtx.moveTo(95, 65);
 uiCtx.arc(90, 65, 5, 0, Math.PI * 2, true); // Right eye
 uiCtx.stroke();
+
+uiCtx.fillStyle = "white";
+uiCtx.fillRect(0, 0, uiCanvas.width, uiCanvas.height);
 
 /*------------------------------------------------------------------------------
     Canvas area
@@ -79,5 +84,10 @@ const onClick = (e) =>
     mouse.isClick = true;
 };
 
-gameCanvas.addEventListener("click", (e) => onClick(e));
-gameCanvas.addEventListener("contextmenu", (e) => e.preventDefault());
+container.addEventListener("click", (e) => onClick(e));
+container.addEventListener("contextmenu", (e) => e.preventDefault());
+
+uiCanvas.addEventListener("click", (e) =>
+{
+    e.stopPropagation();
+});

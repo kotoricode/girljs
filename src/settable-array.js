@@ -1,4 +1,4 @@
-export class GameArray extends Array
+export class SettableArray extends Array
 {
     constructor(...values)
     {
@@ -7,9 +7,7 @@ export class GameArray extends Array
 
     set(...values)
     {
-        let i = values.length;
-
-        while (i--)
+        for (let i = 0; i < values.length; i++)
         {
             this[i] = values[i];
         }

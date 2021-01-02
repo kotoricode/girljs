@@ -1,6 +1,6 @@
-import { GameArray } from "../game-array";
+import { SettableArray } from "../settable-array";
 
-export class Vector3 extends GameArray
+export class Vector3 extends SettableArray
 {
     constructor(x=0, y=0, z=0)
     {
