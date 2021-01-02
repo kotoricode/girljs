@@ -33,19 +33,15 @@ module.exports = {
         minimizer: [
             new TerserPlugin({
                 test: /\.js(\?.*)?$/i,
-                parallel: true,
                 terserOptions: {
                     mangle: {
                         toplevel: true,
                         properties: {
-                            // keep true. webpack-dev uses filepaths as keys
-                            keep_quoted: true,
                             regex: /^(?!([au]_|uniform)).+$/i,
                             reserved: []
                         },
                     },
-                    module: true,
-                    toplevel: true,
+                    module: true
                 }
             })
         ],

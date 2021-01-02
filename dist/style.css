@@ -11,3 +11,14 @@ html, body
     justify-content: center;
     background-color: aquamarine;
 }
+
+#canvasHolder
+{
+    display: grid;
+}
+
+#canvasHolder canvas
+{
+    grid-column: 1;
+    grid-row: 1;
+}

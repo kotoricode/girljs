@@ -10,6 +10,7 @@ import * as ENUM_GL from "./enum-gl";
 const createFramebufferTexture = () =>
 {
     const texture = gl.createTexture();
+    const { width, height } = gl.canvas;
 
     gl.bindTexture(ENUM_GL.TEXTURE_2D, texture);
 
@@ -17,8 +18,8 @@ const createFramebufferTexture = () =>
         ENUM_GL.TEXTURE_2D,
         0,
         ENUM_GL.RGB,
-        gl.canvas.width,
-        gl.canvas.height,
+        width,
+        height,
         0,
         ENUM_GL.RGB,
         ENUM_GL.UNSIGNED_BYTE,

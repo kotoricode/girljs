@@ -1,10 +1,25 @@
 import * as CONST from "./const";
+import { Vector2 } from "./math/vector2";
 import { publish } from "./publisher";
 
 export const storage = window.localStorage;
 
-const canvas = window.document.getElementById("canvas");
-export const gl = canvas.getContext("webgl2", { alpha: false });
+const gameCanvas = window.document.getElementById("gameCanvas");
+export const gl = gameCanvas.getContext("webgl2", { alpha: false });
+
+const uiCanvas = window.document.getElementById("uiCanvas");
+const uiStyle = uiCanvas.style;
+const uiCtx = uiCanvas.getContext("2d");
+
+uiCtx.beginPath();
+uiCtx.arc(75, 75, 50, 0, Math.PI * 2, true); // Outer circle
+uiCtx.moveTo(110, 75);
+uiCtx.arc(75, 75, 35, 0, Math.PI, false); // Mouth (clockwise)
+uiCtx.moveTo(65, 65);
+uiCtx.arc(60, 65, 5, 0, Math.PI * 2, true); // Left eye
+uiCtx.moveTo(95, 65);
+uiCtx.arc(90, 65, 5, 0, Math.PI * 2, true); // Right eye
+uiCtx.stroke();
 
 /*------------------------------------------------------------------------------
     Canvas area
@@ -24,21 +39,21 @@ const onResize = () =>
         canvasMaxWidth
     );
 
-    if (width !== canvas.width)
+    if (width !== gameCanvas.width)
     {
         const height = width / canvasAspect;
 
-        if (height !== canvas.height)
+        if (height !== gameCanvas.height)
         {
-            canvas.width = width;
-            canvas.height = height;
+            gameCanvas.width = width;
+            gameCanvas.height = height;
 
             gl.viewport(0, 0, width, height);
             publish(CONST.EVENT_RESIZE);
         }
     }
 
-    canvasRect = canvas.getBoundingClientRect();
+    canvasRect = gameCanvas.getBoundingClientRect();
 };
 
 for (const resizeEvent of ["DOMContentLoaded", "load", "resize"])
@@ -50,16 +65,19 @@ for (const resizeEvent of ["DOMContentLoaded", "load", "resize"])
     Mouse
 ------------------------------------------------------------------------------*/
 export const mouse = {
-    clipCoords: [0, 0],
+    clipCoords: new Vector2(0, 0),
     isClick: false
 };
 
 const onClick = (e) =>
 {
-    mouse.clipCoords[0] = 2*(e.clientX-canvasRect.left)/canvas.clientWidth - 1;
-    mouse.clipCoords[1] = 1 - 2*(e.clientY-canvasRect.top)/canvas.clientHeight;
+    mouse.clipCoords.set(
+        2*(e.clientX-canvasRect.left)/gameCanvas.clientWidth - 1,
+        1 - 2*(e.clientY-canvasRect.top)/gameCanvas.clientHeight
+    );
+
     mouse.isClick = true;
 };
 
-canvas.addEventListener("click", (e) => onClick(e));
-canvas.addEventListener("contextmenu", (e) => e.preventDefault());
+gameCanvas.addEventListener("click", (e) => onClick(e));
+gameCanvas.addEventListener("contextmenu", (e) => e.preventDefault());
