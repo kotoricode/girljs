@@ -11,12 +11,12 @@ import * as ENUM_GL from "./enum-gl";
 import * as CONST from "./const";
 import { getModelBuffer } from "./model";
 
-const createShader = (prog, shaderId, shaderDef) =>
+const createShader = (program, shaderId, { shaderSrc }) =>
 {
     const shader = gl.createShader(shaderId);
-    gl.shaderSource(shader, shaderDef.shaderSrc);
+    gl.shaderSource(shader, shaderSrc);
     gl.compileShader(shader);
-    gl.attachShader(prog, shader);
+    gl.attachShader(program, shader);
 
     return shader;
 };
@@ -25,26 +25,6 @@ const deleteShader = (program, shader) =>
 {
     gl.detachShader(program, shader);
     gl.deleteShader(shader);
-};
-
-const createProgram = (vert, frag) =>
-{
-    const prog = gl.createProgram();
-
-    const vertShader = createShader(prog, ENUM_GL.VERTEX_SHADER, vert),
-          fragShader = createShader(prog, ENUM_GL.FRAGMENT_SHADER, frag);
-
-    gl.linkProgram(prog);
-
-    if (!gl.getProgramParameter(prog, ENUM_GL.LINK_STATUS))
-    {
-        throw gl.getProgramInfoLog(prog);
-    }
-
-    deleteShader(prog, vertShader);
-    deleteShader(prog, fragShader);
-
-    return prog;
 };
 
 export const createProgramData = (programId, attrData) =>
@@ -169,36 +149,56 @@ const programData = new Map();
 
 for (const [id, data] of programDef)
 {
-    const program = createProgram(data.vert, data.frag);
+    const { vert, frag } = data;
 
-    // Uniforms
+    /*--------------------------------------------------------------------------
+        Program
+    --------------------------------------------------------------------------*/
+    const program = gl.createProgram();
+
+    const vertShader = createShader(program, ENUM_GL.VERTEX_SHADER, vert),
+          fragShader = createShader(program, ENUM_GL.FRAGMENT_SHADER, frag);
+
+    gl.linkProgram(program);
+
+    if (!gl.getProgramParameter(program, ENUM_GL.LINK_STATUS))
+    {
+        throw gl.getProgramInfoLog(program);
+    }
+
+    deleteShader(program, vertShader);
+    deleteShader(program, fragShader);
+
+    /*--------------------------------------------------------------------------
+        Uniforms
+    --------------------------------------------------------------------------*/
     const uniDefaults = new Map(),
           uniSetters = new Map();
 
     for (const vertFrag of Object.values(data))
     {
-        if (!vertFrag.uniforms)
+        if (vertFrag.uniforms)
         {
-            continue;
-        }
-
-        for (const [type, typeObj] of Object.entries(vertFrag.uniforms))
-        {
-            for (const [name, defValueArr] of Object.entries(typeObj))
+            for (const [type, typeObj] of Object.entries(vertFrag.uniforms))
             {
-                uniDefaults.set(name, defValueArr);
-                const loc = gl.getUniformLocation(program, name);
-
-                uniSetters.set(name, (values) =>
+                for (const [name, defValueArr] of Object.entries(typeObj))
                 {
-                    gl[type](loc, ...values);
-                });
+                    uniDefaults.set(name, defValueArr);
+                    const loc = gl.getUniformLocation(program, name);
+
+                    uniSetters.set(name, (values) =>
+                    {
+                        gl[type](loc, ...values);
+                    });
+                }
             }
         }
     }
 
-    // Attributes
-    const attributes = data.vert.attributes,
+    /*--------------------------------------------------------------------------
+        Attributes
+    --------------------------------------------------------------------------*/
+    const { attributes } = vert,
           attrLocations = new Map();
 
     for (const name of Object.keys(attributes))
