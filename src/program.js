@@ -11,7 +11,7 @@ import * as ENUM_GL from "./enum-gl";
 import * as CONST from "./const";
 import { getModelBuffer } from "./model";
 
-const createShader = (program, shaderId, { shaderSrc }) =>
+const createAttachShader = (program, shaderId, { shaderSrc }) =>
 {
     const shader = gl.createShader(shaderId);
     gl.shaderSource(shader, shaderSrc);
@@ -21,7 +21,7 @@ const createShader = (program, shaderId, { shaderSrc }) =>
     return shader;
 };
 
-const deleteShader = (program, shader) =>
+const detachDeleteShader = (program, shader) =>
 {
     gl.detachShader(program, shader);
     gl.deleteShader(shader);
@@ -37,7 +37,19 @@ export const createProgramData = (programId, attrData) =>
         attributes
     } = programData.get(programId);
 
-    // Attributes
+    /*--------------------------------------------------------------------------
+        Uniforms
+    --------------------------------------------------------------------------*/
+    const uniforms = new Map();
+
+    for (const [name, defaults] of uniDefaults)
+    {
+        uniforms.set(name, defaults.slice());
+    }
+
+    /*--------------------------------------------------------------------------
+        Attributes
+    --------------------------------------------------------------------------*/
     const vao = gl.createVertexArray();
 
     gl.bindVertexArray(vao);
@@ -53,14 +65,6 @@ export const createProgramData = (programId, attrData) =>
 
     gl.bindVertexArray(null);
     gl.bindBuffer(ENUM_GL.ARRAY_BUFFER, null);
-
-    // Uniforms
-    const uniforms = new Map();
-
-    for (const [name, defaults] of uniDefaults.entries())
-    {
-        uniforms.set(name, defaults.slice());
-    }
 
     return {
         program,
@@ -156,8 +160,8 @@ for (const [id, data] of programDef)
     --------------------------------------------------------------------------*/
     const program = gl.createProgram();
 
-    const vertShader = createShader(program, ENUM_GL.VERTEX_SHADER, vert),
-          fragShader = createShader(program, ENUM_GL.FRAGMENT_SHADER, frag);
+    const vs = createAttachShader(program, ENUM_GL.VERTEX_SHADER, vert),
+          fs = createAttachShader(program, ENUM_GL.FRAGMENT_SHADER, frag);
 
     gl.linkProgram(program);
 
@@ -166,8 +170,8 @@ for (const [id, data] of programDef)
         throw gl.getProgramInfoLog(program);
     }
 
-    deleteShader(program, vertShader);
-    deleteShader(program, fragShader);
+    detachDeleteShader(program, vs);
+    detachDeleteShader(program, fs);
 
     /*--------------------------------------------------------------------------
         Uniforms
@@ -186,6 +190,8 @@ for (const [id, data] of programDef)
                     uniDefaults.set(name, defValueArr);
                     const loc = gl.getUniformLocation(program, name);
 
+                    // TODO: probably better to hardcode each type
+                    // instead of looking up gl[type] on the fly
                     uniSetters.set(name, (values) =>
                     {
                         gl[type](loc, ...values);

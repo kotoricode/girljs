@@ -140,7 +140,7 @@ const renderQueue = (queueId) =>
             oldTexture = texture;
         }
 
-        for (const [key, value] of uniforms.entries())
+        for (const [key, value] of uniforms)
         {
             uniSetters.get(key)(value);
         }
