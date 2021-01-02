@@ -142,7 +142,7 @@ const renderQueue = (queueId) =>
         }
 
         gl.bindVertexArray(vao);
-        gl.drawArrays(ENUM_GL.TRIANGLES, 0, model.numVertices);
+        gl.drawArrays(ENUM_GL.TRIANGLES, 0, 6);
         gl.bindVertexArray(null);
     }
 

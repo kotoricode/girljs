@@ -32,99 +32,75 @@ import * as CONST from "./const";
     ]
 */
 
-const modelData = new Map([
-    [
-        CONST.MODEL_GROUND,
-        {
-            mesh: [
-                -500, -500,
-                500, -500,
-                500, 500,
-                -500, 500,
-            ],
-            uv: [
-                0, 1,
-                1, 1,
-                1, 0,
-                0, 0,
-            ],
-            idx: [
-                0, 1, 2,
-                2, 3, 0
-            ]
-        },
-    ],
-    [
-        CONST.MODEL_IMAGE,
-        {
-            mesh:[
-                -1, -1,
-                1, -1,
-                1, 1,
-                -1, 1
-            ],
-            uv: [
-                0, 0,
-                1, 0,
-                1, 1,
-                0, 1,
-            ],
-            idx: [
-                0, 1, 2,
-                2, 3, 0
-            ]
-        }
-    ],
-    [
-        CONST.MODEL_PLAYER,
-        {
-            mesh: [
-                -40, 0,
-                40, 0,
-                40, 150,
-                -40, 150
-            ],
-            uv: [
-                0, 1,
-                1, 1,
-                1, 0,
-                0, 0,
-            ],
-            idx: [
-                0, 1, 2,
-                2, 3, 0
-            ]
-        }
-    ],
-]);
+const createArray = (minX, maxX, minY, maxY) =>
+{
+    return [
+        minX, minY,
+        maxX, minY,
+        maxX, maxY,
+        minX, maxY
+    ];
+};
+
+const createArrayFlipY = (minX, maxX, minY, maxY) =>
+{
+    return [
+        minX, maxY,
+        maxX, maxY,
+        maxX, minY,
+        minX, minY
+    ];
+};
+
+// name, meshCoords[], uvCoords[]
+const modelDataNew = [
+    CONST.MODEL_GROUND,
+    createArray(-500, 500, -500, 500),
+    createArrayFlipY(0, 1, 0, 1),
+
+    CONST.MODEL_IMAGE,
+    createArray(-1, 1, -1, 1),
+    createArray(0, 1, 0, 1),
+
+    CONST.MODEL_PLAYER,
+    createArray(-40, 40, 0, 150),
+    createArrayFlipY(0, 1, 0, 1)
+];
+
+if (modelDataNew.length % 3)
+{
+    throw Error;
+}
 
 const models = new Map(),
-      bufferData = [],
-      bytes = Float32Array.BYTES_PER_ELEMENT;
+      numVertices = 6,
+      numCoordinates = numVertices * 2, // x, y
+      modelSize = numCoordinates * 2, // mesh, uv
+      bufferData = new Array(modelSize * modelDataNew.length / 3),
+      bytes = Float32Array.BYTES_PER_ELEMENT,
+      idx = [0, 1, 2, 2, 3, 0];
 
-for (const [id, { mesh, uv, idx }] of modelData)
+for (let i = 0; i < modelDataNew.length;)
 {
-    const idxLen = idx.length;
+    const id = modelDataNew[i++];
+    const meshCoords = modelDataNew[i++];
+    const uvCoords = modelDataNew[i++];
 
-    const meshStart = bufferData.length,
-          idxLen2 = idxLen * 2;
-
-    const uvStart = meshStart + idxLen2;
-    bufferData.length += idxLen2 * 2;
+    const meshStart = i * modelSize;
+    const uvStart = meshStart + numCoordinates;
 
     models.set(id, {
         meshOffset: meshStart * bytes,
         uvOffset: uvStart * bytes,
-        numVertices: idxLen,
-        uvCoords: uv
+        uvCoords
     });
 
-    for (let i = 0; i < idxLen2; i++)
+    for (let j = 0; j < numCoordinates; j++)
     {
-        const index = 2 * idx[i >> 1] + i % 2;
+        const coordIndex = 2 * idx[j >> 1] + j % 2;
 
-        bufferData[meshStart+i] = mesh[index];
-        bufferData[uvStart+i] = uv[index];
+        bufferData[meshStart+j] = meshCoords[coordIndex];
+        bufferData[uvStart+j] = uvCoords[coordIndex];
     }
 }
 
