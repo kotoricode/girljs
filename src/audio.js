@@ -2,7 +2,6 @@ import { getOption } from "./options";
 import { subscribe } from "./publisher";
 
 import * as CONST from "./const";
-import { ONE_TIME_LISTENER } from "./util";
 
 const createGain = (id, parent) =>
 {
@@ -34,20 +33,17 @@ export const setVolume = (id, value) =>
     gains.get(id).gain.value = value;
 };
 
-export const audioWaitClick = () =>
+export const initAudio = () =>
 {
-    window.addEventListener("click", () =>
-    {
-        context = new AudioContext();
-        const dest = context.destination;
+    context = new AudioContext();
+    const dest = context.destination;
 
-        const gainMaster = createGain(CONST.OPTION_MASTER, dest);
-        const gainMusic = createGain(CONST.OPTION_MUSIC, gainMaster);
-        createGain(CONST.OPTION_SOUND, gainMaster);
+    const gainMaster = createGain(CONST.OPTION_MASTER, dest);
+    const gainMusic = createGain(CONST.OPTION_MUSIC, gainMaster);
+    createGain(CONST.OPTION_SOUND, gainMaster);
 
-        context.createMediaElementSource(music).connect(gainMusic);
-        setMusic(CONST.AUDIO_OMOIDE);
-    }, ONE_TIME_LISTENER);
+    context.createMediaElementSource(music).connect(gainMusic);
+    setMusic(CONST.AUDIO_OMOIDE);
 };
 
 const music = new Audio();

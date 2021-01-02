@@ -1,14 +1,11 @@
 import { mouse } from "./dom";
 import { Scene } from "./scene";
-import { audioWaitClick } from "./audio";
 
 import * as CONST from "./const";
 
 // Processes
 import { processCamera } from "./processes/process-camera";
 import { processMotion } from "./processes/process-motion";
-
-audioWaitClick(window);
 
 const sceneMap = new Map([
     [CONST.SCENE_TEST, new Scene(

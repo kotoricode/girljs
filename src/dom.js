@@ -1,6 +1,10 @@
+import { initAudio } from "./audio";
 import * as CONST from "./const";
 import { Vector3 } from "./math/vector3";
 import { publish } from "./publisher";
+import { ONE_TIME_LISTENER } from "./util";
+
+window.addEventListener("mousedown", initAudio, ONE_TIME_LISTENER);
 
 const getElement = (elementId) => window.document.getElementById(elementId);
 
@@ -9,7 +13,10 @@ const container = getElement("container"),
       uiCanvas = getElement("uiCanvas");
 
 export const gl = gameCanvas.getContext("webgl2", { alpha: false });
-const ui = uiCanvas.getContext("2d");
+export const ui = uiCanvas.getContext("2d");
+
+uiCanvas.width = 1280;
+uiCanvas.height = 720;
 
 const uiStyle = uiCanvas.style;
 
@@ -23,8 +30,12 @@ ui.moveTo(95, 65);
 ui.arc(90, 65, 5, 0, Math.PI * 2, true); // Right eye
 ui.stroke();
 
-ui.fillStyle = "white";
-ui.fillRect(0, 0, uiCanvas.width, uiCanvas.height);
+// ui.fillStyle = "white";
+// ui.fillRect(0, 0, uiCanvas.width, uiCanvas.height);
+
+ui.fillStyle = "black";
+ui.font = "30px Arial";
+ui.fillText("Hello World", 10, 50);
 
 /*------------------------------------------------------------------------------
     Canvases
@@ -52,6 +63,9 @@ const onResize = () =>
         {
             gameCanvas.width = width;
             gameCanvas.height = height;
+
+            uiStyle.width = width + "px";
+            uiStyle.height = height + "px";
 
             gl.viewport(0, 0, width, height);
             publish(CONST.EVENT_RESIZE);
@@ -88,7 +102,7 @@ const onClick = (e) =>
 uiCanvas.addEventListener("click", (e) =>
 {
     e.preventDefault();
-    e.stopPropagation();
+    //e.stopPropagation();
 });
 
 // Container does clicks for in-game clicking (e.g. movement)
