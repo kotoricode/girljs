@@ -41,10 +41,9 @@ export const createPlayer = () =>
 
 export const createCamera = () =>
 {
-    const transform = new Transform();
-    transform.local.translation.z = 2;
+    const transform = new Transform(0, 0, 2);
 
-    const cam = new Camera(300, canvasAspect, 0.1, 3);
+    const cam = new Camera(300, canvasAspect, 1, 3);
 
     const entity = new Entity(CONST.ENTITY_CAMERA);
     entity.addComponent(transform, cam);

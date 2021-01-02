@@ -8,8 +8,8 @@ export class CircleCollider
         this.radius2 = radius ** 2;
         this.diameter = radius * 2;
 
-        this.center = new Vector3(x, y, 0);
-        this.anchor = new Vector3(anchorX, anchorY, 0);
+        this.center = new Vector3(x, y);
+        this.anchor = new Vector3(anchorX, anchorY);
     }
 
     hasPoint(vec2)

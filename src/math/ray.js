@@ -4,7 +4,7 @@ export class Ray
 {
     constructor(x, y)
     {
-        this.position = new Vector3(x, y, 0);
+        this.position = new Vector3(x, y);
         this.numHits = 0;
         this.hit = [];
     }

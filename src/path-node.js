@@ -6,7 +6,7 @@ export class PathNode
     {
         this.score = 0;
         this.comeFrom = null;
-        this.position = new Vector3(x, y, 0);
+        this.position = new Vector3(x, y);
         this.adjacent = new Map(); // <adjacent, distanceTo>
 
         this.isAdjacentToStart = false;

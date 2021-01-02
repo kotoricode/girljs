@@ -4,13 +4,13 @@ export class BoxCollider
 {
     constructor(x, y, width, height, anchorX, anchorY)
     {
-        this.position = new Vector3(x, y, 0);
-        this.bottomRight = new Vector3(x + width, y + height, 0);
+        this.position = new Vector3(x, y);
+        this.bottomRight = new Vector3(x + width, y + height);
 
         this.width = width;
         this.height = height;
 
-        this.anchor = new Vector3(anchorX, anchorY, 0);
+        this.anchor = new Vector3(anchorX, anchorY);
     }
 
     hasPoint(p)
