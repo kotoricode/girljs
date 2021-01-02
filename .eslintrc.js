@@ -42,6 +42,7 @@ module.exports = {
         }],
         "no-plusplus": 0,
         "no-restricted-globals": [2,
+            "addEventListener",
             "alert",
             "atob",
             "blur",

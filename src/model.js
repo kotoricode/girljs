@@ -3,21 +3,50 @@ import { gl } from "./dom";
 import * as ENUM_GL from "./enum-gl";
 import * as CONST from "./const";
 
+/*
+    3_________2
+     |      /|
+     |    /  |
+     |  /    |
+     |/______|
+    0         1
+
+    mesh: [
+        minX, minY,
+        maxX, minY,
+        maxX, maxY,
+        minX, maxY
+    ]
+
+    // image-based uv with flipped y (origin topleft instead of bottomleft)
+    uv: [
+        minX, maxY,
+        maxX, maxY,
+        maxX, minY,
+        minX, minY
+    ]
+
+    idx: [
+        0, 1, 2,
+        2, 3, 0
+    ]
+*/
+
 const modelData = new Map([
     [
         CONST.MODEL_GROUND,
         {
             mesh: [
-                -500, 500,
                 -500, -500,
                 500, -500,
                 500, 500,
+                -500, 500,
             ],
             uv: [
-                0.21582, 0.37793,
-                0.21582, 0.25293,
-                0.34082, 0.25293,
-                0.34082, 0.37793,
+                0, 1,
+                1, 1,
+                1, 0,
+                0, 0,
             ],
             idx: [
                 0, 1, 2,
@@ -29,20 +58,20 @@ const modelData = new Map([
         CONST.MODEL_IMAGE,
         {
             mesh:[
-                1, 1,
                 -1, -1,
                 1, -1,
+                1, 1,
                 -1, 1
             ],
             uv: [
-                1, 1,
                 0, 0,
                 1, 0,
-                0, 1
+                1, 1,
+                0, 1,
             ],
             idx: [
-                3, 1, 0,
-                0, 1, 2
+                0, 1, 2,
+                2, 3, 0
             ]
         }
     ],
@@ -50,20 +79,20 @@ const modelData = new Map([
         CONST.MODEL_PLAYER,
         {
             mesh: [
-                21.148255814, 150,
-                -21.148255814, 0,
-                21.148255814, 0,
-                -21.148255814, 150
+                -40, 0,
+                40, 0,
+                40, 150,
+                -40, 150
             ],
             uv: [
-                349, 0,
-                252, 344,
-                349, 344,
-                252, 0
-            ].map(x => x / 1024),
+                0, 1,
+                1, 1,
+                1, 0,
+                0, 0,
+            ],
             idx: [
                 0, 1, 2,
-                0, 3, 1
+                2, 3, 0
             ]
         }
     ],

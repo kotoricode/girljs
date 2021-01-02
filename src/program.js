@@ -51,8 +51,8 @@ export const createProgramData = (programId, attrData) =>
         Attributes
     --------------------------------------------------------------------------*/
     const vao = gl.createVertexArray();
-
     gl.bindVertexArray(vao);
+
     const modelBuffer = getModelBuffer();
     gl.bindBuffer(ENUM_GL.ARRAY_BUFFER, modelBuffer);
 
@@ -63,8 +63,8 @@ export const createProgramData = (programId, attrData) =>
         gl.vertexAttribPointer(loc, ...defaults, attrData[name]);
     }
 
-    gl.bindVertexArray(null);
     gl.bindBuffer(ENUM_GL.ARRAY_BUFFER, null);
+    gl.bindVertexArray(null);
 
     return {
         program,

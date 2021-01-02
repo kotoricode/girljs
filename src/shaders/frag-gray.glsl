@@ -15,11 +15,11 @@ void main()
     );
 
     ivec2 size = textureSize(u_tex, 0);
-    float test = gl_FragCoord.x / float(size.x);
+    float amount = gl_FragCoord.x / float(size.x);
 
     outColor = mix(
         texColor,
         vec4(desat, desat, desat, 1.0),
-        test
+        amount
     );
 }
