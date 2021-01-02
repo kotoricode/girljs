@@ -2,9 +2,11 @@ import * as CONST from "./const";
 import { Vector3 } from "./math/vector3";
 import { publish } from "./publisher";
 
-const container = window.document.getElementById("container");
-const gameCanvas = window.document.getElementById("gameCanvas");
-const uiCanvas = window.document.getElementById("uiCanvas");
+const getElement = (elementId) => window.document.getElementById(elementId);
+
+const container = getElement("container"),
+      gameCanvas = getElement("gameCanvas"),
+      uiCanvas = getElement("uiCanvas");
 
 export const gl = gameCanvas.getContext("webgl2", { alpha: false });
 const ui = uiCanvas.getContext("2d");
@@ -25,7 +27,7 @@ ui.fillStyle = "white";
 ui.fillRect(0, 0, uiCanvas.width, uiCanvas.height);
 
 /*------------------------------------------------------------------------------
-    Canvas area
+    Canvases
 ------------------------------------------------------------------------------*/
 export const canvasMaxWidth = 1280,
              canvasMaxHeight = 720;
@@ -82,12 +84,15 @@ const onClick = (e) =>
     mouse.isClick = true;
 };
 
-container.addEventListener("click", (e) => onClick(e));
-
+// UI canvas receives clicks, propagate to container if no UI interaction
 uiCanvas.addEventListener("click", (e) =>
 {
     e.preventDefault();
     e.stopPropagation();
 });
 
+// Container does clicks for in-game clicking (e.g. movement)
+container.addEventListener("click", (e) => onClick(e));
+
+// Container blocks contextmenu for both canvases
 container.addEventListener("contextmenu", (e) => e.preventDefault());
