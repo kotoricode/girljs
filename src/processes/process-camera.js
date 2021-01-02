@@ -18,6 +18,7 @@ export const processCamera = (scene) =>
 
     // Update camera position, matrix
     camTransform.local.translation.x = plTransform.world.translation.x;
+    camTransform.local.translation.y = plTransform.world.translation.y;
 
     cam.viewProjection.toViewProjection(cam, camTransform);
     cam.invViewProjection.invertFrom(cam.viewProjection);
@@ -28,7 +29,7 @@ export const processCamera = (scene) =>
         const [ground] = scene.one(CONST.ENTITY_GROUND, Ground);
 
         cam.ray.numHits = 0;
-        cam.ray.fromMouse(cam.invViewProjection, mouse.clipCoords);
+        cam.ray.fromMouse(cam.invViewProjection, mouse);
         cam.ray.collide(ground);
 
         // Update player, marker paths

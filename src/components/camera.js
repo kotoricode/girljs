@@ -1,6 +1,5 @@
 import { Matrix4 } from "../math/matrix4";
 import { Ray } from "../math/ray";
-import { Vector3 } from "../math/vector3";
 import { Component } from "./component";
 
 export class Camera extends Component
@@ -16,10 +15,7 @@ export class Camera extends Component
         this.vpLA = -2 * invFrustumLength;
         this.vpLE = -(farPlane+nearPlane) * invFrustumLength;
 
-        this.ray = new Ray(
-            new Vector3(),
-            new Vector3(0, 0, 1)
-        );
+        this.ray = new Ray(0, 0);
 
         this.viewProjection = new Matrix4();
         this.invViewProjection = new Matrix4();

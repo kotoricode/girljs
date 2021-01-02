@@ -57,6 +57,9 @@ const view = getViewProgramData();
 
 gl.enable(ENUM_GL.BLEND);
 gl.blendFunc(ENUM_GL.SRC_ALPHA, ENUM_GL.ONE_MINUS_SRC_ALPHA);
+gl.disable(ENUM_GL.CULL_FACE);
+gl.disable(ENUM_GL.DEPTH_TEST);
+gl.depthMask(false);
 
 const queues = new Map([
     [CONST.PROGRAM_SPRITE, []],
@@ -95,16 +98,8 @@ export const render = (scene) =>
 
     gl.clear(ENUM_GL.COLOR_BUFFER_BIT | ENUM_GL.DEPTH_BUFFER_BIT);
 
-    // 3D Queue
-    gl.enable(ENUM_GL.CULL_FACE);
-    gl.enable(ENUM_GL.DEPTH_TEST);
-    gl.depthMask(true);
+    // Render world to framebuffer
     renderQueue(CONST.PROGRAM_TILED);
-
-    // Sprite Queue
-    gl.disable(ENUM_GL.CULL_FACE);
-    gl.disable(ENUM_GL.DEPTH_TEST);
-    gl.depthMask(false);
     renderQueue(CONST.PROGRAM_SPRITE);
 
     // Framebuffer to canvas

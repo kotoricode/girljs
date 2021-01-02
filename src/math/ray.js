@@ -1,74 +1,44 @@
+import { Vector2 } from "./vector2";
 import { Vector3 } from "./vector3";
 
 export class Ray
 {
-    constructor(origin, target)
+    constructor(x, y)
     {
-        this.origin = origin;
-        this.target = target;
-
-        this.direction = new Vector3();
-        this.setDirection(target);
-
+        this.position = new Vector2(x, y);
         this.numHits = 0;
         this.hit = [];
     }
 
-    setDirection()
-    {
-        this.direction.set(
-            this.target.x - this.origin.x,
-            this.target.y - this.origin.y,
-            this.target.z - this.origin.z
-        );
-
-        this.direction.normalize();
-    }
-
     fromMouse(ivp, mouse)
     {
-        const [mx, my] = mouse;
+        const { x, y } = mouse.clipCoords;
 
-        const w = ivp[3]*mx + ivp[7]*my + ivp[15],
-              zw = ivp[11];
-
-        const iwNear = 1 / (w - zw),
-              iwFar = 1 / (w + zw);
-
-        for (let i = 0; i < 3; i++)
-        {
-            const coord = ivp[i]*mx + ivp[4+i]*my + ivp[12+i];
-            const zcoord = ivp[8+i];
-            this.origin[i] = (coord - zcoord) * iwNear;
-            this.target[i] = (coord + zcoord) * iwFar;
-        }
-
-        this.setDirection();
+        this.position.set(
+            x * ivp[0] + ivp[12],
+            y * ivp[5] + ivp[13]
+        );
     }
 
     collide(box)
     {
-        const multi = -this.origin.z / this.direction.z;
-        const x = this.origin.x + multi*this.direction.x;
+        const { x, y } = this.position;
 
-        if (box.min.x <= x && x <= box.max.x)
+        if (box.min.x <= x && x <= box.max.x &&
+            box.min.y <= y && y <= box.max.y
+        )
         {
-            const y = this.origin.y + multi*this.direction.y;
-
-            if (box.min.y <= y && y <= box.max.y)
-            {
-                this.addHit(x, y, 0);
-            }
+            this.addHit(x, y);
         }
     }
 
-    addHit(x, y, z)
+    addHit(x, y)
     {
         if (this.numHits === this.hit.length)
         {
             this.hit.push(new Vector3());
         }
 
-        this.hit[this.numHits++].set(x, y, z);
+        this.hit[this.numHits++].set(x, y, 0);
     }
 }

@@ -5,7 +5,7 @@ import { Component } from "./component";
 
 export class Transform extends Component
 {
-    constructor(tx=1, ty=1, tz=1)
+    constructor(tx=0, ty=0, tz=0)
     {
         super();
         this.matrix = new Matrix4();

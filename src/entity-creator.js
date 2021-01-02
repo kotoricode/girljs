@@ -21,6 +21,7 @@ const initModelPosUv = (draw) =>
 export const createPlayer = () =>
 {
     const transform = new Transform();
+
     const mot = new Motion(300);
     const player = new Player();
 
@@ -41,9 +42,9 @@ export const createPlayer = () =>
 export const createCamera = () =>
 {
     const transform = new Transform();
-    transform.local.translation[2] = 2;
+    transform.local.translation.z = 2;
 
-    const cam = new Camera(300, canvasAspect, 1, 3);
+    const cam = new Camera(300, canvasAspect, 0.1, 3);
 
     const entity = new Entity(CONST.ENTITY_CAMERA);
     entity.addComponent(transform, cam);
