@@ -12,7 +12,7 @@ import * as CONST from "./const";
 
 const initModelPosUv = (draw) =>
 {
-    draw.initProgram({
+    draw.initProgramData({
         [CONST.A_POS]: draw.model.meshOffset,
         [CONST.A_UV]: draw.model.uvOffset
     });

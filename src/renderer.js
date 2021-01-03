@@ -122,7 +122,7 @@ const renderQueue = (queueId) =>
 
     for (const { programData, texture } of queue)
     {
-        const { program, uniforms, uniSetters, vao } = programData;
+        const { program, uniValues, uniSetters, vao } = programData;
 
         if (oldProgram !== program)
         {
@@ -136,7 +136,7 @@ const renderQueue = (queueId) =>
             oldTexture = texture;
         }
 
-        for (const [key, value] of uniforms)
+        for (const [key, value] of uniValues)
         {
             uniSetters.get(key)(value);
         }
