@@ -1,12 +1,14 @@
 export class Entity
 {
-    constructor(id)
+    constructor(id, ...comps)
     {
         this.id = id;
         this.flags = 0;
         this.components = new Map();
 
         this.below = new Set();
+
+        this.addComponent(...comps);
     }
 
     addChild(entity)

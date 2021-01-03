@@ -3,12 +3,12 @@ import { subscribe } from "./publisher";
 
 import * as $ from "./const";
 
-const createGain = (id, parent) =>
+const createGain = (gainId, parent) =>
 {
     const gainObj = context.createGain();
     gainObj.connect(parent);
-    gains.set(id, gainObj);
-    subscribe(id, () => gainObj.gain.value = getOption(id));
+    gains.set(gainId, gainObj);
+    subscribe(gainId, () => gainObj.gain.value = getOption(gainId));
 
     return gainObj;
 };
@@ -23,14 +23,14 @@ export const setMusic = (fileId) =>
     }
 };
 
-export const setVolume = (id, value) =>
+export const setVolume = (gainId, value) =>
 {
     if (!context)
     {
         throw Error;
     }
 
-    gains.get(id).gain.value = value;
+    gains.get(gainId).gain.value = value;
 };
 
 export const initAudio = () =>

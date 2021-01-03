@@ -33,10 +33,7 @@ export const createPlayer = () =>
 
     initModelPosUv(draw);
 
-    const entity = new Entity($.ENTITY_PLAYER);
-    entity.addComponent(transform, draw, player, mot);
-
-    return entity;
+    return new Entity($.ENTITY_PLAYER, transform, draw, player, mot);
 };
 
 export const createCamera = () =>
@@ -45,10 +42,7 @@ export const createCamera = () =>
 
     const cam = new Camera(300, canvasAspect, 1, 3);
 
-    const entity = new Entity($.ENTITY_CAMERA);
-    entity.addComponent(transform, cam);
-
-    return entity;
+    return new Entity($.ENTITY_CAMERA, transform, cam);
 };
 
 export const createGround = () =>
@@ -68,8 +62,5 @@ export const createGround = () =>
 
     const ground = new Ground(-300, 300, -300, 300);
 
-    const entity = new Entity($.ENTITY_GROUND);
-    entity.addComponent(transform, draw, ground);
-
-    return entity;
+    return new Entity($.ENTITY_GROUND, transform, draw, ground);
 };
