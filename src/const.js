@@ -37,9 +37,9 @@ export const
     U_UVOFFSET = "u_uvOffset",
     U_UVSIZE = "u_uvSize",
     U_COLOR = "u_color",
-    U_MODEL = "u_model",
-    U_VP = "u_vp",
-    A_POS = "a_pos",
+    U_TRANSFORM = "u_transform",
+    U_VIEWPROJECTION = "u_viewprojection",
+    A_POSITION = "a_position",
     A_UV = "a_uv";
 
 export const

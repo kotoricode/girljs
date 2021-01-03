@@ -129,14 +129,22 @@ export class Scene
 
             for (const [draw, transform] of this.all(Drawable, Transform))
             {
-                if (draw.isInitialized)
+                if (!draw.isInitialized)
                 {
-                    continue;
-                }
+                    draw.setUniformIndex(
+                        CONST.U_TRANSFORM,
+                        1,
+                        transform.matrix
+                    );
 
-                draw.setUniformIndex(CONST.U_MODEL, 1, transform.matrix);
-                draw.setUniformIndex(CONST.U_VP, 1, cam.viewProjection);
-                draw.isInitialized = true;
+                    draw.setUniformIndex(
+                        CONST.U_VIEWPROJECTION,
+                        1,
+                        cam.viewProjection
+                    );
+
+                    draw.isInitialized = true;
+                }
             }
 
             this.hasNewDrawables = false;

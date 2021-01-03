@@ -42,7 +42,7 @@ const getViewProgramData = () =>
     const model = getModel(CONST.MODEL_IMAGE);
 
     return createProgramData(CONST.PROGRAM_GRAY, {
-        [CONST.A_POS]: model.meshOffset,
+        [CONST.A_POSITION]: model.meshOffset,
         [CONST.A_UV]: model.uvOffset
     });
 };

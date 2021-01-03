@@ -9,13 +9,13 @@ export class Ray
         this.hit = [];
     }
 
-    fromMouse(ivp, mouse)
+    fromMouse(invViewProjection, mouse)
     {
         const { x, y } = mouse.clipCoords;
 
         this.position.set(
-            x * ivp[0] + ivp[12],
-            y * ivp[5] + ivp[13]
+            x * invViewProjection[0] + invViewProjection[12],
+            y * invViewProjection[5] + invViewProjection[13]
         );
     }
 

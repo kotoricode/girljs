@@ -82,13 +82,13 @@ export const createProgramData = (programId, attrOffsets) =>
 };
 
 const attrPosUv = {
-    [CONST.A_POS]: [2, ENUM_GL.FLOAT, false, 0],
+    [CONST.A_POSITION]: [2, ENUM_GL.FLOAT, false, 0],
     [CONST.A_UV]: [2, ENUM_GL.FLOAT, false, 0],
 };
 
-const uniModelVp = {
-    [CONST.U_MODEL]: [false, null],
-    [CONST.U_VP]: [false, null],
+const uniPosition = {
+    [CONST.U_TRANSFORM]: [false, null],
+    [CONST.U_VIEWPROJECTION]: [false, null],
 };
 
 const vertDef = {
@@ -100,14 +100,14 @@ const vertDef = {
         shaderSrc: vsSprite,
         attributes: attrPosUv,
         uniforms: {
-            uniformMatrix4fv: uniModelVp
+            uniformMatrix4fv: uniPosition
         }
     },
     tiled: {
         shaderSrc: vsTiled,
         attributes: attrPosUv,
         uniforms: {
-            uniformMatrix4fv: uniModelVp,
+            uniformMatrix4fv: uniPosition,
             uniform2f: {
                 [CONST.U_UVREPEAT]: [1, 1]
             },
