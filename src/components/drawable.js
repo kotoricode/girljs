@@ -3,7 +3,7 @@ import { getModel } from "../model";
 import { createProgramData } from "../program";
 import { Component } from "./component";
 
-import * as CONST from "../const";
+import * as $ from "../const";
 
 export class Drawable extends Component
 {
@@ -29,7 +29,7 @@ export class Drawable extends Component
             attrOffsets
         );
 
-        if (this.programId === CONST.PROGRAM_TILED)
+        if (this.programId === $.PROGRAM_TILED)
         {
             let uvMinX = Infinity,
                 uvMinY = Infinity,
@@ -49,9 +49,9 @@ export class Drawable extends Component
                 uvMaxX = Math.max(uvMaxX, x);
             }
 
-            this.setUniform(CONST.U_UVOFFSET, [uvMinX, uvMinY]);
+            this.setUniform($.U_UVOFFSET, [uvMinX, uvMinY]);
 
-            this.setUniform(CONST.U_UVSIZE, [
+            this.setUniform($.U_UVSIZE, [
                 uvMaxX - uvMinX,
                 uvMaxY - uvMinY
             ]);

@@ -1,7 +1,6 @@
 import { gl } from "./dom";
 
-import * as ENUM_GL from "./enum-gl";
-import * as CONST from "./const";
+import * as $ from "./const";
 
 const image = new Image();
 const toFetch = [];
@@ -9,40 +8,40 @@ const toFetch = [];
 const fetchNextImage = () =>
 {
     const src = toFetch[0].src;
-    image.src = `${CONST.PATH_IMG}${src}`;
+    image.src = `${$.PATH_IMG}${src}`;
 };
 
 image.onload = () =>
 {
     const { texture, parami } = toFetch[0];
 
-    gl.bindTexture(ENUM_GL.TEXTURE_2D, texture);
+    gl.bindTexture($.TEXTURE_2D, texture);
 
     gl.texImage2D(
-        ENUM_GL.TEXTURE_2D,
+        $.TEXTURE_2D,
         0,
-        ENUM_GL.RGBA,
-        ENUM_GL.RGBA,
-        ENUM_GL.UNSIGNED_BYTE,
+        $.RGBA,
+        $.RGBA,
+        $.UNSIGNED_BYTE,
         image
     );
 
     for (const [key, value] of parami)
     {
-        gl.texParameteri(ENUM_GL.TEXTURE_2D, key, value);
+        gl.texParameteri($.TEXTURE_2D, key, value);
     }
 
     const minFilter = gl.getTexParameter(
-        ENUM_GL.TEXTURE_2D,
-        ENUM_GL.TEXTURE_MIN_FILTER
+        $.TEXTURE_2D,
+        $.TEXTURE_MIN_FILTER
     );
 
-    if (minFilter > ENUM_GL.LINEAR)
+    if (minFilter > $.LINEAR)
     {
-        gl.generateMipmap(ENUM_GL.TEXTURE_2D);
+        gl.generateMipmap($.TEXTURE_2D);
     }
 
-    gl.bindTexture(ENUM_GL.TEXTURE_2D, null);
+    gl.bindTexture($.TEXTURE_2D, null);
 
     toFetch.shift();
 
@@ -72,16 +71,16 @@ const createImageTexture = (src, parami) =>
 };
 
 const filterLinearLinear = [
-    [ENUM_GL.TEXTURE_MAG_FILTER, ENUM_GL.LINEAR],
-    [ENUM_GL.TEXTURE_MIN_FILTER, ENUM_GL.LINEAR]
+    [$.TEXTURE_MAG_FILTER, $.LINEAR],
+    [$.TEXTURE_MIN_FILTER, $.LINEAR]
 ];
 
 const textures = new Map([
-    [CONST.TEXTURE_POLY, createImageTexture(
-        CONST.TEXTURE_POLY, filterLinearLinear
+    [$.TEXTURE_POLY, createImageTexture(
+        $.TEXTURE_POLY, filterLinearLinear
     )],
-    [CONST.TEXTURE_SPRITE, createImageTexture(
-        CONST.TEXTURE_SPRITE, filterLinearLinear
+    [$.TEXTURE_SPRITE, createImageTexture(
+        $.TEXTURE_SPRITE, filterLinearLinear
     )]
 ]);
 

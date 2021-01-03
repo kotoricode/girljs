@@ -1,7 +1,7 @@
 import { getOption } from "./options";
 import { subscribe } from "./publisher";
 
-import * as CONST from "./const";
+import * as $ from "./const";
 
 const createGain = (id, parent) =>
 {
@@ -15,7 +15,7 @@ const createGain = (id, parent) =>
 
 export const setMusic = (fileId) =>
 {
-    nowPlaying = CONST.PATH_SND + fileId;
+    nowPlaying = $.PATH_SND + fileId;
 
     if (context)
     {
@@ -38,12 +38,12 @@ export const initAudio = () =>
     context = new AudioContext();
     const dest = context.destination;
 
-    const gainMaster = createGain(CONST.OPTION_MASTER, dest);
-    const gainMusic = createGain(CONST.OPTION_MUSIC, gainMaster);
-    createGain(CONST.OPTION_SOUND, gainMaster);
+    const gainMaster = createGain($.OPTION_MASTER, dest);
+    const gainMusic = createGain($.OPTION_MUSIC, gainMaster);
+    createGain($.OPTION_SOUND, gainMaster);
 
     context.createMediaElementSource(music).connect(gainMusic);
-    setMusic(CONST.AUDIO_OMOIDE);
+    setMusic($.AUDIO_OMOIDE);
 };
 
 const music = new Audio();

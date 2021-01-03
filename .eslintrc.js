@@ -31,6 +31,7 @@ module.exports = {
             "code": 80
         }],
         "newline-before-return": 2,
+        "no-constant-condition": 0,
         "no-implicit-globals": 2,
         "no-invalid-this": 2,
         "no-mixed-spaces-and-tabs": 2,

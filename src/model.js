@@ -1,7 +1,6 @@
 import { gl } from "./dom";
 
-import * as ENUM_GL from "./enum-gl";
-import * as CONST from "./const";
+import * as $ from "./const";
 
 /*
     3_________2
@@ -54,15 +53,15 @@ const createArrayFlipY = (minX, maxX, minY, maxY) =>
 
 // name, meshCoords[], uvCoords[]
 const modelDataNew = [
-    CONST.MODEL_GROUND,
+    $.MODEL_GROUND,
     createArray(-500, 500, -500, 500),
     createArrayFlipY(0, 1, 0, 1),
 
-    CONST.MODEL_IMAGE,
+    $.MODEL_IMAGE,
     createArray(-1, 1, -1, 1),
     createArray(0, 1, 0, 1),
 
-    CONST.MODEL_PLAYER,
+    $.MODEL_PLAYER,
     createArray(-40, 40, 0, 150),
     createArrayFlipY(0, 1, 0, 1)
 ];
@@ -106,15 +105,15 @@ for (let i = 0; i < modelDataNew.length;)
 
 const buffer = gl.createBuffer();
 
-gl.bindBuffer(ENUM_GL.ARRAY_BUFFER, buffer);
+gl.bindBuffer($.ARRAY_BUFFER, buffer);
 
 gl.bufferData(
-    ENUM_GL.ARRAY_BUFFER,
+    $.ARRAY_BUFFER,
     new Float32Array(bufferData),
-    ENUM_GL.STATIC_DRAW
+    $.STATIC_DRAW
 );
 
-gl.bindBuffer(ENUM_GL.ARRAY_BUFFER, null);
+gl.bindBuffer($.ARRAY_BUFFER, null);
 
 export const getModel = (modelId) =>
 {

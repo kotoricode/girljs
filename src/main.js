@@ -1,14 +1,14 @@
 import { mouse } from "./dom";
 import { Scene } from "./scene";
 
-import * as CONST from "./const";
+import * as $ from "./const";
 
 // Processes
 import { processCamera } from "./processes/process-camera";
 import { processMotion } from "./processes/process-motion";
 
 const sceneMap = new Map([
-    [CONST.SCENE_TEST, new Scene(
+    [$.SCENE_TEST, new Scene(
         [
             processMotion,
             processCamera
@@ -28,7 +28,7 @@ export const setActiveScene = (sceneId) =>
 };
 
 let activeScene;
-setActiveScene(CONST.SCENE_TEST);
+setActiveScene($.SCENE_TEST);
 
 let oldTimestamp = 0;
 

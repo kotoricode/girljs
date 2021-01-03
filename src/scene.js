@@ -10,7 +10,7 @@ import {
 } from "./entity-creator";
 import { render } from "./renderer";
 
-import * as CONST from "./const";
+import * as $ from "./const";
 
 export class Scene
 {
@@ -25,7 +25,7 @@ export class Scene
         /** @const {Map<number, Set>} */
         this.cached = new Map();
 
-        this.root = new Entity(CONST.ENTITY_ROOT);
+        this.root = new Entity($.ENTITY_ROOT);
 
         this.addCam();
         this.addGround();
@@ -124,7 +124,7 @@ export class Scene
     {
         if (this.hasNewDrawables)
         {
-            const camEntity = this.getEntity(CONST.ENTITY_CAMERA);
+            const camEntity = this.getEntity($.ENTITY_CAMERA);
             const cam = camEntity.getComponent(Camera);
 
             for (const [draw, transform] of this.all(Drawable, Transform))
@@ -132,13 +132,13 @@ export class Scene
                 if (!draw.isInitialized)
                 {
                     draw.setUniformIndex(
-                        CONST.U_TRANSFORM,
+                        $.U_TRANSFORM,
                         1,
                         transform.matrix
                     );
 
                     draw.setUniformIndex(
-                        CONST.U_VIEWPROJECTION,
+                        $.U_VIEWPROJECTION,
                         1,
                         cam.viewProjection
                     );

@@ -7,9 +7,9 @@ import fsSprite   from "./shaders/frag-sprite.glsl";
 import vsTiled    from "./shaders/vert-tiled.glsl";
 import fsTiled    from "./shaders/frag-tiled.glsl";
 
-import * as ENUM_GL from "./enum-gl";
-import * as CONST from "./const";
 import { getModelBuffer } from "./model";
+
+import * as $ from "./const";
 
 const createAttachShader = (program, shaderId, { shaderSrc }) =>
 {
@@ -61,7 +61,7 @@ export const createProgramData = (programId, attrOffsets) =>
     gl.bindVertexArray(vao);
 
     const modelBuffer = getModelBuffer();
-    gl.bindBuffer(ENUM_GL.ARRAY_BUFFER, modelBuffer);
+    gl.bindBuffer($.ARRAY_BUFFER, modelBuffer);
 
     for (const [name, layout] of Object.entries(attributes))
     {
@@ -70,7 +70,7 @@ export const createProgramData = (programId, attrOffsets) =>
         gl.vertexAttribPointer(location, ...layout, attrOffsets[name]);
     }
 
-    gl.bindBuffer(ENUM_GL.ARRAY_BUFFER, null);
+    gl.bindBuffer($.ARRAY_BUFFER, null);
     gl.bindVertexArray(null);
 
     return {
@@ -82,13 +82,13 @@ export const createProgramData = (programId, attrOffsets) =>
 };
 
 const attrPosUv = {
-    [CONST.A_POSITION]: [2, ENUM_GL.FLOAT, false, 0],
-    [CONST.A_UV]: [2, ENUM_GL.FLOAT, false, 0],
+    [$.A_POSITION]: [2, $.FLOAT, false, 0],
+    [$.A_UV]: [2, $.FLOAT, false, 0],
 };
 
 const uniPosition = {
-    [CONST.U_TRANSFORM]: [false, null],
-    [CONST.U_VIEWPROJECTION]: [false, null],
+    [$.U_TRANSFORM]: [false, null],
+    [$.U_VIEWPROJECTION]: [false, null],
 };
 
 const vertDef = {
@@ -109,7 +109,7 @@ const vertDef = {
         uniforms: {
             uniformMatrix4fv: uniPosition,
             uniform2f: {
-                [CONST.U_UVREPEAT]: [1, 1]
+                [$.U_UVREPEAT]: [1, 1]
             },
         }
     }
@@ -123,7 +123,7 @@ const fragDef = {
         shaderSrc: fsSprite,
         uniforms: {
             uniform4f: {
-                [CONST.U_COLOR]: [1, 1, 1, 1]
+                [$.U_COLOR]: [1, 1, 1, 1]
             }
         }
     },
@@ -131,26 +131,26 @@ const fragDef = {
         shaderSrc: fsTiled,
         uniforms: {
             uniform2f: {
-                [CONST.U_UVOFFSET]: [0, 0],
-                [CONST.U_UVSIZE]: [0, 0]
+                [$.U_UVOFFSET]: [0, 0],
+                [$.U_UVSIZE]: [0, 0]
             },
             uniform4f: {
-                [CONST.U_COLOR]: [1, 1, 1, 1]
+                [$.U_COLOR]: [1, 1, 1, 1]
             }
         }
     }
 };
 
 const programDef = new Map([
-    [CONST.PROGRAM_GRAY, {
+    [$.PROGRAM_GRAY, {
         vert: vertDef.standard,
         frag: fragDef.gray
     }],
-    [CONST.PROGRAM_SPRITE, {
+    [$.PROGRAM_SPRITE, {
         vert: vertDef.sprite,
         frag: fragDef.sprite
     }],
-    [CONST.PROGRAM_TILED, {
+    [$.PROGRAM_TILED, {
         vert: vertDef.tiled,
         frag: fragDef.tiled,
     }]
@@ -167,12 +167,12 @@ for (const [programId, data] of programDef)
     --------------------------------------------------------------------------*/
     const program = gl.createProgram();
 
-    const vs = createAttachShader(program, ENUM_GL.VERTEX_SHADER, vert),
-          fs = createAttachShader(program, ENUM_GL.FRAGMENT_SHADER, frag);
+    const vs = createAttachShader(program, $.VERTEX_SHADER, vert),
+          fs = createAttachShader(program, $.FRAGMENT_SHADER, frag);
 
     gl.linkProgram(program);
 
-    if (!gl.getProgramParameter(program, ENUM_GL.LINK_STATUS))
+    if (!gl.getProgramParameter(program, $.LINK_STATUS))
     {
         throw gl.getProgramInfoLog(program);
     }

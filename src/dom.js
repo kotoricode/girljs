@@ -1,8 +1,9 @@
 import { initAudio } from "./audio";
-import * as CONST from "./const";
 import { Vector3 } from "./math/vector3";
 import { publish } from "./publisher";
 import { ONE_TIME_LISTENER } from "./util";
+
+import * as $ from "./const";
 
 window.addEventListener("mousedown", initAudio, ONE_TIME_LISTENER);
 
@@ -68,7 +69,7 @@ const onResize = () =>
             uiStyle.height = height + "px";
 
             gl.viewport(0, 0, width, height);
-            publish(CONST.EVENT_RESIZE);
+            publish($.EVENT_RESIZE);
         }
     }
 

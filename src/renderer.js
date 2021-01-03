@@ -4,46 +4,45 @@ import { createProgramData } from "./program";
 import { getModel } from "./model";
 import { subscribe } from "./publisher";
 
-import * as CONST from "./const";
-import * as ENUM_GL from "./enum-gl";
+import * as $ from "./const";
 
 const createFramebufferTexture = () =>
 {
     const texture = gl.createTexture();
     const { width, height } = gl.canvas;
 
-    gl.bindTexture(ENUM_GL.TEXTURE_2D, texture);
+    gl.bindTexture($.TEXTURE_2D, texture);
 
     gl.texImage2D(
-        ENUM_GL.TEXTURE_2D,
+        $.TEXTURE_2D,
         0,
-        ENUM_GL.RGB,
+        $.RGB,
         width,
         height,
         0,
-        ENUM_GL.RGB,
-        ENUM_GL.UNSIGNED_BYTE,
+        $.RGB,
+        $.UNSIGNED_BYTE,
         null
     );
 
     gl.texParameteri(
-        ENUM_GL.TEXTURE_2D,
-        ENUM_GL.TEXTURE_MIN_FILTER,
-        ENUM_GL.LINEAR
+        $.TEXTURE_2D,
+        $.TEXTURE_MIN_FILTER,
+        $.LINEAR
     );
 
-    gl.bindTexture(ENUM_GL.TEXTURE_2D, null);
+    gl.bindTexture($.TEXTURE_2D, null);
 
     return texture;
 };
 
 const getViewProgramData = () =>
 {
-    const model = getModel(CONST.MODEL_IMAGE);
+    const model = getModel($.MODEL_IMAGE);
 
-    return createProgramData(CONST.PROGRAM_GRAY, {
-        [CONST.A_POSITION]: model.meshOffset,
-        [CONST.A_UV]: model.uvOffset
+    return createProgramData($.PROGRAM_GRAY, {
+        [$.A_POSITION]: model.meshOffset,
+        [$.A_UV]: model.uvOffset
     });
 };
 
@@ -51,19 +50,19 @@ const framebuffer = gl.createFramebuffer();
 let framebufferTexture = createFramebufferTexture();
 
 let isCanvasResized;
-subscribe(CONST.EVENT_RESIZE, () => isCanvasResized = true);
+subscribe($.EVENT_RESIZE, () => isCanvasResized = true);
 
 const view = getViewProgramData();
 
-gl.enable(ENUM_GL.BLEND);
-gl.blendFunc(ENUM_GL.SRC_ALPHA, ENUM_GL.ONE_MINUS_SRC_ALPHA);
-gl.disable(ENUM_GL.CULL_FACE);
-gl.disable(ENUM_GL.DEPTH_TEST);
+gl.enable($.BLEND);
+gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
+gl.disable($.CULL_FACE);
+gl.disable($.DEPTH_TEST);
 gl.depthMask(false);
 
 const queues = new Map([
-    [CONST.PROGRAM_SPRITE, []],
-    [CONST.PROGRAM_TILED, []]
+    [$.PROGRAM_SPRITE, []],
+    [$.PROGRAM_TILED, []]
 ]);
 
 export const render = (scene) =>
@@ -78,7 +77,7 @@ export const render = (scene) =>
     }
 
     // Prepare framebuffer
-    gl.bindFramebuffer(ENUM_GL.FRAMEBUFFER, framebuffer);
+    gl.bindFramebuffer($.FRAMEBUFFER, framebuffer);
 
     if (isCanvasResized)
     {
@@ -86,9 +85,9 @@ export const render = (scene) =>
         framebufferTexture = createFramebufferTexture();
 
         gl.framebufferTexture2D(
-            ENUM_GL.FRAMEBUFFER,
-            ENUM_GL.COLOR_ATTACHMENT0,
-            ENUM_GL.TEXTURE_2D,
+            $.FRAMEBUFFER,
+            $.COLOR_ATTACHMENT0,
+            $.TEXTURE_2D,
             framebufferTexture,
             0
         );
@@ -96,22 +95,22 @@ export const render = (scene) =>
         isCanvasResized = false;
     }
 
-    gl.clear(ENUM_GL.COLOR_BUFFER_BIT | ENUM_GL.DEPTH_BUFFER_BIT);
+    gl.clear($.COLOR_BUFFER_BIT | $.DEPTH_BUFFER_BIT);
 
     // Render world to framebuffer
-    renderQueue(CONST.PROGRAM_TILED);
-    renderQueue(CONST.PROGRAM_SPRITE);
+    renderQueue($.PROGRAM_TILED);
+    renderQueue($.PROGRAM_SPRITE);
 
     // Framebuffer to canvas
-    gl.bindFramebuffer(ENUM_GL.FRAMEBUFFER, null);
+    gl.bindFramebuffer($.FRAMEBUFFER, null);
     gl.useProgram(view.program);
-    gl.bindTexture(ENUM_GL.TEXTURE_2D, framebufferTexture);
+    gl.bindTexture($.TEXTURE_2D, framebufferTexture);
 
     gl.bindVertexArray(view.vao);
-    gl.drawArrays(ENUM_GL.TRIANGLES, 0, 6);
+    gl.drawArrays($.TRIANGLES, 0, 6);
     gl.bindVertexArray(null);
 
-    gl.bindTexture(ENUM_GL.TEXTURE_2D, null);
+    gl.bindTexture($.TEXTURE_2D, null);
 };
 
 const renderQueue = (queueId) =>
@@ -132,7 +131,7 @@ const renderQueue = (queueId) =>
 
         if (oldTexture !== texture)
         {
-            gl.bindTexture(ENUM_GL.TEXTURE_2D, texture);
+            gl.bindTexture($.TEXTURE_2D, texture);
             oldTexture = texture;
         }
 
@@ -142,7 +141,7 @@ const renderQueue = (queueId) =>
         }
 
         gl.bindVertexArray(vao);
-        gl.drawArrays(ENUM_GL.TRIANGLES, 0, 6);
+        gl.drawArrays($.TRIANGLES, 0, 6);
         gl.bindVertexArray(null);
     }
 

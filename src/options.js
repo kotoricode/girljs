@@ -1,12 +1,13 @@
-import * as CONST from "./const";
 import { publish } from "./publisher";
+
+import * as $ from "./const";
 
 const storage = window.localStorage;
 
 const data = {
-    [CONST.OPTION_MASTER]: 0.5,
-    [CONST.OPTION_MUSIC]: 0.5,
-    [CONST.OPTION_SOUND]: 0.5
+    [$.OPTION_MASTER]: 0.5,
+    [$.OPTION_MUSIC]: 0.5,
+    [$.OPTION_SOUND]: 0.5
 };
 
 export const getOption = (key) =>

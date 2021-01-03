@@ -8,13 +8,13 @@ import { Player } from "./components/player";
 import { Drawable } from "./components/drawable";
 import { Ground } from "./components/ground";
 
-import * as CONST from "./const";
+import * as $ from "./const";
 
 const initModelPosUv = (draw) =>
 {
     draw.initProgramData({
-        [CONST.A_POSITION]: draw.model.meshOffset,
-        [CONST.A_UV]: draw.model.uvOffset
+        [$.A_POSITION]: draw.model.meshOffset,
+        [$.A_UV]: draw.model.uvOffset
     });
 };
 
@@ -26,14 +26,14 @@ export const createPlayer = () =>
     const player = new Player();
 
     const draw = new Drawable(
-        CONST.PROGRAM_SPRITE,
-        CONST.TEXTURE_SPRITE,
-        CONST.MODEL_PLAYER
+        $.PROGRAM_SPRITE,
+        $.TEXTURE_SPRITE,
+        $.MODEL_PLAYER
     );
 
     initModelPosUv(draw);
 
-    const entity = new Entity(CONST.ENTITY_PLAYER);
+    const entity = new Entity($.ENTITY_PLAYER);
     entity.addComponent(transform, draw, player, mot);
 
     return entity;
@@ -45,7 +45,7 @@ export const createCamera = () =>
 
     const cam = new Camera(300, canvasAspect, 1, 3);
 
-    const entity = new Entity(CONST.ENTITY_CAMERA);
+    const entity = new Entity($.ENTITY_CAMERA);
     entity.addComponent(transform, cam);
 
     return entity;
@@ -56,19 +56,19 @@ export const createGround = () =>
     const transform = new Transform();
 
     const draw = new Drawable(
-        CONST.PROGRAM_TILED,
-        CONST.TEXTURE_POLY,
-        CONST.MODEL_GROUND
+        $.PROGRAM_TILED,
+        $.TEXTURE_POLY,
+        $.MODEL_GROUND
     );
 
     initModelPosUv(draw);
 
-    draw.setUniform(CONST.U_UVREPEAT, [5, 2]);
-    draw.setUniform(CONST.U_COLOR, [1, 0.7, 1, 1]);
+    draw.setUniform($.U_UVREPEAT, [5, 2]);
+    draw.setUniform($.U_COLOR, [1, 0.7, 1, 1]);
 
     const ground = new Ground(-300, 300, -300, 300);
 
-    const entity = new Entity(CONST.ENTITY_GROUND);
+    const entity = new Entity($.ENTITY_GROUND);
     entity.addComponent(transform, draw, ground);
 
     return entity;
