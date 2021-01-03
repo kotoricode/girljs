@@ -6,36 +6,6 @@ import { subscribe } from "./publisher";
 
 import * as $ from "./const";
 
-const createFramebufferTexture = () =>
-{
-    const texture = gl.createTexture();
-    const { width, height } = gl.canvas;
-
-    gl.bindTexture($.TEXTURE_2D, texture);
-
-    gl.texImage2D(
-        $.TEXTURE_2D,
-        0,
-        $.RGB,
-        width,
-        height,
-        0,
-        $.RGB,
-        $.UNSIGNED_BYTE,
-        null
-    );
-
-    gl.texParameteri(
-        $.TEXTURE_2D,
-        $.TEXTURE_MIN_FILTER,
-        $.LINEAR
-    );
-
-    gl.bindTexture($.TEXTURE_2D, null);
-
-    return texture;
-};
-
 const getViewProgramData = () =>
 {
     const model = getModel($.MODEL_IMAGE);
@@ -47,12 +17,15 @@ const getViewProgramData = () =>
 };
 
 const framebuffer = gl.createFramebuffer();
-let framebufferTexture = createFramebufferTexture();
 
-let isCanvasResized;
-subscribe($.EVENT_RESIZE, () => isCanvasResized = true);
+let isCanvasResized = true,
+    framebufferTexture,
+    oldTexture,
+    oldProgram;
 
-const view = getViewProgramData();
+subscribe($.EVENT_RESIZE, () => isCanvasResized = true, false);
+
+const { program: viewProgram, vao: viewVao } = getViewProgramData();
 
 gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
@@ -82,7 +55,26 @@ export const render = (scene) =>
     if (isCanvasResized)
     {
         gl.deleteTexture(framebufferTexture);
-        framebufferTexture = createFramebufferTexture();
+
+        framebufferTexture = gl.createTexture();
+        const { width, height } = gl.canvas;
+
+        gl.bindTexture($.TEXTURE_2D, framebufferTexture);
+
+        gl.texImage2D(
+            $.TEXTURE_2D,
+            0,
+            $.RGB,
+            width,
+            height,
+            0,
+            $.RGB,
+            $.UNSIGNED_BYTE,
+            null
+        );
+
+        gl.texParameteri($.TEXTURE_2D, $.TEXTURE_MIN_FILTER, $.LINEAR);
+        gl.bindTexture($.TEXTURE_2D, null);
 
         gl.framebufferTexture2D(
             $.FRAMEBUFFER,
@@ -103,10 +95,10 @@ export const render = (scene) =>
 
     // Framebuffer to canvas
     gl.bindFramebuffer($.FRAMEBUFFER, null);
-    gl.useProgram(view.program);
+    gl.useProgram(viewProgram);
     gl.bindTexture($.TEXTURE_2D, framebufferTexture);
 
-    gl.bindVertexArray(view.vao);
+    gl.bindVertexArray(viewVao);
     gl.drawArrays($.TRIANGLES, 0, 6);
     gl.bindVertexArray(null);
 
@@ -116,8 +108,6 @@ export const render = (scene) =>
 const renderQueue = (queueId) =>
 {
     const queue = queues.get(queueId);
-
-    let oldTexture, oldProgram;
 
     for (const { programData, texture } of queue)
     {
