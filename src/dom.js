@@ -41,8 +41,8 @@ ui.fillText("Hello World", 10, 50);
 /*------------------------------------------------------------------------------
     Canvases
 ------------------------------------------------------------------------------*/
-export const canvasMaxWidth = 1280,
-             canvasMaxHeight = 720;
+export const canvasMaxWidth = 1152,
+             canvasMaxHeight = 648;
 
 export const canvasAspect = canvasMaxWidth / canvasMaxHeight;
 

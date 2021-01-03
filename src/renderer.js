@@ -87,7 +87,7 @@ export const render = (scene) =>
         isCanvasResized = false;
     }
 
-    gl.clear($.COLOR_BUFFER_BIT | $.DEPTH_BUFFER_BIT);
+    gl.clear($.COLOR_BUFFER_BIT);
 
     // Render world to framebuffer
     renderQueue($.PROGRAM_TILED);
@@ -96,12 +96,13 @@ export const render = (scene) =>
     // Framebuffer to canvas
     gl.bindFramebuffer($.FRAMEBUFFER, null);
     gl.useProgram(viewProgram);
+
     gl.bindTexture($.TEXTURE_2D, framebufferTexture);
-
     gl.bindVertexArray(viewVao);
-    gl.drawArrays($.TRIANGLES, 0, 6);
-    gl.bindVertexArray(null);
 
+    gl.drawArrays($.TRIANGLES, 0, 6);
+
+    gl.bindVertexArray(null);
     gl.bindTexture($.TEXTURE_2D, null);
 };
 

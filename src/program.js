@@ -6,6 +6,8 @@ import vsSprite   from "./shaders/vert-sprite.glsl";
 import fsSprite   from "./shaders/frag-sprite.glsl";
 import vsTiled    from "./shaders/vert-tiled.glsl";
 import fsTiled    from "./shaders/frag-tiled.glsl";
+import vsColor    from "./shaders/vert-color.glsl";
+import fsColor    from "./shaders/frag-color.glsl";
 
 import { getModelBuffer } from "./model";
 
@@ -81,17 +83,45 @@ export const createProgramData = (programId, attrOffsets) =>
     };
 };
 
+// TODO: maybe move defs to a different file to reduce clutter here
+/*------------------------------------------------------------------------------
+    Templates
+------------------------------------------------------------------------------*/
+const attrPos = {
+    [$.A_POSITION]: [2, $.FLOAT, false, 0],
+};
+
 const attrPosUv = {
     [$.A_POSITION]: [2, $.FLOAT, false, 0],
     [$.A_UV]: [2, $.FLOAT, false, 0],
 };
 
-const uniPosition = {
+const uniTransVP = {
     [$.U_TRANSFORM]: [false, null],
     [$.U_VIEWPROJECTION]: [false, null],
 };
 
+const uniColor = {
+    [$.U_COLOR]: [1, 1, 1, 1]
+};
+
+const uniUvRepeat = {
+    [$.U_UVREPEAT]: [1, 1]
+};
+
+const uniUvOffsetSize = {
+    [$.U_UVOFFSET]: [0, 0],
+    [$.U_UVSIZE]: [0, 0]
+};
+
+/*------------------------------------------------------------------------------
+    Vertex shader definitions
+------------------------------------------------------------------------------*/
 const vertDef = {
+    color: {
+        shaderSrc: vsColor,
+        attributes: attrPos
+    },
     standard: {
         shaderSrc: vsStandard,
         attributes: attrPosUv
@@ -100,21 +130,22 @@ const vertDef = {
         shaderSrc: vsSprite,
         attributes: attrPosUv,
         uniforms: {
-            uniformMatrix4fv: uniPosition
+            uniformMatrix4fv: uniTransVP
         }
     },
     tiled: {
         shaderSrc: vsTiled,
         attributes: attrPosUv,
         uniforms: {
-            uniformMatrix4fv: uniPosition,
-            uniform2f: {
-                [$.U_UVREPEAT]: [1, 1]
-            },
+            uniformMatrix4fv: uniTransVP,
+            uniform2f: uniUvRepeat
         }
     }
 };
 
+/*------------------------------------------------------------------------------
+    Fragment shader definitions
+------------------------------------------------------------------------------*/
 const fragDef = {
     gray: {
         shaderSrc: fsGray
@@ -122,25 +153,21 @@ const fragDef = {
     sprite: {
         shaderSrc: fsSprite,
         uniforms: {
-            uniform4f: {
-                [$.U_COLOR]: [1, 1, 1, 1]
-            }
+            uniform4f: uniColor
         }
     },
     tiled: {
         shaderSrc: fsTiled,
         uniforms: {
-            uniform2f: {
-                [$.U_UVOFFSET]: [0, 0],
-                [$.U_UVSIZE]: [0, 0]
-            },
-            uniform4f: {
-                [$.U_COLOR]: [1, 1, 1, 1]
-            }
+            uniform2f: uniUvOffsetSize,
+            uniform4f: uniColor
         }
     }
 };
 
+/*------------------------------------------------------------------------------
+    Program definitions
+------------------------------------------------------------------------------*/
 const programDef = new Map([
     [$.PROGRAM_GRAY, {
         vert: vertDef.standard,
@@ -156,6 +183,9 @@ const programDef = new Map([
     }]
 ]);
 
+/*------------------------------------------------------------------------------
+    Create and prepare programs
+------------------------------------------------------------------------------*/
 const preparedPrograms = new Map();
 
 for (const [programId, data] of programDef)
