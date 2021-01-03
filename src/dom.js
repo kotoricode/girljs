@@ -85,13 +85,13 @@ for (const resizeEvent of ["DOMContentLoaded", "load", "resize"])
     Mouse
 ------------------------------------------------------------------------------*/
 export const mouse = {
-    clipCoords: new Vector3(),
+    clip: new Vector3(),
     isClick: false
 };
 
 const onClick = (e) =>
 {
-    mouse.clipCoords.set(
+    mouse.clip.set(
         2*(e.clientX-canvasRect.left)/gameCanvas.clientWidth - 1,
         1 - 2*(e.clientY-canvasRect.top)/gameCanvas.clientHeight
     );

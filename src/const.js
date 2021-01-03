@@ -9,10 +9,10 @@ export const
     PROGRAM_TILED = "tiled";
 
 export const
-    ENTITY_ROOT = "root",
-    ENTITY_PLAYER = "player",
     ENTITY_CAMERA = "camera",
-    ENTITY_GROUND = "ground";
+    ENTITY_GROUND = "ground",
+    ENTITY_PLAYER = "player",
+    ENTITY_ROOT = "root";
 
 export const
     SCENE_TEST = "test";
@@ -29,16 +29,18 @@ export const
     OPTION_SOUND = "sound";
 
 export const
-    PATH_SND = "./snd/",
-    PATH_IMG = "./img/";
+    PATH_IMG = "./img/",
+    PATH_SND = "./snd/";
 
 export const
-    U_UVREPEAT = "u_uvRepeat",
-    U_UVOFFSET = "u_uvOffset",
-    U_UVSIZE = "u_uvSize",
     U_COLOR = "u_color",
     U_TRANSFORM = "u_transform",
-    U_VIEWPROJECTION = "u_viewprojection",
+    U_UVOFFSET = "u_uvOffset",
+    U_UVREPEAT = "u_uvRepeat",
+    U_UVSIZE = "u_uvSize",
+    U_VIEWPROJECTION = "u_viewprojection";
+
+export const
     A_POSITION = "a_position",
     A_UV = "a_uv";
 

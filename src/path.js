@@ -64,15 +64,15 @@ export class Path
         this.heapSize = 0;
     }
 
-    run()
-    {
-        // if not, connect START node to directly connected nodes,
-        // then connect END node to directly connected nodes
+    // run()
+    // {
+    //     // if not, connect START node to directly connected nodes,
+    //     // then connect END node to directly connected nodes
 
-        // then, generate rough to-end heuristic for every node
+    //     // then, generate rough to-end heuristic for every node
 
-        // then run a*
-    }
+    //     // then run a*
+    // }
 
     heapAdd(value)
     {

@@ -11,7 +11,7 @@ export class Ray
 
     fromMouse(invViewProjection, mouse)
     {
-        const { x, y } = mouse.clipCoords;
+        const { x, y } = mouse.clip;
 
         this.position.set(
             x * invViewProjection[0] + invViewProjection[12],
