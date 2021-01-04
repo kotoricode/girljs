@@ -30,16 +30,11 @@ export class Sprite extends Component
 
         const { meshOffset, uvOffset } = this.model;
 
-        const offsets = {
+        const attrOffsets = {
             [$.A_POSITION]: meshOffset,
             [$.A_UV]: uvOffset
         };
 
-        this.setupAttributes(offsets);
-    }
-
-    setupAttributes(attrOffsets)
-    {
         setupModelVao(this.programData, attrOffsets);
     }
 
