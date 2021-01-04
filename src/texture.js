@@ -31,12 +31,9 @@ image.onload = () =>
         gl.texParameteri($.TEXTURE_2D, key, value);
     }
 
-    const minFilter = gl.getTexParameter(
-        $.TEXTURE_2D,
-        $.TEXTURE_MIN_FILTER
-    );
+    const minFilter = gl.getTexParameter($.TEXTURE_2D, $.TEXTURE_MIN_FILTER);
 
-    if (minFilter > $.LINEAR)
+    if (minFilter >= $.NEAREST_MIPMAP_NEAREST)
     {
         gl.generateMipmap($.TEXTURE_2D);
     }
@@ -76,12 +73,14 @@ const filterLinearLinear = [
 ];
 
 const textures = new Map([
-    [$.TEXTURE_POLY, createImageTexture(
-        $.TEXTURE_POLY, filterLinearLinear
-    )],
-    [$.TEXTURE_SPRITE, createImageTexture(
-        $.TEXTURE_SPRITE, filterLinearLinear
-    )]
+    [
+        $.TEXTURE_POLY,
+        createImageTexture($.TEXTURE_POLY, filterLinearLinear)
+    ],
+    [
+        $.TEXTURE_SPRITE,
+        createImageTexture($.TEXTURE_SPRITE, filterLinearLinear)
+    ]
 ]);
 
 export const getTexture = (textureId) =>

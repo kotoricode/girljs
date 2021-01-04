@@ -3,6 +3,8 @@ import { gl } from "./dom";
 import * as $ from "./const";
 
 /*
+    using GL.TRIANGLE_STRIP
+
     2_________3
      |\      |
      |  \    |
@@ -17,7 +19,7 @@ import * as $ from "./const";
         minX, maxY
     ]
 
-    // image-based uv with flipped y (origin topleft instead of bottomleft)
+    Image-based uv with flipped y (origin topleft instead of bottomleft)
     uv: [
         minX, maxY,
         maxX, maxY,
@@ -93,10 +95,8 @@ for (let i = 0; i < numModels; i++)
 
     for (let j = 0; j < numCoordinates; j++)
     {
-        const coordIndex = 2 * idx[j >> 1] + j % 2;
-
-        bufferData[meshOffset+j] = meshCoords[coordIndex];
-        bufferData[uvOffset+j] = uvCoords[coordIndex];
+        bufferData[meshOffset+j] = meshCoords[j];
+        bufferData[uvOffset+j] = uvCoords[j];
     }
 }
 

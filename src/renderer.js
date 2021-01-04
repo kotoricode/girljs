@@ -122,6 +122,7 @@ const renderQueue = (queueId) =>
             oldTexture = texture;
         }
 
+        // TODO: ideally we'd check for unchanged uniforms as well...
         for (const [key, value] of uniValues)
         {
             uniSetters.get(key)(value);
