@@ -3,12 +3,20 @@ import { subscribe } from "./publisher";
 
 import * as $ from "./const";
 
+const setGainFromOptions = (gainId) =>
+{
+    const gainObj = gains.get(gainId);
+    gainObj.gain.value = getOption(gainId);
+};
+
 const createGain = (gainId, parent) =>
 {
     const gainObj = context.createGain();
     gainObj.connect(parent);
     gains.set(gainId, gainObj);
-    subscribe(gainId, () => gainObj.gain.value = getOption(gainId));
+
+    subscribe(gainId, setGainFromOptions);
+    setGainFromOptions();
 
     return gainObj;
 };

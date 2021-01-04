@@ -2,33 +2,7 @@ import { gl } from "./dom";
 
 import * as $ from "./const";
 
-/*
-    using GL.TRIANGLE_STRIP
-
-    2_________3
-     |\      |
-     |  \    |
-     |    \  |
-     |______\|
-    0         1
-
-    mesh: [
-        minX, minY,
-        maxX, minY,
-        maxX, maxY,
-        minX, maxY
-    ]
-
-    Image-based uv with flipped y (origin topleft instead of bottomleft)
-    uv: [
-        minX, maxY,
-        maxX, maxY,
-        maxX, minY,
-        minX, minY
-    ]
-*/
-
-const createArray = (minX, maxX, minY, maxY) =>
+const BL_BR_TL_TR = (minX, maxX, minY, maxY) =>
 {
     return [
         minX, minY,
@@ -38,7 +12,7 @@ const createArray = (minX, maxX, minY, maxY) =>
     ];
 };
 
-const createArrayFlipY = (minX, maxX, minY, maxY) =>
+const TL_TR_BL_BR = (minX, maxX, minY, maxY) =>
 {
     return [
         minX, maxY,
@@ -49,30 +23,29 @@ const createArrayFlipY = (minX, maxX, minY, maxY) =>
 };
 
 // name, meshCoords[], uvCoords[]
-const modelDataNew = [
+const modelData = [
     $.MODEL_GROUND,
-    createArray(-500, 500, -500, 500),
-    createArrayFlipY(0, 1, 0, 1),
+    BL_BR_TL_TR(-500, 500, -500, 500),
+    TL_TR_BL_BR(0, 1, 0, 1),
 
     $.MODEL_IMAGE,
-    createArray(-1, 1, -1, 1),
-    createArray(0, 1, 0, 1),
+    BL_BR_TL_TR(-1, 1, -1, 1),
+    BL_BR_TL_TR(0, 1, 0, 1),
 
     $.MODEL_PLAYER,
-    createArray(-40, 40, 0, 150),
-    createArrayFlipY(0, 1, 0, 1)
+    BL_BR_TL_TR(-40, 40, 0, 150),
+    TL_TR_BL_BR(0, 1, 0, 1)
 ];
 
-if (modelDataNew.length % 3)
+if (modelData.length % 3)
 {
     throw Error;
 }
 
 const models = new Map(),
-      idx = [0, 1, 2, 3],
-      numCoordinates = idx.length * 2, // x, y
+      numCoordinates = 8, // 4 verts, 2 coordunits
       modelSize = numCoordinates * 2, // mesh, uv
-      numModels = modelDataNew.length / 3,
+      numModels = modelData.length / 3,
       bufferData = new Array(modelSize * numModels),
       bytes = Float32Array.BYTES_PER_ELEMENT;
 
@@ -83,11 +56,11 @@ for (let i = 0; i < numModels; i++)
 
     const uvOffset = meshOffset + numCoordinates;
 
-    const id = modelDataNew[i3++];
-    const meshCoords = modelDataNew[i3++];
-    const uvCoords = modelDataNew[i3];
+    const modelId = modelData[i3++];
+    const meshCoords = modelData[i3++];
+    const uvCoords = modelData[i3];
 
-    models.set(id, {
+    models.set(modelId, {
         meshOffset: meshOffset * bytes,
         uvOffset: uvOffset * bytes,
         uvCoords

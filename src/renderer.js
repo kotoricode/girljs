@@ -23,13 +23,17 @@ let isCanvasResized = true,
     oldTexture,
     oldProgram;
 
-subscribe($.EVENT_RESIZE, () => isCanvasResized = true, false);
+subscribe($.EVENT_RESIZE, () => isCanvasResized = true);
 
 const { program: viewProgram, vao: viewVao } = getViewProgramData();
 
 gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
+
+// Sprites turn by flipping scale.x sign, so no face culling
 gl.disable($.CULL_FACE);
+
+// Not needed for 2D
 gl.disable($.DEPTH_TEST);
 gl.depthMask(false);
 
