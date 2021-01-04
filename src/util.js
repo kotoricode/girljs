@@ -1,6 +1,4 @@
-const math = Math;
-
-export const DEG_TO_RAD = math.PI / 180;
+export const DEG_TO_RAD = Math.PI / 180;
 export const ONE_TIME_LISTENER = { once: true };
 
 export const clamp = (value, minValue=0, maxValue=1) =>
@@ -20,5 +18,5 @@ export const lerp = (start, end, amount) =>
 
 export const mod = (value, modulo) =>
 {
-    return ((value % modulo) + modulo) % modulo;
+    return (value % modulo + modulo) % modulo;
 };

@@ -7,7 +7,7 @@ import * as $ from "../const";
 
 export class Sprite extends Component
 {
-    constructor(programId, modelId)
+    constructor(programId, modelId, uniforms)
     {
         super();
 
@@ -20,6 +20,14 @@ export class Sprite extends Component
 
         // Marks if 3rd party uniforms (e.g. camera matrix) have been set
         this.isInitialized = false;
+
+        if (uniforms)
+        {
+            for (const [key, value] of uniforms)
+            {
+                this.setUniform(key, value);
+            }
+        }
     }
 
     setModel(modelId)
@@ -45,47 +53,44 @@ export class Sprite extends Component
     {
         if (this.programId === $.PROGRAM_TILED)
         {
+            // TODO: rewrite this shit to get values from (sub)textureData
             const uvMinX = this.model.uvCoords[0], // topleft X
                   uvMaxY = this.model.uvCoords[1], // topleft Y
                   uvMaxX = this.model.uvCoords[6], // bottomright X
                   uvMinY = this.model.uvCoords[7]; // bottomright Y
 
             this.setUniform($.U_UVOFFSET, [uvMinX, uvMinY]);
-
-            this.setUniform($.U_UVSIZE, [
-                uvMaxX - uvMinX,
-                uvMaxY - uvMinY
-            ]);
+            this.setUniform($.U_UVSIZE, [uvMaxX - uvMinX, uvMaxY - uvMinY]);
         }
     }
 
-    setUniform(name, values)
+    setUniform(key, value)
     {
         const { uniValues } = this.programData;
 
-        if (!uniValues.has(name))
+        if (!uniValues.has(key))
         {
-            throw name;
+            throw key;
         }
 
-        if (!(values instanceof Array))
+        if (!Array.isArray(value))
         {
-            throw values;
+            throw value;
         }
 
-        uniValues.set(name, values);
+        uniValues.set(key, value);
     }
 
-    setUniformIndex(name, idx, value)
+    setUniformIndex(key, idx, value)
     {
         const { uniValues } = this.programData;
 
-        if (!uniValues.has(name))
+        if (!uniValues.has(key))
         {
-            throw name;
+            throw key;
         }
 
-        const values = uniValues.get(name);
+        const values = uniValues.get(key);
 
         if (idx >= values.length)
         {

@@ -32,10 +32,14 @@ export const createGround = () =>
 {
     const transform = new Transform(),
           ground = new Ground(-300, 300, -300, 300),
-          sprite = new Sprite($.PROGRAM_TILED, $.MODEL_GROUND);
-
-    sprite.setUniform($.U_UVREPEAT, [5, 5]);
-    sprite.setUniform($.U_COLOR, [1, 0.7, 1, 1]);
+          sprite = new Sprite(
+              $.PROGRAM_TILED,
+              $.MODEL_GROUND,
+              new Map([
+                  [$.U_UVREPEAT, [5, 5]],
+                  [$.U_COLOR, [1, 0.7, 0.5, 1]]
+              ])
+          );
 
     return new Entity($.ENTITY_GROUND, transform, ground, sprite);
 };

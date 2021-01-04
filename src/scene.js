@@ -81,7 +81,7 @@ export class Scene
             }
         }
 
-        this.isGraphDirty = true;
+        this.isDirty = true;
         this.hasNewSprites |= (entity.flags & Sprite.flag);
     }
 
@@ -140,34 +140,23 @@ export class Scene
         return this.entities.get(entityId);
     }
 
-    initSprites()
+    initNewSprites()
     {
-        if (this.hasNewSprites)
+        const [cam] = this.one($.ENTITY_CAMERA, Camera);
+        const { viewProjection } = cam;
+
+        for (const [sprite, transform] of this.all(Sprite, Transform))
         {
-            const [cam] = this.one($.ENTITY_CAMERA, Camera);
-
-            for (const [sprite, transform] of this.all(Sprite, Transform))
+            if (!sprite.isInitialized)
             {
-                if (!sprite.isInitialized)
-                {
-                    sprite.setUniformIndex(
-                        $.U_TRANSFORM,
-                        1,
-                        transform.matrix
-                    );
+                sprite.setUniformIndex($.U_TRANSFORM, 1, transform.matrix);
+                sprite.setUniformIndex($.U_VIEWPROJECTION, 1, viewProjection);
 
-                    sprite.setUniformIndex(
-                        $.U_VIEWPROJECTION,
-                        1,
-                        cam.viewProjection
-                    );
-
-                    sprite.isInitialized = true;
-                }
+                sprite.isInitialized = true;
             }
-
-            this.hasNewSprites = false;
         }
+
+        this.hasNewSprites = false;
     }
 
     one(entityId, ...components)
@@ -180,7 +169,20 @@ export class Scene
     update(dt)
     {
         this.dt = dt;
-        this.initSprites();
+
+        if (this.hasNewSprites)
+        {
+            // Connect new sprites' uniforms to transforms
+            this.initNewSprites();
+        }
+
+        if (this.isDirty)
+        {
+            // Set new transforms' world transforms from scenegraph
+            // TODO: needs to be thoroughly tested
+            // TODO: no need to update the entire graph
+            this.updateGraph();
+        }
 
         for (const process of this.processes)
         {
@@ -192,43 +194,43 @@ export class Scene
 
     updateGraph()
     {
-        for (const entity of this.root.children)
+        if (!this.isDirty)
         {
-            this.updateTransform(entity);
+            throw Error;
         }
 
-        this.isGraphDirty = false;
+        for (const child of this.root.children)
+        {
+            this.updateTransform(child);
+        }
+
+        this.isDirty = false;
     }
 
-    updateTransform(entity, isInheritDirty, parentTransform)
+    updateTransform(entity, isAncestorDirty, parentMatrix)
     {
-        const transform = entity.getComponent(Transform);
-
-        const isDirty = isInheritDirty || transform.isDirty;
+        const xform = entity.getComponent(Transform);
+        const { matrix, world } = xform;
+        const isDirty = isAncestorDirty || xform.isDirty;
 
         if (isDirty)
         {
-            const matrix = transform.matrix;
+            matrix.fromTransform(xform);
 
-            matrix.fromTransform(transform);
-
-            if (parentTransform)
+            if (parentMatrix)
             {
-                matrix.multiplyTransform(parentTransform.matrix);
+                matrix.multiplyTransform(parentMatrix);
             }
 
-            transform.world.translation.set(
-                matrix[12],
-                matrix[13],
-                matrix[14]
-            );
+            // TODO: rotation, scale
+            world.translation.set(matrix[12], matrix[13], matrix[14]);
 
-            transform.isDirty = false;
+            xform.isDirty = false;
         }
 
         for (const child of entity.children)
         {
-            this.updateTransform(child, isDirty, transform);
+            this.updateTransform(child, isDirty, parentMatrix);
         }
     }
 }

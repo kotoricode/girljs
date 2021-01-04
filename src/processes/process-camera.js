@@ -8,25 +8,19 @@ import * as $ from "../const";
 
 export const processCamera = (scene) =>
 {
-    const [pMotion, pTransform] = scene.one(
-        $.ENTITY_PLAYER, Motion, Transform
-    );
+    const [pMotion, plXform] = scene.one($.ENTITY_PLAYER, Motion, Transform),
+          [cam, camXform] = scene.one($.ENTITY_CAMERA, Camera, Transform);
 
-    const pWorldTrans = pTransform.world.translation;
-
-    const [cam, camTransform] = scene.one(
-        $.ENTITY_CAMERA, Camera, Transform
-    );
-
+    const pWorldTrans = plXform.world.translation;
     const { viewProjection, ray } = cam;
 
     // Update camera position, matrix
-    camTransform.local.translation.set(
+    camXform.local.translation.set(
         pWorldTrans.x,
         pWorldTrans.y
     );
 
-    viewProjection.toViewProjection(cam, camTransform);
+    viewProjection.toViewProjection(cam, camXform);
     cam.invViewProjection.invertFrom(viewProjection);
 
     // Update camera ray

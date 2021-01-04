@@ -6,27 +6,24 @@ const dist = new Vector3();
 
 export const processMotion = (scene) =>
 {
-    if (scene.isGraphDirty)
+    for (const [motion, xform] of scene.all(Motion, Transform))
     {
-        scene.updateGraph();
-    }
-
-    for (const [motion, transform] of scene.all(Motion, Transform))
-    {
-        if (transform.isDirty)
+        if (xform.isDirty)
         {
-            throw transform;
+            throw xform;
         }
 
         if (motion.hasTarget())
         {
+            const { local, world } = xform;
+
             const mark = motion.getTarget();
             dist.copyFrom(mark);
-            dist.subVec(transform.world.translation);
+            dist.subVec(world.translation);
 
             if (dist.x)
             {
-                transform.local.scale.x = Math.sign(dist.x);
+                local.scale.x = Math.sign(dist.x);
             }
 
             const step = motion.speed * scene.dt;
@@ -37,18 +34,22 @@ export const processMotion = (scene) =>
             }
             else
             {
-                motion.curMark++;
+                motion.idx++;
 
-                if (motion.curMark > motion.maxMark)
+                if (motion.idx > motion.maxIdx)
                 {
                     motion.resetTargets();
                 }
             }
 
-            transform.local.translation.addVec(dist);
-            transform.isDirty = true;
+            local.translation.addVec(dist);
+            xform.isDirty = true;
+            scene.isDirty = true;
         }
     }
 
-    scene.updateGraph();
+    if (scene.isDirty)
+    {
+        scene.updateGraph();
+    }
 };

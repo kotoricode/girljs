@@ -13,7 +13,7 @@ const fetchNextImage = () =>
 
 image.onload = () =>
 {
-    const { texture, parami } = toFetch[0];
+    const { texture, parami } = toFetch.shift();
 
     gl.bindTexture($.TEXTURE_2D, texture);
 
@@ -39,8 +39,6 @@ image.onload = () =>
     }
 
     gl.bindTexture($.TEXTURE_2D, null);
-
-    toFetch.shift();
 
     if (toFetch.length)
     {
