@@ -13,7 +13,7 @@ export const publish = (event) =>
     }
 };
 
-export const subscribe = (event, subFunc, isInstant=true) =>
+export const subscribe = (event, subFunc) =>
 {
     if (typeof subFunc !== "function")
     {
@@ -33,11 +33,6 @@ export const subscribe = (event, subFunc, isInstant=true) =>
     }
 
     subs.add(subFunc);
-
-    if (isInstant)
-    {
-        subFunc();
-    }
 };
 
 export const unsubscribe = (event, subFunc) =>
