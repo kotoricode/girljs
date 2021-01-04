@@ -72,25 +72,27 @@ if (modelDataNew.length % 3)
 }
 
 const models = new Map(),
-      numVertices = 6,
-      numCoordinates = numVertices * 2, // x, y
+      idx = [0, 1, 2, 2, 3, 0],
+      numCoordinates = idx.length * 2, // x, y
       modelSize = numCoordinates * 2, // mesh, uv
-      bufferData = new Array(modelSize * modelDataNew.length / 3),
-      bytes = Float32Array.BYTES_PER_ELEMENT,
-      idx = [0, 1, 2, 2, 3, 0];
+      numModels = modelDataNew.length / 3,
+      bufferData = new Array(modelSize * numModels),
+      bytes = Float32Array.BYTES_PER_ELEMENT;
 
-for (let i = 0; i < modelDataNew.length;)
+for (let i = 0; i < numModels; i++)
 {
-    const id = modelDataNew[i++];
-    const meshCoords = modelDataNew[i++];
-    const uvCoords = modelDataNew[i++];
+    const meshOffset = i * modelSize;
+    let i3 = i * 3;
 
-    const meshStart = i * modelSize;
-    const uvStart = meshStart + numCoordinates;
+    const uvOffset = meshOffset + numCoordinates;
+
+    const id = modelDataNew[i3++];
+    const meshCoords = modelDataNew[i3++];
+    const uvCoords = modelDataNew[i3];
 
     models.set(id, {
-        meshOffset: meshStart * bytes,
-        uvOffset: uvStart * bytes,
+        meshOffset: meshOffset * bytes,
+        uvOffset: uvOffset * bytes,
         uvCoords
     });
 
@@ -98,10 +100,12 @@ for (let i = 0; i < modelDataNew.length;)
     {
         const coordIndex = 2 * idx[j >> 1] + j % 2;
 
-        bufferData[meshStart+j] = meshCoords[coordIndex];
-        bufferData[uvStart+j] = uvCoords[coordIndex];
+        bufferData[meshOffset+j] = meshCoords[coordIndex];
+        bufferData[uvOffset+j] = uvCoords[coordIndex];
     }
 }
+
+console.log(bufferData);
 
 const buffer = gl.createBuffer();
 
