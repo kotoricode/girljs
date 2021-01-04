@@ -1,6 +1,6 @@
 
 import { Camera } from "./components/camera";
-import { Drawable } from "./components/drawable";
+import { Sprite } from "./components/sprite";
 import { Transform } from "./components/transform";
 import { Entity } from "./entity";
 import {
@@ -72,7 +72,7 @@ export class Scene
         }
 
         this.isGraphDirty = true;
-        this.hasNewDrawables |= (entity.flags & Drawable.flag);
+        this.hasNewSprites |= (entity.flags & Sprite.flag);
     }
 
     getEntities(components)
@@ -120,34 +120,34 @@ export class Scene
         }
     }
 
-    initDrawables()
+    initSprites()
     {
-        if (this.hasNewDrawables)
+        if (this.hasNewSprites)
         {
             const camEntity = this.getEntity($.ENTITY_CAMERA);
             const cam = camEntity.getComponent(Camera);
 
-            for (const [draw, transform] of this.all(Drawable, Transform))
+            for (const [sprite, transform] of this.all(Sprite, Transform))
             {
-                if (!draw.isInitialized)
+                if (!sprite.isInitialized)
                 {
-                    draw.setUniformIndex(
+                    sprite.setUniformIndex(
                         $.U_TRANSFORM,
                         1,
                         transform.matrix
                     );
 
-                    draw.setUniformIndex(
+                    sprite.setUniformIndex(
                         $.U_VIEWPROJECTION,
                         1,
                         cam.viewProjection
                     );
 
-                    draw.isInitialized = true;
+                    sprite.isInitialized = true;
                 }
             }
 
-            this.hasNewDrawables = false;
+            this.hasNewSprites = false;
         }
     }
 
@@ -161,7 +161,7 @@ export class Scene
     update(dt)
     {
         this.dt = dt;
-        this.initDrawables();
+        this.initSprites();
 
         for (const process of this.processes)
         {

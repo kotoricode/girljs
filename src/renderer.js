@@ -1,6 +1,6 @@
 import { gl } from "./dom";
-import { Drawable } from "./components/drawable";
-import { createProgramData, setupAttributes } from "./program";
+import { Sprite } from "./components/sprite";
+import { createProgramData, setupModelVao } from "./program";
 import { getModel } from "./model";
 import { subscribe } from "./publisher";
 
@@ -16,7 +16,7 @@ const getViewProgramData = () =>
 
     const programData = createProgramData($.PROGRAM_GRAY);
 
-    setupAttributes(programData, offsets);
+    setupModelVao(programData, offsets);
 
     return programData;
 };
@@ -49,12 +49,12 @@ const queues = new Map([
 
 export const render = (scene) =>
 {
-    for (const [draw] of scene.all(Drawable))
+    for (const [sprite] of scene.all(Sprite))
     {
-        if (draw.isVisible)
+        if (sprite.isVisible)
         {
-            const queue = queues.get(draw.programId);
-            queue.push(draw);
+            const queue = queues.get(sprite.programId);
+            queue.push(sprite);
         }
     }
 

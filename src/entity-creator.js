@@ -5,20 +5,19 @@ import { Transform } from "./components/transform";
 import { Camera } from "./components/camera";
 import { Motion } from "./components/motion";
 import { Player } from "./components/player";
-import { Drawable } from "./components/drawable";
+import { Sprite } from "./components/sprite";
 import { Ground } from "./components/ground";
 
 import * as $ from "./const";
 
-const initModelPosUv = (draw) =>
+const initModelPosUv = (sprite) =>
 {
     const offsets = {
-        [$.A_POSITION]: draw.model.meshOffset,
-        [$.A_UV]: draw.model.uvOffset
+        [$.A_POSITION]: sprite.model.meshOffset,
+        [$.A_UV]: sprite.model.uvOffset
     };
 
-    draw.initProgramData(offsets);
-    //draw.setupAttributes(offsets);
+    sprite.setupAttributes(offsets);
 };
 
 export const createPlayer = () =>
@@ -28,15 +27,15 @@ export const createPlayer = () =>
     const mot = new Motion(300);
     const player = new Player();
 
-    const draw = new Drawable(
+    const sprite = new Sprite(
         $.PROGRAM_SPRITE,
         $.TEXTURE_SPRITE,
         $.MODEL_PLAYER
     );
 
-    initModelPosUv(draw);
+    initModelPosUv(sprite);
 
-    return new Entity($.ENTITY_PLAYER, transform, draw, player, mot);
+    return new Entity($.ENTITY_PLAYER, transform, sprite, player, mot);
 };
 
 export const createCamera = () =>
@@ -52,18 +51,18 @@ export const createGround = () =>
 {
     const transform = new Transform();
 
-    const draw = new Drawable(
+    const sprite = new Sprite(
         $.PROGRAM_TILED,
         $.TEXTURE_POLY,
         $.MODEL_GROUND
     );
 
-    initModelPosUv(draw);
+    initModelPosUv(sprite);
 
-    draw.setUniform($.U_UVREPEAT, [5, 2]);
-    draw.setUniform($.U_COLOR, [1, 0.7, 1, 1]);
+    sprite.setUniform($.U_UVREPEAT, [5, 2]);
+    sprite.setUniform($.U_COLOR, [1, 0.7, 1, 1]);
 
     const ground = new Ground(-300, 300, -300, 300);
 
-    return new Entity($.ENTITY_GROUND, transform, draw, ground);
+    return new Entity($.ENTITY_GROUND, transform, sprite, ground);
 };

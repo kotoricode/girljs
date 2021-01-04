@@ -37,7 +37,7 @@ const createUniSetter = (type, location) =>
     };
 };
 
-export const setupAttributes = (programData, attrOffsets) =>
+export const setupModelVao = (programData, attrOffsets) =>
 {
     const { program, vao, attributes } = programData;
 
@@ -48,6 +48,11 @@ export const setupAttributes = (programData, attrOffsets) =>
 
     for (const [name, layout] of Object.entries(attributes))
     {
+        if (!(name in attrOffsets))
+        {
+            throw name;
+        }
+
         const location = gl.getAttribLocation(program, name);
         gl.enableVertexAttribArray(location);
         gl.vertexAttribPointer(location, ...layout, attrOffsets[name]);

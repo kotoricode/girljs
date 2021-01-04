@@ -1,55 +1,62 @@
 import { getTexture } from "../texture";
-import { getModel, getModelBuffer } from "../model";
-import { createProgramData, setupAttributes } from "../program";
+import { getModel } from "../model";
+import { createProgramData, setupModelVao } from "../program";
 import { Component } from "./component";
 
 import * as $ from "../const";
-import { gl } from "../dom";
 
-export class Drawable extends Component
+export class Sprite extends Component
 {
     constructor(programId, textureId, modelId)
     {
         super();
 
         this.programId = programId;
-        this.modelId = modelId;
 
-        // TODO: combine model & texture into sprite
-        this.model = getModel(modelId);
+        this.setModel(modelId);
         this.texture = getTexture(textureId);
 
         this.isVisible = true;
 
         // Marks if uniforms have been set
         this.isInitialized = false;
+
+        this.programData = createProgramData(this.programId);
+        this.setupUniforms();
     }
 
-    initProgramData(attrOffsets)
+    setModel(modelId)
     {
-        this.programData = createProgramData(this.programId);
+        this.model = getModel(modelId);
+    }
 
-        setupAttributes(this.programData, attrOffsets);
+    setSprite(modelId)
+    {
+        this.setModel(modelId);
 
+        const { meshOffset, uvOffset } = this.model;
+
+        const offsets = {
+            [$.A_POSITION]: meshOffset,
+            [$.A_UV]: uvOffset
+        };
+
+        this.setupAttributes(offsets);
+    }
+
+    setupAttributes(attrOffsets)
+    {
+        setupModelVao(this.programData, attrOffsets);
+    }
+
+    setupUniforms()
+    {
         if (this.programId === $.PROGRAM_TILED)
         {
-            let uvMinX = Infinity,
-                uvMinY = Infinity,
-                uvMaxX = -Infinity,
-                uvMaxY = -Infinity;
-
-            let i = this.model.uvCoords.length;
-
-            while (i)
-            {
-                const y = this.model.uvCoords[--i];
-                uvMinY = Math.min(uvMinY, y);
-                uvMaxY = Math.max(uvMaxY, y);
-
-                const x = this.model.uvCoords[--i];
-                uvMinX = Math.min(uvMinX, x);
-                uvMaxX = Math.max(uvMaxX, x);
-            }
+            const uvMinX = this.model.uvCoords[0], // topleft X
+                  uvMaxY = this.model.uvCoords[1], // topleft Y
+                  uvMaxX = this.model.uvCoords[6], // bottomright X
+                  uvMinY = this.model.uvCoords[7]; // bottomright Y
 
             this.setUniform($.U_UVOFFSET, [uvMinX, uvMinY]);
 
