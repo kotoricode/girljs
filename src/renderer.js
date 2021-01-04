@@ -6,6 +6,7 @@ import { subscribe } from "./publisher";
 
 import * as $ from "./const";
 
+// TODO: pretty sure this is shared with sprite... move shit to setupmodelvao
 const getViewProgramData = () =>
 {
     const model = getModel($.MODEL_IMAGE);
@@ -36,6 +37,7 @@ gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
 // Sprites turn by flipping scale.x sign, so no face culling
+// TODO: maybe do add face culling for static (no Motion component) entities
 gl.disable($.CULL_FACE);
 
 // Not needed for 2D
@@ -49,6 +51,7 @@ const queues = new Map([
 
 export const render = (scene) =>
 {
+    // TODO: queue must be based on scenegraph, not .all()
     for (const [sprite] of scene.all(Sprite))
     {
         if (sprite.isVisible)

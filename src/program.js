@@ -71,14 +71,8 @@ export const createProgramData = (programId) =>
         attributes
     } = preparedPrograms.get(programId);
 
-    /*--------------------------------------------------------------------------
-        VAO
-    --------------------------------------------------------------------------*/
     const vao = gl.createVertexArray();
 
-    /*--------------------------------------------------------------------------
-        Uniforms
-    --------------------------------------------------------------------------*/
     const uniValues = new Map();
 
     for (const [name, defaults] of uniDefaults)
@@ -228,11 +222,11 @@ for (const [programId, data] of programDef)
     const uniDefaults = new Map(),
           uniSetters = new Map();
 
-    for (const vertFrag of Object.values(data))
+    for (const shaderDef of Object.values(data))
     {
-        if (vertFrag.uniforms)
+        if (shaderDef.uniforms)
         {
-            for (const [type, typeObj] of Object.entries(vertFrag.uniforms))
+            for (const [type, typeObj] of Object.entries(shaderDef.uniforms))
             {
                 for (const [name, defValueArr] of Object.entries(typeObj))
                 {

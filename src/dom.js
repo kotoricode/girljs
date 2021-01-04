@@ -5,21 +5,17 @@ import { ONE_TIME_LISTENER } from "./util";
 
 import * as $ from "./const";
 
+// Modern browsers won't autoplay audio before user interaction
 window.addEventListener("mousedown", initAudio, ONE_TIME_LISTENER);
 
 const getElement = (elementId) => window.document.getElementById(elementId);
 
-const container = getElement("container"),
+const canvasHolder = getElement("canvasHolder"),
       gameCanvas = getElement("gameCanvas"),
       uiCanvas = getElement("uiCanvas");
 
 export const gl = gameCanvas.getContext("webgl2", { alpha: false });
 export const ui = uiCanvas.getContext("2d");
-
-uiCanvas.width = 1280;
-uiCanvas.height = 720;
-
-const uiStyle = uiCanvas.style;
 
 ui.beginPath();
 ui.arc(75, 75, 50, 0, Math.PI * 2, true); // Outer circle
@@ -43,6 +39,11 @@ ui.fillText("Hello World", 10, 50);
 ------------------------------------------------------------------------------*/
 export const canvasMaxWidth = 1152,
              canvasMaxHeight = 648;
+
+// UI canvas is scaled rather than resized, so width & height never change
+uiCanvas.width = canvasMaxWidth;
+uiCanvas.height = canvasMaxHeight;
+const uiStyle = uiCanvas.style;
 
 export const canvasAspect = canvasMaxWidth / canvasMaxHeight;
 
@@ -91,11 +92,15 @@ export const mouse = {
 
 const onClick = (e) =>
 {
-    mouse.clip.set(
-        2*(e.clientX-canvasRect.left)/gameCanvas.clientWidth - 1,
-        1 - 2*(e.clientY-canvasRect.top)/gameCanvas.clientHeight
-    );
+    const x = 2*(e.clientX-canvasRect.left)/gameCanvas.clientWidth - 1;
+    const y = 1 - 2*(e.clientY-canvasRect.top)/gameCanvas.clientHeight;
 
+    if (x < -1 || 1 < x || y < -1 || 1 < x)
+    {
+        console.warn(`${x} ${y}`);
+    }
+
+    mouse.clip.set(x, y);
     mouse.isClick = true;
 };
 
@@ -107,7 +112,7 @@ uiCanvas.addEventListener("click", (e) =>
 });
 
 // Container does clicks for in-game clicking (e.g. movement)
-container.addEventListener("click", (e) => onClick(e));
+canvasHolder.addEventListener("click", (e) => onClick(e));
 
 // Container blocks contextmenu for both canvases
-container.addEventListener("contextmenu", (e) => e.preventDefault());
+canvasHolder.addEventListener("contextmenu", (e) => e.preventDefault());

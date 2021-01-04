@@ -6,14 +6,14 @@ export class Entity
         this.flags = 0;
         this.components = new Map();
 
-        this.below = new Set();
+        this.children = new Set();
 
         this.addComponent(...comps);
     }
 
     addChild(entity)
     {
-        this.below.add(entity);
+        this.children.add(entity);
     }
 
     addComponent(...components)

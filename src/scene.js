@@ -40,6 +40,16 @@ export class Scene
         }
     }
 
+    static * yieldGraph(entity)
+    {
+        yield entity;
+
+        for (const child of entity.children)
+        {
+            yield Scene.yieldGraph(child);
+        }
+    }
+
     addCam()
     {
         const entity = createCamera();
@@ -75,7 +85,15 @@ export class Scene
         this.hasNewSprites |= (entity.flags & Sprite.flag);
     }
 
-    getEntities(components)
+    * all(...components)
+    {
+        for (const entity of this.getEntitiesWith(components))
+        {
+            yield Scene.yieldComponents(entity, components);
+        }
+    }
+
+    getEntitiesWith(components)
     {
         let flags = 0;
 
@@ -102,6 +120,16 @@ export class Scene
         return this.cached.get(flags);
     }
 
+    * getEntitiesOrdered(entity=this.root)
+    {
+        yield entity;
+
+        for (const child of entity.children)
+        {
+            yield this.getEntitiesOrdered(child);
+        }
+    }
+
     getEntity(entityId)
     {
         if (!this.entities.has(entityId))
@@ -112,20 +140,11 @@ export class Scene
         return this.entities.get(entityId);
     }
 
-    * all(...components)
-    {
-        for (const entity of this.getEntities(components))
-        {
-            yield Scene.yieldComponents(entity, components);
-        }
-    }
-
     initSprites()
     {
         if (this.hasNewSprites)
         {
-            const camEntity = this.getEntity($.ENTITY_CAMERA);
-            const cam = camEntity.getComponent(Camera);
+            const [cam] = this.one($.ENTITY_CAMERA, Camera);
 
             for (const [sprite, transform] of this.all(Sprite, Transform))
             {
@@ -173,7 +192,7 @@ export class Scene
 
     updateGraph()
     {
-        for (const entity of this.root.below)
+        for (const entity of this.root.children)
         {
             this.updateTransform(entity);
         }
@@ -207,7 +226,7 @@ export class Scene
             transform.isDirty = false;
         }
 
-        for (const child of entity.below)
+        for (const child of entity.children)
         {
             this.updateTransform(child, isDirty, transform);
         }
