@@ -10,16 +10,6 @@ import { Ground } from "./components/ground";
 
 import * as $ from "./const";
 
-const initModelPosUv = (sprite) =>
-{
-    const offsets = {
-        [$.A_POSITION]: sprite.model.meshOffset,
-        [$.A_UV]: sprite.model.uvOffset
-    };
-
-    sprite.setupAttributes(offsets);
-};
-
 export const createPlayer = () =>
 {
     const transform = new Transform();
@@ -32,8 +22,6 @@ export const createPlayer = () =>
         $.TEXTURE_SPRITE,
         $.MODEL_PLAYER
     );
-
-    initModelPosUv(sprite);
 
     return new Entity($.ENTITY_PLAYER, transform, sprite, player, mot);
 };
@@ -56,8 +44,6 @@ export const createGround = () =>
         $.TEXTURE_POLY,
         $.MODEL_GROUND
     );
-
-    initModelPosUv(sprite);
 
     sprite.setUniform($.U_UVREPEAT, [5, 2]);
     sprite.setUniform($.U_COLOR, [1, 0.7, 1, 1]);

@@ -12,27 +12,21 @@ export class Sprite extends Component
         super();
 
         this.programId = programId;
+        this.programData = createProgramData(this.programId);
 
-        this.setModel(modelId);
+        this.setSprite(modelId);
         this.texture = getTexture(textureId);
 
         this.isVisible = true;
 
         // Marks if uniforms have been set
         this.isInitialized = false;
-
-        this.programData = createProgramData(this.programId);
-        this.setupUniforms();
-    }
-
-    setModel(modelId)
-    {
-        this.model = getModel(modelId);
     }
 
     setSprite(modelId)
     {
-        this.setModel(modelId);
+        this.model = getModel(modelId);
+        this.setupModelUniforms();
 
         const { meshOffset, uvOffset } = this.model;
 
@@ -49,7 +43,7 @@ export class Sprite extends Component
         setupModelVao(this.programData, attrOffsets);
     }
 
-    setupUniforms()
+    setupModelUniforms()
     {
         if (this.programId === $.PROGRAM_TILED)
         {
