@@ -243,6 +243,7 @@ module.exports = {
         "no-shadow": 2,
         "no-throw-literal": 2,
         "no-trailing-spaces": 2,
+        "no-unexpected-multiline": 2,
         "no-unreachable-loop": 2,
         "no-unused-vars": 1,
         "no-var": 2,
@@ -252,6 +253,7 @@ module.exports = {
         "quotes": [2, "double"],
         "semi": [2, "always"],
         "semi-spacing": 2,
+        "semi-style": [2, "last"],
         "space-before-blocks": 2,
         "space-before-function-paren": [2, {
             "anonymous": "never",

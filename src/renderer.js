@@ -138,5 +138,4 @@ const renderTriangleStrip = (vao) =>
     gl.bindVertexArray(vao);
     gl.drawArrays($.TRIANGLE_STRIP, 0, 4);
     gl.bindVertexArray(null);
-}
-;
+};
