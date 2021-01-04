@@ -37,9 +37,9 @@ const createUniSetter = (type, location) =>
     };
 };
 
-export const setupAttributes = (programId, attrOffsets, vao) =>
+export const setupAttributes = (programData, attrOffsets) =>
 {
-    const { program, attributes } = preparedPrograms.get(programId);
+    const { program, vao, attributes } = programData;
 
     gl.bindVertexArray(vao);
 
@@ -57,7 +57,7 @@ export const setupAttributes = (programId, attrOffsets, vao) =>
     gl.bindVertexArray(null);
 };
 
-export const createProgramData = (programId, attrOffsets, vao) =>
+export const createProgramData = (programId) =>
 {
     const {
         program,
@@ -65,6 +65,11 @@ export const createProgramData = (programId, attrOffsets, vao) =>
         uniSetters,
         attributes
     } = preparedPrograms.get(programId);
+
+    /*--------------------------------------------------------------------------
+        VAO
+    --------------------------------------------------------------------------*/
+    const vao = gl.createVertexArray();
 
     /*--------------------------------------------------------------------------
         Uniforms
@@ -76,28 +81,9 @@ export const createProgramData = (programId, attrOffsets, vao) =>
         uniValues.set(name, defaults.slice());
     }
 
-    /*--------------------------------------------------------------------------
-        Attributes
-    --------------------------------------------------------------------------*/
-    setupAttributes(programId, attrOffsets, vao);
-
-    // gl.bindVertexArray(vao);
-
-    // const modelBuffer = getModelBuffer();
-    // gl.bindBuffer($.ARRAY_BUFFER, modelBuffer);
-
-    // for (const [name, layout] of Object.entries(attributes))
-    // {
-    //     const location = gl.getAttribLocation(program, name);
-    //     gl.enableVertexAttribArray(location);
-    //     gl.vertexAttribPointer(location, ...layout, attrOffsets[name]);
-    // }
-
-    // gl.bindBuffer($.ARRAY_BUFFER, null);
-    // gl.bindVertexArray(null);
-
     return {
         program,
+        vao,
         uniSetters,
         uniValues,
         attributes

@@ -1,6 +1,6 @@
 import { gl } from "./dom";
 import { Drawable } from "./components/drawable";
-import { createProgramData } from "./program";
+import { createProgramData, setupAttributes } from "./program";
 import { getModel } from "./model";
 import { subscribe } from "./publisher";
 
@@ -9,17 +9,16 @@ import * as $ from "./const";
 const getViewProgramData = () =>
 {
     const model = getModel($.MODEL_IMAGE);
+    const offsets = {
+        [$.A_POSITION]: model.meshOffset,
+        [$.A_UV]: model.uvOffset
+    };
 
-    const programData = createProgramData(
-        $.PROGRAM_GRAY,
-        {
-            [$.A_POSITION]: model.meshOffset,
-            [$.A_UV]: model.uvOffset
-        },
-        viewVao
-    );
+    const programData = createProgramData($.PROGRAM_GRAY);
 
-    return programData.program;
+    setupAttributes(programData, offsets);
+
+    return programData;
 };
 
 const framebuffer = gl.createFramebuffer();
@@ -31,8 +30,7 @@ let isCanvasResized = true,
 
 subscribe($.EVENT_RESIZE, () => isCanvasResized = true);
 
-const viewVao = gl.createVertexArray();
-const viewProgram = getViewProgramData();
+const { program: viewProgram, vao: viewVao } = getViewProgramData();
 
 gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
@@ -119,8 +117,8 @@ const renderQueue = (queueId) =>
 
     for (const model of queue)
     {
-        const { program, uniValues, uniSetters } = model.programData;
-        const { texture, vao } = model;
+        const { program, uniValues, uniSetters, vao } = model.programData;
+        const { texture } = model;
 
         if (oldProgram !== program)
         {
