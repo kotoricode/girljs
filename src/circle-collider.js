@@ -20,8 +20,8 @@ export class CircleCollider
     setPosition(topLeft)
     {
         this.center.set(
-            topLeft.x + this.radius - this.anchor.x * this.diameter,
-            topLeft.y + this.radius - this.anchor.y * this.diameter
+            topLeft.x + this.radius - this.anchor.x*this.diameter,
+            topLeft.y + this.radius - this.anchor.y*this.diameter
         );
     }
 }

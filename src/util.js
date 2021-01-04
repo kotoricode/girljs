@@ -1,6 +1,6 @@
 const math = Math;
 
-export const DEG_2_RAD = math.PI / 180;
+export const DEG_TO_RAD = math.PI / 180;
 export const ONE_TIME_LISTENER = { once: true };
 
 export const clamp = (value, minValue=0, maxValue=1) =>

@@ -27,9 +27,6 @@ ui.moveTo(95, 65);
 ui.arc(90, 65, 5, 0, Math.PI * 2, true); // Right eye
 ui.stroke();
 
-// ui.fillStyle = "white";
-// ui.fillRect(0, 0, uiCanvas.width, uiCanvas.height);
-
 ui.fillStyle = "black";
 ui.font = "30px Arial";
 ui.fillText("Hello World", 10, 50);

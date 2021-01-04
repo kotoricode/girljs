@@ -21,8 +21,8 @@ export class BoxCollider
 
     setPosition(pos)
     {
-        const posX = pos.x - this.anchor.x * this.width;
-        const posY = pos.y - this.anchor.y * this.height;
+        const posX = pos.x - this.anchor.x*this.width;
+        const posY = pos.y - this.anchor.y*this.height;
 
         this.position.set(posX, posY);
         this.bottomRight.set(posX + this.width, posY + this.height);

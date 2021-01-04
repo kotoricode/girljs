@@ -192,11 +192,11 @@ export class Matrix4 extends SettableArray
         );
     }
 
-    fromTransform(transform)
+    fromTransform({ local })
     {
-        const [sx, sy, sz] = transform.local.scale,
-              [rx, ry, rz, rw] = transform.local.rotation,
-              [tx, ty, tz] = transform.local.translation;
+        const [sx, sy, sz] = local.scale,
+              [rx, ry, rz, rw] = local.rotation,
+              [tx, ty, tz] = local.translation;
 
         const rxx = rx * rx,
               ryy = ry * ry,

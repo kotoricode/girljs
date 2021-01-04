@@ -24,8 +24,7 @@ export class Ray
         const { x, y } = this.position;
 
         if (box.min.x <= x && x <= box.max.x &&
-            box.min.y <= y && y <= box.max.y
-        )
+            box.min.y <= y && y <= box.max.y)
         {
             this.addHit(x, y);
         }
