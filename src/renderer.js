@@ -98,11 +98,7 @@ export const render = (scene) =>
     gl.useProgram(viewProgram);
 
     gl.bindTexture($.TEXTURE_2D, framebufferTexture);
-    gl.bindVertexArray(viewVao);
-
-    gl.drawArrays($.TRIANGLES, 0, 6);
-
-    gl.bindVertexArray(null);
+    renderTriangleStrip(viewVao);
     gl.bindTexture($.TEXTURE_2D, null);
 };
 
@@ -131,10 +127,16 @@ const renderQueue = (queueId) =>
             uniSetters.get(key)(value);
         }
 
-        gl.bindVertexArray(vao);
-        gl.drawArrays($.TRIANGLES, 0, 6);
-        gl.bindVertexArray(null);
+        renderTriangleStrip(vao);
     }
 
     queue.length = 0;
 };
+
+const renderTriangleStrip = (vao) =>
+{
+    gl.bindVertexArray(vao);
+    gl.drawArrays($.TRIANGLE_STRIP, 0, 4);
+    gl.bindVertexArray(null);
+}
+;

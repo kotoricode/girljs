@@ -3,11 +3,11 @@ import { gl } from "./dom";
 import * as $ from "./const";
 
 /*
-    3_________2
-     |      /|
-     |    /  |
-     |  /    |
-     |/______|
+    2_________3
+     |\      |
+     |  \    |
+     |    \  |
+     |______\|
     0         1
 
     mesh: [
@@ -24,11 +24,6 @@ import * as $ from "./const";
         maxX, minY,
         minX, minY
     ]
-
-    idx: [
-        0, 1, 2,
-        2, 3, 0
-    ]
 */
 
 const createArray = (minX, maxX, minY, maxY) =>
@@ -36,8 +31,8 @@ const createArray = (minX, maxX, minY, maxY) =>
     return [
         minX, minY,
         maxX, minY,
+        minX, maxY,
         maxX, maxY,
-        minX, maxY
     ];
 };
 
@@ -46,8 +41,8 @@ const createArrayFlipY = (minX, maxX, minY, maxY) =>
     return [
         minX, maxY,
         maxX, maxY,
+        minX, minY,
         maxX, minY,
-        minX, minY
     ];
 };
 
@@ -72,7 +67,7 @@ if (modelDataNew.length % 3)
 }
 
 const models = new Map(),
-      idx = [0, 1, 2, 2, 3, 0],
+      idx = [0, 1, 2, 3],
       numCoordinates = idx.length * 2, // x, y
       modelSize = numCoordinates * 2, // mesh, uv
       numModels = modelDataNew.length / 3,
@@ -104,8 +99,6 @@ for (let i = 0; i < numModels; i++)
         bufferData[uvOffset+j] = uvCoords[coordIndex];
     }
 }
-
-console.log(bufferData);
 
 const buffer = gl.createBuffer();
 
