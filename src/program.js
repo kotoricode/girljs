@@ -46,8 +46,6 @@ export const createProgramData = (programId, attrOffsets, vao) =>
         attributes
     } = preparedPrograms.get(programId);
 
-    console.log(vao);
-
     /*--------------------------------------------------------------------------
         Uniforms
     --------------------------------------------------------------------------*/

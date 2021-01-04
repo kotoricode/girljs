@@ -10,14 +10,16 @@ const getViewProgramData = () =>
 {
     const model = getModel($.MODEL_IMAGE);
 
-    return createProgramData(
+    const programData = createProgramData(
         $.PROGRAM_GRAY,
         {
             [$.A_POSITION]: model.meshOffset,
             [$.A_UV]: model.uvOffset
         },
-        gl.createVertexArray()
+        viewVao
     );
+
+    return programData.program;
 };
 
 const framebuffer = gl.createFramebuffer();
@@ -29,7 +31,8 @@ let isCanvasResized = true,
 
 subscribe($.EVENT_RESIZE, () => isCanvasResized = true);
 
-const { program: viewProgram, vao: viewVao } = getViewProgramData();
+const viewVao = gl.createVertexArray();
+const viewProgram = getViewProgramData();
 
 gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
@@ -114,9 +117,10 @@ const renderQueue = (queueId) =>
 {
     const queue = queues.get(queueId);
 
-    for (const { programData, texture } of queue)
+    for (const model of queue)
     {
-        const { program, uniValues, uniSetters, vao } = programData;
+        const { program, uniValues, uniSetters } = model.programData;
+        const { texture, vao } = model;
 
         if (oldProgram !== program)
         {
