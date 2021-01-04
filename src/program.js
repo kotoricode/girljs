@@ -37,6 +37,26 @@ const createUniSetter = (type, location) =>
     };
 };
 
+export const setupAttributes = (programId, attrOffsets, vao) =>
+{
+    const { program, attributes } = preparedPrograms.get(programId);
+
+    gl.bindVertexArray(vao);
+
+    const modelBuffer = getModelBuffer();
+    gl.bindBuffer($.ARRAY_BUFFER, modelBuffer);
+
+    for (const [name, layout] of Object.entries(attributes))
+    {
+        const location = gl.getAttribLocation(program, name);
+        gl.enableVertexAttribArray(location);
+        gl.vertexAttribPointer(location, ...layout, attrOffsets[name]);
+    }
+
+    gl.bindBuffer($.ARRAY_BUFFER, null);
+    gl.bindVertexArray(null);
+};
+
 export const createProgramData = (programId, attrOffsets, vao) =>
 {
     const {
@@ -59,25 +79,25 @@ export const createProgramData = (programId, attrOffsets, vao) =>
     /*--------------------------------------------------------------------------
         Attributes
     --------------------------------------------------------------------------*/
-    gl.bindVertexArray(vao);
+    setupAttributes(programId, attrOffsets, vao);
 
-    const modelBuffer = getModelBuffer();
+    // gl.bindVertexArray(vao);
 
-    gl.bindBuffer($.ARRAY_BUFFER, modelBuffer);
+    // const modelBuffer = getModelBuffer();
+    // gl.bindBuffer($.ARRAY_BUFFER, modelBuffer);
 
-    for (const [name, layout] of Object.entries(attributes))
-    {
-        const location = gl.getAttribLocation(program, name);
-        gl.enableVertexAttribArray(location);
-        gl.vertexAttribPointer(location, ...layout, attrOffsets[name]);
-    }
+    // for (const [name, layout] of Object.entries(attributes))
+    // {
+    //     const location = gl.getAttribLocation(program, name);
+    //     gl.enableVertexAttribArray(location);
+    //     gl.vertexAttribPointer(location, ...layout, attrOffsets[name]);
+    // }
 
-    gl.bindBuffer($.ARRAY_BUFFER, null);
-    gl.bindVertexArray(null);
+    // gl.bindBuffer($.ARRAY_BUFFER, null);
+    // gl.bindVertexArray(null);
 
     return {
         program,
-        vao,
         uniSetters,
         uniValues,
         attributes
