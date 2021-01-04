@@ -12,10 +12,13 @@ import * as $ from "./const";
 
 const initModelPosUv = (draw) =>
 {
-    draw.initProgramData({
+    const offsets = {
         [$.A_POSITION]: draw.model.meshOffset,
         [$.A_UV]: draw.model.uvOffset
-    });
+    };
+
+    draw.initProgramData(offsets);
+    //draw.setupAttributes(offsets);
 };
 
 export const createPlayer = () =>

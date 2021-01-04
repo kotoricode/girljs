@@ -1,7 +1,8 @@
 export const
     MODEL_GROUND = "ground",
     MODEL_IMAGE = "image",
-    MODEL_PLAYER = "player";
+    MODEL_PLAYER = "player",
+    MODEL_PLAYER2 = "player2";
 
 export const
     PROGRAM_GRAY = "gray",

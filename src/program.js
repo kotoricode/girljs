@@ -37,7 +37,7 @@ const createUniSetter = (type, location) =>
     };
 };
 
-export const createProgramData = (programId, attrOffsets) =>
+export const createProgramData = (programId, attrOffsets, vao) =>
 {
     const {
         program,
@@ -45,6 +45,8 @@ export const createProgramData = (programId, attrOffsets) =>
         uniSetters,
         attributes
     } = preparedPrograms.get(programId);
+
+    console.log(vao);
 
     /*--------------------------------------------------------------------------
         Uniforms
@@ -59,10 +61,10 @@ export const createProgramData = (programId, attrOffsets) =>
     /*--------------------------------------------------------------------------
         Attributes
     --------------------------------------------------------------------------*/
-    const vao = gl.createVertexArray();
     gl.bindVertexArray(vao);
 
     const modelBuffer = getModelBuffer();
+
     gl.bindBuffer($.ARRAY_BUFFER, modelBuffer);
 
     for (const [name, layout] of Object.entries(attributes))
@@ -79,7 +81,8 @@ export const createProgramData = (programId, attrOffsets) =>
         program,
         vao,
         uniSetters,
-        uniValues
+        uniValues,
+        attributes
     };
 };
 

@@ -34,7 +34,11 @@ const modelData = [
 
     $.MODEL_PLAYER,
     BL_BR_TL_TR(-40, 40, 0, 150),
-    TL_TR_BL_BR(0, 1, 0, 1)
+    TL_TR_BL_BR(0, 1, 0, 1),
+
+    $.MODEL_PLAYER2,
+    BL_BR_TL_TR(-40, 40, 0, 150),
+    TL_TR_BL_BR(0, 0.5, 0, 0.5)
 ];
 
 if (modelData.length % 3)

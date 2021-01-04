@@ -10,10 +10,14 @@ const getViewProgramData = () =>
 {
     const model = getModel($.MODEL_IMAGE);
 
-    return createProgramData($.PROGRAM_GRAY, {
-        [$.A_POSITION]: model.meshOffset,
-        [$.A_UV]: model.uvOffset
-    });
+    return createProgramData(
+        $.PROGRAM_GRAY,
+        {
+            [$.A_POSITION]: model.meshOffset,
+            [$.A_UV]: model.uvOffset
+        },
+        gl.createVertexArray()
+    );
 };
 
 const framebuffer = gl.createFramebuffer();
