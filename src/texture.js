@@ -72,23 +72,82 @@ const filterLinearLinear = [
     [$.TEXTURE_MIN_FILTER, $.LINEAR]
 ];
 
-const textures = new Map([
+const textureData = new Map([
     [
-        $.TEXTURE_POLY,
-        createImageTexture($.TEXTURE_POLY, filterLinearLinear)
+        $.TEXTURE_BRAID,
+        {
+            texture: createImageTexture($.TEXTURE_BRAID, filterLinearLinear),
+            width: 1024,
+            height: 1024
+        }
     ],
     [
         $.TEXTURE_SPRITE,
-        createImageTexture($.TEXTURE_SPRITE, filterLinearLinear)
+        {
+            texture: createImageTexture($.TEXTURE_SPRITE, filterLinearLinear),
+            width: 256,
+            height: 256
+        }
+    ],
+    [
+        $.TEXTURE_POLY,
+        {
+            texture: createImageTexture($.TEXTURE_POLY, filterLinearLinear),
+            width: 256,
+            height: 256
+        }
     ]
 ]);
 
-export const getTexture = (textureId) =>
+export const subTextureData = new Map([
+    [
+        $.SUBTEXTURE_BRAID,
+        {
+            baseTextureId: $.TEXTURE_BRAID,
+            x: 8,
+            y: 10,
+            width: 119,
+            height: 129
+        }
+    ],
+    [
+        $.SUBTEXTURE_BG,
+        {
+            baseTextureId: $.TEXTURE_POLY,
+            x: 0,
+            y: 0,
+            width: 256,
+            height: 256
+        }
+    ],
+    [
+        $.SUBTEXTURE_UKKO,
+        {
+            baseTextureId: $.TEXTURE_SPRITE,
+            x: 0,
+            y: 0,
+            width: 256,
+            height: 256
+        }
+    ]
+]);
+
+export const getSubTextureData = (subTextureId) =>
 {
-    if (!textures.has(textureId))
+    if (!subTextureData.has(subTextureId))
     {
         throw Error;
     }
 
-    return textures.get(textureId);
+    return subTextureData.get(subTextureId);
+};
+
+export const getTextureData = (textureId) =>
+{
+    if (!textureData.has(textureId))
+    {
+        throw Error;
+    }
+
+    return textureData.get(textureId);
 };

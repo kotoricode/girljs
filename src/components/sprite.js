@@ -1,4 +1,4 @@
-import { getTexture } from "../texture";
+import { getSubTextureData, getTextureData } from "../texture";
 import { getModel } from "../model";
 import { createProgramData, setupModelVao } from "../program";
 import { Component } from "./component";
@@ -7,25 +7,28 @@ import * as $ from "../const";
 
 export class Sprite extends Component
 {
-    constructor(programId, textureId, modelId)
+    constructor(programId, modelId)
     {
         super();
 
         this.programId = programId;
         this.programData = createProgramData(this.programId);
 
-        this.setSprite(modelId);
-        this.texture = getTexture(textureId);
+        this.setModel(modelId);
 
         this.isVisible = true;
 
-        // Marks if uniforms have been set
+        // Marks if 3rd party uniforms (e.g. camera matrix) have been set
         this.isInitialized = false;
     }
 
-    setSprite(modelId)
+    setModel(modelId)
     {
         this.model = getModel(modelId);
+        const subTextureData = getSubTextureData(this.model.subTextureId);
+        const textureData = getTextureData(subTextureData.baseTextureId);
+        this.texture = textureData.texture;
+
         this.setupModelUniforms();
 
         const { meshOffset, uvOffset } = this.model;

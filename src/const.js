@@ -47,7 +47,13 @@ export const
 
 export const
     TEXTURE_POLY = "texture.png",
-    TEXTURE_SPRITE = "test.png";
+    TEXTURE_SPRITE = "test.png",
+    TEXTURE_BRAID = "braid.png";
+
+export const
+    SUBTEXTURE_BRAID = "braid",
+    SUBTEXTURE_BG = "bg",
+    SUBTEXTURE_UKKO = "ukko";
 
 export const
     /*--------------------------------------------------------------------------

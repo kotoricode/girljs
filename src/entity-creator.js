@@ -19,8 +19,7 @@ export const createPlayer = () =>
 
     const sprite = new Sprite(
         $.PROGRAM_SPRITE,
-        $.TEXTURE_SPRITE,
-        $.MODEL_PLAYER
+        $.MODEL_PLAYER2
     );
 
     return new Entity($.ENTITY_PLAYER, transform, sprite, player, mot);
@@ -41,7 +40,6 @@ export const createGround = () =>
 
     const sprite = new Sprite(
         $.PROGRAM_TILED,
-        $.TEXTURE_POLY,
         $.MODEL_GROUND
     );
 
