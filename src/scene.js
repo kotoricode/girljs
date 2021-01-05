@@ -69,7 +69,7 @@ export class Scene
             }
         }
 
-        this.isDirty = true;
+        this.hasDirty = true;
         this.hasNewSprites |= (entity.flags & Sprite.flag);
     }
 
@@ -146,6 +146,17 @@ export class Scene
         this.hasNewSprites = false;
     }
 
+    markDirty(space)
+    {
+        // TODO: put dirty spaces into list (instead of .isDirty)
+        // iterate list
+        // for each space, check if still dirty
+        // id dirty, go through ancestors to find topmost dirty
+        // for that ancestor, walk through descendants and clean
+        space.isDirty = true;
+        this.hasDirty = true;
+    }
+
     one(entityId, ...components)
     {
         const entity = this.getEntity(entityId);
@@ -163,7 +174,7 @@ export class Scene
             this.initNewSprites();
         }
 
-        if (this.isDirty)
+        if (this.hasDirty)
         {
             // Set new spaces' world transforms from scenegraph
             // TODO: needs to be thoroughly tested
@@ -181,7 +192,7 @@ export class Scene
 
     updateGraph()
     {
-        if (!this.isDirty)
+        if (!this.hasDirty)
         {
             throw Error;
         }
@@ -191,7 +202,7 @@ export class Scene
             this.updateSpaces(child);
         }
 
-        this.isDirty = false;
+        this.hasDirty = false;
     }
 
     updateSpaces(entity, isAncestorDirty, parentMatrix)

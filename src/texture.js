@@ -71,7 +71,7 @@ const paramiMinLinMaxLin = [
     $.TEXTURE_MAG_FILTER, $.LINEAR
 ];
 
-// name, width 2^n, height 2^n, parami[]
+// name, 1<<width, 1<<height, parami[]
 const textureDef = [
     $.TEXTURE_BRAID,  10, 10, paramiMinLinMaxLin,
     $.TEXTURE_SPRITE,  8,  8, paramiMinLinMaxLin,
@@ -86,8 +86,8 @@ while (i < textureDef.length)
     const key = textureDef[i++];
 
     textureData.set(key, {
-        width: 2 ** textureDef[i++],
-        height: 2 ** textureDef[i++],
+        width: 1 << textureDef[i++],
+        height: 1 << textureDef[i++],
         texture: createImageTexture(key, textureDef[i++])
     });
 }

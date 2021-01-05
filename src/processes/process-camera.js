@@ -46,7 +46,7 @@ export const processCamera = (scene) =>
         position.toWorld(ivp);
         collide(ground);
 
-        // Update player, marker paths
+        // Update player path
         if (numHits)
         {
             const hit = hits[0];

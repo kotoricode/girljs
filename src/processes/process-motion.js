@@ -43,8 +43,7 @@ export const processMotion = (scene) =>
             }
 
             local.translation.addVec(dist);
-            space.isDirty = true;
-            scene.isDirty = true;
+            scene.markDirty(space);
         }
     }
 
