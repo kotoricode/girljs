@@ -1,33 +1,21 @@
 import { Space } from "./components/space";
+import { canvasAspect, ui } from "./dom";
 import { Matrix4 } from "./math/matrix4";
-import { Ray } from "./math/ray";
 
-const halfHeight = 300;
-const aspect = 16 / 9;
-const nearPlane = 1;
-const farPlane = 3;
+// nearZ 1, farZ -1
+const z = 2,
+      nearDist = 1,
+      farDist = 3;
 
-const invFrustumLength = 1 / (farPlane - nearPlane);
-const vpL5 = 1 / halfHeight;
-const vpL0 = vpL5 / aspect;
-const vpLA = -2 * invFrustumLength;
-const vpLE = -(farPlane+nearPlane) * invFrustumLength;
+const frustumLength = nearDist - farDist,
+      vpL0 = 2 / ui.canvas.width,
+      vpL5 = vpL0 * canvasAspect,
+      vpLA = 2 / frustumLength,
+      vpLE = (farDist+nearDist) / frustumLength;
 
-const space = new Space(0, 0, 2);
-
-const ray = new Ray(0, 0);
-const viewProjection = new Matrix4();
-const invViewProjection = new Matrix4();
-
-export const getCameraSpace = () =>
-{
-    return space;
-};
-
-export const getCameraRay = () =>
-{
-    return ray;
-};
+const space = new Space(0, 0, z),
+      viewProjection = new Matrix4(),
+      invViewProjection = new Matrix4();
 
 export const getViewProjection = () =>
 {

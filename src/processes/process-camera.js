@@ -7,6 +7,9 @@ import * as $ from "../const";
 import {
     getCameraRay, getInvViewProjection, setCameraPosition
 } from "../camera";
+import { Ray } from "../math/ray";
+
+const ray = new Ray(0, 0);
 
 export const processCamera = (scene) =>
 {
@@ -19,7 +22,6 @@ export const processCamera = (scene) =>
     if (mouse.isClick)
     {
         const [ground] = scene.one($.ENTITY_GROUND, Ground);
-        const ray = getCameraRay();
 
         ray.numHits = 0;
         const ivp = getInvViewProjection();
