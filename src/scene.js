@@ -1,10 +1,7 @@
 import { Sprite } from "./components/sprite";
 import { Space } from "./components/space";
 import { Entity } from "./entity";
-import {
-    createGround,
-    createPlayer
-} from "./entity-creator";
+import { createGround, createPlayer } from "./entity-creator";
 import { render } from "./renderer";
 
 import * as $ from "./const";

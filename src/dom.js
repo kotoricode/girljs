@@ -4,7 +4,7 @@ import { publish } from "./publisher";
 import { ONE_TIME_LISTENER } from "./util";
 
 import * as $ from "./const";
-import { clearUi, drawCircle, drawDialogue } from "./ui";
+import { clearUi, drawCircle, drawDialogue, isUiInteraction } from "./ui";
 
 // Modern browsers won't autoplay audio before user interaction
 window.addEventListener("mousedown", initAudio, ONE_TIME_LISTENER);
@@ -82,11 +82,6 @@ const onClick = (e) =>
     const x = 2*(e.clientX-canvasRect.left)/gameCanvas.clientWidth - 1;
     const y = 1 - 2*(e.clientY-canvasRect.top)/gameCanvas.clientHeight;
 
-    if (x < -1 || 1 < x || y < -1 || 1 < x)
-    {
-        console.warn(`${x} ${y}`);
-    }
-
     mouse.clip.set(x, y);
     mouse.isClick = true;
 };
@@ -94,7 +89,11 @@ const onClick = (e) =>
 // UI canvas receives clicks, propagate to container if no UI interaction
 uiCanvas.addEventListener("click", (e) =>
 {
-    e.preventDefault();
+    if (isUiInteraction())
+    {
+        e.stopPropagation();
+    }
+    //e.preventDefault();
     //e.stopPropagation();
 });
 

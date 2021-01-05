@@ -1,10 +1,15 @@
 import { ui } from "./dom";
 
-export const drawDialogue = (stringId) =>
+let isDialogueMode = false;
+
+export const drawDialogue = (str) =>
 {
-    ui.fillStyle = "black";
+    isDialogueMode = true;
+
+    ui.strokeStyle = "white";
+    ui.fillStyle = "white";
     ui.font = "30px Arial";
-    ui.fillText("Hello World", 10, 50);
+    ui.fillText(str, 10, 50);
 };
 
 export const drawCircle = (cx, cy, radius) =>
@@ -30,4 +35,17 @@ export const clearUi = () =>
 {
     const { width, height } = ui.canvas;
     ui.clearRect(0, 0, width, height);
+};
+
+export const isUiInteraction = () =>
+{
+    if (isDialogueMode)
+    {
+        clearUi();
+        drawDialogue(new Date() + "");
+
+        return true;
+    }
+
+    return false;
 };
