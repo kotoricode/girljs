@@ -60,14 +60,14 @@ const modelData = [
     }
 ];
 
-if (modelData.length % 2)
+if (modelData.length & 1)
 {
     throw Error;
 }
 
 const models = new Map(),
-      numCoordinates = 8, // 4 verts, 2 coordunits
-      modelSize = numCoordinates * 2, // mesh, uv
+      numCoordUnits = 8, // 4 verts, 2 xy
+      modelSize = numCoordUnits * 2, // mesh, uv
       numModels = modelData.length / 2,
       bufferData = new Array(modelSize * numModels),
       bytes = Float32Array.BYTES_PER_ELEMENT;
@@ -75,7 +75,7 @@ const models = new Map(),
 for (let i = 0; i < numModels; i++)
 {
     const meshOffset = i * modelSize;
-    const uvOffset = meshOffset + numCoordinates;
+    const uvOffset = meshOffset + numCoordUnits;
 
     let i2 = i * 2;
     const modelId = modelData[i2++];
@@ -90,7 +90,7 @@ for (let i = 0; i < numModels; i++)
         subTextureId
     });
 
-    for (let j = 0; j < numCoordinates; j++)
+    for (let j = 0; j < numCoordUnits; j++)
     {
         bufferData[meshOffset+j] = mesh[j];
         bufferData[uvOffset+j] = uvCoords[j];
@@ -100,13 +100,7 @@ for (let i = 0; i < numModels; i++)
 const buffer = gl.createBuffer();
 
 gl.bindBuffer($.ARRAY_BUFFER, buffer);
-
-gl.bufferData(
-    $.ARRAY_BUFFER,
-    new Float32Array(bufferData),
-    $.STATIC_DRAW
-);
-
+gl.bufferData($.ARRAY_BUFFER, new Float32Array(bufferData), $.STATIC_DRAW);
 gl.bindBuffer($.ARRAY_BUFFER, null);
 
 export const getModel = (modelId) =>
@@ -119,7 +113,4 @@ export const getModel = (modelId) =>
     return models.get(modelId);
 };
 
-export const getModelBuffer = () =>
-{
-    return buffer;
-};
+export const getModelBuffer = () => buffer;

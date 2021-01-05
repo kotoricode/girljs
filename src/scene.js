@@ -1,16 +1,14 @@
-
-import { Camera } from "./components/camera";
 import { Sprite } from "./components/sprite";
 import { Transform } from "./components/transform";
 import { Entity } from "./entity";
 import {
-    createCamera,
     createGround,
     createPlayer
 } from "./entity-creator";
 import { render } from "./renderer";
 
 import * as $ from "./const";
+import { getViewProjection } from "./camera";
 
 export class Scene
 {
@@ -27,7 +25,6 @@ export class Scene
 
         this.root = new Entity($.ENTITY_ROOT);
 
-        this.addCam();
         this.addGround();
         this.addPlayer();
     }
@@ -48,12 +45,6 @@ export class Scene
         {
             yield Scene.yieldGraph(child);
         }
-    }
-
-    addCam()
-    {
-        const entity = createCamera();
-        this.addEntity(entity);
     }
 
     addPlayer()
@@ -142,8 +133,7 @@ export class Scene
 
     initNewSprites()
     {
-        const [cam] = this.one($.ENTITY_CAMERA, Camera);
-        const { viewProjection } = cam;
+        const viewProjection = getViewProjection();
 
         for (const [sprite, transform] of this.all(Sprite, Transform))
         {
@@ -215,7 +205,7 @@ export class Scene
 
         if (isDirty)
         {
-            matrix.fromTransform(xform);
+            matrix.fromTransform(xform.local);
 
             if (parentMatrix)
             {

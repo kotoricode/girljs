@@ -10,7 +10,6 @@ export const
     PROGRAM_TILED = "tiled";
 
 export const
-    ENTITY_CAMERA = "camera",
     ENTITY_GROUND = "ground",
     ENTITY_PLAYER = "player",
     ENTITY_ROOT = "root";

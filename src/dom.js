@@ -4,6 +4,7 @@ import { publish } from "./publisher";
 import { ONE_TIME_LISTENER } from "./util";
 
 import * as $ from "./const";
+import { clearUi, drawCircle, drawDialogue } from "./ui";
 
 // Modern browsers won't autoplay audio before user interaction
 window.addEventListener("mousedown", initAudio, ONE_TIME_LISTENER);
@@ -16,20 +17,6 @@ const canvasHolder = getElement("canvasHolder"),
 
 export const gl = gameCanvas.getContext("webgl2", { alpha: false });
 export const ui = uiCanvas.getContext("2d");
-
-ui.beginPath();
-ui.arc(75, 75, 50, 0, Math.PI * 2, true); // Outer circle
-ui.moveTo(110, 75);
-ui.arc(75, 75, 35, 0, Math.PI, false); // Mouth (clockwise)
-ui.moveTo(65, 65);
-ui.arc(60, 65, 5, 0, Math.PI * 2, true); // Left eye
-ui.moveTo(95, 65);
-ui.arc(90, 65, 5, 0, Math.PI * 2, true); // Right eye
-ui.stroke();
-
-ui.fillStyle = "black";
-ui.font = "30px Arial";
-ui.fillText("Hello World", 10, 50);
 
 /*------------------------------------------------------------------------------
     Canvases
@@ -89,6 +76,9 @@ export const mouse = {
 
 const onClick = (e) =>
 {
+    clearUi();
+    drawDialogue();
+    drawCircle();
     const x = 2*(e.clientX-canvasRect.left)/gameCanvas.clientWidth - 1;
     const y = 1 - 2*(e.clientY-canvasRect.top)/gameCanvas.clientHeight;
 

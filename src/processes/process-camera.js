@@ -1,35 +1,31 @@
 import { mouse } from "../dom";
-import { Camera } from "../components/camera";
 import { Motion } from "../components/motion";
 import { Transform } from "../components/transform";
 import { Ground } from "../components/ground";
 
 import * as $ from "../const";
+import {
+    getCameraRay, getInvViewProjection, setCameraPosition
+} from "../camera";
 
 export const processCamera = (scene) =>
 {
-    const [pMotion, plXform] = scene.one($.ENTITY_PLAYER, Motion, Transform),
-          [cam, camXform] = scene.one($.ENTITY_CAMERA, Camera, Transform);
-
-    const pWorldTrans = plXform.world.translation;
-    const { viewProjection, ray } = cam;
+    const [pMotion, plXform] = scene.one($.ENTITY_PLAYER, Motion, Transform);
 
     // Update camera position, matrix
-    camXform.local.translation.set(
-        pWorldTrans.x,
-        pWorldTrans.y
-    );
-
-    viewProjection.toViewProjection(cam, camXform);
-    cam.invViewProjection.invertFrom(viewProjection);
+    setCameraPosition(plXform.world.translation);
 
     // Update camera ray
     if (mouse.isClick)
     {
         const [ground] = scene.one($.ENTITY_GROUND, Ground);
+        const ray = getCameraRay();
 
         ray.numHits = 0;
-        ray.fromMouse(cam.invViewProjection, mouse);
+        const ivp = getInvViewProjection();
+
+        ray.position.copyFrom(mouse.clip);
+        ray.position.toWorld(ivp);
         ray.collide(ground);
 
         // Update player, marker paths

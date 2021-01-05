@@ -12,43 +12,6 @@ export class Matrix4 extends SettableArray
         );
     }
 
-    toViewProjection(cam, transform)
-    {
-        this.fromTransform(transform);
-        this.invertFrom(this);
-
-        const { vpL0, vpL5, vpLA, vpLE } = cam;
-
-        const [
-            R0, R1, R2, R3,
-            R4, R5, R6, R7,
-            R8, R9, RA, RB,
-            RC, RD, RE, RF
-        ] = this;
-
-        this.set(
-            vpL0*R0,
-            vpL5*R1,
-            vpLA*R2 + vpLE*R3,
-            R3,
-
-            vpL0*R4,
-            vpL5*R5,
-            vpLA*R6 + vpLE*R7,
-            R7,
-
-            vpL0*R8,
-            vpL5*R9,
-            vpLA*RA + vpLE*RB,
-            RB,
-
-            vpL0*RC,
-            vpL5*RD,
-            vpLA*RE + vpLE*RF,
-            RF
-        );
-    }
-
     invertFrom(matrix)
     {
         const [
@@ -192,11 +155,11 @@ export class Matrix4 extends SettableArray
         );
     }
 
-    fromTransform({ local })
+    fromTransform(xformData)
     {
-        const [sx, sy, sz] = local.scale,
-              [rx, ry, rz, rw] = local.rotation,
-              [tx, ty, tz] = local.translation;
+        const [sx, sy, sz] = xformData.scale,
+              [rx, ry, rz, rw] = xformData.rotation,
+              [tx, ty, tz] = xformData.translation;
 
         const rxx = rx * rx,
               ryy = ry * ry,

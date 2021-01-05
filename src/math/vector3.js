@@ -111,4 +111,12 @@ export class Vector3 extends SettableArray
 
         this.mulScalar(magnitude / (sqrMag ** 0.5));
     }
+
+    toWorld(invViewProjection)
+    {
+        this.set(
+            this.x * invViewProjection[0] + invViewProjection[12],
+            this.y * invViewProjection[5] + invViewProjection[13]
+        );
+    }
 }

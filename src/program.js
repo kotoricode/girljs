@@ -29,13 +29,7 @@ const detachDeleteShader = (program, shader) =>
     gl.deleteShader(shader);
 };
 
-const createUniSetter = (type, location) =>
-{
-    return (values) =>
-    {
-        gl[type](location, ...values);
-    };
-};
+const createUniSetter = (type, loc) => (values) => gl[type](loc, ...values);
 
 export const setupModelVao = (programData, attrOffsets) =>
 {
@@ -175,18 +169,27 @@ const fragDef = {
     Program definitions
 ------------------------------------------------------------------------------*/
 const programDef = new Map([
-    [$.PROGRAM_GRAY, {
-        vert: vertDef.standard,
-        frag: fragDef.gray
-    }],
-    [$.PROGRAM_SPRITE, {
-        vert: vertDef.sprite,
-        frag: fragDef.sprite
-    }],
-    [$.PROGRAM_TILED, {
-        vert: vertDef.tiled,
-        frag: fragDef.tiled,
-    }]
+    [
+        $.PROGRAM_GRAY,
+        {
+            vert: vertDef.standard,
+            frag: fragDef.gray
+        }
+    ],
+    [
+        $.PROGRAM_SPRITE,
+        {
+            vert: vertDef.sprite,
+            frag: fragDef.sprite
+        }
+    ],
+    [
+        $.PROGRAM_TILED,
+        {
+            vert: vertDef.tiled,
+            frag: fragDef.tiled,
+        }
+    ]
 ]);
 
 /*------------------------------------------------------------------------------
