@@ -201,7 +201,8 @@ while (i < newProgramDef.length)
 {
     const programId = newProgramDef[i++],
           vert = newProgramDef[i++],
-          frag = newProgramDef[i++];
+          frag = newProgramDef[i++],
+          { attributes } = vert;
 
     /*--------------------------------------------------------------------------
         Program
@@ -234,6 +235,6 @@ while (i < newProgramDef.length)
         program,
         uniDefaults,
         uniSetters,
-        attributes: vert.attributes
+        attributes
     });
 }
