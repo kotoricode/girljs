@@ -1,6 +1,6 @@
 import { mouse } from "../dom";
 import { Motion } from "../components/motion";
-import { Transform } from "../components/transform";
+import { Space } from "../components/space";
 import { Ground } from "../components/ground";
 
 import * as $ from "../const";
@@ -10,10 +10,10 @@ import {
 
 export const processCamera = (scene) =>
 {
-    const [pMotion, plXform] = scene.one($.ENTITY_PLAYER, Motion, Transform);
+    const [pMotion, plSpace] = scene.one($.ENTITY_PLAYER, Motion, Space);
 
     // Update camera position, matrix
-    setCameraPosition(plXform.world.translation);
+    setCameraPosition(plSpace.world.translation);
 
     // Update camera ray
     if (mouse.isClick)

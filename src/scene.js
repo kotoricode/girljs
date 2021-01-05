@@ -1,5 +1,5 @@
 import { Sprite } from "./components/sprite";
-import { Transform } from "./components/transform";
+import { Space } from "./components/space";
 import { Entity } from "./entity";
 import {
     createGround,
@@ -135,11 +135,11 @@ export class Scene
     {
         const viewProjection = getViewProjection();
 
-        for (const [sprite, transform] of this.all(Sprite, Transform))
+        for (const [sprite, space] of this.all(Sprite, Space))
         {
             if (!sprite.isInitialized)
             {
-                sprite.setUniformIndex($.U_TRANSFORM, 1, transform.matrix);
+                sprite.setUniformIndex($.U_TRANSFORM, 1, space.matrix);
                 sprite.setUniformIndex($.U_VIEWPROJECTION, 1, viewProjection);
 
                 sprite.isInitialized = true;
@@ -168,7 +168,7 @@ export class Scene
 
         if (this.isDirty)
         {
-            // Set new transforms' world transforms from scenegraph
+            // Set new spaces' world transforms from scenegraph
             // TODO: needs to be thoroughly tested
             // TODO: no need to update the entire graph
             this.updateGraph();
@@ -191,36 +191,36 @@ export class Scene
 
         for (const child of this.root.children)
         {
-            this.updateTransform(child);
+            this.updateSpaces(child);
         }
 
         this.isDirty = false;
     }
 
-    updateTransform(entity, isAncestorDirty, parentMatrix)
+    updateSpaces(entity, isAncestorDirty, parentMatrix)
     {
-        const xform = entity.getComponent(Transform);
-        const { matrix, world } = xform;
-        const isDirty = isAncestorDirty || xform.isDirty;
+        const space = entity.getComponent(Space);
+        const { matrix, world } = space;
+        const isDirty = isAncestorDirty || space.isDirty;
 
         if (isDirty)
         {
-            matrix.fromTransform(xform.local);
+            matrix.fromTransform(space.local);
 
             if (parentMatrix)
             {
-                matrix.multiplyTransform(parentMatrix);
+                matrix.multiplyTransformMatrix(parentMatrix);
             }
 
             // TODO: rotation, scale
             world.translation.set(matrix[12], matrix[13], matrix[14]);
 
-            xform.isDirty = false;
+            space.isDirty = false;
         }
 
         for (const child of entity.children)
         {
-            this.updateTransform(child, isDirty, parentMatrix);
+            this.updateSpaces(child, isDirty, parentMatrix);
         }
     }
 }

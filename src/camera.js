@@ -1,4 +1,4 @@
-import { Transform } from "./components/transform";
+import { Space } from "./components/space";
 import { Matrix4 } from "./math/matrix4";
 import { Ray } from "./math/ray";
 
@@ -13,15 +13,15 @@ const vpL0 = vpL5 / aspect;
 const vpLA = -2 * invFrustumLength;
 const vpLE = -(farPlane+nearPlane) * invFrustumLength;
 
-const transform = new Transform(0, 0, 2);
+const space = new Space(0, 0, 2);
 
 const ray = new Ray(0, 0);
 const viewProjection = new Matrix4();
 const invViewProjection = new Matrix4();
 
-export const getCameraTransform = () =>
+export const getCameraSpace = () =>
 {
-    return transform;
+    return space;
 };
 
 export const getCameraRay = () =>
@@ -41,12 +41,12 @@ export const getInvViewProjection = () =>
 
 export const setCameraPosition = (vec3) =>
 {
-    transform.local.translation.set(vec3.x, vec3.y);
+    space.local.translation.set(vec3.x, vec3.y);
 
     /*--------------------------------------------------------------------------
         ViewProjection & Inverted ViewProjection
     --------------------------------------------------------------------------*/
-    viewProjection.fromTransform(transform.local);
+    viewProjection.fromTransform(space.local);
     viewProjection.invertFrom(viewProjection);
 
     const [

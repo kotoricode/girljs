@@ -116,7 +116,7 @@ export class Matrix4 extends SettableArray
     //     this[15] = L3*RC + L7*RD + LB*RE + LF*RF;
     // }
 
-    multiplyTransform(matrix)
+    multiplyTransformMatrix(matrix)
     {
         const [
             L0, L1, L2, ,
@@ -155,11 +155,11 @@ export class Matrix4 extends SettableArray
         );
     }
 
-    fromTransform(xformData)
+    fromTransform(transform)
     {
-        const [sx, sy, sz] = xformData.scale,
-              [rx, ry, rz, rw] = xformData.rotation,
-              [tx, ty, tz] = xformData.translation;
+        const [sx, sy, sz] = transform.scale,
+              [rx, ry, rz, rw] = transform.rotation,
+              [tx, ty, tz] = transform.translation;
 
         const rxx = rx * rx,
               ryy = ry * ry,

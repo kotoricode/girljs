@@ -1,21 +1,21 @@
 import { Motion } from "../components/motion";
-import { Transform } from "../components/transform";
+import { Space } from "../components/space";
 import { Vector3 } from "../math/vector3";
 
 const dist = new Vector3();
 
 export const processMotion = (scene) =>
 {
-    for (const [motion, xform] of scene.all(Motion, Transform))
+    for (const [motion, space] of scene.all(Motion, Space))
     {
-        if (xform.isDirty)
+        if (space.isDirty)
         {
-            throw xform;
+            throw space;
         }
 
         if (motion.hasTarget())
         {
-            const { local, world } = xform;
+            const { local, world } = space;
 
             const mark = motion.getTarget();
             dist.copyFrom(mark);
@@ -43,7 +43,7 @@ export const processMotion = (scene) =>
             }
 
             local.translation.addVec(dist);
-            xform.isDirty = true;
+            space.isDirty = true;
             scene.isDirty = true;
         }
     }
