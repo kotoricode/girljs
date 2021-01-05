@@ -132,20 +132,20 @@ export const subTextureData = new Map([
 
 export const getSubTextureData = (subTextureId) =>
 {
-    if (!subTextureData.has(subTextureId))
+    if (subTextureData.has(subTextureId))
     {
-        throw Error;
+        return subTextureData.get(subTextureId);
     }
 
-    return subTextureData.get(subTextureId);
+    throw Error;
 };
 
 export const getTextureData = (textureId) =>
 {
-    if (!textureData.has(textureId))
+    if (textureData.has(textureId))
     {
-        throw Error;
+        return textureData.get(textureId);
     }
 
-    return textureData.get(textureId);
+    throw Error;
 };

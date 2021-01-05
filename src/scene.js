@@ -120,12 +120,12 @@ export class Scene
 
     getEntity(entityId)
     {
-        if (!this.entities.has(entityId))
+        if (this.entities.has(entityId))
         {
-            throw entityId;
+            return this.entities.get(entityId);
         }
 
-        return this.entities.get(entityId);
+        throw entityId;
     }
 
     initNewSprites()

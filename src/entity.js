@@ -34,12 +34,12 @@ export class Entity
 
     getComponent(cls)
     {
-        if (!this.components.has(cls))
+        if (this.components.has(cls))
         {
-            throw Error;
+            return this.components.get(cls);
         }
 
-        return this.components.get(cls);
+        throw Error;
     }
 
     hasFlags(flags)

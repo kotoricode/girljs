@@ -25,34 +25,28 @@ export class Segment
 
         const det = ax*by - bx*ay;
 
-        if (!det)
+        if (det)
         {
-            return;
+            const cx = this.start.x - line.start.x,
+                  cy = this.start.y - line.start.y;
+
+            const s = (ax*cy - ay*cx) / det;
+
+            if (0 <= s && s <= 1)
+            {
+                const t = (bx*cy - by*cx) / det;
+
+                // with polygons segments are half-open
+                // one segment's end point is other segment's start point
+                // intersection at that point should be registered just once
+                if (0 <= t && (isPoly ? t < 1 : t <= 1))
+                {
+                    return this.intersection.set(
+                        this.start.x + (t * ax),
+                        this.start.y + (t * ay)
+                    );
+                }
+            }
         }
-
-        const cx = this.start.x - line.start.x,
-              cy = this.start.y - line.start.y;
-
-        const s = (ax*cy - ay*cx) / det;
-
-        if (s < 0 || 1 < s)
-        {
-            return;
-        }
-
-        const t = (bx*cy - by*cx) / det;
-
-        // with polygons segments are half-open
-        // one segment's end point is other segment's start point
-        // intersection at that point should be registered just once
-        if (t < 0 || (isPoly ? 1 <= t : 1 < t))
-        {
-            return;
-        }
-
-        return this.intersection.set(
-            this.start.x + (t * ax),
-            this.start.y + (t * ay)
-        );
     }
 }

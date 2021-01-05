@@ -105,12 +105,12 @@ gl.bindBuffer($.ARRAY_BUFFER, null);
 
 export const getModel = (modelId) =>
 {
-    if (!models.has(modelId))
+    if (models.has(modelId))
     {
-        throw modelId;
+        return models.get(modelId);
     }
 
-    return models.get(modelId);
+    throw modelId;
 };
 
 export const getModelBuffer = () => buffer;
