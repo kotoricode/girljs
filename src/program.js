@@ -29,8 +29,6 @@ const detachDeleteShader = (program, shader) =>
     gl.deleteShader(shader);
 };
 
-const createUniSetter = (type, loc) => (values) => gl[type](loc, ...values);
-
 export const setupModelVao = (programData, attrOffsets) =>
 {
     const { program, vao, attributes } = programData;
@@ -168,38 +166,42 @@ const fragDef = {
 /*------------------------------------------------------------------------------
     Program definitions
 ------------------------------------------------------------------------------*/
-const programDef = new Map([
-    [
-        $.PROGRAM_GRAY,
-        {
-            vert: vertDef.standard,
-            frag: fragDef.gray
-        }
-    ],
-    [
-        $.PROGRAM_SPRITE,
-        {
-            vert: vertDef.sprite,
-            frag: fragDef.sprite
-        }
-    ],
-    [
-        $.PROGRAM_TILED,
-        {
-            vert: vertDef.tiled,
-            frag: fragDef.tiled,
-        }
-    ]
-]);
+const newProgramDef = [
+    $.PROGRAM_GRAY,   vertDef.standard, fragDef.gray,
+    $.PROGRAM_SPRITE, vertDef.sprite,   fragDef.sprite,
+    $.PROGRAM_TILED,  vertDef.tiled,    fragDef.tiled
+];
 
 /*------------------------------------------------------------------------------
     Create and prepare programs
 ------------------------------------------------------------------------------*/
+const createUniSetter = (type, loc) => (values) => gl[type](loc, ...values);
+
+const setUniSetters = ({ uniforms }, program, uniDefaults, uniSetters) =>
+{
+    if (uniforms)
+    {
+        for (const [type, typeObj] of Object.entries(uniforms))
+        {
+            for (const [name, defValueArr] of Object.entries(typeObj))
+            {
+                uniDefaults.set(name, defValueArr);
+                const location = gl.getUniformLocation(program, name);
+                const uniSetter = createUniSetter(type, location);
+                uniSetters.set(name, uniSetter);
+            }
+        }
+    }
+};
+
 const preparedPrograms = new Map();
 
-for (const [programId, data] of programDef)
+let i = 0;
+while (i < newProgramDef.length)
 {
-    const { vert, frag } = data;
+    const programId = newProgramDef[i++],
+          vert = newProgramDef[i++],
+          frag = newProgramDef[i++];
 
     /*--------------------------------------------------------------------------
         Program
@@ -225,22 +227,8 @@ for (const [programId, data] of programDef)
     const uniDefaults = new Map(),
           uniSetters = new Map();
 
-    for (const shaderDef of Object.values(data))
-    {
-        if (shaderDef.uniforms)
-        {
-            for (const [type, typeObj] of Object.entries(shaderDef.uniforms))
-            {
-                for (const [name, defValueArr] of Object.entries(typeObj))
-                {
-                    uniDefaults.set(name, defValueArr);
-                    const location = gl.getUniformLocation(program, name);
-                    const uniSetter = createUniSetter(type, location);
-                    uniSetters.set(name, uniSetter);
-                }
-            }
-        }
-    }
+    setUniSetters(vert, program, uniDefaults, uniSetters);
+    setUniSetters(frag, program, uniDefaults, uniSetters);
 
     preparedPrograms.set(programId, {
         program,

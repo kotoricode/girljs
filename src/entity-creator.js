@@ -25,10 +25,10 @@ export const createGround = () =>
           sprite = new Sprite(
               $.PROGRAM_TILED,
               $.MODEL_GROUND,
-              new Map([
-                  [$.U_UVREPEAT, [5, 5]],
-                  [$.U_COLOR, [1, 0.7, 0.5, 1]]
-              ])
+              {
+                  [$.U_UVREPEAT]: [5, 5],
+                  [$.U_COLOR]: [1, 0.7, 0.5, 1]
+              }
           );
 
     return new Entity($.ENTITY_GROUND, space, ground, sprite);

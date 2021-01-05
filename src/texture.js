@@ -26,9 +26,10 @@ image.onload = () =>
         image
     );
 
-    for (const [key, value] of parami)
+    let i = 0;
+    while (i < parami.length)
     {
-        gl.texParameteri($.TEXTURE_2D, key, value);
+        gl.texParameteri($.TEXTURE_2D, parami[i++], parami[i++]);
     }
 
     const minFilter = gl.getTexParameter($.TEXTURE_2D, $.TEXTURE_MIN_FILTER);
@@ -65,37 +66,31 @@ const createImageTexture = (src, parami) =>
     return texture;
 };
 
-const filterLinearLinear = [
-    [$.TEXTURE_MAG_FILTER, $.LINEAR],
-    [$.TEXTURE_MIN_FILTER, $.LINEAR]
+const paramiMinLinMaxLin = [
+    $.TEXTURE_MIN_FILTER, $.LINEAR,
+    $.TEXTURE_MAG_FILTER, $.LINEAR
 ];
 
-const textureData = new Map([
-    [
-        $.TEXTURE_BRAID,
-        {
-            texture: createImageTexture($.TEXTURE_BRAID, filterLinearLinear),
-            width: 1024,
-            height: 1024
-        }
-    ],
-    [
-        $.TEXTURE_SPRITE,
-        {
-            texture: createImageTexture($.TEXTURE_SPRITE, filterLinearLinear),
-            width: 256,
-            height: 256
-        }
-    ],
-    [
-        $.TEXTURE_POLY,
-        {
-            texture: createImageTexture($.TEXTURE_POLY, filterLinearLinear),
-            width: 256,
-            height: 256
-        }
-    ]
-]);
+// name, width 2^n, height 2^n, parami[]
+const textureDef = [
+    $.TEXTURE_BRAID,  10, 10, paramiMinLinMaxLin,
+    $.TEXTURE_SPRITE,  8,  8, paramiMinLinMaxLin,
+    $.TEXTURE_POLY,    9,  9, paramiMinLinMaxLin
+];
+
+const textureData = new Map();
+
+let i = 0;
+while (i < textureDef.length)
+{
+    const key = textureDef[i++];
+
+    textureData.set(key, {
+        width: 2 ** textureDef[i++],
+        height: 2 ** textureDef[i++],
+        texture: createImageTexture(key, textureDef[i++])
+    });
+}
 
 export const subTextureData = new Map([
     [
@@ -112,8 +107,8 @@ export const subTextureData = new Map([
         $.SUBTEXTURE_BG,
         {
             baseTextureId: $.TEXTURE_POLY,
-            x: 0,
-            y: 0,
+            x: 94,
+            y: 97,
             width: 256,
             height: 256
         }

@@ -23,7 +23,7 @@ export class Sprite extends Component
 
         if (uniforms)
         {
-            for (const [key, value] of uniforms)
+            for (const [key, value] of Object.entries(uniforms))
             {
                 this.setUniform(key, value);
             }
@@ -53,7 +53,6 @@ export class Sprite extends Component
     {
         if (this.programId === $.PROGRAM_TILED)
         {
-            // TODO: rewrite this shit to get values from (sub)textureData
             const uvMinX = this.model.uvCoords[0], // topleft X
                   uvMaxY = this.model.uvCoords[1], // topleft Y
                   uvMaxX = this.model.uvCoords[6], // bottomright X
