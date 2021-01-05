@@ -15,7 +15,7 @@ export const publish = (event) =>
 
 export const subscribe = (event, subFunc) =>
 {
-    if (typeof subFunc !== "function")
+    if (!(subFunc instanceof Function))
     {
         throw Error;
     }

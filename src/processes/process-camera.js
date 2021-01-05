@@ -4,12 +4,28 @@ import { Space } from "../components/space";
 import { Ground } from "../components/ground";
 
 import * as $ from "../const";
-import {
-    getCameraRay, getInvViewProjection, setCameraPosition
-} from "../camera";
-import { Ray } from "../math/ray";
+import { getInvViewProjection, setCameraPosition } from "../camera";
+import { Vector3 } from "../math/vector3";
 
-const ray = new Ray(0, 0);
+const position = new Vector3();
+let numHits = 0;
+const hits = [];
+
+const collide = (box) =>
+{
+    const { min, max } = box;
+    const { x, y } = position;
+
+    if (min.x <= x && x <= max.x && min.y <= y && y <= max.y)
+    {
+        if (numHits === hits.length)
+        {
+            hits.push(new Vector3());
+        }
+
+        hits[numHits++].set(x, y);
+    }
+};
 
 export const processCamera = (scene) =>
 {
@@ -23,17 +39,17 @@ export const processCamera = (scene) =>
     {
         const [ground] = scene.one($.ENTITY_GROUND, Ground);
 
-        ray.numHits = 0;
+        numHits = 0;
         const ivp = getInvViewProjection();
 
-        ray.position.copyFrom(mouse.clip);
-        ray.position.toWorld(ivp);
-        ray.collide(ground);
+        position.copyFrom(mouse.clip);
+        position.toWorld(ivp);
+        collide(ground);
 
         // Update player, marker paths
-        if (ray.numHits)
+        if (numHits)
         {
-            const hit = ray.hit[0];
+            const hit = hits[0];
             pMotion.setMainTarget(hit);
         }
     }
