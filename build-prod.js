@@ -9,6 +9,5 @@ esbuild.build({
     minify: true,
     outfile,
     plugins: [glslPlugin],
-    sourcemap: false,
     target,
 });
