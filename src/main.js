@@ -1,9 +1,6 @@
+import * as $ from "./const";
 import { mouse } from "./dom";
 import { Scene } from "./scene";
-
-import * as $ from "./utils/const";
-
-// Processes
 import { processCamera } from "./processes/process-camera";
 import { processMotion } from "./processes/process-motion";
 

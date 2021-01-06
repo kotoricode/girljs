@@ -1,10 +1,9 @@
+import * as $ from "../const";
 import { gl } from "../dom";
 import { Sprite } from "../components/sprite";
 import { createProgramData, setupModelVao } from "./program";
 import { getModel } from "./model";
 import { subscribe } from "../utils/publisher";
-
-import * as $ from "../utils/const";
 
 // TODO: pretty sure this is shared with sprite... move shit to setupmodelvao
 const getViewProgramData = () =>

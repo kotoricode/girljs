@@ -16,11 +16,6 @@ export const getStored = (key) =>
     }
 };
 
-export const hasStored = (key) =>
-{
-    return storage.getItem(key) !== null;
-};
-
 export const setStored = (key, value) =>
 {
     const json = JSON.stringify(value);

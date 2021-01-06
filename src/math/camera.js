@@ -1,7 +1,6 @@
+import * as $ from "../const";
 import { Matrix4 } from "./matrix4";
 import { Transform } from "./transform";
-
-import * as $ from "../utils/const";
 
 // nearZ 1, farZ -1
 const z = 2,
@@ -28,9 +27,9 @@ export const getInvViewProjection = () =>
     return invViewProjection;
 };
 
-export const setCameraPosition = (x, y) =>
+export const setCameraPosition = (vec) =>
 {
-    transform.translation.set(x, y);
+    transform.translation.set(vec.x, vec.y);
 
     /*--------------------------------------------------------------------------
         ViewProjection & Inverted ViewProjection

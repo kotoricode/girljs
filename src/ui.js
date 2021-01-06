@@ -1,7 +1,6 @@
+import * as $ from "./const";
 import { mouse, ui } from "./dom";
 import { Vector2 } from "./math/vector2";
-
-import * as $ from "./utils/const";
 
 let isDialogueMode = false;
 

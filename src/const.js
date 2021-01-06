@@ -29,9 +29,9 @@ export const
     AUDIO_OMOIDE = "omoide_loft.ogg";
 
 export const
-    OPTION_MASTER = "master",
-    OPTION_MUSIC = "music",
-    OPTION_SOUND = "sound";
+    PREF_MASTER = "master",
+    PREF_MUSIC = "music",
+    PREF_SOUND = "sound";
 
 export const
     PATH_IMG = "./img/",

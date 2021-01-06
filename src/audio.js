@@ -1,13 +1,6 @@
-import { getStored } from "./utils/storage";
-import { subscribe } from "./utils/publisher";
-
-import * as $ from "./utils/const";
-
-const setGainFromOptions = (gainId) =>
-{
-    const gainObj = gains.get(gainId);
-    gainObj.gain.value = getStored(gainId);
-};
+import * as $ from "./const";
+import { clamp } from "./math/math-helper";
+import { getPref, setPref } from "./save";
 
 const createGain = (gainId, parent) =>
 {
@@ -15,43 +8,63 @@ const createGain = (gainId, parent) =>
     gainObj.connect(parent);
     gains.set(gainId, gainObj);
 
-    subscribe(gainId, setGainFromOptions);
-    setGainFromOptions(gainId);
+    const volume = getPref(gainId);
+    setGain(gainId, volume, false);
 
     return gainObj;
-};
-
-export const setMusic = (fileId) =>
-{
-    nowPlaying = $.PATH_SND + fileId;
-
-    if (context)
-    {
-        music.src = nowPlaying;
-    }
-};
-
-export const setVolume = (gainId, value) =>
-{
-    if (!context)
-    {
-        throw Error;
-    }
-
-    gains.get(gainId).gain.value = value;
 };
 
 export const initAudio = () =>
 {
     context = new AudioContext();
-    const dest = context.destination;
 
-    const gainMaster = createGain($.OPTION_MASTER, dest);
-    const gainMusic = createGain($.OPTION_MUSIC, gainMaster);
-    createGain($.OPTION_SOUND, gainMaster);
+    const gainMaster = createGain($.PREF_MASTER, context.destination);
 
+    const gainMusic = createGain($.PREF_MUSIC, gainMaster);
     context.createMediaElementSource(music).connect(gainMusic);
-    setMusic($.AUDIO_OMOIDE);
+    playMusic();
+
+    createGain($.PREF_SOUND, gainMaster);
+};
+
+const playMusic = () =>
+{
+    if (!nowPlaying)
+    {
+        throw Error;
+    }
+
+    if (context)
+    {
+        music.src = $.PATH_SND + nowPlaying;
+    }
+};
+
+export const setGain = (gainId, value, isSetPref=true) =>
+{
+    const clamped = clamp(value, 0, 1);
+
+    if (clamped !== value)
+    {
+        console.warn(value);
+        console.warn(clamped);
+    }
+
+    if (context)
+    {
+        gains.get(gainId).gain.value = clamped;
+    }
+
+    if (isSetPref)
+    {
+        setPref(gainId, value);
+    }
+};
+
+export const setMusic = (audioId) =>
+{
+    nowPlaying = audioId;
+    playMusic();
 };
 
 const music = new Audio();
@@ -61,4 +74,4 @@ music.addEventListener("canplaythrough", music.play);
 const gains = new Map();
 
 let context;
-let nowPlaying;
+let nowPlaying = $.AUDIO_OMOIDE;

@@ -2,7 +2,7 @@ export const DEG_TO_RAD = Math.PI / 180;
 
 export const clamp = (value, minValue=0, maxValue=1) =>
 {
-    return Math.min(maxValue, Math.min(minValue, value));
+    return Math.min(maxValue, Math.max(minValue, value));
 };
 
 export const isApproxEqual = (a, b, tolerance=1e-6) =>

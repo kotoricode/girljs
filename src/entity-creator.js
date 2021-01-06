@@ -1,13 +1,11 @@
+import * as $ from "./const";
 import { Entity } from "./entity";
-
+import { BoxCollider } from "./math/box-collider";
 import { Space } from "./components/space";
 import { Motion } from "./components/motion";
 import { Player } from "./components/player";
 import { Sprite } from "./components/sprite";
-
-import * as $ from "./utils/const";
 import { Collider } from "./components/collider";
-import { BoxCollider } from "./math/box-collider";
 
 export const createPlayer = () =>
 {

@@ -1,9 +1,8 @@
+import * as $ from "./const";
 import { initAudio } from "./audio";
 import { Vector2 } from "./math/vector2";
 import { publish } from "./utils/publisher";
 import { isUiInteraction } from "./ui";
-
-import * as $ from "./utils/const";
 
 // Modern browsers won't autoplay audio before user interaction
 window.addEventListener("mousedown", initAudio, { once: true });
@@ -66,22 +65,21 @@ for (const resizeEvent of ["DOMContentLoaded", "load", "resize"])
 export const mouse = {
     clip: new Vector2(),
     screen: new Vector2(),
-    isClick: false
-};
+    isClick: false,
+    setPosition: (e) =>
+    {
+        const relX = (e.clientX - canvasRect.left) / gameCanvas.clientWidth,
+              relY = (e.clientY - canvasRect.top) / gameCanvas.clientHeight;
 
-const setMousePosition = (e) =>
-{
-    const relX = (e.clientX - canvasRect.left) / gameCanvas.clientWidth,
-          relY = (e.clientY - canvasRect.top) / gameCanvas.clientHeight;
-
-    mouse.screen.set(relX * $.SCREEN_WIDTH, relY * $.SCREEN_HEIGHT);
-    mouse.clip.set(2*relX - 1, 1 - 2*relY);
+        mouse.screen.set(relX * $.SCREEN_WIDTH, relY * $.SCREEN_HEIGHT);
+        mouse.clip.set(2*relX - 1, 1 - 2*relY);
+    }
 };
 
 // UI canvas receives clicks, propagate to container if no UI interaction
 uiCanvas.addEventListener("click", (e) =>
 {
-    setMousePosition(e);
+    mouse.setPosition(e);
 
     if (isUiInteraction())
     {
