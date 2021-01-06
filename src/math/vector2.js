@@ -1,6 +1,6 @@
-import { SettableArray } from "../settable-array";
+import { VectorBase } from "./vector-base";
 
-export class Vector2 extends SettableArray
+export class Vector2 extends VectorBase
 {
     constructor(x=0, y=0)
     {
@@ -12,52 +12,32 @@ export class Vector2 extends SettableArray
         return a.x*b.x + a.y*b.y;
     }
 
-    get x()
-    {
-        return this[0];
-    }
-
-    set x(value)
-    {
-        this[0] = value;
-    }
-
-    get y()
-    {
-        return this[1];
-    }
-
-    set y(value)
-    {
-        this[1] = value;
-    }
-
     // Debug stuff in case someone tries to access this as Vector3
     get z() { throw Error; } // eslint-disable-line
     set z(farts) { throw Error; } // eslint-disable-line
 
-    copyFrom(vec2)
+    copyFrom(vec)
     {
-        this.x = vec2.x;
-        this.y = vec2.y;
+        this.x = vec.x;
+        this.y = vec.y;
     }
 
-    addVec(vec2)
+    addVec(vec)
     {
-        this.x += vec2.x;
-        this.y += vec2.y;
+        this.x += vec.x;
+        this.y += vec.y;
     }
 
-    subVec(vec2)
+    subVec(vec)
     {
-        this.x -= vec2.x;
-        this.y -= vec2.y;
+        this.x -= vec.x;
+        this.y -= vec.y;
     }
 
-    mulVec(vec2)
+    mulVec(vec)
     {
-        this.x *= vec2.x;
-        this.y *= vec2.y;
+        this.x *= vec.x;
+        this.y *= vec.y;
     }
 
     mulScalar(s)
@@ -66,9 +46,14 @@ export class Vector2 extends SettableArray
         this.y *= s;
     }
 
-    sqrDist(vec2)
+    sqrDist(vec)
     {
-        return (this.x-vec2.x)**2 + (this.y-vec2.y)**2;
+        if (!(vec instanceof Vector2))
+        {
+            throw Error;
+        }
+
+        return (this.x-vec.x)**2 + (this.y-vec.y)**2;
     }
 
     sqrMag()
@@ -76,18 +61,6 @@ export class Vector2 extends SettableArray
         const {x, y} = this;
 
         return x*x + y*y;
-    }
-
-    normalize(magnitude=1)
-    {
-        const sqrMag = this.sqrMag();
-
-        if (!sqrMag)
-        {
-            throw Error;
-        }
-
-        this.mulScalar(magnitude / (sqrMag ** 0.5));
     }
 
     toWorld(invViewProjection)

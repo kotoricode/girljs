@@ -1,10 +1,11 @@
-import { SettableArray } from "../settable-array";
+import { VectorBase } from "./vector-base";
 
-export class Vector3 extends SettableArray
+export class Vector3 extends VectorBase
 {
     constructor(x=0, y=0, z=0)
     {
-        super(x, y, z);
+        super(x, y);
+        this.z = z;
     }
 
     static dot(a, b)
@@ -15,26 +16,6 @@ export class Vector3 extends SettableArray
         }
 
         return a.x*b.x + a.y*b.y + a.z*b.z;
-    }
-
-    get x()
-    {
-        return this[0];
-    }
-
-    set x(value)
-    {
-        this[0] = value;
-    }
-
-    get y()
-    {
-        return this[1];
-    }
-
-    set y(value)
-    {
-        this[1] = value;
     }
 
     get z()
@@ -116,17 +97,5 @@ export class Vector3 extends SettableArray
         const {x, y, z} = this;
 
         return x*x + y*y + z*z;
-    }
-
-    normalize(magnitude=1)
-    {
-        const sqrMag = this.sqrMag();
-
-        if (!sqrMag)
-        {
-            throw Error;
-        }
-
-        this.mulScalar(magnitude / (sqrMag ** 0.5));
     }
 }
