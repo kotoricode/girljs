@@ -94,7 +94,7 @@ export class Vector3 extends VectorBase
 
     sqrMag()
     {
-        const {x, y, z} = this;
+        const { x, y, z } = this;
 
         return x*x + y*y + z*z;
     }

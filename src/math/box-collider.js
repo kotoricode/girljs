@@ -2,7 +2,7 @@ import { Vector2 } from "./vector2";
 
 export class BoxCollider
 {
-    constructor(x, y, width, height, anchorX, anchorY)
+    constructor(x, y, width, height, anchorX=0, anchorY=0)
     {
         this.position = new Vector2(x, y);
         this.bottomRight = new Vector2(x + width, y + height);
@@ -13,16 +13,16 @@ export class BoxCollider
         this.anchor = new Vector2(anchorX, anchorY);
     }
 
-    hasPoint(p)
+    hasPoint({ x, y })
     {
-        return this.position.x <= p.x && p.x <= this.bottomRight.x &&
-               this.position.y <= p.y && p.y <= this.bottomRight.y;
+        return this.position.x <= x && x <= this.bottomRight.x &&
+               this.position.y <= y && y <= this.bottomRight.y;
     }
 
-    setPosition(pos)
+    setPosition({ x, y })
     {
-        const posX = pos.x - this.anchor.x*this.width;
-        const posY = pos.y - this.anchor.y*this.height;
+        const posX = x - this.anchor.x*this.width;
+        const posY = y - this.anchor.y*this.height;
 
         this.position.set(posX, posY);
         this.bottomRight.set(posX + this.width, posY + this.height);

@@ -158,7 +158,7 @@ export class Matrix4 extends SettableArray
         );
     }
 
-    fromTransform({scale, rotation, translation})
+    fromTransform({ scale, rotation, translation })
     {
         const [sx, sy, sz] = scale,
               [rx, ry, rz, rw] = rotation,

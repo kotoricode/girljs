@@ -12,32 +12,28 @@ export class Vector2 extends VectorBase
         return a.x*b.x + a.y*b.y;
     }
 
-    // Debug stuff in case someone tries to access this as Vector3
-    get z() { throw Error; } // eslint-disable-line
-    set z(farts) { throw Error; } // eslint-disable-line
-
-    copyFrom(vec)
+    copyFrom({ x, y })
     {
-        this.x = vec.x;
-        this.y = vec.y;
+        this.x = x;
+        this.y = y;
     }
 
-    addVec(vec)
+    addVec({ x, y })
     {
-        this.x += vec.x;
-        this.y += vec.y;
+        this.x += x;
+        this.y += y;
     }
 
-    subVec(vec)
+    subVec({ x, y })
     {
-        this.x -= vec.x;
-        this.y -= vec.y;
+        this.x -= x;
+        this.y -= y;
     }
 
-    mulVec(vec)
+    mulVec({ x, y })
     {
-        this.x *= vec.x;
-        this.y *= vec.y;
+        this.x *= x;
+        this.y *= y;
     }
 
     mulScalar(s)
@@ -58,7 +54,7 @@ export class Vector2 extends VectorBase
 
     sqrMag()
     {
-        const {x, y} = this;
+        const { x, y } = this;
 
         return x*x + y*y;
     }

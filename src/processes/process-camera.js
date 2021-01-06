@@ -1,31 +1,14 @@
 import { mouse } from "../dom";
 import { Motion } from "../components/motion";
 import { Space } from "../components/space";
-import { Ground } from "../components/ground";
 
 import * as $ from "../utils/const";
 import { getInvViewProjection, setCameraPosition } from "../math/camera";
 import { Vector2 } from "../math/vector2";
+import { Collider } from "../components/collider";
 
 const position = new Vector2();
-let numHits = 0;
-const hits = [];
 
-const collide = (box) =>
-{
-    const { min, max } = box;
-    const { x, y } = position;
-
-    if (min.x <= x && x <= max.x && min.y <= y && y <= max.y)
-    {
-        if (numHits === hits.length)
-        {
-            hits.push(new Vector2());
-        }
-
-        hits[numHits++].set(x, y);
-    }
-};
 
 export const processCamera = (scene) =>
 {
@@ -38,20 +21,18 @@ export const processCamera = (scene) =>
     // Update camera ray
     if (mouse.isClick)
     {
-        const [ground] = scene.one($.ENTITY_GROUND, Ground);
+        const [coll] = scene.one($.ENTITY_GROUND, Collider);
 
-        numHits = 0;
         const ivp = getInvViewProjection();
 
         position.copyFrom(mouse.clip);
         position.toWorld(ivp);
-        collide(ground);
+        coll.hasPoint(position);
 
         // Update player path
-        if (numHits)
+        if (coll.hasPoint(position))
         {
-            const hit = hits[0];
-            pMotion.setMainTarget(hit);
+            pMotion.setMainTarget(position);
         }
     }
 };

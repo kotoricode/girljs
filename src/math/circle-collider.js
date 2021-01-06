@@ -2,7 +2,7 @@ import { Vector2 } from "./vector2";
 
 export class CircleCollider
 {
-    constructor(x, y, radius, anchorX, anchorY)
+    constructor(x, y, radius, anchorX=0, anchorY=0)
     {
         this.radius = radius;
         this.radius2 = radius ** 2;

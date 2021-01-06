@@ -39,13 +39,8 @@ export const clearUi = () =>
 
 export const isUiInteraction = () =>
 {
-    if (isDialogueMode)
-    {
-        clearUi();
-        drawDialogue(new Date() + "");
-
-        return true;
-    }
+    clearUi();
+    drawDialogue(new Date() + "");
 
     return false;
 };

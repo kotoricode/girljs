@@ -4,7 +4,7 @@ import { publish } from "./utils/publisher";
 import { ONE_TIME_LISTENER } from "./math/math-helper";
 
 import * as $ from "./utils/const";
-import { clearUi, drawCircle, drawDialogue, isUiInteraction } from "./ui";
+import { clearUi, drawCircle, isUiInteraction } from "./ui";
 
 // Modern browsers won't autoplay audio before user interaction
 window.addEventListener("mousedown", initAudio, ONE_TIME_LISTENER);
@@ -76,9 +76,6 @@ export const mouse = {
 
 const onClick = (e) =>
 {
-    clearUi();
-    drawDialogue();
-    drawCircle();
     const x = 2*(e.clientX-canvasRect.left)/gameCanvas.clientWidth - 1;
     const y = 1 - 2*(e.clientY-canvasRect.top)/gameCanvas.clientHeight;
 
