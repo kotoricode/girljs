@@ -1,13 +1,15 @@
+import { blueprint } from "./blueprint";
 import * as $ from "./const";
 import { mouse } from "./dom";
 import { Scene } from "./scene";
-import { processCamera } from "./processes/process-camera";
-import { processMotion } from "./processes/process-motion";
 
 const mainLoop = (timestamp) =>
 {
-    const dt = (timestamp - oldTimestamp) * 1e-3;
-    activeScene.update(dt);
+    if (activeScene)
+    {
+        const dt = (timestamp - oldTimestamp) * 1e-3;
+        activeScene.update(dt);
+    }
 
     mouse.isClick = false;
     oldTimestamp = timestamp;
@@ -16,23 +18,23 @@ const mainLoop = (timestamp) =>
 
 export const setActiveScene = (sceneId) =>
 {
-    if (activeScene)
+    if (!scenes.has(sceneId))
     {
-        activeScene.jobs = activeScene.inactiveJobs;
+        const bp = blueprint.get(sceneId);
+        const scene = new Scene(bp);
+        scenes.set(sceneId, scene);
     }
 
-    activeScene = sceneMap.get(sceneId);
-    activeScene.jobs = activeScene.activeJobs;
+    if (activeScene)
+    {
+        activeScene.unload();
+    }
+
+    activeScene = scenes.get(sceneId);
+    activeScene.load();
 };
 
-const sceneMap = new Map([
-    [$.SCENE_TEST, new Scene(
-        [
-            processMotion,
-            processCamera
-        ]
-    )]
-]);
+const scenes = new Map();
 
 let activeScene;
 setActiveScene($.SCENE_TEST);

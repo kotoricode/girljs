@@ -2,16 +2,15 @@ import * as $ from "./const";
 import { Sprite } from "./components/sprite";
 import { Space } from "./components/space";
 import { Entity } from "./entity";
-import { createGround, createPlayer } from "./entity-creator";
 import { render } from "./gl/renderer";
 import { getViewProjection } from "./math/camera";
 
 export class Scene
 {
-    constructor(processes)
+    constructor(blueprint)
     {
         this.dt = 0;
-        this.processes = processes;
+        this.blueprint = blueprint;
 
         /** @const {Map<string, Entity>} */
         this.entities = new Map();
@@ -20,9 +19,6 @@ export class Scene
         this.cached = new Map();
 
         this.root = new Entity($.ENTITY_ROOT);
-
-        this.addGround();
-        this.addPlayer();
     }
 
     static * yieldComponents(entity, components)
@@ -60,17 +56,17 @@ export class Scene
         this.hasNewSprites |= (entity.flags & Sprite.flag);
     }
 
-    addGround()
-    {
-        const entity = createGround();
-        this.addEntity(entity);
-    }
+    // addGround()
+    // {
+    //     const entity = createGround();
+    //     this.addEntity(entity);
+    // }
 
-    addPlayer()
-    {
-        const entity = createPlayer();
-        this.addEntity(entity);
-    }
+    // addPlayer()
+    // {
+    //     const entity = createPlayer();
+    //     this.addEntity(entity);
+    // }
 
     * all(...components)
     {
@@ -145,6 +141,27 @@ export class Scene
         this.hasNewSprites = false;
     }
 
+    load()
+    {
+        const bp = this.blueprint();
+        this.processes = bp.processes;
+        this.loadEntities(bp.entities);
+    }
+
+    loadEntities(entities, parentId)
+    {
+        for (const [entityId, entityObj] of Object.entries(entities))
+        {
+            const entity = new Entity(entityId, ...entityObj.components);
+            this.addEntity(entity, parentId);
+
+            if (entity.children)
+            {
+                this.loadEntities(entity.children, entityId);
+            }
+        }
+    }
+
     markDirty(space)
     {
         // TODO: put dirty spaces into list (instead of .isDirty)
@@ -161,6 +178,11 @@ export class Scene
         const entity = this.getEntity(entityId);
 
         return Scene.yieldComponents(entity, components);
+    }
+
+    unload()
+    {
+        console.log("unload");
     }
 
     update(dt)
