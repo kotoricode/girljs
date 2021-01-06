@@ -1,7 +1,7 @@
 import { mouse } from "./dom";
 import { Scene } from "./scene";
 
-import * as $ from "./const";
+import * as $ from "./utils/const";
 
 // Processes
 import { processCamera } from "./processes/process-camera";

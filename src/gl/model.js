@@ -1,7 +1,7 @@
-import { gl } from "./dom";
+import { gl } from "../dom";
 import { getSubTextureData, getTextureData } from "./texture";
 
-import * as $ from "./const";
+import * as $ from "../utils/const";
 
 const BL_BR_TL_TR = (minX, maxX, minY, maxY) =>
 {

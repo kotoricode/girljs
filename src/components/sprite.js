@@ -1,9 +1,9 @@
-import { getSubTextureData, getTextureData } from "../texture";
-import { getModel } from "../model";
-import { createProgramData, setupModelVao } from "../program";
+import { getSubTextureData, getTextureData } from "../gl/texture";
+import { getModel } from "../gl/model";
+import { createProgramData, setupModelVao } from "../gl/program";
 import { Component } from "./component";
 
-import * as $ from "../const";
+import * as $ from "../utils/const";
 
 export class Sprite extends Component
 {

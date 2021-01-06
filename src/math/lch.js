@@ -1,7 +1,7 @@
 // https://www.w3.org/TR/css-color-4/#color-conversion-code
 // http://www.brucelindbloom.com/index.html?Math.html
-import { SettableArray } from "../settable-array";
-import { clamp, DEG_TO_RAD } from "../util";
+import { SettableArray } from "./settable-array";
+import { clamp, DEG_TO_RAD } from "./math-helper";
 
 const cbEpsilon = 6 / 29;
 const invKappa = (cbEpsilon * 0.5) ** 3;

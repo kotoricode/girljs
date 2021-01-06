@@ -1,5 +1,6 @@
-import { SettableArray } from "../settable-array";
+import { SettableArray } from "./settable-array";
 
+// TODO: mat4 can be simplified for 2D stuff (at least translation Z = 0)
 export class Matrix4 extends SettableArray
 {
     constructor()
@@ -155,11 +156,11 @@ export class Matrix4 extends SettableArray
         );
     }
 
-    fromTransform(transform)
+    fromTransform({scale, rotation, translation})
     {
-        const [sx, sy, sz] = transform.scale,
-              [rx, ry, rz, rw] = transform.rotation,
-              [tx, ty, tz] = transform.translation;
+        const [sx, sy, sz] = scale,
+              [rx, ry, rz, rw] = rotation,
+              [tx, ty, tz] = translation;
 
         const rxx = rx * rx,
               ryy = ry * ry,

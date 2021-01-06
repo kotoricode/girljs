@@ -1,4 +1,4 @@
-import { SettableArray } from "../settable-array";
+import { SettableArray } from "./settable-array";
 
 export class VectorBase extends SettableArray
 {

@@ -1,6 +1,6 @@
-import { gl } from "./dom";
+import { gl } from "../dom";
 
-import * as $ from "./const";
+import * as $ from "../utils/const";
 
 const image = new Image();
 const toFetch = [];

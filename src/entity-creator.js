@@ -6,7 +6,7 @@ import { Player } from "./components/player";
 import { Sprite } from "./components/sprite";
 import { Ground } from "./components/ground";
 
-import * as $ from "./const";
+import * as $ from "./utils/const";
 
 export const createPlayer = () =>
 {

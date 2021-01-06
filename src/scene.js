@@ -2,10 +2,10 @@ import { Sprite } from "./components/sprite";
 import { Space } from "./components/space";
 import { Entity } from "./entity";
 import { createGround, createPlayer } from "./entity-creator";
-import { render } from "./renderer";
+import { render } from "./gl/renderer";
 
-import * as $ from "./const";
-import { getViewProjection } from "./camera";
+import * as $ from "./utils/const";
+import { getViewProjection } from "./math/camera";
 
 export class Scene
 {

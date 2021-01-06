@@ -3,8 +3,8 @@ import { Motion } from "../components/motion";
 import { Space } from "../components/space";
 import { Ground } from "../components/ground";
 
-import * as $ from "../const";
-import { getInvViewProjection, setCameraPosition } from "../camera";
+import * as $ from "../utils/const";
+import { getInvViewProjection, setCameraPosition } from "../math/camera";
 import { Vector2 } from "../math/vector2";
 
 const position = new Vector2();
@@ -32,7 +32,8 @@ export const processCamera = (scene) =>
     const [pMotion, plSpace] = scene.one($.ENTITY_PLAYER, Motion, Space);
 
     // Update camera position, matrix
-    setCameraPosition(plSpace.world.translation);
+    const { x, y } = plSpace.world.translation;
+    setCameraPosition(x, y);
 
     // Update camera ray
     if (mouse.isClick)

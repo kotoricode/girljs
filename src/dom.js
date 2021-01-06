@@ -1,9 +1,9 @@
 import { initAudio } from "./audio";
 import { Vector2 } from "./math/vector2";
-import { publish } from "./publisher";
-import { ONE_TIME_LISTENER } from "./util";
+import { publish } from "./utils/publisher";
+import { ONE_TIME_LISTENER } from "./math/math-helper";
 
-import * as $ from "./const";
+import * as $ from "./utils/const";
 import { clearUi, drawCircle, drawDialogue, isUiInteraction } from "./ui";
 
 // Modern browsers won't autoplay audio before user interaction

@@ -1,4 +1,4 @@
-import { gl } from "./dom";
+import { gl } from "../dom";
 
 import vsStandard from "./shaders/vert-standard.glsl";
 import fsGray     from "./shaders/frag-gray.glsl";
@@ -11,7 +11,7 @@ import fsColor    from "./shaders/frag-color.glsl";
 
 import { getModelBuffer } from "./model";
 
-import * as $ from "./const";
+import * as $ from "../utils/const";
 
 const createAttachShader = (program, shaderId, { shaderSrc }) =>
 {

@@ -1,7 +1,7 @@
-import { getOption } from "./options";
-import { subscribe } from "./publisher";
+import { getOption } from "./utils/storage";
+import { subscribe } from "./utils/publisher";
 
-import * as $ from "./const";
+import * as $ from "./utils/const";
 
 const setGainFromOptions = (gainId) =>
 {

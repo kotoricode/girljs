@@ -1,6 +1,6 @@
-import { canvasAspect, ui } from "./dom";
-import { Matrix4 } from "./math/matrix4";
-import { Transform } from "./math/transform";
+import { canvasAspect, ui } from "../dom";
+import { Matrix4 } from "./matrix4";
+import { Transform } from "./transform";
 
 // nearZ 1, farZ -1
 const z = 2,
@@ -27,9 +27,9 @@ export const getInvViewProjection = () =>
     return invViewProjection;
 };
 
-export const setCameraPosition = (vec3) =>
+export const setCameraPosition = (x, y) =>
 {
-    transform.translation.set(vec3.x, vec3.y);
+    transform.translation.set(x, y);
 
     /*--------------------------------------------------------------------------
         ViewProjection & Inverted ViewProjection
