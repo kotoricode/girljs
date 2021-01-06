@@ -1,13 +1,10 @@
 {
-    "private": true,
     "scripts": {
         "build-dev": "node build-dev.js",
         "build-prod": "node build-prod.js"
     },
     "devDependencies": {
         "esbuild": "^0.8.30",
-        "eslint": "^7.4.0",
-        "esload": "0.0.0",
-        "raw-loader": "^4.0.1"
+        "eslint": "^7.4.0"
     }
 }
