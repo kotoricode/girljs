@@ -1,14 +1,14 @@
-/* eslint-env node */
-
+const esbuild = require("esbuild");
 const glslPlugin = require("./glsl-plugin");
+const { entryPoints, outfile, target } = require("./build-common");
 
-require("esbuild").build({
+esbuild.build({
     bundle: true,
     color: true,
-    entryPoints: ["src/main.js"],
+    entryPoints,
     minify: true,
-    outfile: "dist/main.js",
+    outfile,
     plugins: [glslPlugin],
     sourcemap: false,
-    target: "es2020",
+    target,
 });

@@ -1,22 +1,14 @@
-const rawLoader = require("esload").esload({
-    name: "raw-loader",
-    outdir: "dist",
-    rules: [
-        {
-            test: /\.(?:glsl)$/i,
-            use: ["raw-loader"]
-        }
-    ]
-});
+const esbuild = require("esbuild");
+const glslPlugin = require("./glsl-plugin");
+const { entryPoints, outfile, target } = require("./build-common");
 
-require("esbuild").build({
+esbuild.build({
     bundle: true,
     color: true,
-    define: { __webpack_public_path__: "\"/\"" },
-    entryPoints: ["src/main.js"],
+    entryPoints,
     minify: false,
-    outfile: "dist/main.js",
-    plugins: [rawLoader],
+    outfile,
+    plugins: [glslPlugin],
     sourcemap: true,
-    target: ["esnext"],
+    target,
 });
