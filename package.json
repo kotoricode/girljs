@@ -1,16 +1,15 @@
 {
     "private": true,
     "scripts": {
-        "webpack-dev": "webpack --config webpack.dev.js",
-        "webpack-dev-watch": "webpack --config webpack.dev.js --watch",
-        "webpack-prod": "webpack --config webpack.prod.js"
+        "build-dev": "node build-dev.js",
+        "build-prod": "node build-prod.js"
     },
     "devDependencies": {
+        "esbuild": "^0.8.30",
         "eslint": "^7.4.0",
+        "esload": "0.0.0",
         "raw-loader": "^4.0.1",
         "string-replace-loader": "^2.3.0",
-        "terser-webpack-plugin": "^4.1.0",
-        "webpack": "^4.43.0",
-        "webpack-cli": "^3.3.12"
+        "terser-webpack-plugin": "^4.1.0"
     }
 }
