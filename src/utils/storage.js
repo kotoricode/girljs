@@ -1,57 +1,29 @@
-import { publish } from "./publisher";
-
-import * as $ from "./const";
-
 const storage = window.localStorage;
 
-const data = {
-    [$.OPTION_MASTER]: 0.5,
-    [$.OPTION_MUSIC]: 0.5,
-    [$.OPTION_SOUND]: 0.5
-};
-
-export const getOption = (key) =>
+export const getStored = (key) =>
 {
-    return data[key];
-};
+    const data = storage.getItem(key);
 
-export const setOption = (key, value) =>
-{
-    data[key] = value;
-    publish(key);
-};
-
-export const saveOptions = (...keys) =>
-{
-    for (const key of keys)
+    try
     {
-        if (!(key in data))
-        {
-            throw Error;
-        }
+        const parsed = JSON.parse(data);
 
-        const value = data[key];
-
-        const json = JSON.stringify(value);
-        storage.setItem(key, json);
-
-        console.log(`[Options] Saved key:"${key}" value:"${value}"`);
+        return parsed;
+    }
+    catch
+    {
+        throw key;
     }
 };
 
-for (const key of Object.keys(data))
+export const hasStored = (key) =>
 {
-    const stored = storage.getItem(key);
+    return storage.getItem(key) !== null;
+};
 
-    if (stored)
-    {
-        try
-        {
-            data[key] = JSON.parse(stored);
-        }
-        catch
-        {
-            console.warn(`Failed to parse ${key}: ${stored}`);
-        }
-    }
-}
+export const setStored = (key, value) =>
+{
+    const json = JSON.stringify(value);
+
+    storage.setItem(key, json);
+};

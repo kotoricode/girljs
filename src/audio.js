@@ -1,4 +1,4 @@
-import { getOption } from "./utils/storage";
+import { getStored } from "./utils/storage";
 import { subscribe } from "./utils/publisher";
 
 import * as $ from "./utils/const";
@@ -6,7 +6,7 @@ import * as $ from "./utils/const";
 const setGainFromOptions = (gainId) =>
 {
     const gainObj = gains.get(gainId);
-    gainObj.gain.value = getOption(gainId);
+    gainObj.gain.value = getStored(gainId);
 };
 
 const createGain = (gainId, parent) =>

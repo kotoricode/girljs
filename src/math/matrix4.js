@@ -1,3 +1,5 @@
+// https://ncalculators.com/matrix/4x4-matrix-multiplication-calculator.htm
+
 import { SettableArray } from "./settable-array";
 
 // TODO: mat4 can be simplified for 2D stuff (at least translation Z = 0)
