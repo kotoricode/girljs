@@ -15,10 +15,7 @@ const BL_BR_TL_TR = (minX, maxX, minY, maxY) =>
 
 const uvFromSubTexture = (subTextureId) =>
 {
-    const spriteData = getSubTextureData(subTextureId);
-    const { x, y, width, height, baseTextureId } = spriteData;
-
-    const baseData = getTextureData(baseTextureId);
+    const { x, y, width, height, baseData } = getSubTextureData(subTextureId);
     const { width: baseWidth, height: baseHeight } = baseData;
 
     const minX = x / baseWidth,

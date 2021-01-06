@@ -16,15 +16,7 @@ image.onload = () =>
     const { texture, parami } = toFetch.shift();
 
     gl.bindTexture($.TEXTURE_2D, texture);
-
-    gl.texImage2D(
-        $.TEXTURE_2D,
-        0,
-        $.RGBA,
-        $.RGBA,
-        $.UNSIGNED_BYTE,
-        image
-    );
+    gl.texImage2D($.TEXTURE_2D, 0, $.RGBA, $.RGBA, $.UNSIGNED_BYTE, image);
 
     let i = 0;
     while (i < parami.length)
@@ -66,16 +58,19 @@ const createImageTexture = (src, parami) =>
     return texture;
 };
 
+/*------------------------------------------------------------------------------
+    Textures
+------------------------------------------------------------------------------*/
 const paramiMinLinMaxLin = [
     $.TEXTURE_MIN_FILTER, $.LINEAR,
     $.TEXTURE_MAG_FILTER, $.LINEAR
 ];
 
-// name, 1<<width, 1<<height, parami[]
+// name/url, width, height, parami[]
 const textureDef = [
-    $.TEXTURE_BRAID,  10, 10, paramiMinLinMaxLin,
-    $.TEXTURE_SPRITE,  8,  8, paramiMinLinMaxLin,
-    $.TEXTURE_POLY,    9,  9, paramiMinLinMaxLin
+    $.TEXTURE_BRAID, 1024, 1024, paramiMinLinMaxLin,
+    $.TEXTURE_POLY,   512,  512, paramiMinLinMaxLin,
+    $.TEXTURE_SPRITE, 256,  256, paramiMinLinMaxLin
 ];
 
 const textureData = new Map();
@@ -83,63 +78,44 @@ const textureData = new Map();
 let i = 0;
 while (i < textureDef.length)
 {
-    const key = textureDef[i++];
+    const src = textureDef[i++];
 
-    textureData.set(key, {
-        width: 1 << textureDef[i++],
-        height: 1 << textureDef[i++],
-        texture: createImageTexture(key, textureDef[i++])
+    textureData.set(src, {
+        width: textureDef[i++],
+        height: textureDef[i++],
+        texture: createImageTexture(src, textureDef[i++])
     });
 }
 
-export const subTextureData = new Map([
-    [
-        $.SUBTEXTURE_BRAID,
-        {
-            baseTextureId: $.TEXTURE_BRAID,
-            x: 8,
-            y: 10,
-            width: 119,
-            height: 129
-        }
-    ],
-    [
-        $.SUBTEXTURE_BG,
-        {
-            baseTextureId: $.TEXTURE_POLY,
-            x: 94,
-            y: 97,
-            width: 256,
-            height: 256
-        }
-    ],
-    [
-        $.SUBTEXTURE_UKKO,
-        {
-            baseTextureId: $.TEXTURE_SPRITE,
-            x: 0,
-            y: 0,
-            width: 256,
-            height: 256
-        }
-    ]
-]);
+/*------------------------------------------------------------------------------
+    Subtextures
+------------------------------------------------------------------------------*/
+// name, x, y, width, height, textureData name/url
+const subTextureDef = [
+    $.SUBTEXTURE_BRAID, 8, 10, 119, 129, $.TEXTURE_BRAID,
+    $.SUBTEXTURE_BG,   94, 97, 256, 256, $.TEXTURE_POLY,
+    $.SUBTEXTURE_UKKO,  0,  0, 256, 256, $.TEXTURE_SPRITE
+];
+
+const subTextureData = new Map();
+
+i = 0;
+while (i < subTextureDef.length)
+{
+    subTextureData.set(subTextureDef[i++], {
+        x: subTextureDef[i++],
+        y: subTextureDef[i++],
+        width: subTextureDef[i++],
+        height: subTextureDef[i++],
+        baseData: textureData.get(subTextureDef[i++])
+    });
+}
 
 export const getSubTextureData = (subTextureId) =>
 {
     if (subTextureData.has(subTextureId))
     {
         return subTextureData.get(subTextureId);
-    }
-
-    throw Error;
-};
-
-export const getTextureData = (textureId) =>
-{
-    if (textureData.has(textureId))
-    {
-        return textureData.get(textureId);
     }
 
     throw Error;

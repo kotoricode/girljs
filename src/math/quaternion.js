@@ -9,9 +9,9 @@ export class Quaternion extends SettableArray
 
     fromEuler(x, y, z)
     {
-        const hz = z * 0.5,
-              hy = y * 0.5,
-              hx = x * 0.5;
+        const hz = z / 2,
+              hy = y / 2,
+              hx = x / 2;
 
         const cz = Math.cos(hz),
               sz = Math.sin(hz),
@@ -26,7 +26,5 @@ export class Quaternion extends SettableArray
             cx*cy*sz - sx*sy*cz,
             cx*cy*cz + sx*sy*sz
         );
-
-        return this;
     }
 }

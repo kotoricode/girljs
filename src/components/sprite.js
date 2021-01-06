@@ -1,4 +1,4 @@
-import { getSubTextureData, getTextureData } from "../gl/texture";
+import { getSubTextureData } from "../gl/texture";
 import { getModel } from "../gl/model";
 import { createProgramData, setupModelVao } from "../gl/program";
 import { Component } from "./component";
@@ -33,9 +33,8 @@ export class Sprite extends Component
     setModel(modelId)
     {
         this.model = getModel(modelId);
-        const subTextureData = getSubTextureData(this.model.subTextureId);
-        const textureData = getTextureData(subTextureData.baseTextureId);
-        this.texture = textureData.texture;
+        const subTexData = getSubTextureData(this.model.subTextureId);
+        this.texture = subTexData.baseData.texture;
 
         this.setupModelUniforms();
 
