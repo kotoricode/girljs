@@ -12,28 +12,28 @@ export class Vector2 extends VectorBase
         return a.x*b.x + a.y*b.y;
     }
 
-    copyFrom({ x, y })
+    copyFrom(vec)
     {
-        this.x = x;
-        this.y = y;
+        this.x = vec.x;
+        this.y = vec.y;
     }
 
-    addVec({ x, y })
+    addVec(vec)
     {
-        this.x += x;
-        this.y += y;
+        this.x += vec.x;
+        this.y += vec.y;
     }
 
-    subVec({ x, y })
+    subVec(vec)
     {
-        this.x -= x;
-        this.y -= y;
+        this.x -= vec.x;
+        this.y -= vec.y;
     }
 
-    mulVec({ x, y })
+    mulVec(vec)
     {
-        this.x *= x;
-        this.y *= y;
+        this.x *= vec.x;
+        this.y *= vec.y;
     }
 
     mulScalar(s)

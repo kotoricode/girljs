@@ -13,16 +13,16 @@ export class BoxCollider
         this.anchor = new Vector2(anchorX, anchorY);
     }
 
-    hasPoint({ x, y })
+    hasPoint(vec)
     {
-        return this.position.x <= x && x <= this.bottomRight.x &&
-               this.position.y <= y && y <= this.bottomRight.y;
+        return this.position.x <= vec.x && vec.x <= this.bottomRight.x &&
+               this.position.y <= vec.y && vec.y <= this.bottomRight.y;
     }
 
-    setPosition({ x, y })
+    setPosition(vec)
     {
-        const posX = x - this.anchor.x*this.width;
-        const posY = y - this.anchor.y*this.height;
+        const posX = vec.x - this.anchor.x*this.width;
+        const posY = vec.y - this.anchor.y*this.height;
 
         this.position.set(posX, posY);
         this.bottomRight.set(posX + this.width, posY + this.height);

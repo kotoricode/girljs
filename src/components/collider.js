@@ -23,11 +23,11 @@ export class Collider extends Component
         return false;
     }
 
-    setPosition(pos)
+    setPosition(vec2)
     {
         for (const collider of this.meshes)
         {
-            collider.setPosition(pos);
+            collider.setPosition(vec2);
         }
     }
 }
