@@ -11,7 +11,6 @@ import fsTiled    from "./shaders/frag-tiled.glsl";
 import vsColor    from "./shaders/vert-color.glsl";
 import fsColor    from "./shaders/frag-color.glsl";
 
-
 const createAttachShader = (program, shaderId, { shaderSrc }) =>
 {
     const shader = gl.createShader(shaderId);
@@ -20,37 +19,6 @@ const createAttachShader = (program, shaderId, { shaderSrc }) =>
     gl.attachShader(program, shader);
 
     return shader;
-};
-
-const detachDeleteShader = (program, shader) =>
-{
-    gl.detachShader(program, shader);
-    gl.deleteShader(shader);
-};
-
-export const setupModelVao = (programData, attrOffsets) =>
-{
-    const { program, vao, attributes } = programData;
-
-    gl.bindVertexArray(vao);
-
-    const modelBuffer = getModelBuffer();
-    gl.bindBuffer($.ARRAY_BUFFER, modelBuffer);
-
-    for (const [name, layout] of Object.entries(attributes))
-    {
-        if (!(name in attrOffsets))
-        {
-            throw name;
-        }
-
-        const location = gl.getAttribLocation(program, name);
-        gl.enableVertexAttribArray(location);
-        gl.vertexAttribPointer(location, ...layout, attrOffsets[name]);
-    }
-
-    gl.bindBuffer($.ARRAY_BUFFER, null);
-    gl.bindVertexArray(null);
 };
 
 export const createProgramData = (programId) =>
@@ -78,6 +46,56 @@ export const createProgramData = (programId) =>
         uniValues,
         attributes
     };
+};
+
+const createUniSetter = (type, loc) => (values) => gl[type](loc, ...values);
+
+const detachDeleteShader = (program, shader) =>
+{
+    gl.detachShader(program, shader);
+    gl.deleteShader(shader);
+};
+
+const setUniSetters = ({ uniforms }, program, uniDefaults, uniSetters) =>
+{
+    if (uniforms)
+    {
+        for (const [type, typeObj] of Object.entries(uniforms))
+        {
+            for (const [name, defValueArr] of Object.entries(typeObj))
+            {
+                uniDefaults.set(name, defValueArr);
+                const location = gl.getUniformLocation(program, name);
+                const uniSetter = createUniSetter(type, location);
+                uniSetters.set(name, uniSetter);
+            }
+        }
+    }
+};
+
+export const setupModelVao = (programData, attrOffsets) =>
+{
+    const { program, vao, attributes } = programData;
+
+    gl.bindVertexArray(vao);
+
+    const modelBuffer = getModelBuffer();
+    gl.bindBuffer($.ARRAY_BUFFER, modelBuffer);
+
+    for (const [name, layout] of Object.entries(attributes))
+    {
+        if (!(name in attrOffsets))
+        {
+            throw name;
+        }
+
+        const location = gl.getAttribLocation(program, name);
+        gl.enableVertexAttribArray(location);
+        gl.vertexAttribPointer(location, ...layout, attrOffsets[name]);
+    }
+
+    gl.bindBuffer($.ARRAY_BUFFER, null);
+    gl.bindVertexArray(null);
 };
 
 // TODO: maybe move defs to a different file to reduce clutter here
@@ -174,25 +192,6 @@ const newProgramDef = [
 /*------------------------------------------------------------------------------
     Create and prepare programs
 ------------------------------------------------------------------------------*/
-const createUniSetter = (type, loc) => (values) => gl[type](loc, ...values);
-
-const setUniSetters = ({ uniforms }, program, uniDefaults, uniSetters) =>
-{
-    if (uniforms)
-    {
-        for (const [type, typeObj] of Object.entries(uniforms))
-        {
-            for (const [name, defValueArr] of Object.entries(typeObj))
-            {
-                uniDefaults.set(name, defValueArr);
-                const location = gl.getUniformLocation(program, name);
-                const uniSetter = createUniSetter(type, location);
-                uniSetters.set(name, uniSetter);
-            }
-        }
-    }
-};
-
 const preparedPrograms = new Map();
 
 let i = 0;

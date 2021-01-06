@@ -3,31 +3,6 @@
 import { SettableArray } from "./settable-array";
 import { clamp, DEG_TO_RAD } from "./math-helper";
 
-const cbEpsilon = 6 / 29;
-const invKappa = (cbEpsilon * 0.5) ** 3;
-const gammaExp = 1 / 2.4;
-
-const d65x = 0.3127;
-const d65y = 0.329;
-const d65z = 0.3583;
-const d65xn = d65x / d65y;
-const d65zx = d65z / d65y;
-
-// https://entropymine.com/imageworsener/srgbformula/
-const lin2rgb = (value) =>
-{
-    const clamped = clamp(value);
-
-    return clamped > 0.0031308
-           ? 1.055 * clamped**gammaExp - 0.055
-           : 12.92 * clamped;
-};
-
-const invFunc = (value) =>
-{
-    return (value > cbEpsilon) ? value**3 : invKappa*(116*value - 16);
-};
-
 export class Lch
 {
     constructor(l=0, c=0, h=0)
@@ -59,3 +34,28 @@ export class Lch
         );
     }
 }
+
+// https://entropymine.com/imageworsener/srgbformula/
+const lin2rgb = (value) =>
+{
+    const clamped = clamp(value);
+
+    return clamped > 0.0031308
+           ? 1.055 * clamped**gammaExp - 0.055
+           : 12.92 * clamped;
+};
+
+const invFunc = (value) =>
+{
+    return (value > cbEpsilon) ? value**3 : invKappa*(116*value - 16);
+};
+
+const cbEpsilon = 6 / 29;
+const invKappa = (cbEpsilon * 0.5) ** 3;
+const gammaExp = 1 / 2.4;
+
+const d65x = 0.3127;
+const d65y = 0.329;
+const d65z = 0.3583;
+const d65xn = d65x / d65y;
+const d65zx = d65z / d65y;

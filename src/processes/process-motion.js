@@ -2,8 +2,6 @@ import { Motion } from "../components/motion";
 import { Space } from "../components/space";
 import { Vector2 } from "../math/vector2";
 
-const dist = new Vector2();
-
 export const processMotion = (scene) =>
 {
     for (const [motion, space] of scene.all(Motion, Space))
@@ -52,3 +50,5 @@ export const processMotion = (scene) =>
         scene.updateGraph();
     }
 };
+
+const dist = new Vector2();

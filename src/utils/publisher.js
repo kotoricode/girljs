@@ -1,5 +1,3 @@
-const eventSubs = new Map();
-
 export const publish = (event) =>
 {
     if (eventSubs.has(event))
@@ -56,3 +54,5 @@ export const unsubscribe = (event, subFunc) =>
         eventSubs.delete(subs);
     }
 };
+
+const eventSubs = new Map();

@@ -21,33 +21,6 @@ const getViewProgramData = () =>
     return programData;
 };
 
-const framebuffer = gl.createFramebuffer();
-
-let isCanvasResized = true,
-    framebufferTexture,
-    oldTexture,
-    oldProgram;
-
-subscribe($.EVENT_RESIZE, () => isCanvasResized = true);
-
-const { program: viewProgram, vao: viewVao } = getViewProgramData();
-
-gl.enable($.BLEND);
-gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
-
-// Sprites turn by flipping scale.x sign, so no face culling
-// TODO: maybe do add face culling for static (no Motion component) entities
-gl.disable($.CULL_FACE);
-
-// Not needed for 2D
-gl.disable($.DEPTH_TEST);
-gl.depthMask(false);
-
-const queues = new Map([
-    [$.PROGRAM_SPRITE, []],
-    [$.PROGRAM_TILED, []]
-]);
-
 export const render = (scene) =>
 {
     // TODO: queue must be based on scenegraph, not .all()
@@ -152,3 +125,30 @@ const renderTriangleStrip = (vao) =>
     gl.drawArrays($.TRIANGLE_STRIP, 0, 4);
     gl.bindVertexArray(null);
 };
+
+const framebuffer = gl.createFramebuffer();
+
+let isCanvasResized = true,
+    framebufferTexture,
+    oldTexture,
+    oldProgram;
+
+subscribe($.EVENT_RESIZE, () => isCanvasResized = true);
+
+const { program: viewProgram, vao: viewVao } = getViewProgramData();
+
+gl.enable($.BLEND);
+gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
+
+// Sprites turn by flipping scale.x sign, so no face culling
+// TODO: maybe do add face culling for static (no Motion component) entities
+gl.disable($.CULL_FACE);
+
+// Not needed for 2D
+gl.disable($.DEPTH_TEST);
+gl.depthMask(false);
+
+const queues = new Map([
+    [$.PROGRAM_SPRITE, []],
+    [$.PROGRAM_TILED, []]
+]);

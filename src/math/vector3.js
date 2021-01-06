@@ -28,15 +28,6 @@ export class Vector3 extends VectorBase
         this[2] = value;
     }
 
-    // Looped to work with both Vector2 & Vector3
-    copyFrom(vec)
-    {
-        for (let i = 0; i < vec.length; i++)
-        {
-            this[i] = vec[i];
-        }
-    }
-
     addVec(vec)
     {
         for (let i = 0; i < vec.length; i++)
@@ -45,27 +36,12 @@ export class Vector3 extends VectorBase
         }
     }
 
-    subVec(vec)
+    copyFrom(vec)
     {
         for (let i = 0; i < vec.length; i++)
         {
-            this[i] -= vec[i];
+            this[i] = vec[i];
         }
-    }
-
-    mulVec(vec)
-    {
-        for (let i = 0; i < vec.length; i++)
-        {
-            this[i] *= vec[i];
-        }
-    }
-
-    mulScalar(s)
-    {
-        this.x *= s;
-        this.y *= s;
-        this.z *= s;
     }
 
     cross(a, b)
@@ -80,6 +56,21 @@ export class Vector3 extends VectorBase
             a.z*b.x - a.x*b.z,
             a.x*b.y - a.y*b.x
         );
+    }
+
+    mulScalar(s)
+    {
+        this.x *= s;
+        this.y *= s;
+        this.z *= s;
+    }
+
+    mulVec(vec)
+    {
+        for (let i = 0; i < vec.length; i++)
+        {
+            this[i] *= vec[i];
+        }
     }
 
     sqrDist(vec3)
@@ -97,5 +88,13 @@ export class Vector3 extends VectorBase
         const { x, y, z } = this;
 
         return x*x + y*y + z*z;
+    }
+
+    subVec(vec)
+    {
+        for (let i = 0; i < vec.length; i++)
+        {
+            this[i] -= vec[i];
+        }
     }
 }

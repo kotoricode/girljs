@@ -1,5 +1,3 @@
-export const DEG_TO_RAD = Math.PI / 180;
-
 export const clamp = (value, minValue=0, maxValue=1) =>
 {
     return Math.min(maxValue, Math.max(minValue, value));
@@ -19,3 +17,5 @@ export const mod = (value, modulo) =>
 {
     return (value % modulo + modulo) % modulo;
 };
+
+export const DEG_TO_RAD = Math.PI / 180;

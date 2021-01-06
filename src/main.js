@@ -4,14 +4,15 @@ import { Scene } from "./scene";
 import { processCamera } from "./processes/process-camera";
 import { processMotion } from "./processes/process-motion";
 
-const sceneMap = new Map([
-    [$.SCENE_TEST, new Scene(
-        [
-            processMotion,
-            processCamera
-        ]
-    )]
-]);
+const mainLoop = (timestamp) =>
+{
+    const dt = (timestamp - oldTimestamp) * 1e-3;
+    activeScene.update(dt);
+
+    mouse.isClick = false;
+    oldTimestamp = timestamp;
+    window.requestAnimationFrame(mainLoop);
+};
 
 export const setActiveScene = (sceneId) =>
 {
@@ -24,19 +25,18 @@ export const setActiveScene = (sceneId) =>
     activeScene.jobs = activeScene.activeJobs;
 };
 
+const sceneMap = new Map([
+    [$.SCENE_TEST, new Scene(
+        [
+            processMotion,
+            processCamera
+        ]
+    )]
+]);
+
 let activeScene;
 setActiveScene($.SCENE_TEST);
 
 let oldTimestamp = 0;
 
-const loop = (timestamp) =>
-{
-    const dt = (timestamp - oldTimestamp) * 1e-3;
-    activeScene.update(dt);
-
-    mouse.isClick = false;
-    oldTimestamp = timestamp;
-    window.requestAnimationFrame(loop);
-};
-
-loop(0);
+mainLoop(0);

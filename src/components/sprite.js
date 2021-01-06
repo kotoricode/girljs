@@ -47,20 +47,6 @@ export class Sprite extends Component
         setupModelVao(this.programData, attrOffsets);
     }
 
-    setupModelUniforms()
-    {
-        if (this.programId === $.PROGRAM_TILED)
-        {
-            const uvMinX = this.model.uvCoords[0], // topleft X
-                  uvMaxY = this.model.uvCoords[1], // topleft Y
-                  uvMaxX = this.model.uvCoords[6], // bottomright X
-                  uvMinY = this.model.uvCoords[7]; // bottomright Y
-
-            this.setUniform($.U_UVOFFSET, [uvMinX, uvMinY]);
-            this.setUniform($.U_UVSIZE, [uvMaxX - uvMinX, uvMaxY - uvMinY]);
-        }
-    }
-
     setUniform(key, value)
     {
         const { uniValues } = this.programData;
@@ -95,5 +81,19 @@ export class Sprite extends Component
         }
 
         values[idx] = value;
+    }
+
+    setupModelUniforms()
+    {
+        if (this.programId === $.PROGRAM_TILED)
+        {
+            const uvMinX = this.model.uvCoords[0], // topleft X
+                  uvMaxY = this.model.uvCoords[1], // topleft Y
+                  uvMaxX = this.model.uvCoords[6], // bottomright X
+                  uvMinY = this.model.uvCoords[7]; // bottomright Y
+
+            this.setUniform($.U_UVOFFSET, [uvMinX, uvMinY]);
+            this.setUniform($.U_UVSIZE, [uvMaxX - uvMinX, uvMaxY - uvMinY]);
+        }
     }
 }

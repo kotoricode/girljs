@@ -12,34 +12,28 @@ export class Vector2 extends VectorBase
         return a.x*b.x + a.y*b.y;
     }
 
-    copyFrom(vec)
-    {
-        this.x = vec.x;
-        this.y = vec.y;
-    }
-
     addVec(vec)
     {
         this.x += vec.x;
         this.y += vec.y;
     }
 
-    subVec(vec)
+    copyFrom(vec)
     {
-        this.x -= vec.x;
-        this.y -= vec.y;
-    }
-
-    mulVec(vec)
-    {
-        this.x *= vec.x;
-        this.y *= vec.y;
+        this.x = vec.x;
+        this.y = vec.y;
     }
 
     mulScalar(s)
     {
         this.x *= s;
         this.y *= s;
+    }
+
+    mulVec(vec)
+    {
+        this.x *= vec.x;
+        this.y *= vec.y;
     }
 
     sqrDist(vec)
@@ -57,6 +51,12 @@ export class Vector2 extends VectorBase
         const { x, y } = this;
 
         return x*x + y*y;
+    }
+
+    subVec(vec)
+    {
+        this.x -= vec.x;
+        this.y -= vec.y;
     }
 
     toWorld(invViewProjection)

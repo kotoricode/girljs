@@ -10,12 +10,6 @@ export class Segment
         this.intersection = new Vector2();
     }
 
-    set(start, end)
-    {
-        this.start.copyFrom(start);
-        this.end.copyFrom(end);
-    }
-
     getIntersection(line, isPoly=true)
     {
         const ax = this.end.x - this.start.x,
@@ -48,5 +42,11 @@ export class Segment
                 }
             }
         }
+    }
+
+    set(start, end)
+    {
+        this.start.copyFrom(start);
+        this.end.copyFrom(end);
     }
 }

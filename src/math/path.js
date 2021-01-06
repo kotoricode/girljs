@@ -30,29 +30,6 @@ export class Path
         this.nodes.add(node);
     }
 
-    start(start, end)
-    {
-        const startPos = this.startNode.position,
-              endPos = this.endNode.position;
-
-        startPos.copyFrom(start);
-        endPos.copyFrom(end);
-
-        // first check if we can go directly from start to end
-        // otherwise launch a*
-
-        for (const node of this.nodes)
-        {
-            // if connected to start
-            // const dist = this.startNode.sqrDist(node);
-            // this.startAdjacent.set(node, dist);
-
-            // if connected to end
-            // const dist = this.endNode.sqrDist(node);
-            // this.endAdjacent.set(node, dist);
-        }
-    }
-
     finish()
     {
         for (const node of this.nodes)
@@ -155,5 +132,28 @@ export class Path
         this.heap[idx2] = val1;
 
         return idx2;
+    }
+
+    start(start, end)
+    {
+        const startPos = this.startNode.position,
+              endPos = this.endNode.position;
+
+        startPos.copyFrom(start);
+        endPos.copyFrom(end);
+
+        // first check if we can go directly from start to end
+        // otherwise launch a*
+
+        for (const node of this.nodes)
+        {
+            // if connected to start
+            // const dist = this.startNode.sqrDist(node);
+            // this.startAdjacent.set(node, dist);
+
+            // if connected to end
+            // const dist = this.endNode.sqrDist(node);
+            // this.endAdjacent.set(node, dist);
+        }
     }
 }

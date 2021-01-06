@@ -4,27 +4,7 @@ import { Vector2 } from "./math/vector2";
 import { publish } from "./utils/publisher";
 import { isUiInteraction } from "./ui";
 
-// Modern browsers won't autoplay audio before user interaction
-window.addEventListener("mousedown", initAudio, { once: true });
-
 const getElement = (elementId) => window.document.getElementById(elementId);
-
-const canvasHolder = getElement("canvasHolder"),
-      gameCanvas = getElement("gameCanvas"),
-      uiCanvas = getElement("uiCanvas");
-
-export const gl = gameCanvas.getContext("webgl2", { alpha: false });
-export const ui = uiCanvas.getContext("2d");
-
-/*------------------------------------------------------------------------------
-    Canvases
-------------------------------------------------------------------------------*/
-// UI canvas is scaled rather than resized, so width & height never change
-uiCanvas.width = $.SCREEN_WIDTH;
-uiCanvas.height = $.SCREEN_HEIGHT;
-const uiStyle = uiCanvas.style;
-
-let canvasRect;
 
 const onResize = () =>
 {
@@ -53,6 +33,26 @@ const onResize = () =>
 
     canvasRect = gameCanvas.getBoundingClientRect();
 };
+
+// Modern browsers won't autoplay audio before user interaction
+window.addEventListener("mousedown", initAudio, { once: true });
+
+/*------------------------------------------------------------------------------
+    Canvases
+------------------------------------------------------------------------------*/
+const canvasHolder = getElement("canvasHolder"),
+      gameCanvas = getElement("gameCanvas"),
+      uiCanvas = getElement("uiCanvas");
+
+export const gl = gameCanvas.getContext("webgl2", { alpha: false });
+export const ui = uiCanvas.getContext("2d");
+
+// UI canvas is scaled rather than resized, so width & height never change
+uiCanvas.width = $.SCREEN_WIDTH;
+uiCanvas.height = $.SCREEN_HEIGHT;
+const uiStyle = uiCanvas.style;
+
+let canvasRect;
 
 for (const resizeEvent of ["DOMContentLoaded", "load", "resize"])
 {

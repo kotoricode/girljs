@@ -12,6 +12,18 @@ const BL_BR_TL_TR = (minX, maxX, minY, maxY) =>
     ];
 };
 
+export const getModel = (modelId) =>
+{
+    if (models.has(modelId))
+    {
+        return models.get(modelId);
+    }
+
+    throw modelId;
+};
+
+export const getModelBuffer = () => buffer;
+
 const uvFromSubTexture = (subTextureId) =>
 {
     const { x, y, width, height, baseData } = getSubTextureData(subTextureId);
@@ -98,15 +110,3 @@ const buffer = gl.createBuffer();
 gl.bindBuffer($.ARRAY_BUFFER, buffer);
 gl.bufferData($.ARRAY_BUFFER, new Float32Array(bufferData), $.STATIC_DRAW);
 gl.bindBuffer($.ARRAY_BUFFER, null);
-
-export const getModel = (modelId) =>
-{
-    if (models.has(modelId))
-    {
-        return models.get(modelId);
-    }
-
-    throw modelId;
-};
-
-export const getModelBuffer = () => buffer;

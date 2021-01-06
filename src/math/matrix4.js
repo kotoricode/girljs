@@ -1,7 +1,6 @@
 // https://ncalculators.com/matrix/4x4-matrix-multiplication-calculator.htm
 import { SettableArray } from "./settable-array";
 
-// TODO: mat4 can be simplified for 2D stuff (at least translation Z = 0)
 export class Matrix4 extends SettableArray
 {
     constructor()
@@ -11,6 +10,46 @@ export class Matrix4 extends SettableArray
             0, 1, 0, 0,
             0, 0, 1, 0,
             0, 0, 0, 1
+        );
+    }
+
+    fromTransform({ scale, rotation, translation })
+    {
+        const [sx, sy, sz] = scale,
+              [rx, ry, rz, rw] = rotation,
+              [tx, ty, tz] = translation;
+
+        const rxx = rx * rx,
+              ryy = ry * ry,
+              rzz = rz * rz,
+              rww = rw * rw,
+              rxy = rx * ry,
+              rxz = rx * rz,
+              rxw = rx * rw,
+              ryz = ry * rz,
+              ryw = ry * rw,
+              rzw = rz * rw;
+
+        this.set(
+            sx * (rww + rxx - ryy - rzz),
+            sx * (rxy - rzw) * 2,
+            sx * (rxz + ryw) * 2,
+            0,
+
+            sy * (rxy + rzw) * 2,
+            sy * (rww - rxx + ryy - rzz),
+            sy * (ryz - rxw) * 2,
+            0,
+
+            sz * (rxz - ryw) * 2,
+            sz * (ryz + rxw) * 2,
+            sz * (rww - rxx - ryy + rzz),
+            0,
+
+            tx,
+            ty,
+            tz,
+            1
         );
     }
 
@@ -118,6 +157,7 @@ export class Matrix4 extends SettableArray
     //     this[15] = L3*RC + L7*RD + LB*RE + LF*RF;
     // }
 
+    // TODO: can be simplified for 2D stuff (at least translation Z = 0)
     multiplyTransformMatrix(matrix)
     {
         const [
@@ -153,46 +193,6 @@ export class Matrix4 extends SettableArray
             L0*RC + L4*RD + L8*RE + LC,
             L1*RC + L5*RD + L9*RE + LD,
             L2*RC + L6*RD + LA*RE + LE,
-            1
-        );
-    }
-
-    fromTransform({ scale, rotation, translation })
-    {
-        const [sx, sy, sz] = scale,
-              [rx, ry, rz, rw] = rotation,
-              [tx, ty, tz] = translation;
-
-        const rxx = rx * rx,
-              ryy = ry * ry,
-              rzz = rz * rz,
-              rww = rw * rw,
-              rxy = rx * ry,
-              rxz = rx * rz,
-              rxw = rx * rw,
-              ryz = ry * rz,
-              ryw = ry * rw,
-              rzw = rz * rw;
-
-        this.set(
-            sx * (rww + rxx - ryy - rzz),
-            sx * (rxy - rzw) * 2,
-            sx * (rxz + ryw) * 2,
-            0,
-
-            sy * (rxy + rzw) * 2,
-            sy * (rww - rxx + ryy - rzz),
-            sy * (ryz - rxw) * 2,
-            0,
-
-            sz * (rxz - ryw) * 2,
-            sz * (ryz + rxw) * 2,
-            sz * (rww - rxx - ryy + rzz),
-            0,
-
-            tx,
-            ty,
-            tz,
             1
         );
     }

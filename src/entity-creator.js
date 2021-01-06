@@ -7,16 +7,6 @@ import { Player } from "./components/player";
 import { Sprite } from "./components/sprite";
 import { Collider } from "./components/collider";
 
-export const createPlayer = () =>
-{
-    const space = new Space(),
-          mot = new Motion(300),
-          player = new Player(),
-          sprite = new Sprite($.PROGRAM_SPRITE, $.MODEL_PLAYER2);
-
-    return new Entity($.ENTITY_PLAYER, space, sprite, player, mot);
-};
-
 export const createGround = () =>
 {
     const space = new Space(),
@@ -32,4 +22,14 @@ export const createGround = () =>
           );
 
     return new Entity($.ENTITY_GROUND, space, collider, sprite);
+};
+
+export const createPlayer = () =>
+{
+    const space = new Space(),
+          mot = new Motion(300),
+          player = new Player(),
+          sprite = new Sprite($.PROGRAM_SPRITE, $.MODEL_PLAYER2);
+
+    return new Entity($.ENTITY_PLAYER, space, sprite, player, mot);
 };

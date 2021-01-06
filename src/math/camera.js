@@ -2,29 +2,14 @@ import * as $ from "../const";
 import { Matrix4 } from "./matrix4";
 import { Transform } from "./transform";
 
-// nearZ 1, farZ -1
-const z = 2,
-      nearDist = 1,
-      farDist = 3;
-
-const frustumLength = nearDist - farDist,
-      vpL0 = 2 / $.SCREEN_WIDTH,
-      vpL5 = vpL0 * $.SCREEN_ASPECT,
-      vpLA = 2 / frustumLength,
-      vpLE = (farDist+nearDist) / frustumLength;
-
-const transform = new Transform(0, 0, z),
-      viewProjection = new Matrix4(),
-      invViewProjection = new Matrix4();
+export const getInvViewProjection = () =>
+{
+    return invViewProjection;
+};
 
 export const getViewProjection = () =>
 {
     return viewProjection;
-};
-
-export const getInvViewProjection = () =>
-{
-    return invViewProjection;
 };
 
 export const setCameraPosition = (vec) =>
@@ -68,3 +53,18 @@ export const setCameraPosition = (vec) =>
 
     invViewProjection.invertFrom(viewProjection);
 };
+
+// nearZ 1, farZ -1
+const z = 2,
+      nearDist = 1,
+      farDist = 3;
+
+const frustumLength = nearDist - farDist,
+      vpL0 = 2 / $.SCREEN_WIDTH,
+      vpL5 = vpL0 * $.SCREEN_ASPECT,
+      vpLA = 2 / frustumLength,
+      vpLE = (farDist+nearDist) / frustumLength;
+
+const transform = new Transform(0, 0, z),
+      viewProjection = new Matrix4(),
+      invViewProjection = new Matrix4();

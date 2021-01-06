@@ -12,11 +12,6 @@ export class AnimArray
         this.maxTime = this.times[this.times.length - 1];
     }
 
-    tick(dt)
-    {
-        this.setValue(this.curTime + dt);
-    }
-
     getNextTimeIndex(x)
     {
         return x > this.curTime;
@@ -49,5 +44,10 @@ export class AnimArray
                 progress
             );
         }
+    }
+
+    tick(dt)
+    {
+        this.setValue(this.curTime + dt);
     }
 }

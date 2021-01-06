@@ -6,9 +6,6 @@ import { getInvViewProjection, setCameraPosition } from "../math/camera";
 import { Vector2 } from "../math/vector2";
 import { Collider } from "../components/collider";
 
-const position = new Vector2();
-
-
 export const processCamera = (scene) =>
 {
     const [pMotion, plSpace] = scene.one($.ENTITY_PLAYER, Motion, Space);
@@ -29,3 +26,5 @@ export const processCamera = (scene) =>
         }
     }
 };
+
+const position = new Vector2();

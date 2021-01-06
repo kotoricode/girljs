@@ -43,18 +43,6 @@ export class Scene
         }
     }
 
-    addPlayer()
-    {
-        const entity = createPlayer();
-        this.addEntity(entity);
-    }
-
-    addGround()
-    {
-        const entity = createGround();
-        this.addEntity(entity);
-    }
-
     addEntity(entity, parent=this.root)
     {
         parent.addChild(entity);
@@ -70,6 +58,18 @@ export class Scene
 
         this.hasDirty = true;
         this.hasNewSprites |= (entity.flags & Sprite.flag);
+    }
+
+    addGround()
+    {
+        const entity = createGround();
+        this.addEntity(entity);
+    }
+
+    addPlayer()
+    {
+        const entity = createPlayer();
+        this.addEntity(entity);
     }
 
     * all(...components)

@@ -11,16 +11,6 @@ export const getPref = (prefId) =>
     throw prefId;
 };
 
-export const setPref = (prefId, value) =>
-{
-    if (!(prefId in prefs))
-    {
-        throw prefId;
-    }
-
-    prefs[prefId] = value;
-};
-
 export const prefsFromStored = () =>
 {
     for (const key of Object.keys(prefs))
@@ -40,6 +30,16 @@ export const prefsToStored = () =>
     {
         setStored(key, value);
     }
+};
+
+export const setPref = (prefId, value) =>
+{
+    if (!(prefId in prefs))
+    {
+        throw prefId;
+    }
+
+    prefs[prefId] = value;
 };
 
 const prefs = {

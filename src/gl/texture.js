@@ -1,14 +1,41 @@
 import * as $ from "../const";
 import { gl } from "../dom";
 
-const image = new Image();
-const toFetch = [];
+const createImageTexture = (src, parami) =>
+{
+    const texture = gl.createTexture();
+
+    toFetch.push({ texture, parami, src });
+
+    if (toFetch.length === 1)
+    {
+        fetchNextImage();
+    }
+
+    return texture;
+};
 
 const fetchNextImage = () =>
 {
     const src = toFetch[0].src;
     image.src = `${$.PATH_IMG}${src}`;
 };
+
+export const getSubTextureData = (subTextureId) =>
+{
+    if (subTextureData.has(subTextureId))
+    {
+        return subTextureData.get(subTextureId);
+    }
+
+    throw Error;
+};
+
+/*------------------------------------------------------------------------------
+    Image
+------------------------------------------------------------------------------*/
+const image = new Image();
+const toFetch = [];
 
 image.onload = () =>
 {
@@ -41,20 +68,6 @@ image.onload = () =>
 image.onerror = () =>
 {
     throw Error;
-};
-
-const createImageTexture = (src, parami) =>
-{
-    const texture = gl.createTexture();
-
-    toFetch.push({ texture, parami, src });
-
-    if (toFetch.length === 1)
-    {
-        fetchNextImage();
-    }
-
-    return texture;
 };
 
 /*------------------------------------------------------------------------------
@@ -109,13 +122,3 @@ while (i < subTextureDef.length)
         baseData: textureData.get(subTextureDef[i++])
     });
 }
-
-export const getSubTextureData = (subTextureId) =>
-{
-    if (subTextureData.has(subTextureId))
-    {
-        return subTextureData.get(subTextureId);
-    }
-
-    throw Error;
-};
