@@ -1,6 +1,6 @@
-import { Space } from "./components/space";
 import { canvasAspect, ui } from "./dom";
 import { Matrix4 } from "./math/matrix4";
+import { Transform } from "./math/transform";
 
 // nearZ 1, farZ -1
 const z = 2,
@@ -13,7 +13,7 @@ const frustumLength = nearDist - farDist,
       vpLA = 2 / frustumLength,
       vpLE = (farDist+nearDist) / frustumLength;
 
-const space = new Space(0, 0, z),
+const transform = new Transform(0, 0, z),
       viewProjection = new Matrix4(),
       invViewProjection = new Matrix4();
 
@@ -29,12 +29,12 @@ export const getInvViewProjection = () =>
 
 export const setCameraPosition = (vec3) =>
 {
-    space.local.translation.set(vec3.x, vec3.y);
+    transform.translation.set(vec3.x, vec3.y);
 
     /*--------------------------------------------------------------------------
         ViewProjection & Inverted ViewProjection
     --------------------------------------------------------------------------*/
-    viewProjection.fromTransform(space.local);
+    viewProjection.fromTransform(transform);
     viewProjection.invertFrom(viewProjection);
 
     const [
