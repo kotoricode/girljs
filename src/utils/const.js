@@ -1,4 +1,9 @@
 export const
+    SCREEN_WIDTH = 1152,
+    SCREEN_HEIGHT = 648,
+    SCREEN_ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT;
+
+export const
     MODEL_GROUND = "ground",
     MODEL_IMAGE = "image",
     MODEL_PLAYER = "player",

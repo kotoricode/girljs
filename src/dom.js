@@ -1,13 +1,12 @@
 import { initAudio } from "./audio";
 import { Vector2 } from "./math/vector2";
 import { publish } from "./utils/publisher";
-import { ONE_TIME_LISTENER } from "./math/math-helper";
+import { isUiInteraction } from "./ui";
 
 import * as $ from "./utils/const";
-import { clearUi, drawCircle, isUiInteraction } from "./ui";
 
 // Modern browsers won't autoplay audio before user interaction
-window.addEventListener("mousedown", initAudio, ONE_TIME_LISTENER);
+window.addEventListener("mousedown", initAudio, { once: true });
 
 const getElement = (elementId) => window.document.getElementById(elementId);
 
@@ -21,15 +20,10 @@ export const ui = uiCanvas.getContext("2d");
 /*------------------------------------------------------------------------------
     Canvases
 ------------------------------------------------------------------------------*/
-export const canvasMaxWidth = 1152,
-             canvasMaxHeight = 648;
-
 // UI canvas is scaled rather than resized, so width & height never change
-uiCanvas.width = canvasMaxWidth;
-uiCanvas.height = canvasMaxHeight;
+uiCanvas.width = $.SCREEN_WIDTH;
+uiCanvas.height = $.SCREEN_HEIGHT;
 const uiStyle = uiCanvas.style;
-
-export const canvasAspect = canvasMaxWidth / canvasMaxHeight;
 
 let canvasRect;
 
@@ -37,13 +31,13 @@ const onResize = () =>
 {
     const width = Math.min(
         window.innerWidth,
-        window.innerHeight * canvasAspect,
-        canvasMaxWidth
+        window.innerHeight * $.SCREEN_ASPECT,
+        $.SCREEN_WIDTH
     );
 
     if (width !== gameCanvas.width)
     {
-        const height = width / canvasAspect;
+        const height = width / $.SCREEN_ASPECT;
 
         if (height !== gameCanvas.height)
         {
@@ -71,21 +65,24 @@ for (const resizeEvent of ["DOMContentLoaded", "load", "resize"])
 ------------------------------------------------------------------------------*/
 export const mouse = {
     clip: new Vector2(),
+    screen: new Vector2(),
     isClick: false
 };
 
-const onClick = (e) =>
+const setMousePosition = (e) =>
 {
-    const x = 2*(e.clientX-canvasRect.left)/gameCanvas.clientWidth - 1;
-    const y = 1 - 2*(e.clientY-canvasRect.top)/gameCanvas.clientHeight;
+    const relX = (e.clientX - canvasRect.left) / gameCanvas.clientWidth,
+          relY = (e.clientY - canvasRect.top) / gameCanvas.clientHeight;
 
-    mouse.clip.set(x, y);
-    mouse.isClick = true;
+    mouse.screen.set(relX * $.SCREEN_WIDTH, relY * $.SCREEN_HEIGHT);
+    mouse.clip.set(2*relX - 1, 1 - 2*relY);
 };
 
 // UI canvas receives clicks, propagate to container if no UI interaction
 uiCanvas.addEventListener("click", (e) =>
 {
+    setMousePosition(e);
+
     if (isUiInteraction())
     {
         e.stopPropagation();
@@ -95,7 +92,10 @@ uiCanvas.addEventListener("click", (e) =>
 });
 
 // Container does clicks for in-game clicking (e.g. movement)
-canvasHolder.addEventListener("click", (e) => onClick(e));
+canvasHolder.addEventListener("click", () =>
+{
+    mouse.isClick = true;
+});
 
 // Container blocks contextmenu for both canvases
 canvasHolder.addEventListener("contextmenu", (e) => e.preventDefault());

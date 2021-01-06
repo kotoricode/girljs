@@ -2,10 +2,10 @@ import { Vector2 } from "./vector2";
 
 export class Segment
 {
-    constructor(start, end)
+    constructor(startX, startY, endX, endY)
     {
-        this.start = start;
-        this.end = end;
+        this.start = new Vector2(startX, startY);
+        this.end = new Vector2(endX, endY);
 
         this.intersection = new Vector2();
     }

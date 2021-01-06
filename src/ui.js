@@ -1,4 +1,7 @@
-import { ui } from "./dom";
+import { mouse, ui } from "./dom";
+import { Vector2 } from "./math/vector2";
+
+import * as $ from "./utils/const";
 
 let isDialogueMode = false;
 
@@ -41,6 +44,12 @@ export const isUiInteraction = () =>
 {
     clearUi();
     drawDialogue(new Date() + "");
+
+    ui.strokeStyle = "white";
+    ui.beginPath();
+    ui.moveTo(0, 0);
+    ui.lineTo(30, 30);
+    ui.stroke();
 
     return false;
 };

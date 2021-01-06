@@ -17,8 +17,8 @@ export const processMotion = (scene) =>
         {
             const { local, world } = space;
 
-            const mark = motion.getTarget();
-            dist.copyFrom(mark);
+            const target = motion.getTarget();
+            dist.copyFrom(target);
             dist.subVec(world.translation);
 
             if (dist.x)
