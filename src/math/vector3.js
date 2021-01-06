@@ -9,6 +9,11 @@ export class Vector3 extends SettableArray
 
     static dot(a, b)
     {
+        if (!(a instanceof Vector3 && b instanceof Vector3))
+        {
+            throw Error;
+        }
+
         return a.x*b.x + a.y*b.y + a.z*b.z;
     }
 
@@ -42,32 +47,37 @@ export class Vector3 extends SettableArray
         this[2] = value;
     }
 
-    copyFrom(vec3)
+    // Looped to work with both Vector2 & Vector3
+    copyFrom(vec)
     {
-        this.x = vec3.x;
-        this.y = vec3.y;
-        this.z = vec3.z;
+        for (let i = 0; i < vec.length; i++)
+        {
+            this[i] = vec[i];
+        }
     }
 
-    addVec(vec3)
+    addVec(vec)
     {
-        this.x += vec3.x;
-        this.y += vec3.y;
-        this.z += vec3.z;
+        for (let i = 0; i < vec.length; i++)
+        {
+            this[i] += vec[i];
+        }
     }
 
-    subVec(vec3)
+    subVec(vec)
     {
-        this.x -= vec3.x;
-        this.y -= vec3.y;
-        this.z -= vec3.z;
+        for (let i = 0; i < vec.length; i++)
+        {
+            this[i] -= vec[i];
+        }
     }
 
-    mulVec(vec3)
+    mulVec(vec)
     {
-        this.x *= vec3.x;
-        this.y *= vec3.y;
-        this.z *= vec3.z;
+        for (let i = 0; i < vec.length; i++)
+        {
+            this[i] *= vec[i];
+        }
     }
 
     mulScalar(s)
@@ -79,6 +89,11 @@ export class Vector3 extends SettableArray
 
     cross(a, b)
     {
+        if (!(a instanceof Vector3 && b instanceof Vector3))
+        {
+            throw Error;
+        }
+
         this.setValues(
             a.y*b.z - a.z*b.y,
             a.z*b.x - a.x*b.z,
@@ -88,9 +103,12 @@ export class Vector3 extends SettableArray
 
     sqrDist(vec3)
     {
-        return (this.x - vec3.x) ** 2 +
-               (this.y - vec3.y) ** 2 +
-               (this.z - vec3.z) ** 2;
+        if (!(vec3 instanceof Vector3))
+        {
+            throw Error;
+        }
+
+        return (this.x-vec3.x)**2 + (this.y-vec3.y)**2 + (this.z-vec3.z)**2;
     }
 
     sqrMag()
@@ -110,13 +128,5 @@ export class Vector3 extends SettableArray
         }
 
         this.mulScalar(magnitude / (sqrMag ** 0.5));
-    }
-
-    toWorld(invViewProjection)
-    {
-        this.set(
-            this.x * invViewProjection[0] + invViewProjection[12],
-            this.y * invViewProjection[5] + invViewProjection[13]
-        );
     }
 }

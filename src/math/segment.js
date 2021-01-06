@@ -1,4 +1,4 @@
-import { Vector3 } from "./vector3";
+import { Vector2 } from "./vector2";
 
 export class Segment
 {
@@ -7,7 +7,7 @@ export class Segment
         this.start = start;
         this.end = end;
 
-        this.intersection = new Vector3();
+        this.intersection = new Vector2();
     }
 
     set(start, end)

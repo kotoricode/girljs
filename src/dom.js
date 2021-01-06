@@ -1,5 +1,5 @@
 import { initAudio } from "./audio";
-import { Vector3 } from "./math/vector3";
+import { Vector2 } from "./math/vector2";
 import { publish } from "./publisher";
 import { ONE_TIME_LISTENER } from "./util";
 
@@ -70,7 +70,7 @@ for (const resizeEvent of ["DOMContentLoaded", "load", "resize"])
     Mouse
 ------------------------------------------------------------------------------*/
 export const mouse = {
-    clip: new Vector3(),
+    clip: new Vector2(),
     isClick: false
 };
 

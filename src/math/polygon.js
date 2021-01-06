@@ -1,5 +1,5 @@
 import { Segment } from "./segment";
-import { Vector3 } from "./vector3";
+import { Vector2 } from "./vector2";
 
 export class Polygon
 {
@@ -12,7 +12,7 @@ export class Polygon
         }
 
         this.points = points;
-        this.activeSegment = new Segment(new Vector3(), new Vector3());
+        this.activeSegment = new Segment(new Vector2(), new Vector2());
 
         this.intersections = [];
         this.idx = -1;

@@ -1,8 +1,8 @@
 import { Motion } from "../components/motion";
 import { Space } from "../components/space";
-import { Vector3 } from "../math/vector3";
+import { Vector2 } from "../math/vector2";
 
-const dist = new Vector3();
+const dist = new Vector2();
 
 export const processMotion = (scene) =>
 {
@@ -43,6 +43,7 @@ export const processMotion = (scene) =>
             }
 
             local.translation.addVec(dist);
+
             scene.markDirty(space);
         }
     }

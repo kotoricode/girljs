@@ -5,9 +5,9 @@ import { Ground } from "../components/ground";
 
 import * as $ from "../const";
 import { getInvViewProjection, setCameraPosition } from "../camera";
-import { Vector3 } from "../math/vector3";
+import { Vector2 } from "../math/vector2";
 
-const position = new Vector3();
+const position = new Vector2();
 let numHits = 0;
 const hits = [];
 
@@ -20,7 +20,7 @@ const collide = (box) =>
     {
         if (numHits === hits.length)
         {
-            hits.push(new Vector3());
+            hits.push(new Vector2());
         }
 
         hits[numHits++].set(x, y);
