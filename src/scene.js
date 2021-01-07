@@ -4,19 +4,23 @@ import { Space } from "./components/space";
 import { Entity } from "./entity";
 import { render } from "./gl/renderer";
 import { getViewProjection } from "./math/camera";
+import { blueprint } from "./blueprint";
 
 export class Scene
 {
-    constructor(blueprint)
+    constructor(sceneId)
     {
+        this.sceneId = sceneId;
+
         this.dt = 0;
-        this.blueprint = blueprint;
 
         /** @const {Map<string, Entity>} */
         this.entities = new Map();
 
         /** @const {Map<number, Set>} */
         this.cached = new Map();
+
+        this.newSpriteEntities = new Set();
     }
 
     static * yieldComponents(entity, components)
@@ -27,7 +31,7 @@ export class Scene
         }
     }
 
-    static * yieldGraph(entity)
+    static * yieldEntities(entity)
     {
         yield entity;
 
@@ -51,7 +55,11 @@ export class Scene
         }
 
         this.hasDirty = true;
-        this.hasNewSprites |= (entity.flags & Sprite.flag);
+
+        if (entity.hasFlags(Sprite.flag))
+        {
+            this.newSpriteEntities.add(entity);
+        }
     }
 
     * all(...components)
@@ -89,16 +97,6 @@ export class Scene
         return this.cached.get(flags);
     }
 
-    * getEntitiesOrdered(entity=this.root)
-    {
-        yield entity;
-
-        for (const child of entity.children)
-        {
-            yield this.getEntitiesOrdered(child);
-        }
-    }
-
     getEntity(entityId)
     {
         if (this.entities.has(entityId))
@@ -111,29 +109,23 @@ export class Scene
 
     initNewSprites()
     {
-        const viewProjection = getViewProjection();
+        const vp = getViewProjection();
 
-        for (const [sprite, space] of this.all(Sprite, Space))
+        for (const entity of this.newSpriteEntities)
         {
-            if (!sprite.isInitialized)
-            {
-                sprite.setUniformIndexed($.U_TRANSFORM, 1, space.matrix);
-                sprite.setUniformIndexed($.U_VIEWPROJECTION, 1, viewProjection);
+            const [sprite, space] = entity.getComponents(Sprite, Space);
 
-                sprite.isInitialized = true;
-            }
+            sprite.setUniformIndexed($.U_TRANSFORM, 1, space.matrix);
+            sprite.setUniformIndexed($.U_VIEWPROJECTION, 1, vp);
         }
-
-        this.hasNewSprites = false;
     }
 
     load()
     {
         this.root = new Entity($.ENTITY_ROOT);
-        this.hasNewSprites = false;
         this.hasDirty = false;
 
-        const bp = this.blueprint();
+        const bp = blueprint.get(this.sceneId)();
         this.processes = bp.processes;
         this.loadEntities(bp.entities);
     }
@@ -180,10 +172,10 @@ export class Scene
         }
 
         this.cached.clear();
+        this.newSpriteEntities.clear();
 
         this.unloadEntities(this.root);
 
-        this.hasNewSprites = false;
         this.hasDirty = false;
     }
 
@@ -202,7 +194,7 @@ export class Scene
     {
         this.dt = dt;
 
-        if (this.hasNewSprites)
+        if (this.newSpriteEntities.size)
         {
             // Connect new sprites' uniforms to transforms
             this.initNewSprites();
@@ -263,6 +255,14 @@ export class Scene
         for (const child of entity.children)
         {
             this.updateSpaces(child, isDirty, parentMatrix);
+        }
+    }
+
+    * yieldGraph()
+    {
+        for (const child of this.root.children)
+        {
+            yield Scene.yieldEntities(child);
         }
     }
 }

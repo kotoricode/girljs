@@ -1,4 +1,3 @@
-import { blueprint } from "./blueprint";
 import * as $ from "./const";
 import { mouse } from "./dom";
 import { Scene } from "./scene";
@@ -18,16 +17,20 @@ const mainLoop = (timestamp) =>
 
 export const setActiveScene = (sceneId) =>
 {
-    if (!scenes.has(sceneId))
-    {
-        const bp = blueprint.get(sceneId);
-        const scene = new Scene(bp);
-        scenes.set(sceneId, scene);
-    }
-
     if (activeScene)
     {
+        if (activeScene.sceneId === sceneId)
+        {
+            throw sceneId;
+        }
+
         activeScene.unload();
+    }
+
+    if (!scenes.has(sceneId))
+    {
+        const scene = new Scene(sceneId);
+        scenes.set(sceneId, scene);
     }
 
     activeScene = scenes.get(sceneId);

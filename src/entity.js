@@ -41,9 +41,22 @@ export class Entity
         throw Error;
     }
 
+    * getComponents(...classes)
+    {
+        for (const cls of classes)
+        {
+            yield this.getComponent(cls);
+        }
+    }
+
     hasFlags(flags)
     {
-        return (flags & this.flags) === flags;
+        if (Number.isInteger(flags))
+        {
+            return (flags & this.flags) === flags;
+        }
+
+        throw flags;
     }
 
     removeComponent(...components)

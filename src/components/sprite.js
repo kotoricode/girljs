@@ -14,9 +14,6 @@ export class Sprite extends Component
         this.setModel(modelId);
         this.isVisible = true;
 
-        // Marks if 3rd party uniforms (e.g. camera matrix) have been set
-        this.isInitialized = false;
-
         if (uniforms)
         {
             for (const [key, value] of Object.entries(uniforms))
