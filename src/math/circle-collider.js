@@ -14,7 +14,7 @@ export class CircleCollider
 
     hasPoint(vec2)
     {
-        return this.radius2 >= vec2.sqrDist(this.center);
+        return this.radius2 >= vec2.sqrDistance(this.center);
     }
 
     setPosition(topLeft)

@@ -14,33 +14,45 @@ export const processMotion = (scene) =>
         if (motion.hasTarget())
         {
             const { local, world } = space;
+            const { direction } = motion;
 
+            // Distance to target
             const target = motion.getTarget();
-            dist.copyFrom(target);
-            dist.subVec(world.translation);
+            distance.copyFrom(target);
+            distance.subVec(world.translation);
 
-            if (dist.x)
+            // Direction
+            direction.copyFrom(distance);
+            direction.normalize();
+
+            // Flip sprite X according to direction
+            if (direction.x)
             {
-                local.scale.x = Math.sign(dist.x);
+                local.scale.x = Math.sign(direction.x);
             }
 
-            const step = motion.speed * scene.dt;
+            const moveDistance = motion.speed * scene.dt;
 
-            if (step**2 < dist.sqrMag())
+            if (moveDistance < distance.magnitude())
             {
-                dist.normalize(step);
+                // Can't reach target yet, step towards it
+                distance.normalize(moveDistance);
             }
             else
             {
+                // Reaches target, switch to next target
                 motion.idx++;
 
                 if (motion.idx > motion.maxIdx)
                 {
+                    // No more targets, stop moving
+                    direction.set(0, 0);
                     motion.resetTargets();
                 }
             }
 
-            local.translation.addVec(dist);
+            // Step to or towards target
+            local.translation.addVec(distance);
             scene.markDirty(space);
         }
     }
@@ -51,4 +63,4 @@ export const processMotion = (scene) =>
     }
 };
 
-const dist = new Vector2();
+const distance = new Vector2();

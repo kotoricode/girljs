@@ -36,7 +36,7 @@ export class Vector2 extends VectorBase
         this.y *= vec.y;
     }
 
-    sqrDist(vec)
+    sqrDistance(vec)
     {
         if (!(vec instanceof Vector2))
         {
@@ -46,7 +46,7 @@ export class Vector2 extends VectorBase
         return (this.x-vec.x)**2 + (this.y-vec.y)**2;
     }
 
-    sqrMag()
+    sqrMagnitude()
     {
         const { x, y } = this;
 

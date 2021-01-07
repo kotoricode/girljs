@@ -21,6 +21,9 @@ export class Scene
         this.cached = new Map();
 
         this.newSpriteEntities = new Set();
+
+        // TODO: implement this
+        this.dirtyEntities = new Set();
     }
 
     static * yieldComponents(entity, components)

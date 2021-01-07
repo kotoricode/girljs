@@ -1,5 +1,4 @@
 import { PathNode } from "./path-node";
-import { sqrDist } from "./math";
 
 export class Path
 {
@@ -20,7 +19,7 @@ export class Path
 
         for (const other of this.nodes)
         {
-            const dist = sqrDist(node.position, other.position);
+            const dist = node.position.sqrDistance(other.position);
 
             // TODO: check if adjacent
             node.adjacent.set(other, dist);
@@ -148,11 +147,11 @@ export class Path
         for (const node of this.nodes)
         {
             // if connected to start
-            // const dist = this.startNode.sqrDist(node);
+            // const dist = this.startNode.sqrDistance(node);
             // this.startAdjacent.set(node, dist);
 
             // if connected to end
-            // const dist = this.endNode.sqrDist(node);
+            // const dist = this.endNode.sqrDistance(node);
             // this.endAdjacent.set(node, dist);
         }
     }

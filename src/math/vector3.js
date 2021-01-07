@@ -73,7 +73,7 @@ export class Vector3 extends VectorBase
         }
     }
 
-    sqrDist(vec3)
+    sqrDistance(vec3)
     {
         if (!(vec3 instanceof Vector3))
         {
@@ -83,7 +83,7 @@ export class Vector3 extends VectorBase
         return (this.x-vec3.x)**2 + (this.y-vec3.y)**2 + (this.z-vec3.z)**2;
     }
 
-    sqrMag()
+    sqrMagnitude()
     {
         const { x, y, z } = this;
 

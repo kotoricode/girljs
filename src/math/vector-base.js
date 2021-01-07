@@ -27,15 +27,20 @@ export class VectorBase extends SettableArray
         this[1] = value;
     }
 
-    normalize(magnitude=1)
+    magnitude(vec)
     {
-        const sqrMag = this.sqrMag();
+        return this.sqrMagnitude(vec) ** 0.5;
+    }
 
-        if (!sqrMag)
+    normalize(toMagnitude=1)
+    {
+        const magnitude = this.magnitude();
+
+        if (!magnitude)
         {
             throw Error;
         }
 
-        this.mulScalar(magnitude / (sqrMag ** 0.5));
+        this.mulScalar(toMagnitude / magnitude);
     }
 }

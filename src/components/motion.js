@@ -13,6 +13,7 @@ export class Motion extends Component
         }
 
         this.speed = speed;
+        this.direction = new Vector2();
 
         this.idx = -1;
         this.maxIdx = -1;
