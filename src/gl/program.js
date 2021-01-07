@@ -21,31 +21,6 @@ const createAttachShader = (program, shaderId, { shaderSrc }) =>
     return shader;
 };
 
-const createUniSetter = (type, loc) => (values) => gl[type](loc, ...values);
-
-const detachDeleteShader = (program, shader) =>
-{
-    gl.detachShader(program, shader);
-    gl.deleteShader(shader);
-};
-
-const setUniSetters = ({ uniforms }, program, uniDefaults, uniSetters) =>
-{
-    if (uniforms)
-    {
-        for (const [type, typeObj] of Object.entries(uniforms))
-        {
-            for (const [name, defValueArr] of Object.entries(typeObj))
-            {
-                uniDefaults.set(name, defValueArr);
-                const location = gl.getUniformLocation(program, name);
-                const uniSetter = createUniSetter(type, location);
-                uniSetters.set(name, uniSetter);
-            }
-        }
-    }
-};
-
 export const createProgramData = (programId, attrOffsets) =>
 {
     const {
@@ -95,6 +70,14 @@ export const createProgramData = (programId, attrOffsets) =>
         uniSetters,
         uniValues
     };
+};
+
+const createUniSetter = (type, loc) => (values) => gl[type](loc, ...values);
+
+const detachDeleteShader = (program, shader) =>
+{
+    gl.detachShader(program, shader);
+    gl.deleteShader(shader);
 };
 
 /*------------------------------------------------------------------------------
@@ -224,8 +207,22 @@ while (i < newProgramDef.length)
     const uniDefaults = new Map(),
           uniSetters = new Map();
 
-    setUniSetters(vert, program, uniDefaults, uniSetters);
-    setUniSetters(frag, program, uniDefaults, uniSetters);
+    for (const { uniforms } of [vert, frag])
+    {
+        if (uniforms)
+        {
+            for (const [type, typeObj] of Object.entries(uniforms))
+            {
+                for (const [name, defValueArr] of Object.entries(typeObj))
+                {
+                    const location = gl.getUniformLocation(program, name);
+                    const uniSetter = createUniSetter(type, location);
+                    uniSetters.set(name, uniSetter);
+                    uniDefaults.set(name, defValueArr);
+                }
+            }
+        }
+    }
 
     preparedPrograms.set(programId, {
         program,
