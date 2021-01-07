@@ -83,16 +83,15 @@ const detachDeleteShader = (program, shader) =>
 /*------------------------------------------------------------------------------
     Templates
 ------------------------------------------------------------------------------*/
-// transpose, value
-const uniMatrix = [false, null];
+// also works with uniformMatrix [transpose, value]
 const uniArrZeroZero = [0, 0];
 
 const attrPos = [$.A_POSITION];
 const attrPosUv = [$.A_POSITION, $.A_UV];
 
 const uniTransVP = {
-    [$.U_TRANSFORM]: uniMatrix,
-    [$.U_VIEWPROJECTION]: uniMatrix,
+    [$.U_TRANSFORM]: uniArrZeroZero,
+    [$.U_VIEWPROJECTION]: uniArrZeroZero,
 };
 
 const uniColor = {
