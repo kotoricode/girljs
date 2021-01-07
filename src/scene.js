@@ -17,8 +17,6 @@ export class Scene
 
         /** @const {Map<number, Set>} */
         this.cached = new Map();
-
-        this.root = new Entity($.ENTITY_ROOT);
     }
 
     static * yieldComponents(entity, components)
@@ -55,18 +53,6 @@ export class Scene
         this.hasDirty = true;
         this.hasNewSprites |= (entity.flags & Sprite.flag);
     }
-
-    // addGround()
-    // {
-    //     const entity = createGround();
-    //     this.addEntity(entity);
-    // }
-
-    // addPlayer()
-    // {
-    //     const entity = createPlayer();
-    //     this.addEntity(entity);
-    // }
 
     * all(...components)
     {
@@ -143,6 +129,8 @@ export class Scene
 
     load()
     {
+        this.root = new Entity($.ENTITY_ROOT);
+
         const bp = this.blueprint();
         this.processes = bp.processes;
         this.loadEntities(bp.entities);
@@ -182,7 +170,20 @@ export class Scene
 
     unload()
     {
-        console.log("unload");
+        this.entities.clear();
+        this.cached.clear();
+        this.unloadEntities(this.root);
+    }
+
+    unloadEntities(entity)
+    {
+        for (const child of entity.children)
+        {
+            this.unloadEntities(child);
+        }
+
+        entity.children.clear();
+        entity.components.clear();
     }
 
     update(dt)

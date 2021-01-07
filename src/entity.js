@@ -5,7 +5,6 @@ export class Entity
         this.id = id;
         this.flags = 0;
         this.components = new Map();
-
         this.children = new Set();
 
         this.addComponent(...comps);
