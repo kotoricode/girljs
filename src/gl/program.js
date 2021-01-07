@@ -21,33 +21,6 @@ const createAttachShader = (program, shaderId, { shaderSrc }) =>
     return shader;
 };
 
-export const createProgramData = (programId) =>
-{
-    const {
-        program,
-        uniDefaults,
-        uniSetters,
-        attributes
-    } = preparedPrograms.get(programId);
-
-    const vao = gl.createVertexArray();
-
-    const uniValues = new Map();
-
-    for (const [name, defaults] of uniDefaults)
-    {
-        uniValues.set(name, defaults.slice());
-    }
-
-    return {
-        program,
-        vao,
-        uniSetters,
-        uniValues,
-        attributes
-    };
-};
-
 const createUniSetter = (type, loc) => (values) => gl[type](loc, ...values);
 
 const detachDeleteShader = (program, shader) =>
@@ -73,10 +46,29 @@ const setUniSetters = ({ uniforms }, program, uniDefaults, uniSetters) =>
     }
 };
 
-export const setupModelVao = (programData, attrOffsets) =>
+export const createProgramData = (programId, attrOffsets) =>
 {
-    const { program, vao, attributes } = programData;
+    const {
+        program,
+        uniDefaults,
+        uniSetters,
+        attributes
+    } = preparedPrograms.get(programId);
 
+    /*--------------------------------------------------------------------------
+        Uniforms
+    --------------------------------------------------------------------------*/
+    const uniValues = new Map();
+
+    for (const [name, defaults] of uniDefaults)
+    {
+        uniValues.set(name, defaults.slice());
+    }
+
+    /*--------------------------------------------------------------------------
+        Attributes
+    --------------------------------------------------------------------------*/
+    const vao = gl.createVertexArray();
     gl.bindVertexArray(vao);
 
     const modelBuffer = getModelBuffer();
@@ -96,9 +88,15 @@ export const setupModelVao = (programData, attrOffsets) =>
 
     gl.bindBuffer($.ARRAY_BUFFER, null);
     gl.bindVertexArray(null);
+
+    return {
+        program,
+        vao,
+        uniSetters,
+        uniValues
+    };
 };
 
-// TODO: maybe move defs to a different file to reduce clutter here
 /*------------------------------------------------------------------------------
     Templates
 ------------------------------------------------------------------------------*/

@@ -1,7 +1,7 @@
 import * as $ from "../const";
 import { getSubTextureData } from "../gl/texture";
 import { getModel } from "../gl/model";
-import { createProgramData, setupModelVao } from "../gl/program";
+import { createProgramData } from "../gl/program";
 import { Component } from "./component";
 
 export class Sprite extends Component
@@ -11,10 +11,7 @@ export class Sprite extends Component
         super();
 
         this.programId = programId;
-        this.programData = createProgramData(this.programId);
-
         this.setModel(modelId);
-
         this.isVisible = true;
 
         // Marks if 3rd party uniforms (e.g. camera matrix) have been set
@@ -32,10 +29,17 @@ export class Sprite extends Component
     setModel(modelId)
     {
         this.model = getModel(modelId);
-        const subTexData = getSubTextureData(this.model.subTextureId);
+        const { meshOffset, uvOffset, uvCoords, subTextureId } = this.model;
+
+        const subTexData = getSubTextureData(subTextureId);
         this.texture = subTexData.baseData.texture;
 
-        const { meshOffset, uvOffset, uvCoords } = this.model;
+        const attrOffsets = {
+            [$.A_POSITION]: meshOffset,
+            [$.A_UV]: uvOffset
+        };
+
+        this.programData = createProgramData(this.programId, attrOffsets);
 
         // Program-specific uniforms
         if (this.programId === $.PROGRAM_TILED)
@@ -48,13 +52,6 @@ export class Sprite extends Component
             this.setUniform($.U_UVOFFSET, [uvMinX, uvMinY]);
             this.setUniform($.U_UVSIZE, [uvMaxX - uvMinX, uvMaxY - uvMinY]);
         }
-
-        const attrOffsets = {
-            [$.A_POSITION]: meshOffset,
-            [$.A_UV]: uvOffset
-        };
-
-        setupModelVao(this.programData, attrOffsets);
     }
 
     setUniform(key, value)

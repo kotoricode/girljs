@@ -1,23 +1,19 @@
 import * as $ from "../const";
 import { gl } from "../dom";
 import { Sprite } from "../components/sprite";
-import { createProgramData, setupModelVao } from "./program";
+import { createProgramData } from "./program";
 import { getModel } from "./model";
 import { subscribe } from "../utils/publisher";
 
 const getViewProgramData = () =>
 {
-    const programData = createProgramData($.PROGRAM_GRAY);
-
     const model = getModel($.MODEL_IMAGE);
     const offsets = {
         [$.A_POSITION]: model.meshOffset,
         [$.A_UV]: model.uvOffset
     };
 
-    setupModelVao(programData, offsets);
-
-    return programData;
+    return createProgramData($.PROGRAM_GRAY, offsets);
 };
 
 export const render = (scene) =>
