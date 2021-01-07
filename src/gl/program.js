@@ -49,16 +49,16 @@ export const createProgramData = (programId, attrOffsets) =>
     const modelBuffer = getModelBuffer();
     gl.bindBuffer($.ARRAY_BUFFER, modelBuffer);
 
-    for (const [name, layout] of Object.entries(attributes))
+    for (const name of attributes)
     {
         if (!(name in attrOffsets))
         {
             throw name;
         }
 
-        const location = gl.getAttribLocation(program, name);
-        gl.enableVertexAttribArray(location);
-        gl.vertexAttribPointer(location, ...layout, attrOffsets[name]);
+        const pos = gl.getAttribLocation(program, name);
+        gl.enableVertexAttribArray(pos);
+        gl.vertexAttribPointer(pos, 2, $.FLOAT, false, 0, attrOffsets[name]);
     }
 
     gl.bindBuffer($.ARRAY_BUFFER, null);
@@ -83,18 +83,16 @@ const detachDeleteShader = (program, shader) =>
 /*------------------------------------------------------------------------------
     Templates
 ------------------------------------------------------------------------------*/
-const attrPos = {
-    [$.A_POSITION]: [2, $.FLOAT, false, 0],
-};
+// transpose, value
+const uniMatrix = [false, null];
+const uniArrZeroZero = [0, 0];
 
-const attrPosUv = {
-    [$.A_POSITION]: [2, $.FLOAT, false, 0],
-    [$.A_UV]: [2, $.FLOAT, false, 0],
-};
+const attrPos = [$.A_POSITION];
+const attrPosUv = [$.A_POSITION, $.A_UV];
 
 const uniTransVP = {
-    [$.U_TRANSFORM]: [false, null],
-    [$.U_VIEWPROJECTION]: [false, null],
+    [$.U_TRANSFORM]: uniMatrix,
+    [$.U_VIEWPROJECTION]: uniMatrix,
 };
 
 const uniColor = {
@@ -106,8 +104,8 @@ const uniUvRepeat = {
 };
 
 const uniUvOffsetSize = {
-    [$.U_UVOFFSET]: [0, 0],
-    [$.U_UVSIZE]: [0, 0]
+    [$.U_UVOFFSET]: uniArrZeroZero,
+    [$.U_UVSIZE]: uniArrZeroZero
 };
 
 /*------------------------------------------------------------------------------
@@ -215,8 +213,8 @@ while (i < newProgramDef.length)
             {
                 for (const [name, defValueArr] of Object.entries(typeObj))
                 {
-                    const location = gl.getUniformLocation(program, name);
-                    const uniSetter = createUniSetter(type, location);
+                    const pos = gl.getUniformLocation(program, name);
+                    const uniSetter = createUniSetter(type, pos);
                     uniSetters.set(name, uniSetter);
                     uniDefaults.set(name, defValueArr);
                 }

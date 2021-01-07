@@ -4,7 +4,7 @@ const fs = require("fs");
 const path = require("path");
 
 const glslFiles = /\.glsl$/;
-const whitespace = /(?<!version|300|es|precision|[high|medium|low]p|uniform|sampler2D|in|out|vec\d|mat\d|mat\dx\d|void|float|int|bool|double)\s/g;
+const whitespace = /(?<!version|300|es|precision|[high|medium|low]p|uniform|sampler\w+|in|out|vec\d|mat\d|mat\dx\d|void|float|int|bool|double)\s/g;
 
 module.exports = {
     name: "glsl-plugin",
