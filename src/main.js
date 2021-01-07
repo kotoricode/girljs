@@ -11,7 +11,7 @@ const mainLoop = (timestamp) =>
         activeScene.update(dt);
     }
 
-    mouse.isClick = false;
+    mouse.isWorldClick = false;
     oldTimestamp = timestamp;
     window.requestAnimationFrame(mainLoop);
 };

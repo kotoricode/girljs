@@ -65,21 +65,17 @@ for (const resizeEvent of ["DOMContentLoaded", "load", "resize"])
 export const mouse = {
     clip: new Vector2(),
     screen: new Vector2(),
-    isClick: false,
-    setPosition: (e) =>
-    {
-        const relX = (e.clientX - canvasRect.left) / gameCanvas.clientWidth,
-              relY = (e.clientY - canvasRect.top) / gameCanvas.clientHeight;
-
-        mouse.screen.set(relX * $.SCREEN_WIDTH, relY * $.SCREEN_HEIGHT);
-        mouse.clip.set(2*relX - 1, 1 - 2*relY);
-    }
+    isWorldClick: false
 };
 
 // UI canvas receives clicks, propagate to container if no UI interaction
 uiCanvas.addEventListener("click", (e) =>
 {
-    mouse.setPosition(e);
+    const relX = (e.clientX - canvasRect.left) / gameCanvas.clientWidth,
+          relY = (e.clientY - canvasRect.top) / gameCanvas.clientHeight;
+
+    mouse.screen.set(relX * $.SCREEN_WIDTH, relY * $.SCREEN_HEIGHT);
+    mouse.clip.set(2*relX - 1, 1 - 2*relY);
 
     if (isUiInteraction())
     {
@@ -90,10 +86,7 @@ uiCanvas.addEventListener("click", (e) =>
 });
 
 // Container does clicks for in-game clicking (e.g. movement)
-canvasHolder.addEventListener("click", () =>
-{
-    mouse.isClick = true;
-});
+canvasHolder.addEventListener("click", () => mouse.isWorldClick = true);
 
 // Container blocks contextmenu for both canvases
 canvasHolder.addEventListener("contextmenu", (e) => e.preventDefault());

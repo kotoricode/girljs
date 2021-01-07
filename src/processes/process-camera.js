@@ -11,7 +11,7 @@ export const processCamera = (scene) =>
     const [pMotion, plSpace] = scene.one($.ENTITY_PLAYER, Motion, Space);
     setCameraPosition(plSpace.world.translation);
 
-    if (mouse.isClick)
+    if (mouse.isWorldClick)
     {
         const [coll] = scene.one($.ENTITY_GROUND, Collider);
 
