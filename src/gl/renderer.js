@@ -5,16 +5,15 @@ import { createProgramData, setupModelVao } from "./program";
 import { getModel } from "./model";
 import { subscribe } from "../utils/publisher";
 
-// TODO: pretty sure this is shared with sprite... move shit to setupmodelvao
 const getViewProgramData = () =>
 {
+    const programData = createProgramData($.PROGRAM_GRAY);
+
     const model = getModel($.MODEL_IMAGE);
     const offsets = {
         [$.A_POSITION]: model.meshOffset,
         [$.A_UV]: model.uvOffset
     };
-
-    const programData = createProgramData($.PROGRAM_GRAY);
 
     setupModelVao(programData, offsets);
 

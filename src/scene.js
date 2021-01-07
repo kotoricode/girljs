@@ -117,8 +117,8 @@ export class Scene
         {
             if (!sprite.isInitialized)
             {
-                sprite.setUniformIndex($.U_TRANSFORM, 1, space.matrix);
-                sprite.setUniformIndex($.U_VIEWPROJECTION, 1, viewProjection);
+                sprite.setUniformIndexed($.U_TRANSFORM, 1, space.matrix);
+                sprite.setUniformIndexed($.U_VIEWPROJECTION, 1, viewProjection);
 
                 sprite.isInitialized = true;
             }
@@ -130,6 +130,8 @@ export class Scene
     load()
     {
         this.root = new Entity($.ENTITY_ROOT);
+        this.hasNewSprites = false;
+        this.hasDirty = false;
 
         const bp = this.blueprint();
         this.processes = bp.processes;
@@ -171,8 +173,18 @@ export class Scene
     unload()
     {
         this.entities.clear();
+
+        for (const cache of this.cached.values())
+        {
+            cache.clear();
+        }
+
         this.cached.clear();
+
         this.unloadEntities(this.root);
+
+        this.hasNewSprites = false;
+        this.hasDirty = false;
     }
 
     unloadEntities(entity)
