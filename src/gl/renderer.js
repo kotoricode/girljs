@@ -4,6 +4,7 @@ import { Sprite } from "../components/sprite";
 import { createProgramData } from "./program";
 import { getModel } from "./model";
 import { subscribe } from "../utils/publisher";
+import { bindBuffer, unbindBuffer } from "./buffer";
 
 const getViewProgramData = () =>
 {
@@ -72,6 +73,9 @@ export const render = (scene) =>
     renderQueue($.PROGRAM_TILED);
     renderQueue($.PROGRAM_SPRITE);
 
+    // Debug
+    test();
+
     // Framebuffer to canvas
     gl.bindFramebuffer($.FRAMEBUFFER, null);
     gl.useProgram(viewProgram);
@@ -79,6 +83,29 @@ export const render = (scene) =>
     gl.bindTexture($.TEXTURE_2D, framebufferTexture);
     renderTriangleStrip(viewVao);
     gl.bindTexture($.TEXTURE_2D, null);
+};
+
+const test = () =>
+{
+    bindBuffer($.BUFFER_DEBUG);
+
+    gl.bufferData($.ARRAY_BUFFER, new Float32Array([
+        0.0, 0.0,
+        0.1, 0.1
+    ]), $.STATIC_DRAW);
+
+    unbindBuffer();
+
+    const prog = createProgramData($.PROGRAM_DEBUG, {
+        [$.A_POSITION]: 0
+    },
+    $.BUFFER_DEBUG);
+
+    gl.useProgram(prog.program);
+
+    gl.bindVertexArray(prog.vao);
+    gl.drawArrays($.LINES, 0, 2);
+    gl.bindVertexArray(null);
 };
 
 const renderQueue = (queueId) =>

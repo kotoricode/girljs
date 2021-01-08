@@ -21,7 +21,7 @@ void main()
 
     outColor = mix(
         texColor,
-        vec4(desat, desat, desat, 1.0),
+        vec4(desat, desat, desat, 1),
         amount
     );
 }

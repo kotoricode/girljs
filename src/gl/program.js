@@ -11,10 +11,10 @@ import fsTiled    from "./shaders/tiled.frag";
 import vsColor    from "./shaders/color.vert";
 import fsColor    from "./shaders/color.frag";
 
-const createAttachShader = (program, shaderId, { shaderSrc }) =>
+const createAttachShader = (program, shaderId, vertFrag) =>
 {
     const shader = gl.createShader(shaderId);
-    gl.shaderSource(shader, shaderSrc);
+    gl.shaderSource(shader, vertFrag.src);
     gl.compileShader(shader);
     gl.attachShader(program, shader);
 
@@ -111,22 +111,22 @@ const uniUvOffsetSize = {
 ------------------------------------------------------------------------------*/
 const vertDef = {
     color: {
-        shaderSrc: vsColor,
+        src: vsColor,
         attributes: attrPos
     },
     standard: {
-        shaderSrc: vsStandard,
+        src: vsStandard,
         attributes: attrPosUv
     },
     sprite: {
-        shaderSrc: vsSprite,
+        src: vsSprite,
         attributes: attrPosUv,
         uniforms: {
             uniformMatrix4fv: uniTransVP
         }
     },
     tiled: {
-        shaderSrc: vsTiled,
+        src: vsTiled,
         attributes: attrPosUv,
         uniforms: {
             uniformMatrix4fv: uniTransVP,
@@ -140,19 +140,19 @@ const vertDef = {
 ------------------------------------------------------------------------------*/
 const fragDef = {
     color: {
-        shaderSrc: fsColor
+        src: fsColor
     },
     gray: {
-        shaderSrc: fsGray
+        src: fsGray
     },
     sprite: {
-        shaderSrc: fsSprite,
+        src: fsSprite,
         uniforms: {
             uniform4f: uniColor
         }
     },
     tiled: {
-        shaderSrc: fsTiled,
+        src: fsTiled,
         uniforms: {
             uniform2f: uniUvOffsetSize,
             uniform4f: uniColor
