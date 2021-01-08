@@ -74,9 +74,6 @@ export const render = (scene) =>
     renderQueue($.PROGRAM_TILED);
     renderQueue($.PROGRAM_SPRITE);
 
-    // Debug
-    test();
-
     // Framebuffer to canvas
     gl.bindFramebuffer($.FRAMEBUFFER, null);
     gl.useProgram(viewProgram);
@@ -84,6 +81,9 @@ export const render = (scene) =>
     gl.bindTexture($.TEXTURE_2D, framebufferTexture);
     renderTriangleStrip(viewVao);
     gl.bindTexture($.TEXTURE_2D, null);
+
+    // Debug
+    test();
 };
 
 const test = () =>
@@ -97,16 +97,17 @@ const test = () =>
 
     unbindBuffer();
 
-    const prog = createProgramData($.PROGRAM_DEBUG, {
-        [$.A_POSITION]: 0
-    },
-    $.BUFFER_DEBUG);
+    const prog = createProgramData(
+        $.PROGRAM_DEBUG,
+        { [$.A_POSITION]: 0 },
+        $.BUFFER_DEBUG
+    );
 
-    gl.useProgram(prog.program);
+    oldProgram = prog.program;
+    gl.useProgram(oldProgram);
 
-    const a = prog.uniSetters.get($.U_VIEWPROJECTION);
     const vp = getViewProjection();
-    a([0, vp]);
+    prog.uniSetters.get($.U_VIEWPROJECTION)([0, vp]);
 
     gl.bindVertexArray(prog.vao);
     gl.drawArrays($.LINES, 0, 2);

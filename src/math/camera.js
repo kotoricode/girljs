@@ -54,23 +54,17 @@ export const setCameraPosition = (vec) =>
     invViewProjection.invertFrom(viewProjection);
 };
 
-const f = 1000;
+const f = 10;
 const n = 1;
 const dist = f - n;
 
 const L0 = 2 / $.SCREEN_WIDTH,
       L5 = 2 / $.SCREEN_HEIGHT,
-      LA = 1 / dist,
-      LE = -n / dist;
+      LA = -2 / dist,
+      LE = -(f + n) / dist;
 
-const transform = new Transform(),
+const transform = new Transform(0, 0, 2),
       viewProjection = new Matrix4(),
       invViewProjection = new Matrix4();
 
-// let i = 0;
-
-// window.setInterval(() =>
-// {
-//     i += 0.03;
-//     transform.rotation.fromEuler(i, 0, 0);
-// }, 20);
+transform.rotation.fromEuler(0, 0, 0);
