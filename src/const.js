@@ -14,6 +14,7 @@ export const
     MODEL_PLAYER2 = "player2";
 
 export const
+    PROGRAM_DEBUG = "debug",
     PROGRAM_GRAY = "gray",
     PROGRAM_SPRITE = "sprite",
     PROGRAM_TILED = "tiled";

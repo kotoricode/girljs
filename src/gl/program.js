@@ -140,6 +140,9 @@ const vertDef = {
     Fragment shader definitions
 ------------------------------------------------------------------------------*/
 const fragDef = {
+    color: {
+        shaderSrc: fsColor
+    },
     gray: {
         shaderSrc: fsGray
     },
@@ -164,7 +167,8 @@ const fragDef = {
 const newProgramDef = [
     $.PROGRAM_GRAY,   vertDef.standard, fragDef.gray,
     $.PROGRAM_SPRITE, vertDef.sprite,   fragDef.sprite,
-    $.PROGRAM_TILED,  vertDef.tiled,    fragDef.tiled
+    $.PROGRAM_TILED,  vertDef.tiled,    fragDef.tiled,
+    $.PROGRAM_DEBUG,  vertDef.color,    fragDef.color
 ];
 
 /*------------------------------------------------------------------------------

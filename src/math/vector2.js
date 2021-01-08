@@ -1,3 +1,4 @@
+import { getInvViewProjection } from "./camera";
 import { VectorBase } from "./vector-base";
 
 export class Vector2 extends VectorBase
@@ -59,11 +60,13 @@ export class Vector2 extends VectorBase
         this.y -= vec.y;
     }
 
-    toWorld(invViewProjection)
+    toWorld()
     {
+        const ivp = getInvViewProjection();
+
         this.set(
-            this.x * invViewProjection[0] + invViewProjection[12],
-            this.y * invViewProjection[5] + invViewProjection[13]
+            this.x * ivp[0] + ivp[12],
+            this.y * ivp[5] + ivp[13]
         );
     }
 }

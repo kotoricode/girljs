@@ -1,6 +1,7 @@
 import * as $ from "./const";
 import { mouse } from "./dom";
 import { Scene } from "./scene";
+import "./debug";
 
 const mainLoop = (timestamp) =>
 {
