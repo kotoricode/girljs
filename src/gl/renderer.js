@@ -5,6 +5,7 @@ import { createProgramData } from "./program";
 import { getModel } from "./model";
 import { subscribe } from "../utils/publisher";
 import { bindBuffer, unbindBuffer } from "./buffer";
+import { getViewProjection } from "../math/camera";
 
 const getViewProgramData = () =>
 {
@@ -91,8 +92,8 @@ const test = () =>
 
     gl.bufferData($.ARRAY_BUFFER, new Float32Array([
         0.0, 0.0,
-        0.1, 0.1
-    ]), $.STATIC_DRAW);
+        300.0, 300.0
+    ]), $.DYNAMIC_DRAW);
 
     unbindBuffer();
 
@@ -102,6 +103,10 @@ const test = () =>
     $.BUFFER_DEBUG);
 
     gl.useProgram(prog.program);
+
+    const a = prog.uniSetters.get($.U_VIEWPROJECTION);
+    const vp = getViewProjection();
+    a([0, vp]);
 
     gl.bindVertexArray(prog.vao);
     gl.drawArrays($.LINES, 0, 2);
