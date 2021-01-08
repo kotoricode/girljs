@@ -1,6 +1,6 @@
 import * as $ from "../const";
 import { gl } from "../dom";
-import { getBuffer } from "./buffer";
+import { bindBuffer, unbindBuffer } from "./buffer";
 import { getSubTextureData } from "./texture";
 
 const getCoords = (minX, maxX, minY, maxY) =>
@@ -84,8 +84,6 @@ for (let i = 0; i < modelData.length;)
     }
 }
 
-const buffer = getBuffer($.BUFFER_MODEL);
-
-gl.bindBuffer($.ARRAY_BUFFER, buffer);
+bindBuffer($.BUFFER_MODEL);
 gl.bufferData($.ARRAY_BUFFER, new Float32Array(bufferData), $.STATIC_DRAW);
-gl.bindBuffer($.ARRAY_BUFFER, null);
+unbindBuffer();

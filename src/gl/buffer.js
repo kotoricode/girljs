@@ -6,12 +6,18 @@ const buffers = new Map([
     [ $.BUFFER_DEBUG, gl.createBuffer() ]
 ]);
 
-export const getBuffer = (bufferId) =>
+export const bindBuffer = (bufferId) =>
 {
-    if (buffers.has(bufferId))
+    if (!buffers.has(bufferId))
     {
-        return buffers.get(bufferId);
+        throw bufferId;
     }
 
-    throw bufferId;
+    const buffer = buffers.get(bufferId);
+    gl.bindBuffer($.ARRAY_BUFFER, buffer);
+};
+
+export const unbindBuffer = () =>
+{
+    gl.bindBuffer($.ARRAY_BUFFER, null);
 };

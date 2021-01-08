@@ -67,10 +67,10 @@ const transform = new Transform(),
       viewProjection = new Matrix4(),
       invViewProjection = new Matrix4();
 
-let i = 0;
+// let i = 0;
 
-window.setInterval(() =>
-{
-    i += 0.03;
-    transform.rotation.fromEuler(i, 0, 0);
-}, 20);
+// window.setInterval(() =>
+// {
+//     i += 0.03;
+//     transform.rotation.fromEuler(i, 0, 0);
+// }, 20);

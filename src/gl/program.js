@@ -1,6 +1,6 @@
 import * as $ from "../const";
 import { gl } from "../dom";
-import { getBuffer } from "./buffer";
+import { bindBuffer, unbindBuffer } from "./buffer";
 
 import vsStandard from "./shaders/standard.vert";
 import fsGray     from "./shaders/gray.frag";
@@ -46,8 +46,7 @@ export const createProgramData = (programId, attrOffsets, bufferId) =>
     const vao = gl.createVertexArray();
     gl.bindVertexArray(vao);
 
-    const buffer = getBuffer(bufferId);
-    gl.bindBuffer($.ARRAY_BUFFER, buffer);
+    bindBuffer(bufferId);
 
     for (const name of attributes)
     {
@@ -61,7 +60,7 @@ export const createProgramData = (programId, attrOffsets, bufferId) =>
         gl.vertexAttribPointer(pos, 2, $.FLOAT, false, 0, attrOffsets[name]);
     }
 
-    gl.bindBuffer($.ARRAY_BUFFER, null);
+    unbindBuffer();
     gl.bindVertexArray(null);
 
     return {

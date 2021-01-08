@@ -1,16 +1,14 @@
 import * as $ from "./const";
 import { gl } from "./dom";
-import { getBuffer } from "./gl/buffer";
+import { bindBuffer, unbindBuffer } from "./gl/buffer";
 
-const buffer = getBuffer($.BUFFER_DEBUG);
-
-gl.bindBuffer($.ARRAY_BUFFER, buffer);
+bindBuffer($.BUFFER_DEBUG);
 
 gl.bufferData($.ARRAY_BUFFER, new Float32Array([
     0.0, 0.0,
     100.0, 100.0
 ]), $.STATIC_DRAW);
 
-gl.bindBuffer($.ARRAY_BUFFER, null);
+unbindBuffer();
 
 console.log("hello world");
