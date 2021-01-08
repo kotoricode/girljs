@@ -4,18 +4,19 @@ export class Path
 {
     constructor(heapMaxSize)
     {
-        this.startNode = new PathNode();
-        this.endNode = new PathNode();
-        this.nodes = new Set();
-
-        this.heapMaxSize = heapMaxSize;
         this.heap = new Array(heapMaxSize); // head [0]
         this.heapSize = 0;
+        this.heapMaxSize = heapMaxSize;
+
+        this.nodes = new Set();
+        this.startNode = new PathNode();
+        this.endNode = new PathNode();
     }
 
     createNode(x, y)
     {
         const node = new PathNode(x, y);
+        this.nodes.add(node);
 
         for (const other of this.nodes)
         {
@@ -25,8 +26,6 @@ export class Path
             node.adjacent.set(other, dist);
             other.adjacent.set(node, dist);
         }
-
-        this.nodes.add(node);
     }
 
     finish()

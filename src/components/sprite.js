@@ -41,13 +41,14 @@ export class Sprite extends Component
         // Program-specific uniforms
         if (this.programId === $.PROGRAM_TILED)
         {
-            const uvMinX = uvCoords[0], // topleft X
-                  uvMaxY = uvCoords[1], // topleft Y
-                  uvMaxX = uvCoords[6], // bottomright X
-                  uvMinY = uvCoords[7]; // bottomright Y
+            const uvMinX = uvCoords[0],
+                  uvMinY = uvCoords[5];
+
+            const width = uvCoords[2] - uvMinX,
+                  height = uvCoords[1] - uvMinY;
 
             this.setUniform($.U_UVOFFSET, [uvMinX, uvMinY]);
-            this.setUniform($.U_UVSIZE, [uvMaxX - uvMinX, uvMaxY - uvMinY]);
+            this.setUniform($.U_UVSIZE, [width, height]);
         }
     }
 
