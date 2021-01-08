@@ -53,6 +53,11 @@ export class Matrix4 extends SettableArray
         );
     }
 
+    invert()
+    {
+        this.invertFrom(this);
+    }
+
     invertFrom(matrix)
     {
         const [
