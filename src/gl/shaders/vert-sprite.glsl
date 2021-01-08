@@ -5,6 +5,7 @@ uniform mat4 u_viewprojection;
 
 in vec2 a_position;
 in vec2 a_uv;
+
 out vec2 v_uv;
 
 void main()

@@ -2,7 +2,9 @@
 precision mediump float;
 
 uniform sampler2D u_texture;
+
 in vec2 v_uv;
+
 out vec4 outColor;
 
 void main()
