@@ -29,8 +29,8 @@ export const blueprint = new Map([
                             $.PROGRAM_TILED,
                             $.MODEL_GROUND,
                             {
-                                [$.U_UVREPEAT]: [5, 5],
-                                [$.U_COLOR]: [1, 0.7, 0.5, 1]
+                                [$.U_UVREPEAT]: [4, 3.3],
+                                [$.U_COLOR]: [1, 1, 1, 1]
                             }
                         )
                     ],

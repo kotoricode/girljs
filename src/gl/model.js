@@ -45,7 +45,7 @@ const uvFromSubTexture = (subTextureId) =>
 const modelData = [
     $.MODEL_GROUND,
     {
-        mesh: BL_BR_TL_TR(-500, 500, -500, 500),
+        mesh: BL_BR_TL_TR(-200, 200, -200, 200),
         subTextureId: $.SUBTEXTURE_BG
     },
 
