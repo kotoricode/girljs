@@ -123,41 +123,41 @@ export class Matrix4 extends SettableArray
         );
     }
 
-    // multiply(leftMatrix)
-    // {
-    //     const [
-    //         L0, L1, L2, L3,
-    //         L4, L5, L6, L7,
-    //         L8, L9, LA, LB,
-    //         LC, LD, LE, LF
-    //     ] = leftMatrix;
+    multiply(leftMatrix)
+    {
+        const [
+            L0, L1, L2, L3,
+            L4, L5, L6, L7,
+            L8, L9, LA, LB,
+            LC, LD, LE, LF
+        ] = leftMatrix;
 
-    //     const [
-    //         R0, R1, R2, R3,
-    //         R4, R5, R6, R7,
-    //         R8, R9, RA, RB,
-    //         RC, RD, RE, RF
-    //     ] = this;
+        const [
+            R0, R1, R2, R3,
+            R4, R5, R6, R7,
+            R8, R9, RA, RB,
+            RC, RD, RE, RF
+        ] = this;
 
-    //     this.set(
-    //         L0*R0 + L4*R1 + L8*R2 + LC*R3,
-    //         L1*R0 + L5*R1 + L9*R2 + LD*R3,
-    //         L2*R0 + L6*R1 + LA*R2 + LE*R3,
-    //         L3*R0 + L7*R1 + LB*R2 + LF*R3,
-    //         L0*R4 + L4*R5 + L8*R6 + LC*R7,
-    //         L1*R4 + L5*R5 + L9*R6 + LD*R7,
-    //         L2*R4 + L6*R5 + LA*R6 + LE*R7,
-    //         L3*R4 + L7*R5 + LB*R6 + LF*R7,
-    //         L0*R8 + L4*R9 + L8*RA + LC*RB,
-    //         L1*R8 + L5*R9 + L9*RA + LD*RB,
-    //         L2*R8 + L6*R9 + LA*RA + LE*RB,
-    //         L3*R8 + L7*R9 + LB*RA + LF*RB,
-    //         L0*RC + L4*RD + L8*RE + LC*RF,
-    //         L1*RC + L5*RD + L9*RE + LD*RF,
-    //         L2*RC + L6*RD + LA*RE + LE*RF,
-    //         L3*RC + L7*RD + LB*RE + LF*RF
-    //     );
-    // }
+        this.set(
+            L0*R0 + L4*R1 + L8*R2 + LC*R3,
+            L1*R0 + L5*R1 + L9*R2 + LD*R3,
+            L2*R0 + L6*R1 + LA*R2 + LE*R3,
+            L3*R0 + L7*R1 + LB*R2 + LF*R3,
+            L0*R4 + L4*R5 + L8*R6 + LC*R7,
+            L1*R4 + L5*R5 + L9*R6 + LD*R7,
+            L2*R4 + L6*R5 + LA*R6 + LE*R7,
+            L3*R4 + L7*R5 + LB*R6 + LF*R7,
+            L0*R8 + L4*R9 + L8*RA + LC*RB,
+            L1*R8 + L5*R9 + L9*RA + LD*RB,
+            L2*R8 + L6*R9 + LA*RA + LE*RB,
+            L3*R8 + L7*R9 + LB*RA + LF*RB,
+            L0*RC + L4*RD + L8*RE + LC*RF,
+            L1*RC + L5*RD + L9*RE + LD*RF,
+            L2*RC + L6*RD + LA*RE + LE*RF,
+            L3*RC + L7*RD + LB*RE + LF*RF
+        );
+    }
 
     // TODO: can be simplified for 2D stuff (at least translation Z = 0)
     multiplyTransformMatrix(matrix)

@@ -17,6 +17,7 @@ export const processCamera = (scene) =>
 
         position.copyFrom(mouse.clip);
         position.toWorld();
+
         coll.hasPoint(position);
 
         if (coll.hasPoint(position))

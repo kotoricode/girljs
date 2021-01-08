@@ -1,4 +1,5 @@
 import { getInvViewProjection } from "./camera";
+import { Matrix4 } from "./matrix4";
 import { VectorBase } from "./vector-base";
 
 export class Vector2 extends VectorBase
@@ -64,9 +65,39 @@ export class Vector2 extends VectorBase
     {
         const ivp = getInvViewProjection();
 
-        this.set(
-            this.x * ivp[0] + ivp[12],
-            this.y * ivp[5] + ivp[13]
-        );
+        const [x, y] = this;
+
+        const w = ivp[3]*x + ivp[7]*y + ivp[15],
+              zw = ivp[11];
+
+        const iwNear = 1 / (w - zw);
+
+        for (let i = 0; i < 2; i++)
+        {
+            const coord = ivp[i]*x + ivp[4+i]*y + ivp[12+i];
+            const zcoord = ivp[8+i];
+            this[i] = (coord - zcoord) * iwNear;
+        }
+    }
+
+    fromMouse(ivp, mouse)
+    {
+        const [mx, my] = mouse;
+
+        const w = ivp[3]*mx + ivp[7]*my + ivp[15],
+              zw = ivp[11];
+
+        const iwNear = 1 / (w - zw),
+              iwFar = 1 / (w + zw);
+
+        for (let i = 0; i < 3; i++)
+        {
+            const coord = ivp[i]*mx + ivp[4+i]*my + ivp[12+i];
+            const zcoord = ivp[8+i];
+            this.origin[i] = (coord - zcoord) * iwNear;
+            this.target[i] = (coord + zcoord) * iwFar;
+        }
+
+        this.setDirection();
     }
 }

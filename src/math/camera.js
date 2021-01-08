@@ -67,4 +67,4 @@ const transform = new Transform(0, 0, 2),
       viewProjection = new Matrix4(),
       invViewProjection = new Matrix4();
 
-transform.rotation.fromEuler(0, 0, 0);
+transform.rotation.fromEuler(0, 0, 0.6);
