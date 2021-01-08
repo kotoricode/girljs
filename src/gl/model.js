@@ -2,7 +2,7 @@ import * as $ from "../const";
 import { gl } from "../dom";
 import { getSubTextureData } from "./texture";
 
-const BL_BR_TL_TR = (minX, maxX, minY, maxY) =>
+const getCoords = (minX, maxX, minY, maxY) =>
 {
     return [
         minX, minY,
@@ -43,35 +43,12 @@ const uvFromSubTexture = (subTextureId) =>
 };
 
 const modelData = [
-    $.MODEL_GROUND,
-    {
-        mesh: BL_BR_TL_TR(-200, 200, -200, 200),
-        subTextureId: $.SUBTEXTURE_BG
-    },
+    $.MODEL_GROUND,  getCoords(-200, 200, -200, 200), $.SUBTEXTURE_BG,
+    $.MODEL_PLAYER,  getCoords(-40, 40, 0, 150),      $.SUBTEXTURE_UKKO,
+    $.MODEL_PLAYER2, getCoords(-40, 40, 0, 150),      $.SUBTEXTURE_BRAID,
 
-    $.MODEL_IMAGE,
-    {
-        mesh: BL_BR_TL_TR(-1, 1, -1, 1),
-        uv: BL_BR_TL_TR(0, 1, 0, 1)
-    },
-
-    $.MODEL_PLAYER,
-    {
-        mesh: BL_BR_TL_TR(-40, 40, 0, 150),
-        subTextureId: $.SUBTEXTURE_UKKO
-    },
-
-    $.MODEL_PLAYER2,
-    {
-        mesh: BL_BR_TL_TR(-40, 40, 0, 150),
-        subTextureId: $.SUBTEXTURE_BRAID
-    }
+    $.MODEL_IMAGE,   getCoords(-1, 1, -1, 1),         getCoords(0, 1, 0, 1)
 ];
-
-if (modelData.length & 1)
-{
-    throw Error;
-}
 
 const models = new Map(),
       numCoordUnits = 8, // 4 verts, 2 xy
@@ -80,22 +57,26 @@ const models = new Map(),
       bufferData = new Array(modelSize * numModels),
       bytes = Float32Array.BYTES_PER_ELEMENT;
 
-for (let i = 0; i < numModels; i++)
+let i = 0;
+while (i < modelData.length)
 {
-    const meshOffset = i * modelSize;
+    const modelId = modelData[i++];
+    const mesh = modelData[i++];
+    const subTexOrUv = modelData[i++];
+    const hasSubTexture = typeof subTexOrUv === "string";
+
+    const meshOffset = (i / 3) * modelSize;
     const uvOffset = meshOffset + numCoordUnits;
 
-    let i2 = i * 2;
-    const modelId = modelData[i2++];
-    const { mesh, uv, subTextureId } = modelData[i2];
-
-    const uvCoords = uv || uvFromSubTexture(subTextureId);
+    const uvCoords = hasSubTexture
+                   ? uvFromSubTexture(subTexOrUv)
+                   : subTexOrUv;
 
     models.set(modelId, {
         meshOffset: meshOffset * bytes,
         uvOffset: uvOffset * bytes,
         uvCoords,
-        subTextureId
+        subTextureId: hasSubTexture ? subTexOrUv : null
     });
 
     for (let j = 0; j < numCoordUnits; j++)
