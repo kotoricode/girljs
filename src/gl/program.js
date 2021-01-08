@@ -2,14 +2,14 @@ import * as $ from "../const";
 import { gl } from "../dom";
 import { getModelBuffer } from "./model";
 
-import vsStandard from "./shaders/vert-standard.glsl";
-import fsGray     from "./shaders/frag-gray.glsl";
-import vsSprite   from "./shaders/vert-sprite.glsl";
-import fsSprite   from "./shaders/frag-sprite.glsl";
-import vsTiled    from "./shaders/vert-tiled.glsl";
-import fsTiled    from "./shaders/frag-tiled.glsl";
-import vsColor    from "./shaders/vert-color.glsl";
-import fsColor    from "./shaders/frag-color.glsl";
+import vsStandard from "./shaders/standard.vert";
+import fsGray     from "./shaders/gray.frag";
+import vsSprite   from "./shaders/sprite.vert";
+import fsSprite   from "./shaders/sprite.frag";
+import vsTiled    from "./shaders/tiled.vert";
+import fsTiled    from "./shaders/tiled.frag";
+import vsColor    from "./shaders/color.vert";
+import fsColor    from "./shaders/color.frag";
 
 const createAttachShader = (program, shaderId, { shaderSrc }) =>
 {
