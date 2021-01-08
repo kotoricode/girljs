@@ -44,8 +44,7 @@ image.onload = () =>
     gl.bindTexture($.TEXTURE_2D, texture);
     gl.texImage2D($.TEXTURE_2D, 0, $.RGBA, $.RGBA, $.UNSIGNED_BYTE, image);
 
-    let i = 0;
-    while (i < parami.length)
+    for (let i = 0; i < parami.length;)
     {
         gl.texParameteri($.TEXTURE_2D, parami[i++], parami[i++]);
     }
@@ -87,8 +86,7 @@ const textureDef = [
 
 const textureData = new Map();
 
-let i = 0;
-while (i < textureDef.length)
+for (let i = 0; i < textureDef.length;)
 {
     const src = textureDef[i++];
 
@@ -111,8 +109,7 @@ const subTextureDef = [
 
 const subTextureData = new Map();
 
-i = 0;
-while (i < subTextureDef.length)
+for (let i = 0; i < subTextureDef.length;)
 {
     subTextureData.set(subTextureDef[i++], {
         x: subTextureDef[i++],

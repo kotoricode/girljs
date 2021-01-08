@@ -172,8 +172,7 @@ const newProgramDef = [
 ------------------------------------------------------------------------------*/
 const preparedPrograms = new Map();
 
-let i = 0;
-while (i < newProgramDef.length)
+for (let i = 0; i < newProgramDef.length;)
 {
     const programId = newProgramDef[i++],
           vert = newProgramDef[i++],

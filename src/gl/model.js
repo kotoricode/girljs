@@ -57,8 +57,7 @@ const models = new Map(),
       bufferData = new Array(modelSize * numModels),
       bytes = Float32Array.BYTES_PER_ELEMENT;
 
-let i = 0;
-while (i < modelData.length)
+for (let i = 0; i < modelData.length;)
 {
     const modelId = modelData[i++];
     const mesh = modelData[i++];
