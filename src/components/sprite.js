@@ -36,7 +36,11 @@ export class Sprite extends Component
             [$.A_UV]: uvOffset
         };
 
-        this.programData = createProgramData(this.programId, attrOffsets);
+        this.programData = createProgramData(
+            this.programId,
+            attrOffsets,
+            $.BUFFER_MODEL
+        );
 
         // Program-specific uniforms
         if (this.programId === $.PROGRAM_TILED)

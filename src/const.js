@@ -4,6 +4,10 @@ export const
     SCREEN_ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT;
 
 export const
+    BUFFER_MODEL = 1,
+    BUFFER_DEBUG = 2;
+
+export const
     MODEL_GROUND = "ground",
     MODEL_IMAGE = "image",
     MODEL_PLAYER = "player",

@@ -13,7 +13,7 @@ const getViewProgramData = () =>
         [$.A_UV]: model.uvOffset
     };
 
-    return createProgramData($.PROGRAM_GRAY, offsets);
+    return createProgramData($.PROGRAM_GRAY, offsets, $.BUFFER_MODEL);
 };
 
 export const render = (scene) =>
