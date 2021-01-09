@@ -1,6 +1,5 @@
-import * as $ from "./const";
-import { mouse, ui } from "./dom";
-import { Vector3 } from "./math/vector3";
+
+import { ui } from "./dom";
 
 export const clearUi = () =>
 {
@@ -8,7 +7,7 @@ export const clearUi = () =>
     ui.clearRect(0, 0, width, height);
 };
 
-export const drawCircle = (cx, cy, radius) =>
+export const drawCircle = () =>
 {
     ui.strokeStyle = "white";
 
@@ -19,8 +18,6 @@ export const drawCircle = (cx, cy, radius) =>
 
 export const drawDialogue = (str) =>
 {
-    isDialogueMode = true;
-
     ui.strokeStyle = "white";
     ui.fillStyle = "white";
     ui.font = "30px Arial";
@@ -32,7 +29,7 @@ export const drawLine = () =>
 
 };
 
-export const drawRectangle = (x, y, width, height) =>
+export const drawRectangle = () =>
 {
 
 };
@@ -51,4 +48,3 @@ export const isUiInteraction = () =>
     return false;
 };
 
-let isDialogueMode = false;

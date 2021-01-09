@@ -9,7 +9,7 @@ import { Vector3 } from "../math/vector3";
 
 export const processCamera = (scene) =>
 {
-    const [pMotion, plSpace] = scene.one($.ENTITY_PLAYER, Motion, Space);
+    const [plMotion, plSpace] = scene.one($.ENTITY_PLAYER, Motion, Space);
     setCameraPosition(plSpace.world.translation);
 
     if (mouse.isWorldClick)
@@ -25,9 +25,8 @@ export const processCamera = (scene) =>
         // Update player, marker paths
         if (ray.numHits)
         {
-            console.log("collide");
-            // const hit = cam.ray.hit[0];
-            // plMotion.setMainTarget(hit);
+            const hit = ray.hit[0];
+            plMotion.setMainTarget(hit);
         }
 
         // position.copyFrom(mouse.clip);

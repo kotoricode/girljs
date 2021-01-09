@@ -47,7 +47,7 @@ export const createProgramData = (programId, attrOffsets, bufferId) =>
     gl.bindVertexArray(vao);
     bindBuffer(bufferId);
 
-    for (const name of attributes)
+    for (const [name, layout] of Object.entries(attributes))
     {
         if (!(name in attrOffsets))
         {
@@ -56,7 +56,7 @@ export const createProgramData = (programId, attrOffsets, bufferId) =>
 
         const pos = gl.getAttribLocation(program, name);
         gl.enableVertexAttribArray(pos);
-        gl.vertexAttribPointer(pos, 2, $.FLOAT, false, 0, attrOffsets[name]);
+        gl.vertexAttribPointer(pos, ...layout, attrOffsets[name]);
     }
 
     unbindBuffer();
@@ -84,8 +84,19 @@ const detachDeleteShader = (program, shader) =>
 // also works with uniformMatrix [transpose, value]
 const uniArrZeroZero = [0, 0];
 
-const attrPos = [$.A_POSITION];
-const attrPosUv = [$.A_POSITION, $.A_UV];
+// const attrPos = [$.A_POSITION];
+// const attrPosUv = [$.A_POSITION, $.A_UV];
+
+const attrLayout2 = [2, $.FLOAT, false, 0];
+
+const attrPos = {
+    [$.A_POSITION]: attrLayout2
+};
+
+const attrPosUv = {
+    [$.A_POSITION]: attrLayout2,
+    [$.A_UV]: attrLayout2,
+};
 
 const uniTransVP = {
     [$.U_TRANSFORM]: uniArrZeroZero,

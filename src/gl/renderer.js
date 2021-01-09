@@ -69,6 +69,8 @@ export const render = (scene) =>
     }
 
     gl.clear($.COLOR_BUFFER_BIT);
+    gl.enable($.DEPTH_TEST);
+    gl.depthMask(true);
 
     // Render world to framebuffer
     renderQueue($.PROGRAM_TILED);
@@ -88,6 +90,9 @@ export const render = (scene) =>
 
 const renderDebug = () =>
 {
+    gl.disable($.DEPTH_TEST);
+    gl.depthMask(false);
+
     const prog = getDebugProgram();
 
     oldProgram = prog.program;
@@ -158,10 +163,6 @@ gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 // Sprites turn by flipping scale.x sign, so no face culling
 // TODO: maybe do add face culling for static (no Motion component) entities
 gl.disable($.CULL_FACE);
-
-// Not needed for 2D
-gl.disable($.DEPTH_TEST);
-gl.depthMask(false);
 
 const queues = new Map([
     [$.PROGRAM_SPRITE, []],

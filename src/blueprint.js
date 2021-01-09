@@ -1,10 +1,8 @@
 import * as $ from "./const";
-import { BoxCollider } from "./math/box-collider";
 import { Space } from "./components/space";
 import { Motion } from "./components/motion";
 import { Player } from "./components/player";
 import { Sprite } from "./components/sprite";
-import { Collider } from "./components/collider";
 import { processMotion } from "./processes/process-motion";
 import { processCamera } from "./processes/process-camera";
 import { Ground } from "./components/ground";
