@@ -3,7 +3,6 @@ import { mouse } from "../dom";
 import { Motion } from "../components/motion";
 import { Space } from "../components/space";
 import { getInvViewProjection, setCameraPosition } from "../math/camera";
-import { Vector2 } from "../math/vector2";
 import { Ground } from "../components/ground";
 import { Ray } from "../math/ray";
 import { Vector3 } from "../math/vector3";
@@ -43,7 +42,6 @@ export const processCamera = (scene) =>
     }
 };
 
-const position = new Vector2();
 const ray = new Ray(
     new Vector3(),
     new Vector3(0, 0, 1)

@@ -1,13 +1,13 @@
-import { Vector2 } from "./vector2";
+import { Vector3 } from "./vector3";
 
 export class Segment
 {
     constructor(startX, startY, endX, endY)
     {
-        this.start = new Vector2(startX, startY);
-        this.end = new Vector2(endX, endY);
+        this.start = new Vector3(startX, startY);
+        this.end = new Vector3(endX, endY);
 
-        this.intersection = new Vector2();
+        this.intersection = new Vector3();
     }
 
     getIntersection(line, isPoly=true)

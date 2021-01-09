@@ -1,6 +1,6 @@
 import * as $ from "./const";
 import { mouse, ui } from "./dom";
-import { Vector2 } from "./math/vector2";
+import { Vector3 } from "./math/vector3";
 
 export const clearUi = () =>
 {

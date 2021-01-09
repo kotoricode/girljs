@@ -1,16 +1,16 @@
-import { Vector2 } from "./vector2";
+import { Vector3 } from "./vector3";
 
 export class BoxCollider
 {
     constructor(x, y, width, height, anchorX=0, anchorY=0)
     {
-        this.position = new Vector2(x, y);
-        this.bottomRight = new Vector2(x + width, y + height);
+        this.position = new Vector3(x, y);
+        this.bottomRight = new Vector3(x + width, y + height);
 
         this.width = width;
         this.height = height;
 
-        this.anchor = new Vector2(anchorX, anchorY);
+        this.anchor = new Vector3(anchorX, anchorY);
     }
 
     hasPoint(vec)

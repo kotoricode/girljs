@@ -1,4 +1,4 @@
-import { Vector2 } from "../math/vector2";
+import { Vector3 } from "../math/vector3";
 import { Component } from "./component";
 
 export class Motion extends Component
@@ -13,11 +13,11 @@ export class Motion extends Component
         }
 
         this.speed = speed;
-        this.direction = new Vector2();
+        this.direction = new Vector3();
 
         this.idx = -1;
         this.maxIdx = -1;
-        this.waypoints = [new Vector2()];
+        this.waypoints = [new Vector3()];
     }
 
     hasTarget()
