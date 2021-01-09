@@ -13,7 +13,7 @@ export const blueprint = new Map([
             [$.ENTITY_PLAYER, {
                 components: [
                     new Space(),
-                    new Motion(300),
+                    new Motion(3),
                     new Player(),
                     new Sprite($.PROGRAM_SPRITE, $.MODEL_PLAYER2)
                 ],
@@ -22,7 +22,7 @@ export const blueprint = new Map([
             [$.ENTITY_GROUND, {
                 components: [
                     new Space(),
-                    new Ground(-200, 200, -200, 200),
+                    new Ground(-2, 2, -2, 2),
                     //new Collider(new BoxCollider(-300, -300, 600, 600)),
                     new Sprite(
                         $.PROGRAM_TILED,

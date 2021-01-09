@@ -2,13 +2,23 @@ import * as $ from "../const";
 import { setBufferData } from "./buffer";
 import { getSubTextureData } from "./texture";
 
-const getCoords = (minX, maxX, minY, maxY) =>
+const getXy = (minX, maxX, minY, maxY) =>
 {
     return [
         minX, minY, 0,
         maxX, minY, 0,
         minX, maxY, 0,
         maxX, maxY, 0,
+    ];
+};
+
+const getXz = (minX, maxX, minZ, maxZ) =>
+{
+    return [
+        minX, 0, minZ,
+        maxX, 0, minZ,
+        minX, 0, maxZ,
+        maxX, 0, maxZ,
     ];
 };
 
@@ -51,15 +61,17 @@ const uvFromSubTexture = (subTextureId) =>
 };
 
 const modelData = [
-    $.MODEL_GROUND,  getCoords(-200, 200, -200, 200), $.SUBTEXTURE_BG,
-    $.MODEL_PLAYER,  getCoords(-40, 40, 0, 150),      $.SUBTEXTURE_UKKO,
-    $.MODEL_PLAYER2, getCoords(-40, 40, 0, 150),      $.SUBTEXTURE_BRAID,
+    $.MODEL_GROUND,  getXz(-2, 2, -2, 2),      $.SUBTEXTURE_BG,
+    $.MODEL_PLAYER,  getXy(-0.4, 0.4, 0, 1.5), $.SUBTEXTURE_UKKO,
+    $.MODEL_PLAYER2, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEXTURE_BRAID,
 
-    $.MODEL_IMAGE,   getCoords(-1, 1, -1, 1),         getUv(0, 1, 0, 1)
+    $.MODEL_IMAGE,   getXy(-1, 1, -1, 1),      getUv(0, 1, 0, 1)
 ];
 
 const models = new Map(),
-      modelSize = 12 + 8,
+      xyzSize = 12,
+      uvSize = 8,
+      modelSize = xyzSize + uvSize,
       numModels = modelData.length / 3,
       bufferData = new Array(modelSize * numModels),
       bytes = Float32Array.BYTES_PER_ELEMENT;
@@ -73,7 +85,7 @@ for (let i = 0; i < modelData.length;)
     const subTexOrUv = modelData[i++];
     const hasRawUv = Array.isArray(subTexOrUv);
 
-    const uvOffset = meshOffset + 12;
+    const uvOffset = meshOffset + xyzSize;
 
     const uvCoords = hasRawUv ? subTexOrUv : uvFromSubTexture(subTexOrUv);
 
@@ -84,12 +96,12 @@ for (let i = 0; i < modelData.length;)
         subTextureId: hasRawUv ? null : subTexOrUv
     });
 
-    for (let j = 0; j < 12; j++)
+    for (let j = 0; j < xyzSize; j++)
     {
         bufferData[meshOffset+j] = mesh[j];
     }
 
-    for (let j = 0; j < 8; j++)
+    for (let j = 0; j < uvSize; j++)
     {
         bufferData[uvOffset+j] = uvCoords[j];
     }

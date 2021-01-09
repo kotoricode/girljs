@@ -46,18 +46,34 @@ export class Ray
         this.setDirection();
     }
 
+    // collide(box)
+    // {
+    //     const multi = -this.origin.z / this.direction.z;
+    //     const x = this.origin.x + multi*this.direction.x;
+
+    //     if (box.min.x <= x && x <= box.max.x)
+    //     {
+    //         const y = this.origin.y + multi*this.direction.y;
+
+    //         if (box.min.y <= y && y <= box.max.y)
+    //         {
+    //             this.addHit(x, y, 0);
+    //         }
+    //     }
+    // }
+
     collide(box)
     {
-        const multi = -this.origin.z / this.direction.z;
+        const multi = -this.origin.y / this.direction.y;
         const x = this.origin.x + multi*this.direction.x;
 
         if (box.min.x <= x && x <= box.max.x)
         {
-            const y = this.origin.y + multi*this.direction.y;
+            const z = this.origin.z + multi*this.direction.z;
 
-            if (box.min.y <= y && y <= box.max.y)
+            if (box.min.y <= z && z <= box.max.y)
             {
-                this.addHit(x, y, 0);
+                this.addHit(x, 0, z);
             }
         }
     }

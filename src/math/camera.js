@@ -14,7 +14,7 @@ export const getViewProjection = () =>
 
 export const setCameraPosition = (vec) =>
 {
-    transform.translation.set(vec.x, vec.y);
+    transform.translation.set(vec.x);
 
     /*--------------------------------------------------------------------------
         ViewProjection & Inverted ViewProjection
@@ -52,8 +52,8 @@ const n = 1;
 const dist = f - n;
 const fov = Math.tan(1 / 2);
 
-const transform = new Transform(0, 0, 500),
+const transform = new Transform(0, 1.4, 5),
       viewProjection = new Matrix4(),
       invViewProjection = new Matrix4();
 
-transform.rotation.fromEuler(0.2, 0.2, 0.2);
+//transform.rotation.fromEuler(0.2, 0.2, 0.2);
