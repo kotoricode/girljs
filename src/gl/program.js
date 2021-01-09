@@ -10,6 +10,7 @@ import vsTiled    from "./shaders/tiled.vert";
 import fsTiled    from "./shaders/tiled.frag";
 import vsColor    from "./shaders/color.vert";
 import fsColor    from "./shaders/color.frag";
+import { bindVao, unbindVao } from "./gl-helper";
 
 const createAttachShader = (program, shaderId, vertFrag) =>
 {
@@ -44,7 +45,7 @@ export const createProgramData = (programId, attrOffsets, bufferId) =>
         Attributes
     --------------------------------------------------------------------------*/
     const vao = gl.createVertexArray();
-    gl.bindVertexArray(vao);
+    bindVao(vao);
     bindBuffer(bufferId);
 
     for (const [name, layout] of Object.entries(attributes))
@@ -60,7 +61,7 @@ export const createProgramData = (programId, attrOffsets, bufferId) =>
     }
 
     unbindBuffer();
-    gl.bindVertexArray(null);
+    unbindVao();
 
     return {
         program,

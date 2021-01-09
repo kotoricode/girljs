@@ -18,7 +18,7 @@ const bufferData = [
     -2, 2, -2
 ];
 
-setBufferData($.BUFFER_DEBUG, bufferData);
+setBufferData($.BUFFER_DEBUG, bufferData, $.DYNAMIC_DRAW);
 
 const debugProgram = createProgramData(
     $.PROGRAM_DEBUG,

@@ -7,6 +7,9 @@ import { subscribe } from "../utils/publisher";
 import { getViewProjection } from "../math/camera";
 import { getDebugProgram } from "./debug";
 import { getBufferSize } from "./buffer";
+import {
+    bindTexture, bindVao, setTextureParami, unbindTexture, unbindVao, useProgram
+} from "./gl-helper";
 
 const getViewProgramData = () =>
 {
@@ -41,7 +44,7 @@ export const render = (scene) =>
         framebufferTexture = gl.createTexture();
         const { width, height } = gl.canvas;
 
-        gl.bindTexture($.TEXTURE_2D, framebufferTexture);
+        bindTexture(framebufferTexture);
 
         gl.texImage2D(
             $.TEXTURE_2D,
@@ -55,8 +58,8 @@ export const render = (scene) =>
             null
         );
 
-        gl.texParameteri($.TEXTURE_2D, $.TEXTURE_MIN_FILTER, $.LINEAR);
-        gl.bindTexture($.TEXTURE_2D, null);
+        setTextureParami($.TEXTURE_MIN_FILTER, $.LINEAR);
+        unbindTexture();
 
         gl.framebufferTexture2D(
             $.FRAMEBUFFER,
@@ -79,11 +82,11 @@ export const render = (scene) =>
 
     // Framebuffer to canvas
     gl.bindFramebuffer($.FRAMEBUFFER, null);
-    gl.useProgram(viewProgram);
+    useProgram(viewProgram);
 
-    gl.bindTexture($.TEXTURE_2D, framebufferTexture);
+    bindTexture(framebufferTexture);
     renderTriangleStrip(viewVao);
-    gl.bindTexture($.TEXTURE_2D, null);
+    unbindTexture();
 
     // Debug
     renderDebug();
@@ -96,17 +99,16 @@ const renderDebug = () =>
 
     const prog = getDebugProgram();
 
-    oldProgram = prog.program;
-    gl.useProgram(oldProgram);
+    useProgram(prog.program);
 
     const vp = getViewProjection();
     prog.uniSetters.get($.U_VIEWPROJECTION)([0, vp]);
 
     const bufferSize = getBufferSize($.BUFFER_DEBUG);
 
-    gl.bindVertexArray(prog.vao);
+    bindVao(prog.vao);
     gl.drawArrays($.LINES, 0, bufferSize / 3);
-    gl.bindVertexArray(null);
+    unbindVao();
 };
 
 const renderQueue = (queueId) =>
@@ -118,17 +120,8 @@ const renderQueue = (queueId) =>
         const { program, uniValues, uniSetters, vao } = model.programData;
         const { texture } = model;
 
-        if (oldProgram !== program)
-        {
-            gl.useProgram(program);
-            oldProgram = program;
-        }
-
-        if (oldTexture !== texture)
-        {
-            gl.bindTexture($.TEXTURE_2D, texture);
-            oldTexture = texture;
-        }
+        useProgram(program);
+        bindTexture(texture);
 
         // TODO: ideally we'd check for unchanged uniforms as well...
         for (const [key, value] of uniValues)
@@ -144,17 +137,15 @@ const renderQueue = (queueId) =>
 
 const renderTriangleStrip = (vao) =>
 {
-    gl.bindVertexArray(vao);
+    bindVao(vao);
     gl.drawArrays($.TRIANGLE_STRIP, 0, 4);
-    gl.bindVertexArray(null);
+    unbindVao();
 };
 
 const framebuffer = gl.createFramebuffer();
 
 let isCanvasResized = true,
-    framebufferTexture,
-    oldTexture,
-    oldProgram;
+    framebufferTexture;
 
 subscribe($.EVENT_CANVAS_RESIZED, () => isCanvasResized = true);
 

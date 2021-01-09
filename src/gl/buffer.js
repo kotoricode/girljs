@@ -28,10 +28,10 @@ export const getBufferSize = (bufferId) =>
     throw bufferId;
 };
 
-export const setBufferData = (bufferId, data) =>
+export const setBufferData = (bufferId, data, usage) =>
 {
     bindBuffer(bufferId);
-    gl.bufferData($.ARRAY_BUFFER, new Float32Array(data), $.STATIC_DRAW);
+    gl.bufferData($.ARRAY_BUFFER, new Float32Array(data), usage);
     unbindBuffer();
 
     bufferSizes.set(bufferId, data.length);

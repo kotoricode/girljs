@@ -107,4 +107,4 @@ for (let i = 0; i < modelData.length;)
     }
 }
 
-setBufferData($.BUFFER_MODEL, bufferData);
+setBufferData($.BUFFER_MODEL, bufferData, $.STATIC_DRAW);

@@ -1,5 +1,6 @@
 import * as $ from "../const";
 import { gl } from "../dom";
+import { bindTexture, setTextureParami, unbindTexture } from "./gl-helper";
 
 const createImageTexture = (src, parami) =>
 {
@@ -41,12 +42,12 @@ image.onload = () =>
 {
     const { texture, parami } = toFetch.shift();
 
-    gl.bindTexture($.TEXTURE_2D, texture);
+    bindTexture(texture);
     gl.texImage2D($.TEXTURE_2D, 0, $.RGBA, $.RGBA, $.UNSIGNED_BYTE, image);
 
     for (let i = 0; i < parami.length;)
     {
-        gl.texParameteri($.TEXTURE_2D, parami[i++], parami[i++]);
+        setTextureParami(parami[i++], parami[i++]);
     }
 
     const minFilter = gl.getTexParameter($.TEXTURE_2D, $.TEXTURE_MIN_FILTER);
@@ -57,7 +58,7 @@ image.onload = () =>
         gl.generateMipmap($.TEXTURE_2D);
     }
 
-    gl.bindTexture($.TEXTURE_2D, null);
+    unbindTexture();
 
     if (toFetch.length)
     {
