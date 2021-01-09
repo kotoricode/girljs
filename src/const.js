@@ -4,44 +4,48 @@ export const
     SCREEN_ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT;
 
 export const
-    BUFFER_MODEL = 1,
-    BUFFER_DEBUG = 2;
+    BUFFER_MODEL = 0,
+    BUFFER_DEBUG = 1;
 
 export const
-    MODEL_GROUND = "ground",
-    MODEL_IMAGE = "image",
-    MODEL_PLAYER = "player",
-    MODEL_PLAYER2 = "player2";
+    MODEL_GROUND = 0,
+    MODEL_IMAGE = 1,
+    MODEL_PLAYER = 2,
+    MODEL_PLAYER2 = 3;
 
 export const
-    PROGRAM_DEBUG = "debug",
-    PROGRAM_GRAY = "gray",
-    PROGRAM_SPRITE = "sprite",
-    PROGRAM_TILED = "tiled";
+    PROGRAM_DEBUG = 0,
+    PROGRAM_GRAY = 1,
+    PROGRAM_SPRITE = 2,
+    PROGRAM_TILED = 3;
 
 export const
-    ENTITY_GROUND = "ground",
-    ENTITY_PLAYER = "player",
-    ENTITY_ROOT = "root";
+    ENTITY_GROUND = 0,
+    ENTITY_PLAYER = 1,
+    ENTITY_ROOT = 2;
 
 export const
-    SCENE_TEST = "test";
+    SCENE_TEST = 0;
 
 export const
-    EVENT_RESIZE = "resize";
+    EVENT_CANVAS_RESIZED = 0;
 
+// STRING --- Filenames
 export const
     AUDIO_OMOIDE = "omoide_loft.ogg";
 
+// STRING --- JSON save data keys
 export const
     PREF_MASTER = "master",
     PREF_MUSIC = "music",
     PREF_SOUND = "sound";
 
+// STRING --- Part of file URL
 export const
     PATH_IMG = "./img/",
     PATH_SND = "./snd/";
 
+// STRING --- Shader variables
 export const
     U_COLOR = "u_color",
     U_TRANSFORM = "u_transform",
@@ -50,19 +54,21 @@ export const
     U_UVSIZE = "u_uvSize",
     U_VIEWPROJECTION = "u_viewprojection";
 
+// STRING --- Shader variables
 export const
     A_POSITION = "a_position",
     A_UV = "a_uv";
 
+// STRING --- Filenames
 export const
     TEXTURE_POLY = "texture.png",
     TEXTURE_SPRITE = "test.png",
     TEXTURE_BRAID = "braid.png";
 
 export const
-    SUBTEXTURE_BRAID = "braid",
-    SUBTEXTURE_BG = "bg",
-    SUBTEXTURE_UKKO = "ukko";
+    SUBTEXTURE_BRAID = 12,
+    SUBTEXTURE_BG = 34,
+    SUBTEXTURE_UKKO = 56;
 
 export const
     /*--------------------------------------------------------------------------

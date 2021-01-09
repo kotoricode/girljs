@@ -148,7 +148,7 @@ let isCanvasResized = true,
     oldTexture,
     oldProgram;
 
-subscribe($.EVENT_RESIZE, () => isCanvasResized = true);
+subscribe($.EVENT_CANVAS_RESIZED, () => isCanvasResized = true);
 
 const { program: viewProgram, vao: viewVao } = getViewProgramData();
 

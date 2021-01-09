@@ -68,11 +68,9 @@ export class Vector2 extends VectorBase
         const [x, y] = this;
         const w = (ivp[3]*x + ivp[7]*y + ivp[15] - ivp[11]);
 
-        for (let i = 0; i < 2; i++)
-        {
-            const coord = ivp[i]*x + ivp[4+i]*y + ivp[12+i];
-            const zcoord = ivp[8+i];
-            this[i] = (coord - zcoord) / w;
-        }
+        this.set(
+            (ivp[0]*x + ivp[4]*y + ivp[12] - ivp[8]) / w,
+            (ivp[1]*x + ivp[5]*y + ivp[13] - ivp[9]) / w
+        );
     }
 }

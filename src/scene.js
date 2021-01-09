@@ -14,7 +14,7 @@ export class Scene
 
         this.dt = 0;
 
-        /** @const {Map<string, Entity>} */
+        ///** @const {Map<string, Entity>} */
         this.entities = new Map();
 
         /** @const {Map<number, Set>} */
@@ -135,7 +135,7 @@ export class Scene
 
     loadEntities(entities, parentId)
     {
-        for (const [entityId, entityObj] of Object.entries(entities))
+        for (const [entityId, entityObj] of entities)
         {
             const entity = new Entity(entityId, ...entityObj.components);
             this.addEntity(entity, parentId);

@@ -60,20 +60,18 @@ for (let i = 0; i < modelData.length;)
     const modelId = modelData[i++];
     const mesh = modelData[i++];
     const subTexOrUv = modelData[i++];
-    const hasSubTexture = typeof subTexOrUv === "string";
+    const hasRawUv = Array.isArray(subTexOrUv);
 
     const meshOffset = (i / 3) * modelSize;
     const uvOffset = meshOffset + numCoordUnits;
 
-    const uvCoords = hasSubTexture
-                   ? uvFromSubTexture(subTexOrUv)
-                   : subTexOrUv;
+    const uvCoords = hasRawUv ? subTexOrUv : uvFromSubTexture(subTexOrUv);
 
     models.set(modelId, {
         meshOffset: meshOffset * bytes,
         uvOffset: uvOffset * bytes,
         uvCoords,
-        subTextureId: hasSubTexture ? subTexOrUv : null
+        subTextureId: hasRawUv ? null : subTexOrUv
     });
 
     for (let j = 0; j < numCoordUnits; j++)
