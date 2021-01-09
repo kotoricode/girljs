@@ -22,49 +22,37 @@ export const setCameraPosition = (vec) =>
     viewProjection.fromTransform(transform);
     viewProjection.invert();
 
-    const [
-        R0, R1, R2, R3,
-        R4, R5, R6, R7,
-        R8, R9, RA, RB,
-        RC, RD, RE, RF
-    ] = viewProjection;
+    viewProjection.multiply([
+        1 / ($.SCREEN_ASPECT * Math.tan(fov/2)),
+        0,
+        0,
+        0,
 
-    viewProjection.set(
-        L0 * R0,
-        L5 * R1,
-        LA * R2 + LE * R3,
-        R3,
+        0,
+        1 / (Math.tan(fov/2)),
+        0,
+        0,
 
-        L0 * R4,
-        L5 * R5,
-        LA * R6 + LE * R7,
-        R7,
+        0,
+        0,
+        -(f + n)/(f - n),
+        -1,
 
-        L0 * R8,
-        L5 * R9,
-        LA * RA + LE * RB,
-        RB,
-
-        L0 * RC,
-        L5 * RD,
-        LA * RE + LE * RF,
-        RF
-    );
+        0,
+        0,
+        -(2*f*n)/(f-n),
+        0
+    ]);
 
     invViewProjection.invertFrom(viewProjection);
 };
 
-const f = 100;
+const f = 1000;
 const n = 1;
-const dist = f - n;
+const fov = 1;
 
-const L0 = 2 / $.SCREEN_WIDTH,
-      L5 = 2 / $.SCREEN_HEIGHT,
-      LA = -2 / dist,
-      LE = -(f + n) / dist;
-
-const transform = new Transform(0, 0, 5),
+const transform = new Transform(0, 0, 500),
       viewProjection = new Matrix4(),
       invViewProjection = new Matrix4();
 
-transform.rotation.fromEuler(0, 0, 0.6);
+transform.rotation.fromEuler(0, 0, 0);
