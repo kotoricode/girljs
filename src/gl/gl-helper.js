@@ -97,7 +97,8 @@ export const unbindBuffer = () =>
 };
 
 const buffers = new Map([
-    [ $.BUFFER_MODEL, createBuffer() ],
+    [ $.BUFFER_SPRITE, createBuffer() ],
+    [ $.BUFFER_POLYGON, createBuffer() ],
     [ $.BUFFER_DEBUG, createBuffer() ]
 ]);
 

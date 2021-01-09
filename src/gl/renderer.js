@@ -24,7 +24,7 @@ const getViewProgramData = () =>
         [$.A_UV]: model.uvOffset
     };
 
-    return createProgramData($.PROGRAM_GRAY, offsets, $.BUFFER_MODEL);
+    return createProgramData($.PROGRAM_GRAY, offsets, $.BUFFER_POLYGON);
 };
 
 export const render = (scene) =>
@@ -90,7 +90,8 @@ export const render = (scene) =>
     useProgram(viewProgram);
 
     bindTexture(framebufferTexture);
-    renderTriangleStrip(viewVao);
+    renderTriangle(viewVao);
+    //renderTriangleStrip(viewVao);
     unbindTexture();
 
     // Debug
@@ -141,6 +142,11 @@ const renderQueue = (queueId) =>
 const renderTriangleStrip = (vao) =>
 {
     drawArraysVao($.TRIANGLE_STRIP, 0, 4, vao);
+};
+
+const renderTriangle = (vao) =>
+{
+    drawArraysVao($.TRIANGLES, 0, 6, vao);
 };
 
 const framebuffer = gl.createFramebuffer();

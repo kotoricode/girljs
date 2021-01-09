@@ -39,7 +39,7 @@ export class Sprite extends Component
         this.programData = createProgramData(
             this.programId,
             attrOffsets,
-            $.BUFFER_MODEL
+            $.BUFFER_SPRITE
         );
 
         // Program-specific uniforms

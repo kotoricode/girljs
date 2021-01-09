@@ -4,14 +4,16 @@ export const
     SCREEN_ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT;
 
 export const
-    BUFFER_MODEL = 0,
-    BUFFER_DEBUG = 1;
+    BUFFER_SPRITE = 0,
+    BUFFER_POLYGON = 1,
+    BUFFER_DEBUG = 2;
 
 export const
     MODEL_GROUND = 0,
     MODEL_IMAGE = 1,
     MODEL_PLAYER = 2,
-    MODEL_PLAYER2 = 3;
+    MODEL_PLAYER2 = 3,
+    MODEL_POLYGON = 4;
 
 export const
     PROGRAM_DEBUG = 0,

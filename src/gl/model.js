@@ -60,29 +60,30 @@ const uvFromSubTexture = (subTextureId) =>
     ];
 };
 
-const modelData = [
+/*------------------------------------------------------------------------------
+    Sprites
+------------------------------------------------------------------------------*/
+const spriteModelData = [
     $.MODEL_GROUND,  getXz(-2, 2, -2, 2),      $.SUBTEXTURE_BG,
     $.MODEL_PLAYER,  getXy(-0.4, 0.4, 0, 1.5), $.SUBTEXTURE_UKKO,
     $.MODEL_PLAYER2, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEXTURE_BRAID,
-
-    $.MODEL_IMAGE,   getXy(-1, 1, -1, 1),      getUv(0, 1, 0, 1)
 ];
 
 const models = new Map(),
       xyzSize = 12,
       uvSize = 8,
       modelSize = xyzSize + uvSize,
-      numModels = modelData.length / 3,
-      bufferData = new Array(modelSize * numModels),
+      numSpriteModels = spriteModelData.length / 3,
+      spriteBufferData = new Array(modelSize * numSpriteModels),
       bytes = Float32Array.BYTES_PER_ELEMENT;
 
-for (let i = 0; i < modelData.length;)
+for (let i = 0; i < spriteModelData.length;)
 {
     const meshOffset = (i / 3) * modelSize;
 
-    const modelId = modelData[i++];
-    const mesh = modelData[i++];
-    const subTexOrUv = modelData[i++];
+    const modelId = spriteModelData[i++];
+    const mesh = spriteModelData[i++];
+    const subTexOrUv = spriteModelData[i++];
     const hasRawUv = Array.isArray(subTexOrUv);
 
     const uvOffset = meshOffset + xyzSize;
@@ -98,13 +99,53 @@ for (let i = 0; i < modelData.length;)
 
     for (let j = 0; j < xyzSize; j++)
     {
-        bufferData[meshOffset+j] = mesh[j];
+        spriteBufferData[meshOffset+j] = mesh[j];
     }
 
     for (let j = 0; j < uvSize; j++)
     {
-        bufferData[uvOffset+j] = uvCoords[j];
+        spriteBufferData[uvOffset+j] = uvCoords[j];
     }
 }
 
-setBufferData($.BUFFER_MODEL, bufferData, $.STATIC_DRAW);
+setBufferData($.BUFFER_SPRITE, spriteBufferData, $.STATIC_DRAW);
+
+/*------------------------------------------------------------------------------
+    Polygons
+------------------------------------------------------------------------------*/
+const polygonModelData = [
+    $.MODEL_IMAGE,
+    [ -1, 1, 0, -1, -1, 0, 1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0 ],
+    [ 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1 ]
+];
+
+const numPolygonModels = polygonModelData.length / 3;
+const polygonBufferData = new Array(modelSize * numPolygonModels);
+
+for (let i = 0; i < polygonModelData.length;)
+{
+    const meshOffset = (i / 3) * modelSize;
+
+    const modelId = polygonModelData[i++];
+    const mesh = polygonModelData[i++];
+    const uvCoords = polygonModelData[i++];
+    const uvOffset = meshOffset + mesh.length;
+
+    models.set(modelId, {
+        meshOffset: meshOffset * bytes,
+        uvOffset: uvOffset * bytes,
+        uvCoords
+    });
+
+    for (let j = 0; j < mesh.length; j++)
+    {
+        polygonBufferData[meshOffset+j] = mesh[j];
+    }
+
+    for (let j = 0; j < uvCoords.length; j++)
+    {
+        polygonBufferData[uvOffset+j] = uvCoords[j];
+    }
+}
+
+setBufferData($.BUFFER_POLYGON, polygonBufferData, $.STATIC_DRAW);
