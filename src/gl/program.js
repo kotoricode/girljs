@@ -88,13 +88,14 @@ const uniArrZeroZero = [0, 0];
 // const attrPosUv = [$.A_POSITION, $.A_UV];
 
 const attrLayout2 = [2, $.FLOAT, false, 0];
+const attrLayout3 = [3, $.FLOAT, false, 0];
 
 const attrPos = {
-    [$.A_POSITION]: attrLayout2
+    [$.A_POSITION]: attrLayout3
 };
 
 const attrPosUv = {
-    [$.A_POSITION]: attrLayout2,
+    [$.A_POSITION]: attrLayout3,
     [$.A_UV]: attrLayout2,
 };
 

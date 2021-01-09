@@ -8,8 +8,8 @@ export const getDebugProgram = () =>
 };
 
 const bufferData = [
-    0, 0,
-    300, 300
+    0, 0, 0,
+    300, 300, 50
 ];
 
 setBufferData($.BUFFER_DEBUG, bufferData);

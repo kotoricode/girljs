@@ -5,6 +5,16 @@ import { getSubTextureData } from "./texture";
 const getCoords = (minX, maxX, minY, maxY) =>
 {
     return [
+        minX, minY, 0,
+        maxX, minY, 0,
+        minX, maxY, 0,
+        maxX, maxY, 0,
+    ];
+};
+
+const getUv = (minX, maxX, minY, maxY) =>
+{
+    return [
         minX, minY,
         maxX, minY,
         minX, maxY,
@@ -45,25 +55,25 @@ const modelData = [
     $.MODEL_PLAYER,  getCoords(-40, 40, 0, 150),      $.SUBTEXTURE_UKKO,
     $.MODEL_PLAYER2, getCoords(-40, 40, 0, 150),      $.SUBTEXTURE_BRAID,
 
-    $.MODEL_IMAGE,   getCoords(-1, 1, -1, 1),         getCoords(0, 1, 0, 1)
+    $.MODEL_IMAGE,   getCoords(-1, 1, -1, 1),         getUv(0, 1, 0, 1)
 ];
 
 const models = new Map(),
-      numCoordUnits = 8, // 4 verts, 2 xy
-      modelSize = numCoordUnits * 2, // mesh, uv
-      numModels = modelData.length / 2,
+      modelSize = 12 + 8,
+      numModels = modelData.length / 3,
       bufferData = new Array(modelSize * numModels),
       bytes = Float32Array.BYTES_PER_ELEMENT;
 
 for (let i = 0; i < modelData.length;)
 {
+    const meshOffset = (i / 3) * modelSize;
+
     const modelId = modelData[i++];
     const mesh = modelData[i++];
     const subTexOrUv = modelData[i++];
     const hasRawUv = Array.isArray(subTexOrUv);
 
-    const meshOffset = (i / 3) * modelSize;
-    const uvOffset = meshOffset + numCoordUnits;
+    const uvOffset = meshOffset + 12;
 
     const uvCoords = hasRawUv ? subTexOrUv : uvFromSubTexture(subTexOrUv);
 
@@ -74,9 +84,13 @@ for (let i = 0; i < modelData.length;)
         subTextureId: hasRawUv ? null : subTexOrUv
     });
 
-    for (let j = 0; j < numCoordUnits; j++)
+    for (let j = 0; j < 12; j++)
     {
         bufferData[meshOffset+j] = mesh[j];
+    }
+
+    for (let j = 0; j < 8; j++)
+    {
         bufferData[uvOffset+j] = uvCoords[j];
     }
 }
