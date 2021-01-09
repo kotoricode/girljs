@@ -83,13 +83,6 @@ export class Vector3 extends VectorBase
         return (this.x-vec3.x)**2 + (this.y-vec3.y)**2 + (this.z-vec3.z)**2;
     }
 
-    sqrMagnitude()
-    {
-        const { x, y, z } = this;
-
-        return x*x + y*y + z*z;
-    }
-
     subVec(vec)
     {
         for (let i = 0; i < vec.length; i++)

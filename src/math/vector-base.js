@@ -27,9 +27,9 @@ export class VectorBase extends SettableArray
         this[1] = value;
     }
 
-    magnitude(vec)
+    magnitude()
     {
-        return this.sqrMagnitude(vec) ** 0.5;
+        return this.sqrMagnitude() ** 0.5;
     }
 
     normalize(toMagnitude=1)
@@ -42,5 +42,10 @@ export class VectorBase extends SettableArray
         }
 
         this.mulScalar(toMagnitude / magnitude);
+    }
+
+    sqrMagnitude()
+    {
+        return this.reduce((acc, val) => acc + val**2, 0);
     }
 }
