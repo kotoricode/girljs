@@ -28,16 +28,6 @@ export const processCamera = (scene) =>
             const hit = ray.hit[0];
             plMotion.setMainTarget(hit);
         }
-
-        // position.copyFrom(mouse.clip);
-        // position.toWorld();
-
-        // coll.hasPoint(position);
-
-        // if (coll.hasPoint(position))
-        // {
-        //     pMotion.setMainTarget(position);
-        // }
     }
 };
 

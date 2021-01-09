@@ -23,24 +23,24 @@ export const setCameraPosition = (vec) =>
     viewProjection.invert();
 
     viewProjection.multiply([
-        1 / ($.SCREEN_ASPECT * Math.tan(fov/2)),
+        1 / ($.SCREEN_ASPECT * fov),
         0,
         0,
         0,
 
         0,
-        1 / (Math.tan(fov/2)),
+        1 / fov,
         0,
         0,
 
         0,
         0,
-        -(f + n)/(f - n),
+        -(f + n) / dist,
         -1,
 
         0,
         0,
-        -(2*f*n)/(f-n),
+        -(2*f*n) / dist,
         0
     ]);
 
@@ -49,10 +49,11 @@ export const setCameraPosition = (vec) =>
 
 const f = 1000;
 const n = 1;
-const fov = 1;
+const dist = f - n;
+const fov = Math.tan(1 / 2);
 
 const transform = new Transform(0, 0, 500),
       viewProjection = new Matrix4(),
       invViewProjection = new Matrix4();
 
-transform.rotation.fromEuler(0, 0, 0);
+transform.rotation.fromEuler(0.2, 0.2, 0.2);

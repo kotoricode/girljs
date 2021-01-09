@@ -1,11 +1,10 @@
-import { VectorBase } from "./vector-base";
+import { SettableArray } from "./settable-array";
 
-export class Vector3 extends VectorBase
+export class Vector3 extends SettableArray
 {
     constructor(x=0, y=0, z=0)
     {
-        super(x, y);
-        this.z = z;
+        super(x, y, z);
     }
 
     static dot(a, b)
@@ -16,6 +15,26 @@ export class Vector3 extends VectorBase
         }
 
         return a.x*b.x + a.y*b.y + a.z*b.z;
+    }
+
+    get x()
+    {
+        return this[0];
+    }
+
+    set x(value)
+    {
+        this[0] = value;
+    }
+
+    get y()
+    {
+        return this[1];
+    }
+
+    set y(value)
+    {
+        this[1] = value;
     }
 
     get z()
@@ -91,15 +110,25 @@ export class Vector3 extends VectorBase
         }
     }
 
-    toWorld(ivp)
+    magnitude()
     {
-        const [x, y] = this;
-        const w = (ivp[3]*x + ivp[7]*y + ivp[15] - ivp[11]);
+        return this.sqrMagnitude() ** 0.5;
+    }
 
-        this.set(
-            (ivp[0]*x + ivp[4]*y + ivp[12] - ivp[8]) / w,
-            (ivp[1]*x + ivp[5]*y + ivp[13] - ivp[9]) / w,
-            (ivp[2]*x + ivp[6]*y + ivp[14] - ivp[10]) / w
-        );
+    normalize(toMagnitude=1)
+    {
+        const magnitude = this.magnitude();
+
+        if (!magnitude)
+        {
+            throw Error;
+        }
+
+        this.mulScalar(toMagnitude / magnitude);
+    }
+
+    sqrMagnitude()
+    {
+        return this.reduce((acc, val) => acc + val**2, 0);
     }
 }
