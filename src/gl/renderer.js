@@ -8,14 +8,11 @@ import { getViewProjection } from "../math/camera";
 import { getDebugProgram } from "./debug";
 import {
     bindTexture,
-    bindVao,
     createTexture,
-    drawArrays,
     drawArraysVao,
     getBufferSize,
     setTextureParami,
     unbindTexture,
-    unbindVao,
     useProgram
 } from "./gl-helper";
 

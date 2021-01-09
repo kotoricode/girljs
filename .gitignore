@@ -3,5 +3,6 @@ dist/*
 !dist/style.css
 
 node_modules
-
 package-lock.json
+
+tools/obj-tool/target/*
