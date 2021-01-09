@@ -7,6 +7,7 @@ import { Sprite } from "./components/sprite";
 import { Collider } from "./components/collider";
 import { processMotion } from "./processes/process-motion";
 import { processCamera } from "./processes/process-camera";
+import { Ground } from "./components/ground";
 
 export const blueprint = new Map([
     [$.SCENE_TEST, () => ({
@@ -23,7 +24,8 @@ export const blueprint = new Map([
             [$.ENTITY_GROUND, {
                 components: [
                     new Space(),
-                    new Collider(new BoxCollider(-300, -300, 600, 600)),
+                    new Ground(-200, 200, -200, 200),
+                    //new Collider(new BoxCollider(-300, -300, 600, 600)),
                     new Sprite(
                         $.PROGRAM_TILED,
                         $.MODEL_GROUND,

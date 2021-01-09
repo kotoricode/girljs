@@ -54,7 +54,7 @@ export const setCameraPosition = (vec) =>
     invViewProjection.invertFrom(viewProjection);
 };
 
-const f = 10;
+const f = 100;
 const n = 1;
 const dist = f - n;
 
@@ -63,7 +63,7 @@ const L0 = 2 / $.SCREEN_WIDTH,
       LA = -2 / dist,
       LE = -(f + n) / dist;
 
-const transform = new Transform(0, 0, 2),
+const transform = new Transform(0, 0, 5),
       viewProjection = new Matrix4(),
       invViewProjection = new Matrix4();
 

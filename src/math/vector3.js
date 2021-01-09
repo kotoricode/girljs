@@ -90,4 +90,16 @@ export class Vector3 extends VectorBase
             this[i] -= vec[i];
         }
     }
+
+    toWorld(ivp)
+    {
+        const [x, y] = this;
+        const w = (ivp[3]*x + ivp[7]*y + ivp[15] - ivp[11]);
+
+        this.set(
+            (ivp[0]*x + ivp[4]*y + ivp[12] - ivp[8]) / w,
+            (ivp[1]*x + ivp[5]*y + ivp[13] - ivp[9]) / w,
+            (ivp[2]*x + ivp[6]*y + ivp[14] - ivp[10]) / w
+        );
+    }
 }

@@ -1,5 +1,4 @@
 import { getInvViewProjection } from "./camera";
-import { Matrix4 } from "./matrix4";
 import { VectorBase } from "./vector-base";
 
 export class Vector2 extends VectorBase

@@ -2,9 +2,11 @@ import * as $ from "../const";
 import { mouse } from "../dom";
 import { Motion } from "../components/motion";
 import { Space } from "../components/space";
-import { setCameraPosition } from "../math/camera";
+import { getInvViewProjection, setCameraPosition } from "../math/camera";
 import { Vector2 } from "../math/vector2";
-import { Collider } from "../components/collider";
+import { Ground } from "../components/ground";
+import { Ray } from "../math/ray";
+import { Vector3 } from "../math/vector3";
 
 export const processCamera = (scene) =>
 {
@@ -13,18 +15,36 @@ export const processCamera = (scene) =>
 
     if (mouse.isWorldClick)
     {
-        const [coll] = scene.one($.ENTITY_GROUND, Collider);
+        const [ground] = scene.one($.ENTITY_GROUND, Ground);
 
-        position.copyFrom(mouse.clip);
-        position.toWorld();
+        const ivp = getInvViewProjection();
 
-        coll.hasPoint(position);
+        ray.numHits = 0;
+        ray.fromMouse(ivp, mouse.clip);
+        ray.collide(ground);
 
-        if (coll.hasPoint(position))
+        // Update player, marker paths
+        if (ray.numHits)
         {
-            pMotion.setMainTarget(position);
+            console.log("collide");
+            // const hit = cam.ray.hit[0];
+            // plMotion.setMainTarget(hit);
         }
+
+        // position.copyFrom(mouse.clip);
+        // position.toWorld();
+
+        // coll.hasPoint(position);
+
+        // if (coll.hasPoint(position))
+        // {
+        //     pMotion.setMainTarget(position);
+        // }
     }
 };
 
 const position = new Vector2();
+const ray = new Ray(
+    new Vector3(),
+    new Vector3(0, 0, 1)
+);
