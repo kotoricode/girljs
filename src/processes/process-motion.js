@@ -1,6 +1,6 @@
 import { Motion } from "../components/motion";
 import { Space } from "../components/space";
-import { Vector3 } from "../math/vector3";
+import { Vector } from "../math/vector";
 
 export const processMotion = (scene) =>
 {
@@ -63,4 +63,4 @@ export const processMotion = (scene) =>
     }
 };
 
-const distance = new Vector3();
+const distance = new Vector();

@@ -1,14 +1,14 @@
-import { Vector3 } from "./vector3";
+import { Vector } from "./vector";
 
 export class Ray
 {
-    constructor(origin, target)
+    constructor(sx, sy, sz, ex, ey, ez)
     {
-        this.origin = origin;
-        this.target = target;
+        this.start = new Vector(sx, sy, sz);
+        this.end = new Vector(ex, ey, ez);
 
-        this.direction = new Vector3();
-        this.setDirection(target);
+        this.direction = new Vector();
+        this.setDirection(this.end);
 
         this.numHits = 0;
         this.hit = [];
@@ -17,9 +17,9 @@ export class Ray
     setDirection()
     {
         this.direction.set(
-            this.target.x - this.origin.x,
-            this.target.y - this.origin.y,
-            this.target.z - this.origin.z
+            this.end.x - this.start.x,
+            this.end.y - this.start.y,
+            this.end.z - this.start.z
         );
 
         this.direction.normalize();
@@ -39,8 +39,8 @@ export class Ray
         {
             const coord = ivp[i]*mx + ivp[4+i]*my + ivp[12+i];
             const zcoord = ivp[8+i];
-            this.origin[i] = (coord - zcoord) * iwNear;
-            this.target[i] = (coord + zcoord) * iwFar;
+            this.start[i] = (coord - zcoord) * iwNear;
+            this.end[i] = (coord + zcoord) * iwFar;
         }
 
         this.setDirection();
@@ -64,12 +64,12 @@ export class Ray
 
     collide(box)
     {
-        const multi = -this.origin.y / this.direction.y;
-        const x = this.origin.x + multi*this.direction.x;
+        const multi = -this.start.y / this.direction.y;
+        const x = this.start.x + multi*this.direction.x;
 
         if (box.min.x <= x && x <= box.max.x)
         {
-            const z = this.origin.z + multi*this.direction.z;
+            const z = this.start.z + multi*this.direction.z;
 
             if (box.min.y <= z && z <= box.max.y)
             {
@@ -82,7 +82,7 @@ export class Ray
     {
         if (this.numHits === this.hit.length)
         {
-            this.hit.push(new Vector3());
+            this.hit.push(new Vector());
         }
 
         this.hit[this.numHits++].set(x, y, z);

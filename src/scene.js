@@ -11,16 +11,12 @@ export class Scene
     constructor(sceneId)
     {
         this.sceneId = sceneId;
-
         this.dt = 0;
-
-        ///** @const {Map<string, Entity>} */
         this.entities = new Map();
+        this.newSpriteEntities = new Set();
 
         /** @const {Map<number, Set>} */
         this.cached = new Map();
-
-        this.newSpriteEntities = new Set();
 
         // TODO: implement this
         this.dirtyEntities = new Set();

@@ -1,6 +1,6 @@
 import { SettableArray } from "./settable-array";
 
-export class Vector3 extends SettableArray
+export class Vector extends SettableArray
 {
     constructor(x=0, y=0, z=0)
     {
@@ -9,7 +9,7 @@ export class Vector3 extends SettableArray
 
     static dot(a, b)
     {
-        if (!(a instanceof Vector3 && b instanceof Vector3))
+        if (!(a instanceof Vector && b instanceof Vector))
         {
             throw Error;
         }
@@ -65,7 +65,7 @@ export class Vector3 extends SettableArray
 
     cross(a, b)
     {
-        if (!(a instanceof Vector3 && b instanceof Vector3))
+        if (!(a instanceof Vector && b instanceof Vector))
         {
             throw Error;
         }
@@ -94,7 +94,7 @@ export class Vector3 extends SettableArray
 
     sqrDistance(vec3)
     {
-        if (!(vec3 instanceof Vector3))
+        if (!(vec3 instanceof Vector))
         {
             throw Error;
         }

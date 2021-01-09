@@ -1,6 +1,6 @@
 import * as $ from "./const";
 import { initAudio } from "./audio";
-import { Vector3 } from "./math/vector3";
+import { Vector } from "./math/vector";
 import { publish } from "./utils/publisher";
 import { isUiInteraction } from "./ui";
 
@@ -63,8 +63,8 @@ for (const resizeEvent of ["DOMContentLoaded", "load", "resize"])
     Mouse
 ------------------------------------------------------------------------------*/
 export const mouse = {
-    clip: new Vector3(),
-    screen: new Vector3(),
+    clip: new Vector(),
+    screen: new Vector(),
     isWorldClick: false
 };
 

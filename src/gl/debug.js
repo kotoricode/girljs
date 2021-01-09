@@ -9,7 +9,13 @@ export const getDebugProgram = () =>
 
 const bufferData = [
     0, 0, 0,
-    300, 300, 50
+    2, 2, 2,
+    0, 0, 0,
+    -2, 2, 2,
+    0, 0, 0,
+    2, -2, 2,
+    0, 0, 0,
+    -2, 2, -2
 ];
 
 setBufferData($.BUFFER_DEBUG, bufferData);

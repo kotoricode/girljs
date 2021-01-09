@@ -18,11 +18,23 @@ export const bindBuffer = (bufferId) =>
     gl.bindBuffer($.ARRAY_BUFFER, buffer);
 };
 
+export const getBufferSize = (bufferId) =>
+{
+    if (bufferSizes.has(bufferId))
+    {
+        return bufferSizes.get(bufferId);
+    }
+
+    throw bufferId;
+};
+
 export const setBufferData = (bufferId, data) =>
 {
     bindBuffer(bufferId);
     gl.bufferData($.ARRAY_BUFFER, new Float32Array(data), $.STATIC_DRAW);
     unbindBuffer();
+
+    bufferSizes.set(bufferId, data.length);
 };
 
 export const unbindBuffer = () =>
@@ -35,5 +47,7 @@ const buffers = new Map([
     [ $.BUFFER_MODEL, gl.createBuffer() ],
     [ $.BUFFER_DEBUG, gl.createBuffer() ]
 ]);
+
+const bufferSizes = new Map();
 
 let activeBuffer;

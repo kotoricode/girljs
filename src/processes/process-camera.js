@@ -5,7 +5,6 @@ import { Space } from "../components/space";
 import { getInvViewProjection, setCameraPosition } from "../math/camera";
 import { Ground } from "../components/ground";
 import { Ray } from "../math/ray";
-import { Vector3 } from "../math/vector3";
 
 export const processCamera = (scene) =>
 {
@@ -31,7 +30,4 @@ export const processCamera = (scene) =>
     }
 };
 
-const ray = new Ray(
-    new Vector3(),
-    new Vector3(0, 0, 1)
-);
+const ray = new Ray(0, 0, 0, 0, 0, 1);

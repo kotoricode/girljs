@@ -6,6 +6,7 @@ import { getModel } from "./model";
 import { subscribe } from "../utils/publisher";
 import { getViewProjection } from "../math/camera";
 import { getDebugProgram } from "./debug";
+import { getBufferSize } from "./buffer";
 
 const getViewProgramData = () =>
 {
@@ -101,8 +102,10 @@ const renderDebug = () =>
     const vp = getViewProjection();
     prog.uniSetters.get($.U_VIEWPROJECTION)([0, vp]);
 
+    const bufferSize = getBufferSize($.BUFFER_DEBUG);
+
     gl.bindVertexArray(prog.vao);
-    gl.drawArrays($.LINES, 0, 2);
+    gl.drawArrays($.LINES, 0, bufferSize / 3);
     gl.bindVertexArray(null);
 };
 

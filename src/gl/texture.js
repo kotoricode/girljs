@@ -51,6 +51,7 @@ image.onload = () =>
 
     const minFilter = gl.getTexParameter($.TEXTURE_2D, $.TEXTURE_MIN_FILTER);
 
+    // TODO: do we ever even use mipmaps?
     if (minFilter >= $.NEAREST_MIPMAP_NEAREST)
     {
         gl.generateMipmap($.TEXTURE_2D);

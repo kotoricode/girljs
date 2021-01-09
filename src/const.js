@@ -30,15 +30,24 @@ export const
 export const
     EVENT_CANVAS_RESIZED = 0;
 
+export const
+    SUBTEXTURE_BRAID = 0,
+    SUBTEXTURE_BG = 1,
+    SUBTEXTURE_UKKO = 2;
+
 // STRING --- Filenames
 export const
     AUDIO_OMOIDE = "omoide_loft.ogg";
 
-// STRING --- JSON save data keys
+// STRING --- JSON prefs data keys
 export const
-    PREF_MASTER = "master",
-    PREF_MUSIC = "music",
-    PREF_SOUND = "sound";
+    PREF_MASTER = "PREF_MASTER",
+    PREF_MUSIC = "PREF_MUSIC",
+    PREF_SOUND = "PREF_SOUND";
+
+// STRING --- JSON state data keys
+export const
+    STATE_MONEY = "STATE_MONEY";
 
 // STRING --- Part of file URL
 export const
@@ -64,11 +73,6 @@ export const
     TEXTURE_POLY = "texture.png",
     TEXTURE_SPRITE = "test.png",
     TEXTURE_BRAID = "braid.png";
-
-export const
-    SUBTEXTURE_BRAID = 12,
-    SUBTEXTURE_BG = 34,
-    SUBTEXTURE_UKKO = 56;
 
 export const
     /*--------------------------------------------------------------------------
