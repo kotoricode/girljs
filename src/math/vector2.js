@@ -66,38 +66,13 @@ export class Vector2 extends VectorBase
         const ivp = getInvViewProjection();
 
         const [x, y] = this;
-
-        const w = ivp[3]*x + ivp[7]*y + ivp[15],
-              zw = ivp[11];
-
-        const iwNear = 1 / (w - zw);
+        const w = (ivp[3]*x + ivp[7]*y + ivp[15] - ivp[11]);
 
         for (let i = 0; i < 2; i++)
         {
             const coord = ivp[i]*x + ivp[4+i]*y + ivp[12+i];
             const zcoord = ivp[8+i];
-            this[i] = (coord - zcoord) * iwNear;
+            this[i] = (coord - zcoord) / w;
         }
-    }
-
-    fromMouse(ivp, mouse)
-    {
-        const [mx, my] = mouse;
-
-        const w = ivp[3]*mx + ivp[7]*my + ivp[15],
-              zw = ivp[11];
-
-        const iwNear = 1 / (w - zw),
-              iwFar = 1 / (w + zw);
-
-        for (let i = 0; i < 3; i++)
-        {
-            const coord = ivp[i]*mx + ivp[4+i]*my + ivp[12+i];
-            const zcoord = ivp[8+i];
-            this.origin[i] = (coord - zcoord) * iwNear;
-            this.target[i] = (coord + zcoord) * iwFar;
-        }
-
-        this.setDirection();
     }
 }

@@ -4,8 +4,8 @@ import { Sprite } from "../components/sprite";
 import { createProgramData } from "./program";
 import { getModel } from "./model";
 import { subscribe } from "../utils/publisher";
-import { bindBuffer, unbindBuffer } from "./buffer";
 import { getViewProjection } from "../math/camera";
+import { getDebugProgram } from "./debug";
 
 const getViewProgramData = () =>
 {
@@ -83,25 +83,12 @@ export const render = (scene) =>
     gl.bindTexture($.TEXTURE_2D, null);
 
     // Debug
-    test();
+    renderDebug();
 };
 
-const test = () =>
+const renderDebug = () =>
 {
-    bindBuffer($.BUFFER_DEBUG);
-
-    gl.bufferData($.ARRAY_BUFFER, new Float32Array([
-        0.0, 0.0,
-        300.0, 300.0
-    ]), $.DYNAMIC_DRAW);
-
-    unbindBuffer();
-
-    const prog = createProgramData(
-        $.PROGRAM_DEBUG,
-        { [$.A_POSITION]: 0 },
-        $.BUFFER_DEBUG
-    );
+    const prog = getDebugProgram();
 
     oldProgram = prog.program;
     gl.useProgram(oldProgram);

@@ -45,7 +45,6 @@ export const createProgramData = (programId, attrOffsets, bufferId) =>
     --------------------------------------------------------------------------*/
     const vao = gl.createVertexArray();
     gl.bindVertexArray(vao);
-
     bindBuffer(bufferId);
 
     for (const name of attributes)
