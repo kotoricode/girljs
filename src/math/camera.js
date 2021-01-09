@@ -1,4 +1,5 @@
 import * as $ from "../const";
+import { DEG_TO_RAD } from "./math-helper";
 import { Matrix4 } from "./matrix4";
 import { Transform } from "./transform";
 
@@ -50,10 +51,10 @@ export const setCameraPosition = (vec) =>
 const f = 1000;
 const n = 1;
 const dist = f - n;
-const fov = Math.tan(1 / 2);
+const fov = Math.tan(DEG_TO_RAD * 30 / 2);
 
-const transform = new Transform(0, 1.4, 5),
+const transform = new Transform(0, 2.7, 8),
       viewProjection = new Matrix4(),
       invViewProjection = new Matrix4();
 
-//transform.rotation.fromEuler(0.2, 0.2, 0.2);
+transform.rotation.fromEuler(0.2, 0, 0);

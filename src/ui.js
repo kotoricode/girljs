@@ -37,13 +37,7 @@ export const drawRectangle = () =>
 export const isUiInteraction = () =>
 {
     clearUi();
-    drawDialogue(new Date() + "");
-
-    ui.strokeStyle = "white";
-    ui.beginPath();
-    ui.moveTo(0, 0);
-    ui.lineTo(30, 30);
-    ui.stroke();
+    drawDialogue(Date.now() + "");
 
     return false;
 };

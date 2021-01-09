@@ -15,10 +15,10 @@ const getXy = (minX, maxX, minY, maxY) =>
 const getXz = (minX, maxX, minZ, maxZ) =>
 {
     return [
-        minX, 0, minZ,
-        maxX, 0, minZ,
         minX, 0, maxZ,
         maxX, 0, maxZ,
+        minX, 0, minZ,
+        maxX, 0, minZ,
     ];
 };
 

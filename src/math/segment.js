@@ -2,10 +2,10 @@ import { Vector3 } from "./vector3";
 
 export class Segment
 {
-    constructor(startX, startY, endX, endY)
+    constructor(startX, startZ, endX, endZ)
     {
-        this.start = new Vector3(startX, startY);
-        this.end = new Vector3(endX, endY);
+        this.start = new Vector3(startX, 0, startZ);
+        this.end = new Vector3(endX, 0, endZ);
 
         this.intersection = new Vector3();
     }
@@ -13,22 +13,22 @@ export class Segment
     getIntersection(line, isPoly=true)
     {
         const ax = this.end.x - this.start.x,
-              ay = this.end.y - this.start.y,
+              az = this.end.z - this.start.z,
               bx = line.end.x - line.start.x,
-              by = line.end.y - line.start.y;
+              bz = line.end.z - line.start.z;
 
-        const det = ax*by - bx*ay;
+        const det = ax*bz - bx*az;
 
         if (det)
         {
             const cx = this.start.x - line.start.x,
-                  cy = this.start.y - line.start.y;
+                  cz = this.start.z - line.start.z;
 
-            const s = (ax*cy - ay*cx) / det;
+            const s = (ax*cz - az*cx) / det;
 
             if (0 <= s && s <= 1)
             {
-                const t = (bx*cy - by*cx) / det;
+                const t = (bx*cz - bz*cx) / det;
 
                 // with polygons segments are half-open
                 // one segment's end point is other segment's start point
@@ -37,7 +37,8 @@ export class Segment
                 {
                     return this.intersection.set(
                         this.start.x + (t * ax),
-                        this.start.y + (t * ay)
+                        0,
+                        this.start.z + (t * az)
                     );
                 }
             }
