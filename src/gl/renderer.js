@@ -6,9 +6,17 @@ import { getModel } from "./model";
 import { subscribe } from "../utils/publisher";
 import { getViewProjection } from "../math/camera";
 import { getDebugProgram } from "./debug";
-import { getBufferSize } from "./buffer";
 import {
-    bindTexture, bindVao, setTextureParami, unbindTexture, unbindVao, useProgram
+    bindTexture,
+    bindVao,
+    createTexture,
+    drawArrays,
+    drawArraysVao,
+    getBufferSize,
+    setTextureParami,
+    unbindTexture,
+    unbindVao,
+    useProgram
 } from "./gl-helper";
 
 const getViewProgramData = () =>
@@ -41,7 +49,7 @@ export const render = (scene) =>
     {
         gl.deleteTexture(framebufferTexture);
 
-        framebufferTexture = gl.createTexture();
+        framebufferTexture = createTexture();
         const { width, height } = gl.canvas;
 
         bindTexture(framebufferTexture);
@@ -106,9 +114,7 @@ const renderDebug = () =>
 
     const bufferSize = getBufferSize($.BUFFER_DEBUG);
 
-    bindVao(prog.vao);
-    gl.drawArrays($.LINES, 0, bufferSize / 3);
-    unbindVao();
+    drawArraysVao($.LINES, 0, bufferSize / 3, prog.vao);
 };
 
 const renderQueue = (queueId) =>
@@ -137,9 +143,7 @@ const renderQueue = (queueId) =>
 
 const renderTriangleStrip = (vao) =>
 {
-    bindVao(vao);
-    gl.drawArrays($.TRIANGLE_STRIP, 0, 4);
-    unbindVao();
+    drawArraysVao($.TRIANGLE_STRIP, 0, 4, vao);
 };
 
 const framebuffer = gl.createFramebuffer();

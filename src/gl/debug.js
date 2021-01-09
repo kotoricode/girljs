@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { setBufferData } from "./buffer";
+import { setBufferData } from "./gl-helper";
 import { createProgramData } from "./program";
 
 export const getDebugProgram = () =>

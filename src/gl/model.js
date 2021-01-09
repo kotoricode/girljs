@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { setBufferData } from "./buffer";
+import { setBufferData } from "./gl-helper";
 import { getSubTextureData } from "./texture";
 
 const getXy = (minX, maxX, minY, maxY) =>

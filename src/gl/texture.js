@@ -1,10 +1,12 @@
 import * as $ from "../const";
 import { gl } from "../dom";
-import { bindTexture, setTextureParami, unbindTexture } from "./gl-helper";
+import {
+    bindTexture, createTexture, setTextureParami, unbindTexture
+} from "./gl-helper";
 
 const createImageTexture = (src, parami) =>
 {
-    const texture = gl.createTexture();
+    const texture = createTexture();
 
     toFetch.push({ texture, parami, src });
 

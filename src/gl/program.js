@@ -1,6 +1,5 @@
 import * as $ from "../const";
 import { gl } from "../dom";
-import { bindBuffer, unbindBuffer } from "./buffer";
 
 import vsStandard from "./shaders/standard.vert";
 import fsGray     from "./shaders/gray.frag";
@@ -10,7 +9,7 @@ import vsTiled    from "./shaders/tiled.vert";
 import fsTiled    from "./shaders/tiled.frag";
 import vsColor    from "./shaders/color.vert";
 import fsColor    from "./shaders/color.frag";
-import { bindVao, unbindVao } from "./gl-helper";
+import { bindBuffer, bindVao, unbindBuffer, unbindVao } from "./gl-helper";
 
 const createAttachShader = (program, shaderId, vertFrag) =>
 {
