@@ -9,7 +9,6 @@ import vsTiled    from "./shaders/tiled.vert";
 import fsTiled    from "./shaders/tiled.frag";
 import vsColor    from "./shaders/color.vert";
 import fsColor    from "./shaders/color.frag";
-import { ProgramData } from "./program-data";
 
 const createAttachShader = (program, shaderId, vertFrag) =>
 {
@@ -185,21 +184,23 @@ for (let i = 0; i < newProgramDef.length;)
     /*--------------------------------------------------------------------------
         Uniforms
     --------------------------------------------------------------------------*/
-    const uniDefaults = new Map(),
-          uniSetters = new Map();
+    const uniforms = {
+        setters: new Map(),
+        defaults: new Map()
+    };
 
-    for (const { uniforms } of [vert, frag])
+    for (const shader of [vert, frag])
     {
-        if (uniforms)
+        if (shader.uniforms)
         {
-            for (const [type, typeObj] of Object.entries(uniforms))
+            for (const [type, typeObj] of Object.entries(shader.uniforms))
             {
                 for (const [name, defValueArr] of Object.entries(typeObj))
                 {
                     const pos = gl.getUniformLocation(program, name);
                     const uniSetter = createUniSetter(type, pos);
-                    uniSetters.set(name, uniSetter);
-                    uniDefaults.set(name, defValueArr);
+                    uniforms.setters.set(name, uniSetter);
+                    uniforms.defaults.set(name, defValueArr);
                 }
             }
         }
@@ -207,8 +208,7 @@ for (let i = 0; i < newProgramDef.length;)
 
     preparedPrograms.set(programId, {
         program,
-        uniDefaults,
-        uniSetters,
-        attributes
+        attributes,
+        uniforms
     });
 }

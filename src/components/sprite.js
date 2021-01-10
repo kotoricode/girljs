@@ -46,7 +46,7 @@ export class Sprite extends Component
         {
             for (const [key, value] of Object.entries(uniforms))
             {
-                this.programData.setUniform(key, value);
+                this.programData.setUniValue(key, value);
             }
         }
 
@@ -61,8 +61,8 @@ export class Sprite extends Component
             const width = uvCoords[2] - uvMinX,
                   height = uvCoords[1] - uvMinY;
 
-            this.programData.setUniform($.U_UVOFFSET, [uvMinX, uvMinY]);
-            this.programData.setUniform($.U_UVSIZE, [width, height]);
+            this.programData.setUniValue($.U_UVOFFSET, [uvMinX, uvMinY]);
+            this.programData.setUniValue($.U_UVSIZE, [width, height]);
         }
     }
 }

@@ -9,20 +9,19 @@ export class ProgramData
         const {
             program,
             attributes,
-            uniDefaults,
-            uniSetters
+            uniforms
         } = getProgram(programId);
 
         this.program = program;
-        this.uniSetters = uniSetters;
-        this.uniValues = new Map();
+        this.uniforms = uniforms;
+        this.uniforms.values = new Map();
 
         this.vao = gl.createVertexArray();
         this.attributes = attributes;
 
-        for (const [name, defaults] of uniDefaults)
+        for (const [name, defaults] of this.uniforms.defaults)
         {
-            this.uniValues.set(name, defaults.slice());
+            this.uniforms.values.set(name, defaults.slice());
         }
     }
 
@@ -47,9 +46,9 @@ export class ProgramData
         unbindVao();
     }
 
-    setUniform(key, value)
+    setUniValue(key, value)
     {
-        if (!this.uniValues.has(key))
+        if (!this.uniforms.values.has(key))
         {
             throw key;
         }
@@ -59,17 +58,22 @@ export class ProgramData
             throw value;
         }
 
-        this.uniValues.set(key, value);
+        this.uniforms.values.set(key, value);
     }
 
-    setUniformIndexed(key, idx, value)
+    setUniValueIndexed(key, idx, value)
     {
-        if (!this.uniValues.has(key))
+        if (!this.uniforms.values.has(key))
         {
             throw key;
         }
 
-        const values = this.uniValues.get(key);
+        const values = this.uniforms.values.get(key);
+
+        if (!Array.isArray(values))
+        {
+            throw values;
+        }
 
         if (idx >= values.length)
         {
@@ -77,5 +81,18 @@ export class ProgramData
         }
 
         values[idx] = value;
+    }
+
+    updateProgramUniform(key, value)
+    {
+        this.uniforms.setters.get(key)(value);
+    }
+
+    updateProgramUniforms()
+    {
+        for (const [key, value] of this.uniforms.values)
+        {
+            this.updateProgramUniform(key, value);
+        }
     }
 }

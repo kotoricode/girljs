@@ -106,37 +106,28 @@ const renderDebug = () =>
     gl.disable($.DEPTH_TEST);
     gl.depthMask(false);
 
-    const prog = getDebugProgram();
+    const programData = getDebugProgram();
 
-    useProgram(prog.program);
+    useProgram(programData.program);
 
     const vp = getViewProjection();
-    prog.uniSetters.get($.U_VIEWPROJECTION)([0, vp]);
+    programData.updateProgramUniform($.U_VIEWPROJECTION, [0, vp]);
 
     const bufferSize = getBufferSize($.BUFFER_DEBUG);
 
-    drawArraysVao($.LINES, 0, bufferSize / 3, prog.vao);
+    drawArraysVao($.LINES, 0, bufferSize / 3, programData.vao);
 };
 
 const renderQueue = (queueId) =>
 {
     const queue = queues.get(queueId);
 
-    for (const model of queue)
+    for (const { programData, texture } of queue)
     {
-        const { program, uniValues, uniSetters, vao } = model.programData;
-        const { texture } = model;
-
-        useProgram(program);
+        useProgram(programData.program);
         bindTexture(texture);
-
-        // TODO: ideally we'd check for unchanged uniforms as well...
-        for (const [key, value] of uniValues)
-        {
-            uniSetters.get(key)(value);
-        }
-
-        renderTriangleStrip(vao);
+        programData.updateProgramUniforms();
+        renderTriangleStrip(programData.vao);
     }
 
     queue.length = 0;

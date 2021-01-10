@@ -114,13 +114,13 @@ export class Scene
         {
             const [sprite, space] = entity.getComponents(Sprite, Space);
 
-            sprite.programData.setUniformIndexed(
+            sprite.programData.setUniValueIndexed(
                 $.U_TRANSFORM,
                 1,
                 space.matrix
             );
 
-            sprite.programData.setUniformIndexed(
+            sprite.programData.setUniValueIndexed(
                 $.U_VIEWPROJECTION,
                 1,
                 vp
