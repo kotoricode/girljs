@@ -22,16 +22,6 @@ const getXz = (minX, maxX, minZ, maxZ) =>
     ];
 };
 
-const getUv = (minX, maxX, minY, maxY) =>
-{
-    return [
-        minX, minY,
-        maxX, minY,
-        minX, maxY,
-        maxX, maxY,
-    ];
-};
-
 export const getModel = (modelId) =>
 {
     if (models.has(modelId))
@@ -61,6 +51,12 @@ const uvFromSubTexture = (subTextureId) =>
 };
 
 /*------------------------------------------------------------------------------
+    General
+------------------------------------------------------------------------------*/
+const models = new Map();
+const bytes = Float32Array.BYTES_PER_ELEMENT;
+
+/*------------------------------------------------------------------------------
     Sprites
 ------------------------------------------------------------------------------*/
 const spriteModelData = [
@@ -69,32 +65,27 @@ const spriteModelData = [
     $.MODEL_PLAYER2, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEXTURE_BRAID,
 ];
 
-const models = new Map(),
-      xyzSize = 12,
+const xyzSize = 12,
       uvSize = 8,
-      modelSize = xyzSize + uvSize,
-      numSpriteModels = spriteModelData.length / 3,
-      spriteBufferData = new Array(modelSize * numSpriteModels),
-      bytes = Float32Array.BYTES_PER_ELEMENT;
+      xyzUvSize = xyzSize + uvSize,
+      spriteBufferData = new Array(xyzUvSize * spriteModelData.length / 3);
 
 for (let i = 0; i < spriteModelData.length;)
 {
-    const meshOffset = (i / 3) * modelSize;
+    const meshOffset = (i / 3) * xyzUvSize;
 
     const modelId = spriteModelData[i++];
     const mesh = spriteModelData[i++];
-    const subTexOrUv = spriteModelData[i++];
-    const hasRawUv = Array.isArray(subTexOrUv);
+    const subTextureId = spriteModelData[i++];
 
     const uvOffset = meshOffset + xyzSize;
-
-    const uvCoords = hasRawUv ? subTexOrUv : uvFromSubTexture(subTexOrUv);
+    const uvCoords = uvFromSubTexture(subTextureId);
 
     models.set(modelId, {
         meshOffset: meshOffset * bytes,
         uvOffset: uvOffset * bytes,
         uvCoords,
-        subTextureId: hasRawUv ? null : subTexOrUv
+        subTextureId
     });
 
     for (let j = 0; j < xyzSize; j++)
@@ -119,16 +110,17 @@ const polygonModelData = [
     [ 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1 ]
 ];
 
-const numPolygonModels = polygonModelData.length / 3;
-const polygonBufferData = new Array(modelSize * numPolygonModels);
+const polygonBufferData = [];
 
 for (let i = 0; i < polygonModelData.length;)
 {
-    const meshOffset = (i / 3) * modelSize;
-
     const modelId = polygonModelData[i++];
     const mesh = polygonModelData[i++];
     const uvCoords = polygonModelData[i++];
+
+    const meshOffset = polygonBufferData.length;
+    polygonBufferData.length += mesh.length + uvCoords.length;
+
     const uvOffset = meshOffset + mesh.length;
 
     models.set(modelId, {
