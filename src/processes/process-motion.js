@@ -1,10 +1,12 @@
+import * as $ from "../const";
 import { Motion } from "../components/motion";
 import { Space } from "../components/space";
+import { Sprite } from "../components/sprite";
 import { Vector } from "../math/vector";
 
 export const processMotion = (scene) =>
 {
-    for (const [motion, space] of scene.all(Motion, Space))
+    for (const [motion, space, sprite] of scene.all(Motion, Space, Sprite))
     {
         if (space.isDirty)
         {
@@ -29,6 +31,15 @@ export const processMotion = (scene) =>
             if (direction.x)
             {
                 local.scale.x = Math.sign(direction.x);
+
+                if (direction.x > 0)
+                {
+                    sprite.setModel($.MODEL_PLAYER2);
+                }
+                else
+                {
+                    sprite.setModel($.MODEL_PLAYER);
+                }
             }
 
             const moveDistance = motion.speed * scene.dt;

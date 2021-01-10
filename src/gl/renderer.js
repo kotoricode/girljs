@@ -24,7 +24,10 @@ const getViewProgramData = () =>
         [$.A_UV]: model.uvOffset
     };
 
-    return createProgramData($.PROGRAM_GRAY, offsets, $.BUFFER_POLYGON);
+    const programData = createProgramData($.PROGRAM_GRAY);
+    programData.setAttributes($.BUFFER_POLYGON, offsets);
+
+    return programData;
 };
 
 export const render = (scene) =>

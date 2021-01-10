@@ -11,36 +11,54 @@ export class Sprite extends Component
         super();
 
         this.programId = programId;
-        this.setModel(modelId);
         this.isVisible = true;
 
-        if (uniforms)
-        {
-            for (const [key, value] of Object.entries(uniforms))
-            {
-                this.setUniform(key, value);
-            }
-        }
+        this.setModel(modelId);
+        this.setProgramUniforms(uniforms);
     }
 
     setModel(modelId)
     {
         this.model = getModel(modelId);
-        const { meshOffset, uvOffset, uvCoords, subTextureId } = this.model;
+        const { subTextureId } = this.model;
 
         const subTexData = getSubTextureData(subTextureId);
         this.texture = subTexData.baseData.texture;
+
+        this.stuff();
+    }
+
+    stuff()
+    {
+        const { meshOffset, uvOffset } = this.model;
 
         const attrOffsets = {
             [$.A_POSITION]: meshOffset,
             [$.A_UV]: uvOffset
         };
 
-        this.programData = createProgramData(
-            this.programId,
-            attrOffsets,
-            $.BUFFER_SPRITE
-        );
+        if (!this.programData)
+        {
+            this.programData = createProgramData(this.programId);
+            this.programData.setAttributes($.BUFFER_SPRITE, attrOffsets);
+        }
+        else
+        {
+            this.programData.setAttributes($.BUFFER_SPRITE, attrOffsets);
+        }
+    }
+
+    setProgramUniforms(uniforms)
+    {
+        if (uniforms)
+        {
+            for (const [key, value] of Object.entries(uniforms))
+            {
+                this.programData.setUniform(key, value);
+            }
+        }
+
+        const { uvCoords } = this.model;
 
         // Program-specific uniforms
         if (this.programId === $.PROGRAM_TILED)
@@ -51,44 +69,8 @@ export class Sprite extends Component
             const width = uvCoords[2] - uvMinX,
                   height = uvCoords[1] - uvMinY;
 
-            this.setUniform($.U_UVOFFSET, [uvMinX, uvMinY]);
-            this.setUniform($.U_UVSIZE, [width, height]);
+            this.programData.setUniform($.U_UVOFFSET, [uvMinX, uvMinY]);
+            this.programData.setUniform($.U_UVSIZE, [width, height]);
         }
-    }
-
-    setUniform(key, value)
-    {
-        const { uniValues } = this.programData;
-
-        if (!uniValues.has(key))
-        {
-            throw key;
-        }
-
-        if (!Array.isArray(value))
-        {
-            throw value;
-        }
-
-        uniValues.set(key, value);
-    }
-
-    setUniformIndexed(key, idx, value)
-    {
-        const { uniValues } = this.programData;
-
-        if (!uniValues.has(key))
-        {
-            throw key;
-        }
-
-        const values = uniValues.get(key);
-
-        if (idx >= values.length)
-        {
-            throw idx;
-        }
-
-        values[idx] = value;
     }
 }

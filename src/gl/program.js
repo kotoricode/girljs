@@ -9,7 +9,7 @@ import vsTiled    from "./shaders/tiled.vert";
 import fsTiled    from "./shaders/tiled.frag";
 import vsColor    from "./shaders/color.vert";
 import fsColor    from "./shaders/color.frag";
-import { bindBuffer, bindVao, unbindBuffer, unbindVao } from "./gl-helper";
+import { ProgramData } from "./program-data";
 
 const createAttachShader = (program, shaderId, vertFrag) =>
 {
@@ -21,7 +21,7 @@ const createAttachShader = (program, shaderId, vertFrag) =>
     return shader;
 };
 
-export const createProgramData = (programId, attrOffsets, bufferId) =>
+export const createProgramData = (programId) =>
 {
     const {
         program,
@@ -30,47 +30,17 @@ export const createProgramData = (programId, attrOffsets, bufferId) =>
         attributes
     } = preparedPrograms.get(programId);
 
-    /*--------------------------------------------------------------------------
-        Uniforms
-    --------------------------------------------------------------------------*/
-    const uniValues = new Map();
+    const programData = new ProgramData(
+        program, uniDefaults, uniSetters, attributes
+    );
 
-    for (const [name, defaults] of uniDefaults)
-    {
-        uniValues.set(name, defaults.slice());
-    }
-
-    /*--------------------------------------------------------------------------
-        Attributes
-    --------------------------------------------------------------------------*/
-    const vao = gl.createVertexArray();
-    bindVao(vao);
-    bindBuffer(bufferId);
-
-    for (const [name, layout] of Object.entries(attributes))
-    {
-        if (!(name in attrOffsets))
-        {
-            throw name;
-        }
-
-        const pos = gl.getAttribLocation(program, name);
-        gl.enableVertexAttribArray(pos);
-        gl.vertexAttribPointer(pos, ...layout, attrOffsets[name]);
-    }
-
-    unbindBuffer();
-    unbindVao();
-
-    return {
-        program,
-        vao,
-        uniSetters,
-        uniValues
-    };
+    return programData;
 };
 
-const createUniSetter = (type, loc) => (values) => gl[type](loc, ...values);
+const createUniSetter = (type, loc) => (values) =>
+{
+    gl[type](loc, ...values);
+};
 
 const detachDeleteShader = (program, shader) =>
 {
