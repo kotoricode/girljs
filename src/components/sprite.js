@@ -10,7 +10,7 @@ export class Sprite extends Component
     {
         super();
 
-        this.programId = programId;
+        this.programData = new ProgramData(programId);
         this.isVisible = true;
 
         this.setModel(modelId);
@@ -20,24 +20,17 @@ export class Sprite extends Component
     setModel(modelId)
     {
         this.model = getModel(modelId);
-        const { subTextureId } = this.model;
+        const { meshOffset, uvOffset, subTextureId } = this.model;
 
         const subTexData = getSubTextureData(subTextureId);
         this.texture = subTexData.baseData.texture;
 
-        const { meshOffset, uvOffset } = this.model;
-
-        const attrOffsets = {
+        const attribOffsets = {
             [$.A_POSITION]: meshOffset,
             [$.A_UV]: uvOffset
         };
 
-        if (!this.programData)
-        {
-            this.programData = new ProgramData(this.programId);
-        }
-
-        this.programData.setAttributes($.BUFFER_SPRITE, attrOffsets);
+        this.programData.setAttributes($.BUFFER_SPRITE, attribOffsets);
     }
 
     setProgramUniforms(uniforms)
@@ -46,14 +39,14 @@ export class Sprite extends Component
         {
             for (const [key, value] of Object.entries(uniforms))
             {
-                this.programData.setUniValue(key, value);
+                this.programData.stageUniform(key, value);
             }
         }
 
         const { uvCoords } = this.model;
 
         // Program-specific uniforms
-        if (this.programId === $.PROGRAM_TILED)
+        if (this.programData.programId === $.PROGRAM_TILED)
         {
             const uvMinX = uvCoords[0],
                   uvMinY = uvCoords[5];
@@ -61,8 +54,8 @@ export class Sprite extends Component
             const width = uvCoords[2] - uvMinX,
                   height = uvCoords[1] - uvMinY;
 
-            this.programData.setUniValue($.U_UVOFFSET, [uvMinX, uvMinY]);
-            this.programData.setUniValue($.U_UVSIZE, [width, height]);
+            this.programData.stageUniform($.U_UVOFFSET, [uvMinX, uvMinY]);
+            this.programData.stageUniform($.U_UVSIZE, [width, height]);
         }
     }
 }

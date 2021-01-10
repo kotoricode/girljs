@@ -8,7 +8,10 @@ import { getDebugProgram } from "./debug";
 import {
     bindTexture,
     createTexture,
+    depthMask,
+    disable,
     drawArraysVao,
+    enable,
     getBufferSize,
     setTextureParami,
     unbindTexture,
@@ -37,7 +40,7 @@ export const render = (scene) =>
     {
         if (sprite.isVisible)
         {
-            const queue = queues.get(sprite.programId);
+            const queue = queues.get(sprite.programData.programId);
             queue.push(sprite);
         }
     }
@@ -81,8 +84,8 @@ export const render = (scene) =>
     }
 
     gl.clear($.COLOR_BUFFER_BIT);
-    gl.enable($.DEPTH_TEST);
-    gl.depthMask(true);
+    enable($.DEPTH_TEST);
+    depthMask(true);
 
     // Render world to framebuffer
     renderQueue($.PROGRAM_TILED);
@@ -103,15 +106,15 @@ export const render = (scene) =>
 
 const renderDebug = () =>
 {
-    gl.disable($.DEPTH_TEST);
-    gl.depthMask(false);
+    disable($.DEPTH_TEST);
+    depthMask(false);
 
     const programData = getDebugProgram();
 
     useProgram(programData.program);
 
     const vp = getViewProjection();
-    programData.updateProgramUniform($.U_VIEWPROJECTION, [0, vp]);
+    programData.setUniform($.U_VIEWPROJECTION, [0, vp]);
 
     const bufferSize = getBufferSize($.BUFFER_DEBUG);
 
@@ -126,7 +129,7 @@ const renderQueue = (queueId) =>
     {
         useProgram(programData.program);
         bindTexture(texture);
-        programData.updateProgramUniforms();
+        programData.setUniforms();
         renderTriangleStrip(programData.vao);
     }
 
@@ -152,12 +155,12 @@ subscribe($.EVENT_CANVAS_RESIZED, () => isCanvasResized = true);
 
 const { program: viewProgram, vao: viewVao } = getViewProgramData();
 
-gl.enable($.BLEND);
+enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
 // Sprites turn by flipping scale.x sign, so no face culling
 // TODO: maybe do add face culling for static (no Motion component) entities
-gl.disable($.CULL_FACE);
+disable($.CULL_FACE);
 
 const queues = new Map([
     [$.PROGRAM_SPRITE, []],

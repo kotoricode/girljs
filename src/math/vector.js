@@ -7,16 +7,6 @@ export class Vector extends SettableArray
         super(x, y, z);
     }
 
-    static dot(a, b)
-    {
-        if (!(a instanceof Vector && b instanceof Vector))
-        {
-            throw Error;
-        }
-
-        return a.x*b.x + a.y*b.y + a.z*b.z;
-    }
-
     get x()
     {
         return this[0];
@@ -49,65 +39,44 @@ export class Vector extends SettableArray
 
     addVec(vec)
     {
-        for (let i = 0; i < vec.length; i++)
-        {
-            this[i] += vec[i];
-        }
+        this.x += vec.x;
+        this.y += vec.y;
+        this.z += vec.z;
     }
 
     copyFrom(vec)
     {
-        for (let i = 0; i < vec.length; i++)
-        {
-            this[i] = vec[i];
-        }
+        this.x = vec.x;
+        this.y = vec.y;
+        this.z = vec.z;
     }
 
-    cross(a, b)
+    cross(vec)
     {
-        if (!(a instanceof Vector && b instanceof Vector))
-        {
-            throw Error;
-        }
-
         this.setValues(
-            a.y*b.z - a.z*b.y,
-            a.z*b.x - a.x*b.z,
-            a.x*b.y - a.y*b.x
+            this.y*vec.z - this.z*vec.y,
+            this.z*vec.x - this.x*vec.z,
+            this.x*vec.y - this.y*vec.x
         );
     }
 
-    mulScalar(s)
+    dot(vec)
     {
-        this.x *= s;
-        this.y *= s;
-        this.z *= s;
+        return this.x*vec.x + this.y*vec.y + this.z*vec.z;
+    }
+
+    mulScalar(scalar)
+    {
+        this.x *= scalar;
+        this.y *= scalar;
+        this.z *= scalar;
     }
 
     mulVec(vec)
     {
-        for (let i = 0; i < vec.length; i++)
-        {
-            this[i] *= vec[i];
-        }
-    }
-
-    sqrDistance(vec3)
-    {
-        if (!(vec3 instanceof Vector))
-        {
-            throw Error;
-        }
-
-        return (this.x-vec3.x)**2 + (this.y-vec3.y)**2 + (this.z-vec3.z)**2;
-    }
-
-    subVec(vec)
-    {
-        for (let i = 0; i < vec.length; i++)
-        {
-            this[i] -= vec[i];
-        }
+        this.x *= vec.x;
+        this.y *= vec.y;
+        this.z *= vec.z;
     }
 
     magnitude()
@@ -127,8 +96,20 @@ export class Vector extends SettableArray
         this.mulScalar(toMagnitude / magnitude);
     }
 
+    sqrDistance(vec)
+    {
+        return (this.x-vec.x)**2 + (this.y-vec.y)**2 + (this.z-vec.z)**2;
+    }
+
     sqrMagnitude()
     {
-        return this.reduce((acc, val) => acc + val**2, 0);
+        return this.dot(this);
+    }
+
+    subVec(vec)
+    {
+        this.x -= vec.x;
+        this.y -= vec.y;
+        this.z -= vec.z;
     }
 }

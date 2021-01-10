@@ -1,16 +1,21 @@
 import * as $ from "../const";
 import { gl } from "../dom";
 
-export const createBuffer = () => gl.createBuffer();
-export const createTexture = () => gl.createTexture();
-
-export const useProgram = (program) =>
+export const bindBuffer = (bufferId) =>
 {
-    if (program !== oldProgram)
+    if (activeBuffer)
     {
-        gl.useProgram(program);
-        oldProgram = program;
+        throw Error(`${bufferId}, ${activeBuffer}`);
     }
+
+    if (!buffers.has(bufferId))
+    {
+        throw bufferId;
+    }
+
+    activeBuffer = bufferId;
+    const buffer = buffers.get(bufferId);
+    gl.bindBuffer($.ARRAY_BUFFER, buffer);
 };
 
 export const bindTexture = (texture) =>
@@ -27,6 +32,40 @@ export const bindVao = (vao) =>
     gl.bindVertexArray(vao);
 };
 
+export const createBuffer = () => gl.createBuffer();
+
+export const createTexture = () => gl.createTexture();
+
+export const createVao = (programData) =>
+{
+    const vao = gl.createVertexArray();
+    vaos.set(programData, vao);
+
+    return vao;
+};
+
+export const deleteVao = (programData) =>
+{
+    if (!vaos.has(programData))
+    {
+        throw programData;
+    }
+
+    const vao = vaos.get(programData);
+    vaos.delete(programData);
+    gl.deleteVertexArray(vao);
+};
+
+export const depthMask = (state) =>
+{
+    gl.depthMask(state);
+};
+
+export const disable = (cap) =>
+{
+    gl.disable(cap);
+};
+
 export const drawArrays = (mode, offset, length) =>
 {
     gl.drawArrays(mode, offset, length);
@@ -39,36 +78,9 @@ export const drawArraysVao = (mode, offset, length, vao) =>
     unbindVao();
 };
 
-export const setTextureParami = (key, value) =>
+export const enable = (cap) =>
 {
-    gl.texParameteri($.TEXTURE_2D, key, value);
-};
-
-export const unbindTexture = () =>
-{
-    bindTexture(null);
-};
-
-export const unbindVao = () =>
-{
-    bindVao(null);
-};
-
-export const bindBuffer = (bufferId) =>
-{
-    if (activeBuffer)
-    {
-        throw Error(`${bufferId}, ${activeBuffer}`);
-    }
-
-    if (!buffers.has(bufferId))
-    {
-        throw bufferId;
-    }
-
-    activeBuffer = bufferId;
-    const buffer = buffers.get(bufferId);
-    gl.bindBuffer($.ARRAY_BUFFER, buffer);
+    gl.enable(cap);
 };
 
 export const getBufferSize = (bufferId) =>
@@ -90,10 +102,34 @@ export const setBufferData = (bufferId, data, usage) =>
     bufferSizes.set(bufferId, data.length);
 };
 
+export const setTextureParami = (key, value) =>
+{
+    gl.texParameteri($.TEXTURE_2D, key, value);
+};
+
+export const unbindTexture = () =>
+{
+    bindTexture(null);
+};
+
+export const unbindVao = () =>
+{
+    bindVao(null);
+};
+
 export const unbindBuffer = () =>
 {
     activeBuffer = null;
     gl.bindBuffer($.ARRAY_BUFFER, null);
+};
+
+export const useProgram = (program) =>
+{
+    if (program !== oldProgram)
+    {
+        gl.useProgram(program);
+        oldProgram = program;
+    }
 };
 
 const buffers = new Map([
@@ -103,6 +139,8 @@ const buffers = new Map([
 ]);
 
 const bufferSizes = new Map();
+
+const vaos = new Map();
 
 let activeBuffer;
 let oldProgram;

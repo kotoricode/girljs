@@ -44,22 +44,15 @@ export const getProgram = (programId) =>
 /*------------------------------------------------------------------------------
     Templates
 ------------------------------------------------------------------------------*/
-// also works with uniformMatrix [transpose, value]
 const uniArrZeroZero = [0, 0];
 
-// const attrPos = [$.A_POSITION];
-// const attrPosUv = [$.A_POSITION, $.A_UV];
-
-const attrLayout2 = [2, $.FLOAT, false, 0];
-const attrLayout3 = [3, $.FLOAT, false, 0];
-
-const attrPos = {
-    [$.A_POSITION]: attrLayout3
+const attribPos = {
+    [$.A_POSITION]: 3
 };
 
-const attrPosUv = {
-    [$.A_POSITION]: attrLayout3,
-    [$.A_UV]: attrLayout2,
+const attribPosUv = {
+    [$.A_POSITION]: 3,
+    [$.A_UV]: 2,
 };
 
 const uniTransVP = {
@@ -93,22 +86,22 @@ const vertDef = {
         uniforms: {
             uniformMatrix4fv: uniVP
         },
-        attributes: attrPos
+        attributes: attribPos
     },
     standard: {
         src: vsStandard,
-        attributes: attrPosUv
+        attributes: attribPosUv
     },
     sprite: {
         src: vsSprite,
-        attributes: attrPosUv,
+        attributes: attribPosUv,
         uniforms: {
             uniformMatrix4fv: uniTransVP
         }
     },
     tiled: {
         src: vsTiled,
-        attributes: attrPosUv,
+        attributes: attribPosUv,
         uniforms: {
             uniformMatrix4fv: uniTransVP,
             uniform2f: uniUvRepeat
@@ -186,7 +179,8 @@ for (let i = 0; i < newProgramDef.length;)
     --------------------------------------------------------------------------*/
     const uniforms = {
         setters: new Map(),
-        defaults: new Map()
+        defaults: new Map(),
+        staging: null
     };
 
     for (const shader of [vert, frag])

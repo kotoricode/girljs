@@ -1,6 +1,9 @@
+import * as $ from "../const";
 import { gl } from "../dom";
-import { bindBuffer, bindVao, unbindBuffer, unbindVao } from "./gl-helper";
 import { getProgram } from "./program";
+import {
+    bindBuffer, bindVao, createVao, deleteVao, unbindBuffer, unbindVao
+} from "./gl-helper";
 
 export class ProgramData
 {
@@ -12,43 +15,65 @@ export class ProgramData
             uniforms
         } = getProgram(programId);
 
+        this.programId = programId;
         this.program = program;
         this.uniforms = uniforms;
-        this.uniforms.values = new Map();
+        this.uniforms.staging = new Map();
 
-        this.vao = gl.createVertexArray();
+        // TODO: maybe pool vaos?
+        this.vao = createVao(this);
         this.attributes = attributes;
 
         for (const [name, defaults] of this.uniforms.defaults)
         {
-            this.uniforms.values.set(name, defaults.slice());
+            this.uniforms.staging.set(name, defaults.slice());
         }
     }
 
-    setAttributes(bufferId, attrOffsets)
+    delete()
+    {
+        deleteVao(this);
+    }
+
+    setAttributes(bufferId, attribOffsets)
     {
         bindVao(this.vao);
         bindBuffer(bufferId);
 
-        for (const [name, layout] of Object.entries(this.attributes))
+        for (const [name, attribSize] of Object.entries(this.attributes))
         {
-            if (!(name in attrOffsets))
+            if (!(name in attribOffsets))
             {
                 throw name;
             }
 
             const pos = gl.getAttribLocation(this.program, name);
             gl.enableVertexAttribArray(pos);
-            gl.vertexAttribPointer(pos, ...layout, attrOffsets[name]);
+            gl.vertexAttribPointer(
+                pos, attribSize, $.FLOAT, false, 0, attribOffsets[name]
+            );
         }
 
         unbindBuffer();
         unbindVao();
     }
 
-    setUniValue(key, value)
+    setUniform(key, value)
     {
-        if (!this.uniforms.values.has(key))
+        this.uniforms.setters.get(key)(value);
+    }
+
+    setUniforms()
+    {
+        for (const [key, value] of this.uniforms.staging)
+        {
+            this.setUniform(key, value);
+        }
+    }
+
+    stageUniform(key, value)
+    {
+        if (!this.uniforms.staging.has(key))
         {
             throw key;
         }
@@ -58,41 +83,28 @@ export class ProgramData
             throw value;
         }
 
-        this.uniforms.values.set(key, value);
+        this.uniforms.staging.set(key, value);
     }
 
-    setUniValueIndexed(key, idx, value)
+    stageUniformAtIndex(key, idx, value)
     {
-        if (!this.uniforms.values.has(key))
+        if (!this.uniforms.staging.has(key))
         {
             throw key;
         }
 
-        const values = this.uniforms.values.get(key);
+        const staging = this.uniforms.staging.get(key);
 
-        if (!Array.isArray(values))
+        if (!Array.isArray(staging))
         {
-            throw values;
+            throw staging;
         }
 
-        if (idx >= values.length)
+        if (idx >= staging.length)
         {
             throw idx;
         }
 
-        values[idx] = value;
-    }
-
-    updateProgramUniform(key, value)
-    {
-        this.uniforms.setters.get(key)(value);
-    }
-
-    updateProgramUniforms()
-    {
-        for (const [key, value] of this.uniforms.values)
-        {
-            this.updateProgramUniform(key, value);
-        }
+        staging[idx] = value;
     }
 }
