@@ -1,7 +1,6 @@
 import * as $ from "../const";
 import { gl } from "../dom";
 import { Sprite } from "../components/sprite";
-import { createProgramData } from "./program";
 import { getModel } from "./model";
 import { subscribe } from "../utils/publisher";
 import { getViewProjection } from "../math/camera";
@@ -15,6 +14,7 @@ import {
     unbindTexture,
     useProgram
 } from "./gl-helper";
+import { ProgramData } from "./program-data";
 
 const getViewProgramData = () =>
 {
@@ -24,7 +24,7 @@ const getViewProgramData = () =>
         [$.A_UV]: model.uvOffset
     };
 
-    const programData = createProgramData($.PROGRAM_GRAY);
+    const programData = new ProgramData($.PROGRAM_GRAY);
     programData.setAttributes($.BUFFER_POLYGON, offsets);
 
     return programData;

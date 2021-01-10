@@ -1,6 +1,6 @@
 import * as $ from "../const";
 import { setBufferData } from "./gl-helper";
-import { createProgramData } from "./program";
+import { ProgramData } from "./program-data";
 
 export const getDebugProgram = () =>
 {
@@ -20,5 +20,5 @@ const bufferData = [
 
 setBufferData($.BUFFER_DEBUG, bufferData, $.DYNAMIC_DRAW);
 
-const debugProgram = createProgramData($.PROGRAM_DEBUG);
+const debugProgram = new ProgramData($.PROGRAM_DEBUG);
 debugProgram.setAttributes($.BUFFER_DEBUG, { [$.A_POSITION]: 0 });

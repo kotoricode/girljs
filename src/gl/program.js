@@ -21,22 +21,6 @@ const createAttachShader = (program, shaderId, vertFrag) =>
     return shader;
 };
 
-export const createProgramData = (programId) =>
-{
-    const {
-        program,
-        uniDefaults,
-        uniSetters,
-        attributes
-    } = preparedPrograms.get(programId);
-
-    const programData = new ProgramData(
-        program, uniDefaults, uniSetters, attributes
-    );
-
-    return programData;
-};
-
 const createUniSetter = (type, loc) => (values) =>
 {
     gl[type](loc, ...values);
@@ -46,6 +30,16 @@ const detachDeleteShader = (program, shader) =>
 {
     gl.detachShader(program, shader);
     gl.deleteShader(shader);
+};
+
+export const getProgram = (programId) =>
+{
+    if (preparedPrograms.has(programId))
+    {
+        return preparedPrograms.get(programId);
+    }
+
+    throw programId;
 };
 
 /*------------------------------------------------------------------------------

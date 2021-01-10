@@ -1,10 +1,18 @@
 import { gl } from "../dom";
 import { bindBuffer, bindVao, unbindBuffer, unbindVao } from "./gl-helper";
+import { getProgram } from "./program";
 
 export class ProgramData
 {
-    constructor(program, uniDefaults, uniSetters, attributes)
+    constructor(programId)
     {
+        const {
+            program,
+            attributes,
+            uniDefaults,
+            uniSetters
+        } = getProgram(programId);
+
         this.program = program;
         this.uniSetters = uniSetters;
         this.uniValues = new Map();

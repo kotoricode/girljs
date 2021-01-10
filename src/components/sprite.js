@@ -1,8 +1,8 @@
 import * as $ from "../const";
 import { getSubTextureData } from "../gl/texture";
 import { getModel } from "../gl/model";
-import { createProgramData } from "../gl/program";
 import { Component } from "./component";
+import { ProgramData } from "../gl/program-data";
 
 export class Sprite extends Component
 {
@@ -25,11 +25,6 @@ export class Sprite extends Component
         const subTexData = getSubTextureData(subTextureId);
         this.texture = subTexData.baseData.texture;
 
-        this.stuff();
-    }
-
-    stuff()
-    {
         const { meshOffset, uvOffset } = this.model;
 
         const attrOffsets = {
@@ -39,13 +34,10 @@ export class Sprite extends Component
 
         if (!this.programData)
         {
-            this.programData = createProgramData(this.programId);
-            this.programData.setAttributes($.BUFFER_SPRITE, attrOffsets);
+            this.programData = new ProgramData(this.programId);
         }
-        else
-        {
-            this.programData.setAttributes($.BUFFER_SPRITE, attrOffsets);
-        }
+
+        this.programData.setAttributes($.BUFFER_SPRITE, attrOffsets);
     }
 
     setProgramUniforms(uniforms)
