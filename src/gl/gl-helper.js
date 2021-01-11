@@ -7,6 +7,12 @@ export const bindArrayBuffer = (bufferId) =>
     gl.bindBuffer($.ARRAY_BUFFER, buffer);
 };
 
+export const bindBufferBase = (bufferId, idx) =>
+{
+    const buffer = getBuffer(bufferId);
+    gl.bindBufferBase($.UNIFORM_BUFFER, idx, buffer);
+};
+
 export const bindTexture = (texture) =>
 {
     if (texture !== oldTexture)
@@ -96,13 +102,20 @@ export const getBufferSize = (bufferId) =>
     throw bufferId;
 };
 
-export const setBufferData = (bufferId, data, usage) =>
+export const setArrayBufferData = (bufferId, data) =>
 {
     bindArrayBuffer(bufferId);
-    gl.bufferData($.ARRAY_BUFFER, new Float32Array(data), usage);
+    gl.bufferData($.ARRAY_BUFFER, new Float32Array(data), $.STATIC_DRAW);
     unbindArrayBuffer();
 
     bufferSizes.set(bufferId, data.length);
+};
+
+export const setUniformBufferData = (bufferId, data) =>
+{
+    bindUniformBuffer(bufferId);
+    gl.bufferData($.UNIFORM_BUFFER, data, $.DYNAMIC_DRAW);
+    unbindUniformBuffer();
 };
 
 export const setTextureParami = (key, value) =>

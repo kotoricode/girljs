@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { setBufferData } from "./gl-helper";
+import { setArrayBufferData } from "./gl-helper";
 import { getSubTextureData } from "./texture";
 
 const getXy = (minX, maxX, minY, maxY) =>
@@ -99,7 +99,7 @@ for (let i = 0; i < spriteModelData.length;)
     }
 }
 
-setBufferData($.BUFFER_ARRAY_SPRITE, spriteBufferData, $.STATIC_DRAW);
+setArrayBufferData($.BUFFER_ARRAY_SPRITE, spriteBufferData);
 
 /*------------------------------------------------------------------------------
     Polygons
@@ -140,4 +140,4 @@ for (let i = 0; i < polygonModelData.length;)
     }
 }
 
-setBufferData($.BUFFER_ARRAY_POLYGON, polygonBufferData, $.STATIC_DRAW);
+setArrayBufferData($.BUFFER_ARRAY_POLYGON, polygonBufferData, $.STATIC_DRAW);

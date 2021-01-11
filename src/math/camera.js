@@ -1,6 +1,8 @@
 import * as $ from "../const";
 import { gl } from "../dom";
-import { bindUniformBuffer, getBuffer, unbindUniformBuffer } from "../gl/gl-helper";
+import {
+    bindUniformBuffer, getBuffer, unbindUniformBuffer, setUniformBufferData, bindBufferBase
+} from "../gl/gl-helper";
 import { DEG_TO_RAD } from "./math-helper";
 import { Matrix4 } from "./matrix4";
 import { Transform } from "./transform";
@@ -52,16 +54,10 @@ export const setCameraPosition = (vec) =>
     /*--------------------------------------------------------------------------
         Update UBO
     --------------------------------------------------------------------------*/
-    bindUniformBuffer($.BUFFER_UNIFORM_CAMERA);
-
     vpData.set(viewProjection);
 
-    gl.bufferData(
-        $.UNIFORM_BUFFER,
-        vpData,
-        $.DYNAMIC_DRAW
-    );
-
+    bindUniformBuffer($.BUFFER_UNIFORM_CAMERA);
+    setUniformBufferData($.BUFFER_UNIFORM_CAMERA, vpData);
     unbindUniformBuffer();
 };
 
@@ -82,8 +78,7 @@ const invViewProjection = new Matrix4();
 
 transform.rotation.fromEuler(0.2, 0, 0);
 
-const buffer = getBuffer($.BUFFER_UNIFORM_CAMERA);
 const vpData = new Float32Array(16);
 const vpIndex = 0;
 
-gl.bindBufferBase(gl.UNIFORM_BUFFER, vpIndex, buffer);
+bindBufferBase($.BUFFER_UNIFORM_CAMERA, vpIndex);
