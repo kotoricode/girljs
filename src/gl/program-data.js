@@ -1,7 +1,7 @@
 import * as $ from "../const";
 import { gl } from "../dom";
 import { getPreparedProgram } from "./program";
-import { Buffer } from "./buffer";
+import { BufferArray } from "./buffer";
 import { Vao } from "./vao";
 
 export class ProgramData
@@ -34,7 +34,7 @@ export class ProgramData
     {
         // TODO: share vaos if program & model are the same
         Vao.bind(this.vao);
-        Buffer.bindAsArray(bufferId);
+        BufferArray.bind(bufferId);
 
         for (const [name, attribSize] of Object.entries(this.attributes))
         {
@@ -50,7 +50,7 @@ export class ProgramData
             );
         }
 
-        Buffer.unbindAsArray();
+        BufferArray.unbind();
         Vao.unbind();
     }
 

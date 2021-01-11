@@ -1,5 +1,5 @@
 import { gl } from "../dom";
-import { bindingPoints, blockBuffers } from "./buffer";
+import { BufferUniform } from "./buffer";
 import { Vao } from "./vao";
 
 export const depthMask = (state) => gl.depthMask(state);
@@ -33,17 +33,11 @@ export const setProgram = (programData) =>
 
     if (blocks)
     {
-        for (const block of blocks)
+        for (const blockId of blocks)
         {
-            const bufferId = blockBuffers.get(block);
-            const bindingPoint = bindingPoints.indexOf(bufferId);
-
-            if (bindingPoint === -1)
-            {
-                throw bufferId;
-            }
-
-            const blockIdx = gl.getUniformBlockIndex(program, block);
+            const bufferId = BufferUniform.getBufferByBlock(blockId);
+            const bindingPoint = BufferUniform.getBindingPoint(bufferId);
+            const blockIdx = gl.getUniformBlockIndex(program, blockId);
             gl.uniformBlockBinding(program, blockIdx, bindingPoint);
         }
     }

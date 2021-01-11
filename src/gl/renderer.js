@@ -12,7 +12,7 @@ import {
     setProgram
 } from "./gl-helper";
 
-import { Buffer } from "./buffer";
+import { BufferArray } from "./buffer";
 
 import {
     bindTexture, createTexture, setTextureParami, unbindTexture
@@ -109,7 +109,7 @@ const renderDebug = () =>
     const programData = getDebugProgram();
     setProgram(programData);
 
-    const bufferSize = Buffer.getSize($.BUF_ARR_DEBUG);
+    const bufferSize = BufferArray.getSize($.BUF_ARR_DEBUG);
     drawArraysVao($.LINES, 0, bufferSize / 3, programData.vao);
 };
 

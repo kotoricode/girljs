@@ -1,6 +1,6 @@
 import * as $ from "../const";
 import { BufferData } from "../math/buffer-data";
-import { Buffer } from "./buffer";
+import { BufferArray } from "./buffer";
 import { getSubTextureData } from "./texture";
 
 const getXy = (minX, maxX, minY, maxY) =>
@@ -100,7 +100,7 @@ for (let i = 0; i < spriteModelData.length;)
     }
 }
 
-Buffer.setAsArray(
+BufferArray.set(
     $.BUF_ARR_SPRITE,
     new BufferData(spriteBufferData),
     $.STATIC_DRAW
@@ -145,7 +145,7 @@ for (let i = 0; i < polygonModelData.length;)
     }
 }
 
-Buffer.setAsArray(
+BufferArray.set(
     $.BUF_ARR_POLYGON,
     new BufferData(polygonBufferData),
     $.STATIC_DRAW
