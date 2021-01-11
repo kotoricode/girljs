@@ -3,12 +3,7 @@ import { gl } from "../dom";
 
 export const bindArrayBuffer = (bufferId) =>
 {
-    if (!buffers.has(bufferId))
-    {
-        throw bufferId;
-    }
-
-    const buffer = buffers.get(bufferId);
+    const buffer = getBuffer(bufferId);
     gl.bindBuffer($.ARRAY_BUFFER, buffer);
 };
 
@@ -19,6 +14,12 @@ export const bindTexture = (texture) =>
         gl.bindTexture($.TEXTURE_2D, texture);
         oldTexture = texture;
     }
+};
+
+export const bindUniformBuffer = (bufferId) =>
+{
+    const buffer = getBuffer(bufferId);
+    gl.bindBuffer($.UNIFORM_BUFFER, buffer);
 };
 
 export const bindVao = (vao) =>
@@ -75,6 +76,16 @@ export const enable = (cap) =>
     gl.enable(cap);
 };
 
+export const getBuffer = (bufferId) =>
+{
+    if (buffers.has(bufferId))
+    {
+        return buffers.get(bufferId);
+    }
+
+    throw bufferId;
+};
+
 export const getBufferSize = (bufferId) =>
 {
     if (bufferSizes.has(bufferId))
@@ -114,6 +125,11 @@ export const unbindArrayBuffer = () =>
     gl.bindBuffer($.ARRAY_BUFFER, null);
 };
 
+export const unbindUniformBuffer = () =>
+{
+    gl.bindBuffer($.UNIFORM_BUFFER, null);
+};
+
 export const useProgram = (program) =>
 {
     if (program !== oldProgram)
@@ -128,14 +144,11 @@ const buffers = new Map(
         $.BUFFER_ARRAY_SPRITE,
         $.BUFFER_ARRAY_POLYGON,
         $.BUFFER_ARRAY_DEBUG,
-        $.BUFFER_UNIFORM_VIEWPROJECTION
-    ].reduce(
-        (array, bufferId) => (
-            array.push([bufferId, gl.createBuffer()]),
-            array
-        ),
-        []
-    )
+        $.BUFFER_UNIFORM_CAMERA
+    ].reduce((array, bufferId) => (
+        array.push([bufferId, gl.createBuffer()]),
+        array
+    ), [])
 );
 
 const bufferSizes = new Map();

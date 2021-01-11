@@ -1,8 +1,10 @@
 #version 300 es
 
-uniform camera {
+uniform camera
+{
 	mat4 u_viewProjection;
 };
+
 in vec3 a_position;
 
 void main()
