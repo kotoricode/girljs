@@ -13,11 +13,7 @@ import {
 } from "./gl-helper";
 
 import { BufferArray } from "./buffer";
-
-import {
-    bindTexture, createTexture, setTextureParami, unbindTexture
-} from "./texture";
-
+import { Texture } from "./texture";
 import { ProgramData } from "./program-data";
 
 const getViewProgramData = () =>
@@ -52,8 +48,8 @@ export const render = (scene) =>
     if (isCanvasResized)
     {
         gl.deleteTexture(framebufferTexture);
-        framebufferTexture = createTexture();
-        bindTexture(framebufferTexture);
+        framebufferTexture = Texture.create();
+        Texture.bind(framebufferTexture);
 
         gl.texImage2D(
             $.TEXTURE_2D,
@@ -67,8 +63,8 @@ export const render = (scene) =>
             null
         );
 
-        setTextureParami($.TEXTURE_MIN_FILTER, $.LINEAR);
-        unbindTexture();
+        Texture.setParami($.TEXTURE_MIN_FILTER, $.LINEAR);
+        Texture.unbind();
 
         gl.framebufferTexture2D(
             $.FRAMEBUFFER,
@@ -93,9 +89,9 @@ export const render = (scene) =>
     gl.bindFramebuffer($.FRAMEBUFFER, null);
     setProgram(viewProgramData);
 
-    bindTexture(framebufferTexture);
+    Texture.bind(framebufferTexture);
     renderTriangle(viewProgramData.vao);
-    unbindTexture();
+    Texture.unbind();
 
     // Debug
     renderDebug();
@@ -120,7 +116,7 @@ const renderQueue = (queueId) =>
     for (const { programData, texture } of queue)
     {
         setProgram(programData);
-        bindTexture(texture);
+        Texture.bind(texture);
         programData.setUniforms();
         renderTriangleStrip(programData.vao);
     }

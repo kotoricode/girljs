@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { getSubTextureData } from "../gl/texture";
+import { Texture } from "../gl/texture";
 import { getModel } from "../gl/model";
 import { Component } from "./component";
 import { ProgramData } from "../gl/program-data";
@@ -35,7 +35,7 @@ export class Sprite extends Component
         );
 
         // Texture
-        const subTexData = getSubTextureData(this.model.subTextureId);
+        const subTexData = Texture.getSubTextureData(this.model.subTextureId);
         this.texture = subTexData.baseData.texture;
     }
 

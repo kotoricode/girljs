@@ -1,7 +1,7 @@
 import * as $ from "../const";
 import { BufferData } from "../math/buffer-data";
 import { BufferArray } from "./buffer";
-import { getSubTextureData } from "./texture";
+import { Texture } from "./texture";
 
 const getXy = (minX, maxX, minY, maxY) =>
 {
@@ -35,7 +35,10 @@ export const getModel = (modelId) =>
 
 const uvFromSubTexture = (subTextureId) =>
 {
-    const { x, y, width, height, baseData } = getSubTextureData(subTextureId);
+    const {
+        x, y, width, height, baseData
+    } = Texture.getSubTextureData(subTextureId);
+
     const { width: baseWidth, height: baseHeight } = baseData;
 
     const minX = x / baseWidth;

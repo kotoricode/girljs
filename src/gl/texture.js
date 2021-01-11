@@ -1,18 +1,41 @@
 import * as $ from "../const";
 import { gl } from "../dom";
 
-export const bindTexture = (texture) =>
-{
-    if (texture !== oldTexture)
+export const Texture = {
+    bind(texture)
     {
-        gl.bindTexture($.TEXTURE_2D, texture);
-        oldTexture = texture;
+        if (texture !== oldTexture)
+        {
+            gl.bindTexture($.TEXTURE_2D, texture);
+            oldTexture = texture;
+        }
+    },
+    create()
+    {
+        return gl.createTexture();
+    },
+    getSubTextureData(subTextureId)
+    {
+        if (subTextureData.has(subTextureId))
+        {
+            return subTextureData.get(subTextureId);
+        }
+
+        throw Error;
+    },
+    setParami(key, value)
+    {
+        gl.texParameteri($.TEXTURE_2D, key, value);
+    },
+    unbind()
+    {
+        Texture.bind(null);
     }
 };
 
 const createImageTexture = (src, parami) =>
 {
-    const texture = createTexture();
+    const texture = Texture.create();
     toFetch.push({ texture, parami, src });
 
     if (toFetch.length === 1)
@@ -23,32 +46,10 @@ const createImageTexture = (src, parami) =>
     return texture;
 };
 
-export const createTexture = () => gl.createTexture();
-
 const fetchNextImage = () =>
 {
     const src = toFetch[0].src;
     image.src = `${$.PATH_IMG}${src}`;
-};
-
-export const getSubTextureData = (subTextureId) =>
-{
-    if (subTextureData.has(subTextureId))
-    {
-        return subTextureData.get(subTextureId);
-    }
-
-    throw Error;
-};
-
-export const setTextureParami = (key, value) =>
-{
-    gl.texParameteri($.TEXTURE_2D, key, value);
-};
-
-export const unbindTexture = () =>
-{
-    bindTexture(null);
 };
 
 /*------------------------------------------------------------------------------
@@ -61,12 +62,12 @@ image.onload = () =>
 {
     const { texture, parami } = toFetch.shift();
 
-    bindTexture(texture);
+    Texture.bind(texture);
     gl.texImage2D($.TEXTURE_2D, 0, $.RGBA, $.RGBA, $.UNSIGNED_BYTE, image);
 
     for (let i = 0; i < parami.length;)
     {
-        setTextureParami(parami[i++], parami[i++]);
+        Texture.setParami(parami[i++], parami[i++]);
     }
 
     const minFilter = gl.getTexParameter($.TEXTURE_2D, $.TEXTURE_MIN_FILTER);
@@ -77,7 +78,7 @@ image.onload = () =>
         gl.generateMipmap($.TEXTURE_2D);
     }
 
-    unbindTexture();
+    Texture.unbind();
 
     if (toFetch.length)
     {
