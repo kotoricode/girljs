@@ -30,7 +30,7 @@ export class Sprite extends Component
         this.attribOffsets[$.A_UV] = this.model.uvOffset;
 
         this.programData.setAttributes(
-            $.BUFFER_ARRAY_SPRITE,
+            $.ARRAY_BUFFER_SPRITE,
             this.attribOffsets
         );
 

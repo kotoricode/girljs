@@ -129,6 +129,9 @@ const fragDef = {
 /*------------------------------------------------------------------------------
     Program definitions
 ------------------------------------------------------------------------------*/
+
+// TODO: add uniform block bindings for each program
+
 const newProgramDef = [
     $.PROGRAM_VIEW,   vertDef.view,   fragDef.view,
     $.PROGRAM_SPRITE, vertDef.sprite, fragDef.sprite,

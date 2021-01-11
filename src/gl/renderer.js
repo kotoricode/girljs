@@ -13,11 +13,11 @@ import {
     enable,
     getBufferSize,
     setTextureParami,
+    bindUniformBlock,
     unbindTexture,
     useProgram
 } from "./gl-helper";
 import { ProgramData } from "./program-data";
-import { cameraBindUniformBlock } from "../math/camera";
 
 const getViewProgramData = () =>
 {
@@ -28,7 +28,7 @@ const getViewProgramData = () =>
     };
 
     const programData = new ProgramData($.PROGRAM_VIEW);
-    programData.setAttributes($.BUFFER_ARRAY_POLYGON, offsets);
+    programData.setAttributes($.ARRAY_BUFFER_POLYGON, offsets);
 
     return programData;
 };
@@ -105,11 +105,12 @@ const renderDebug = () =>
     disable($.DEPTH_TEST);
     depthMask(false);
 
-    const programData = getDebugProgram();
-    useProgram(programData.program);
-    const bufferSize = getBufferSize($.BUFFER_ARRAY_DEBUG);
+    const { program, vao } = getDebugProgram();
+    useProgram(program);
 
-    drawArraysVao($.LINES, 0, bufferSize / 3, programData.vao);
+    bindUniformBlock(program, $.UNIFORM_BUFFER_CAMERA, $.UB_CAMERA);
+    const bufferSize = getBufferSize($.ARRAY_BUFFER_DEBUG);
+    drawArraysVao($.LINES, 0, bufferSize / 3, vao);
 };
 
 const renderQueue = (queueId) =>
@@ -121,7 +122,7 @@ const renderQueue = (queueId) =>
         const { program } = programData;
 
         useProgram(program);
-        cameraBindUniformBlock(program);
+        bindUniformBlock(program, $.UNIFORM_BUFFER_CAMERA, $.UB_CAMERA);
 
         bindTexture(texture);
         programData.setUniforms();

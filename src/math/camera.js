@@ -1,7 +1,6 @@
 import * as $ from "../const";
-import { gl } from "../dom";
 import {
-    bindUniformBuffer, getBuffer, unbindUniformBuffer, setUniformBufferData, bindBufferBase
+    bindUniformBuffer, unbindUniformBuffer, setUniformBufferData
 } from "../gl/gl-helper";
 import { DEG_TO_RAD } from "./math-helper";
 import { Matrix4 } from "./matrix4";
@@ -56,15 +55,9 @@ export const setCameraPosition = (vec) =>
     --------------------------------------------------------------------------*/
     vpData.set(viewProjection);
 
-    bindUniformBuffer($.BUFFER_UNIFORM_CAMERA);
-    setUniformBufferData($.BUFFER_UNIFORM_CAMERA, vpData);
+    bindUniformBuffer($.UNIFORM_BUFFER_CAMERA);
+    setUniformBufferData($.UNIFORM_BUFFER_CAMERA, vpData);
     unbindUniformBuffer();
-};
-
-export const cameraBindUniformBlock = (program) =>
-{
-    const ubIdx = gl.getUniformBlockIndex(program, $.UB_CAMERA);
-    gl.uniformBlockBinding(program, ubIdx, vpIndex);
 };
 
 const f = 1000;
@@ -79,6 +72,3 @@ const invViewProjection = new Matrix4();
 transform.rotation.fromEuler(0.2, 0, 0);
 
 const vpData = new Float32Array(16);
-const vpIndex = 0;
-
-bindBufferBase($.BUFFER_UNIFORM_CAMERA, vpIndex);
