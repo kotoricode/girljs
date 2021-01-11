@@ -2,7 +2,7 @@ import * as $ from "../const";
 import { gl } from "../dom";
 import { getPreparedProgram } from "./program";
 import { bindArrayBuffer, unbindArrayBuffer} from "./gl-helper";
-import { bindVao, createVao, deleteVao, unbindVao } from "./vao";
+import { Vao } from "./vao";
 
 export class ProgramData
 {
@@ -16,7 +16,7 @@ export class ProgramData
         this.uniforms.staging = new Map();
 
         // TODO: maybe pool vaos?
-        this.vao = createVao(this);
+        this.vao = Vao.create(this);
         this.attributes = prepared.attributes;
 
         for (const [name, defaults] of this.uniforms.defaults)
@@ -27,13 +27,13 @@ export class ProgramData
 
     delete()
     {
-        deleteVao(this);
+        Vao.delete(this);
     }
 
     setAttributes(bufferId, attribOffsets)
     {
         // TODO: share vaos if program & model are the same
-        bindVao(this.vao);
+        Vao.bind(this.vao);
         bindArrayBuffer(bufferId);
 
         for (const [name, attribSize] of Object.entries(this.attributes))
@@ -51,7 +51,7 @@ export class ProgramData
         }
 
         unbindArrayBuffer();
-        unbindVao();
+        Vao.unbind();
     }
 
     setUniform(key, value)

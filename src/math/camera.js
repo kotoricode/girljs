@@ -5,15 +5,9 @@ import { DEG_TO_RAD } from "./math-helper";
 import { Matrix4 } from "./matrix4";
 import { Transform } from "./transform";
 
-export const getInvViewProjection = () =>
-{
-    return invViewProjection;
-};
+export const getInvViewProjection = () => invViewProjection;
 
-export const getViewProjection = () =>
-{
-    return viewProjection;
-};
+export const getViewProjection = () => viewProjection;
 
 export const setCameraPosition = (vec) =>
 {

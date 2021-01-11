@@ -1,6 +1,6 @@
 import * as $ from "../const";
 import { gl } from "../dom";
-import { bindVao, unbindVao } from "./vao";
+import { Vao } from "./vao";
 
 /*------------------------------------------------------------------------------
     Helper functions
@@ -29,9 +29,9 @@ export const drawArrays = (mode, offset, length) => gl.drawArrays(
 
 export const drawArraysVao = (mode, offset, length, vao) =>
 {
-    bindVao(vao);
+    Vao.bind(vao);
     drawArrays(mode, offset, length);
-    unbindVao();
+    Vao.unbind();
 };
 
 export const enable = (cap) => gl.enable(cap);
