@@ -1,5 +1,6 @@
 import * as $ from "../const";
 import { setUniformBuffer } from "../gl/gl-helper";
+import { BufferData } from "./buffer-data";
 import { DEG_TO_RAD } from "./math-helper";
 import { Matrix4 } from "./matrix4";
 import { Transform } from "./transform";
@@ -23,41 +24,18 @@ export const setCameraPosition = (vec) =>
     --------------------------------------------------------------------------*/
     viewProjection.fromTransform(transform);
     viewProjection.invert();
-
-    viewProjection.multiply([
-        1 / ($.SCREEN_ASPECT * fov),
-        0,
-        0,
-        0,
-
-        0,
-        1 / fov,
-        0,
-        0,
-
-        0,
-        0,
-        -(f + n) / dist,
-        -1,
-
-        0,
-        0,
-        -(2*f*n) / dist,
-        0
-    ]);
-
+    viewProjection.multiplyPerspective(fov, near, far);
     invViewProjection.invertFrom(viewProjection);
 
     /*--------------------------------------------------------------------------
         Update UBO
     --------------------------------------------------------------------------*/
-    vpData.set(viewProjection);
-    setUniformBuffer($.BUF_UNI_CAMERA, vpData);
+    viewProjectionData.from(viewProjection);
+    setUniformBuffer($.BUF_UNI_CAMERA, viewProjectionData);
 };
 
-const f = 1000;
-const n = 1;
-const dist = f - n;
+const far = 1000;
+const near = 1;
 const fov = Math.tan(DEG_TO_RAD * 30 / 2);
 
 const transform = new Transform(0, 2.7, 8);
@@ -66,4 +44,4 @@ const invViewProjection = new Matrix4();
 
 transform.rotation.fromEuler(0.2, 0, 0);
 
-const vpData = new Float32Array(16);
+const viewProjectionData = new BufferData(16);

@@ -1,4 +1,5 @@
 import * as $ from "../const";
+import { BufferData } from "../math/buffer-data";
 import { setArrayBuffer } from "./gl-helper";
 import { getSubTextureData } from "./texture";
 
@@ -101,7 +102,7 @@ for (let i = 0; i < spriteModelData.length;)
 
 setArrayBuffer(
     $.BUF_ARR_SPRITE,
-    new Float32Array(spriteBufferData),
+    new BufferData(spriteBufferData),
     $.STATIC_DRAW
 );
 
@@ -146,6 +147,6 @@ for (let i = 0; i < polygonModelData.length;)
 
 setArrayBuffer(
     $.BUF_ARR_POLYGON,
-    new Float32Array(polygonBufferData),
+    new BufferData(polygonBufferData),
     $.STATIC_DRAW
 );

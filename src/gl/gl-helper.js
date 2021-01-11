@@ -113,6 +113,7 @@ export const setUniformBuffer = (bufferId, data) => setBuffer(
 );
 
 export const unbindArrayBuffer = () => unbindBuffer($.ARRAY_BUFFER);
+
 const unbindBuffer = (bufferType) => gl.bindBuffer(bufferType, null);
 
 /*------------------------------------------------------------------------------
@@ -123,23 +124,19 @@ const reduceFunc = (array, bufferId) => (
     array
 );
 
-const arrayBuffers = new Map(
-    [
-        $.BUF_ARR_SPRITE,
-        $.BUF_ARR_POLYGON,
-        $.BUF_ARR_DEBUG
-    ].reduce(reduceFunc, [])
-);
-
-const uniformBuffers = new Map(
-    [
-        $.BUF_UNI_CAMERA
-    ].reduce(reduceFunc, [])
-);
-
 const buffers = new Map([
-    [$.ARRAY_BUFFER, arrayBuffers],
-    [$.UNIFORM_BUFFER, uniformBuffers]
+    [$.ARRAY_BUFFER, new Map(
+        [
+            $.BUF_ARR_SPRITE,
+            $.BUF_ARR_POLYGON,
+            $.BUF_ARR_DEBUG
+        ].reduce(reduceFunc, [])
+    )],
+    [$.UNIFORM_BUFFER, new Map(
+        [
+            $.BUF_UNI_CAMERA
+        ].reduce(reduceFunc, [])
+    )]
 ]);
 
 let oldProgram;
