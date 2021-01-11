@@ -46,6 +46,8 @@ export const getPreparedProgram = (programId) =>
 ------------------------------------------------------------------------------*/
 const uniArrZeroZero = [0, 0];
 
+const ubCamera = [$.UB_CAMERA];
+
 const attribPos = {
     [$.A_POSITION]: 3
 };
@@ -78,14 +80,17 @@ const uniUvOffsetSize = {
 const vertDef = {
     color: {
         src: vsColor,
+        blocks: ubCamera,
         attributes: attribPos
     },
     view: {
         src: vsView,
+        blocks: null,
         attributes: attribPosUv
     },
     sprite: {
         src: vsSprite,
+        blocks: ubCamera,
         attributes: attribPosUv,
         uniforms: {
             uniformMatrix4fv: uniTransVP
@@ -93,6 +98,7 @@ const vertDef = {
     },
     tiled: {
         src: vsTiled,
+        blocks: ubCamera,
         attributes: attribPosUv,
         uniforms: {
             uniformMatrix4fv: uniTransVP,
@@ -106,19 +112,23 @@ const vertDef = {
 ------------------------------------------------------------------------------*/
 const fragDef = {
     color: {
-        src: fsColor
+        src: fsColor,
+        blocks: null
     },
     view: {
-        src: fsView
+        src: fsView,
+        blocks: null
     },
     sprite: {
         src: fsSprite,
+        blocks: null,
         uniforms: {
             uniform4f: uniColor
         }
     },
     tiled: {
         src: fsTiled,
+        blocks: null,
         uniforms: {
             uniform2f: uniUvOffsetSize,
             uniform4f: uniColor
@@ -130,10 +140,10 @@ const fragDef = {
     Program definitions
 ------------------------------------------------------------------------------*/
 const programDef = [
-    $.PROGRAM_VIEW,   vertDef.view,   fragDef.view,   null,
-    $.PROGRAM_SPRITE, vertDef.sprite, fragDef.sprite, [$.UB_CAMERA],
-    $.PROGRAM_TILED,  vertDef.tiled,  fragDef.tiled,  [$.UB_CAMERA],
-    $.PROGRAM_DEBUG,  vertDef.color,  fragDef.color,  [$.UB_CAMERA]
+    $.PROGRAM_VIEW,   vertDef.view,   fragDef.view,
+    $.PROGRAM_SPRITE, vertDef.sprite, fragDef.sprite,
+    $.PROGRAM_TILED,  vertDef.tiled,  fragDef.tiled,
+    $.PROGRAM_DEBUG,  vertDef.color,  fragDef.color
 ];
 
 /*------------------------------------------------------------------------------
@@ -146,8 +156,9 @@ for (let i = 0; i < programDef.length;)
     const programId = programDef[i++];
     const vert = programDef[i++];
     const frag = programDef[i++];
-    const blocks = programDef[i++];
-    const { attributes } = vert;
+
+    const { attributes, blocks: vsBlocks } = vert;
+    const fsBlocks = frag.blocks;
 
     /*--------------------------------------------------------------------------
         Program
@@ -164,6 +175,25 @@ for (let i = 0; i < programDef.length;)
 
     detachDeleteShader(program, vs);
     detachDeleteShader(program, fs);
+
+    /*--------------------------------------------------------------------------
+        Uniform blocks
+    --------------------------------------------------------------------------*/
+    let blocks = null;
+
+    if (vsBlocks)
+    {
+        blocks = [...vsBlocks];
+
+        if (fsBlocks)
+        {
+            blocks.push(...fsBlocks);
+        }
+    }
+    else if (fsBlocks)
+    {
+        blocks = [...fsBlocks];
+    }
 
     /*--------------------------------------------------------------------------
         Uniforms
