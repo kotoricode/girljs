@@ -109,9 +109,14 @@ const renderDebug = () =>
 
     useProgram(programData.program);
 
+    // gl.uniformBlockBinding(
+    //     programData.program,
+    //     gl.getUniformBlockIndex(programData.program, "perScene"),
+    //     0
+    // );
+
     const vp = getViewProjection();
     programData.setUniform($.U_VIEWPROJECTION, [0, vp]);
-
     const bufferSize = getBufferSize($.BUFFER_DEBUG);
 
     drawArraysVao($.LINES, 0, bufferSize / 3, programData.vao);

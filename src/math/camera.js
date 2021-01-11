@@ -1,4 +1,5 @@
 import * as $ from "../const";
+import { gl } from "../dom";
 import { DEG_TO_RAD } from "./math-helper";
 import { Matrix4 } from "./matrix4";
 import { Transform } from "./transform";
@@ -58,3 +59,9 @@ const transform = new Transform(0, 2.7, 8),
       invViewProjection = new Matrix4();
 
 transform.rotation.fromEuler(0.2, 0, 0);
+
+const buffer = gl.createBuffer();
+gl.bindBuffer(gl.UNIFORM_BUFFER, buffer);
+gl.bufferData(gl.UNIFORM_BUFFER, new Float32Array([2.0]), gl.DYNAMIC_DRAW);
+gl.bindBuffer(gl.UNIFORM_BUFFER, null);
+gl.bindBufferBase(gl.UNIFORM_BUFFER, 0, buffer);
