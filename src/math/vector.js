@@ -44,7 +44,7 @@ export class Vector extends SettableArray
         this.z += vec.z;
     }
 
-    copyFrom(vec)
+    from(vec)
     {
         this.x = vec.x;
         this.y = vec.y;

@@ -44,7 +44,7 @@ export class Segment
 
     set(start, end)
     {
-        this.start.copyFrom(start);
-        this.end.copyFrom(end);
+        this.start.from(start);
+        this.end.from(end);
     }
 }

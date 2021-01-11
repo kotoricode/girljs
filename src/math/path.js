@@ -136,8 +136,8 @@ export class Path
     {
         const startPos = this.startNode.position;
         const endPos = this.endNode.position;
-        startPos.copyFrom(start);
-        endPos.copyFrom(end);
+        startPos.from(start);
+        endPos.from(end);
 
         // first check if we can go directly from start to end
         // otherwise launch a*

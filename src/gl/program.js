@@ -46,7 +46,7 @@ export const getPreparedProgram = (programId) =>
 ------------------------------------------------------------------------------*/
 const uniArrZeroZero = [0, 0];
 
-const ubCamera = [$.UB_CAMERA];
+const ubCamera = [$.UNIFORM_BLOCK_CAMERA];
 
 const attribPos = {
     [$.A_POSITION]: 3

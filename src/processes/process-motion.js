@@ -19,11 +19,11 @@ export const processMotion = (scene) =>
 
             // Distance to target
             const target = motion.getTarget();
-            distance.copyFrom(target);
+            distance.from(target);
             distance.subVec(space.world.translation);
 
             // Direction
-            direction.copyFrom(distance);
+            direction.from(distance);
             direction.normalize();
 
             // Flip sprite X according to direction

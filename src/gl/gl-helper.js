@@ -1,9 +1,10 @@
 import * as $ from "../const";
 import { gl } from "../dom";
+import { bindVao, unbindVao } from "./vao";
 
 export const bindArrayBuffer = (bufferId) =>
 {
-    const buffer = getBuffer(bufferId);
+    const buffer = getArrayBuffer(bufferId);
     gl.bindBuffer($.ARRAY_BUFFER, buffer);
 };
 
@@ -16,32 +17,7 @@ export const bindTexture = (texture) =>
     }
 };
 
-export const bindVao = (vao) =>
-{
-    gl.bindVertexArray(vao);
-};
-
 export const createTexture = () => gl.createTexture();
-
-export const createVao = (programData) =>
-{
-    const vao = gl.createVertexArray();
-    vaos.set(programData, vao);
-
-    return vao;
-};
-
-export const deleteVao = (programData) =>
-{
-    if (!vaos.has(programData))
-    {
-        throw programData;
-    }
-
-    const vao = vaos.get(programData);
-    vaos.delete(programData);
-    gl.deleteVertexArray(vao);
-};
 
 export const depthMask = (state) =>
 {
@@ -70,11 +46,11 @@ export const enable = (cap) =>
     gl.enable(cap);
 };
 
-const getBuffer = (bufferId) =>
+const getArrayBuffer = (bufferId) =>
 {
-    if (buffers.has(bufferId))
+    if (arrayBuffers.has(bufferId))
     {
-        return buffers.get(bufferId);
+        return arrayBuffers.get(bufferId);
     }
 
     throw bufferId;
@@ -85,6 +61,16 @@ export const getBufferSize = (bufferId) =>
     if (bufferSizes.has(bufferId))
     {
         return bufferSizes.get(bufferId);
+    }
+
+    throw bufferId;
+};
+
+const getUniformBuffer = (bufferId) =>
+{
+    if (uniformBuffers.has(bufferId))
+    {
+        return uniformBuffers.get(bufferId);
     }
 
     throw bufferId;
@@ -101,7 +87,7 @@ export const setArrayBufferData = (bufferId, data, usage) =>
 
 export const setUniformBufferData = (bufferId, data) =>
 {
-    const buffer = getBuffer(bufferId);
+    const buffer = getUniformBuffer(bufferId);
     gl.bindBuffer($.UNIFORM_BUFFER, buffer);
     gl.bufferData($.UNIFORM_BUFFER, data, $.DYNAMIC_DRAW);
     gl.bindBuffer($.UNIFORM_BUFFER, null);
@@ -115,11 +101,6 @@ export const setTextureParami = (key, value) =>
 export const unbindTexture = () =>
 {
     bindTexture(null);
-};
-
-export const unbindVao = () =>
-{
-    bindVao(null);
 };
 
 export const unbindArrayBuffer = () =>
@@ -157,29 +138,33 @@ export const useProgramBindBlocks = (programData) =>
     }
 };
 
-const buffers = new Map([
-    $.ARRAY_BUFFER_SPRITE,
-    $.ARRAY_BUFFER_POLYGON,
-    $.ARRAY_BUFFER_DEBUG,
-    $.UNIFORM_BUFFER_CAMERA
-].reduce((array, bufferId) => (
+const reduceFunc = (array, bufferId) => (
     array.push([bufferId, gl.createBuffer()]),
     array
-), []));
+);
+
+const arrayBuffers = new Map([
+    $.ARRAY_BUFFER_SPRITE,
+    $.ARRAY_BUFFER_POLYGON,
+    $.ARRAY_BUFFER_DEBUG
+].reduce(reduceFunc, []));
+
+const uniformBuffers = new Map([
+    $.UNIFORM_BUFFER_CAMERA
+].reduce(reduceFunc, []));
 
 let oldProgram;
 let oldTexture;
 const bufferSizes = new Map();
-const vaos = new Map();
 const bindingPoints = [$.UNIFORM_BUFFER_CAMERA];
 
 for (let i = 0; i < bindingPoints.length; i++)
 {
     const bufferId = bindingPoints[i];
-    const buffer = getBuffer(bufferId);
+    const buffer = getUniformBuffer(bufferId);
     gl.bindBufferBase($.UNIFORM_BUFFER, i, buffer);
 }
 
 const blockBuffers = new Map([
-    [$.UB_CAMERA, $.UNIFORM_BUFFER_CAMERA]
+    [$.UNIFORM_BLOCK_CAMERA, $.UNIFORM_BUFFER_CAMERA]
 ]);

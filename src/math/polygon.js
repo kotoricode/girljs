@@ -22,7 +22,7 @@ export class Polygon
 
         if (this.idx < this.intersections.length)
         {
-            this.intersections[this.idx].copyFrom(point);
+            this.intersections[this.idx].from(point);
         }
         else
         {

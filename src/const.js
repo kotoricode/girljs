@@ -38,26 +38,21 @@ export const
     SUBTEXTURE_BG = 1,
     SUBTEXTURE_UKKO = 2;
 
-// STRING --- Filenames
 export const
     AUDIO_OMOIDE = "omoide_loft.ogg";
 
-// STRING --- JSON prefs data keys
 export const
-    PREF_MASTER = "PREF_MASTER",
-    PREF_MUSIC = "PREF_MUSIC",
-    PREF_SOUND = "PREF_SOUND";
+    PREF_MASTER = "master",
+    PREF_MUSIC = "music",
+    PREF_SOUND = "sound";
 
-// STRING --- JSON state data keys
 export const
-    STATE_MONEY = "STATE_MONEY";
+    STATE_MONEY = "money";
 
-// STRING --- Part of file URL
 export const
     PATH_IMG = "./img/",
     PATH_SND = "./snd/";
 
-// STRING --- Shader variables
 export const
     U_COLOR = "u_color",
     U_TRANSFORM = "u_transform",
@@ -65,16 +60,13 @@ export const
     U_UVREPEAT = "u_uvRepeat",
     U_UVSIZE = "u_uvSize";
 
-// STRING --- Shader variables
 export const
     A_POSITION = "a_position",
     A_UV = "a_uv";
 
-// STRING --- Uniform block names
 export const
-    UB_CAMERA = "camera";
+    UNIFORM_BLOCK_CAMERA = "camera";
 
-// STRING --- Filenames
 export const
     TEXTURE_POLY = "texture.png",
     TEXTURE_SPRITE = "test.png",
