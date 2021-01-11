@@ -8,17 +8,6 @@ export const bindArrayBuffer = (bufferId) =>
     gl.bindBuffer($.ARRAY_BUFFER, buffer);
 };
 
-export const bindTexture = (texture) =>
-{
-    if (texture !== oldTexture)
-    {
-        gl.bindTexture($.TEXTURE_2D, texture);
-        oldTexture = texture;
-    }
-};
-
-export const createTexture = () => gl.createTexture();
-
 export const depthMask = (state) =>
 {
     gl.depthMask(state);
@@ -93,16 +82,6 @@ export const setUniformBufferData = (bufferId, data) =>
     gl.bindBuffer($.UNIFORM_BUFFER, null);
 };
 
-export const setTextureParami = (key, value) =>
-{
-    gl.texParameteri($.TEXTURE_2D, key, value);
-};
-
-export const unbindTexture = () =>
-{
-    bindTexture(null);
-};
-
 export const unbindArrayBuffer = () =>
 {
     gl.bindBuffer($.ARRAY_BUFFER, null);
@@ -154,7 +133,6 @@ const uniformBuffers = new Map([
 ].reduce(reduceFunc, []));
 
 let oldProgram;
-let oldTexture;
 const bufferSizes = new Map();
 const bindingPoints = [$.UNIFORM_BUFFER_CAMERA];
 

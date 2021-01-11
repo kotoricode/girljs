@@ -1,8 +1,14 @@
 import * as $ from "../const";
 import { gl } from "../dom";
-import {
-    bindTexture, createTexture, setTextureParami, unbindTexture
-} from "./gl-helper";
+
+export const bindTexture = (texture) =>
+{
+    if (texture !== oldTexture)
+    {
+        gl.bindTexture($.TEXTURE_2D, texture);
+        oldTexture = texture;
+    }
+};
 
 const createImageTexture = (src, parami) =>
 {
@@ -16,6 +22,8 @@ const createImageTexture = (src, parami) =>
 
     return texture;
 };
+
+export const createTexture = () => gl.createTexture();
 
 const fetchNextImage = () =>
 {
@@ -31,6 +39,16 @@ export const getSubTextureData = (subTextureId) =>
     }
 
     throw Error;
+};
+
+export const setTextureParami = (key, value) =>
+{
+    gl.texParameteri($.TEXTURE_2D, key, value);
+};
+
+export const unbindTexture = () =>
+{
+    bindTexture(null);
 };
 
 /*------------------------------------------------------------------------------
@@ -75,6 +93,8 @@ image.onerror = () =>
 /*------------------------------------------------------------------------------
     Textures
 ------------------------------------------------------------------------------*/
+let oldTexture;
+
 const paramiMinLinMaxLin = [
     $.TEXTURE_MIN_FILTER, $.LINEAR,
     $.TEXTURE_MAG_FILTER, $.LINEAR

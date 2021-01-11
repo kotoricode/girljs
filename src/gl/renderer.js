@@ -5,17 +5,18 @@ import { getModel } from "./model";
 import { subscribe } from "../utils/publisher";
 import { getDebugProgram } from "./debug";
 import {
-    bindTexture,
-    createTexture,
     depthMask,
     disable,
     drawArraysVao,
     enable,
     getBufferSize,
-    setTextureParami,
-    unbindTexture,
     useProgramBindBlocks
 } from "./gl-helper";
+
+import {
+    bindTexture, createTexture, setTextureParami, unbindTexture
+} from "./texture";
+
 import { ProgramData } from "./program-data";
 
 const getViewProgramData = () =>
