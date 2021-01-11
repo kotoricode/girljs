@@ -3,7 +3,6 @@ import { Sprite } from "./components/sprite";
 import { Space } from "./components/space";
 import { Entity } from "./entity";
 import { render } from "./gl/renderer";
-import { getViewProjection } from "./math/camera";
 import { blueprint } from "./blueprint";
 
 export class Scene
@@ -110,12 +109,13 @@ export class Scene
     {
         for (const entity of this.newSpriteEntities)
         {
-            const [{ programData }, { matrix }] = entity.getComponents(
-                Sprite,
-                Space
-            );
+            const [sprite, space] = entity.getComponents(Sprite, Space);
 
-            programData.stageUniformAtIndex($.U_TRANSFORM, 1, matrix);
+            sprite.programData.stageUniformAtIndex(
+                $.U_TRANSFORM,
+                1,
+                space.matrix
+            );
         }
     }
 

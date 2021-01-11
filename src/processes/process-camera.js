@@ -14,7 +14,6 @@ export const processCamera = (scene) =>
     if (mouse.isWorldClick)
     {
         const [ground] = scene.one($.ENTITY_GROUND, Ground);
-
         const ivp = getInvViewProjection();
 
         ray.numHits = 0;

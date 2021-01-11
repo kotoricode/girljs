@@ -17,14 +17,12 @@ const createGain = (gainId, parent) =>
 export const initAudio = () =>
 {
     context = new AudioContext();
-
     const gainMaster = createGain($.PREF_MASTER, context.destination);
-
     const gainMusic = createGain($.PREF_MUSIC, gainMaster);
     context.createMediaElementSource(music).connect(gainMusic);
-    playMusic();
-
     createGain($.PREF_SOUND, gainMaster);
+
+    playMusic();
 };
 
 const playMusic = () =>

@@ -134,9 +134,8 @@ export class Path
 
     start(start, end)
     {
-        const startPos = this.startNode.position,
-              endPos = this.endNode.position;
-
+        const startPos = this.startNode.position;
+        const endPos = this.endNode.position;
         startPos.copyFrom(start);
         endPos.copyFrom(end);
 

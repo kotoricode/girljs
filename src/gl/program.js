@@ -143,19 +143,17 @@ const preparedPrograms = new Map();
 
 for (let i = 0; i < newProgramDef.length;)
 {
-    const programId = newProgramDef[i++],
-          vert = newProgramDef[i++],
-          frag = newProgramDef[i++],
-          { attributes } = vert;
+    const programId = newProgramDef[i++];
+    const vert = newProgramDef[i++];
+    const frag = newProgramDef[i++];
+    const { attributes } = vert;
 
     /*--------------------------------------------------------------------------
         Program
     --------------------------------------------------------------------------*/
     const program = gl.createProgram();
-
-    const vs = createAttachShader(program, $.VERTEX_SHADER, vert),
-          fs = createAttachShader(program, $.FRAGMENT_SHADER, frag);
-
+    const vs = createAttachShader(program, $.VERTEX_SHADER, vert);
+    const fs = createAttachShader(program, $.FRAGMENT_SHADER, frag);
     gl.linkProgram(program);
 
     if (!gl.getProgramParameter(program, $.LINK_STATUS))

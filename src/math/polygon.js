@@ -12,7 +12,6 @@ export class Polygon
 
         this.points = points;
         this.activeSegment = new Segment();
-
         this.intersections = [];
         this.idx = -1;
     }

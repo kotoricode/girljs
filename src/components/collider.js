@@ -10,11 +10,11 @@ export class Collider extends Component
         this.meshes = new Set(meshes);
     }
 
-    hasPoint(vec2)
+    hasPoint(vec)
     {
         for (const collider of this.meshes)
         {
-            if (collider.hasPoint(vec2))
+            if (collider.hasPoint(vec))
             {
                 return true;
             }
@@ -23,11 +23,11 @@ export class Collider extends Component
         return false;
     }
 
-    setPosition(vec2)
+    setPosition(vec)
     {
         for (const collider of this.meshes)
         {
-            collider.setPosition(vec2);
+            collider.setPosition(vec);
         }
     }
 }

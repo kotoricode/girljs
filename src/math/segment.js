@@ -6,24 +6,21 @@ export class Segment
     {
         this.start = new Vector(startX, 0, startZ);
         this.end = new Vector(endX, 0, endZ);
-
         this.intersection = new Vector();
     }
 
     getIntersection(line, isPoly=true)
     {
-        const ax = this.end.x - this.start.x,
-              az = this.end.z - this.start.z,
-              bx = line.end.x - line.start.x,
-              bz = line.end.z - line.start.z;
-
+        const ax = this.end.x - this.start.x;
+        const az = this.end.z - this.start.z;
+        const bx = line.end.x - line.start.x;
+        const bz = line.end.z - line.start.z;
         const det = ax*bz - bx*az;
 
         if (det)
         {
-            const cx = this.start.x - line.start.x,
-                  cz = this.start.z - line.start.z;
-
+            const cx = this.start.x - line.start.x;
+            const cz = this.start.z - line.start.z;
             const s = (ax*cz - az*cx) / det;
 
             if (0 <= s && s <= 1)

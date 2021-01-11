@@ -19,6 +19,5 @@ export const getStored = (key) =>
 export const setStored = (key, value) =>
 {
     const json = JSON.stringify(value);
-
     storage.setItem(key, json);
 };

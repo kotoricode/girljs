@@ -37,10 +37,10 @@ const uvFromSubTexture = (subTextureId) =>
     const { x, y, width, height, baseData } = getSubTextureData(subTextureId);
     const { width: baseWidth, height: baseHeight } = baseData;
 
-    const minX = x / baseWidth,
-          maxX = (x + width) / baseWidth,
-          minY = y / baseHeight,
-          maxY = (y + height) / baseHeight;
+    const minX = x / baseWidth;
+    const maxX = (x + width) / baseWidth;
+    const minY = y / baseHeight;
+    const maxY = (y + height) / baseHeight;
 
     return [
         minX, maxY,
@@ -65,10 +65,10 @@ const spriteModelData = [
     $.MODEL_PLAYER2, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEXTURE_BRAID,
 ];
 
-const xyzSize = 12,
-      uvSize = 8,
-      xyzUvSize = xyzSize + uvSize,
-      spriteBufferData = new Array(xyzUvSize * spriteModelData.length / 3);
+const xyzSize = 12;
+const uvSize = 8;
+const xyzUvSize = xyzSize + uvSize;
+const spriteBufferData = new Array(xyzUvSize * spriteModelData.length / 3);
 
 for (let i = 0; i < spriteModelData.length;)
 {

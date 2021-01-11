@@ -9,10 +9,10 @@ export class Component
 
         if (!flagged.has(ctorName))
         {
-            if (flagged.size >= 31)
+            if (flagged.size > 31)
             {
                 // TODO: switch to bigint if tons of comps
-                throw Error;
+                throw flagged;
             }
 
             ctor.flag = 1 << flagged.size;

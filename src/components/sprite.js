@@ -29,7 +29,10 @@ export class Sprite extends Component
         this.attribOffsets[$.A_POSITION] = this.model.meshOffset;
         this.attribOffsets[$.A_UV] = this.model.uvOffset;
 
-        this.programData.setAttributes($.BUFFER_ARRAY_SPRITE, this.attribOffsets);
+        this.programData.setAttributes(
+            $.BUFFER_ARRAY_SPRITE,
+            this.attribOffsets
+        );
 
         // Texture
         const subTexData = getSubTextureData(this.model.subTextureId);
@@ -46,16 +49,17 @@ export class Sprite extends Component
             }
         }
 
-        const { uvCoords } = this.model;
-
         // Program-specific uniforms
         if (this.programData.programId === $.PROGRAM_TILED)
         {
-            const uvMinX = uvCoords[0],
-                  uvMinY = uvCoords[5];
+            const [
+                uvMinX, uvMaxY,
+                uvMaxX, ,
+                , uvMinY
+            ] = this.model.uvCoords;
 
-            const width = uvCoords[2] - uvMinX,
-                  height = uvCoords[1] - uvMinY;
+            const width = uvMaxX - uvMinX;
+            const height = uvMaxY - uvMinY;
 
             this.programData.stageUniform($.U_UVOFFSET, [uvMinX, uvMinY]);
             this.programData.stageUniform($.U_UVSIZE, [width, height]);

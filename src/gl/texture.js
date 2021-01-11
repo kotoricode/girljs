@@ -7,7 +7,6 @@ import {
 const createImageTexture = (src, parami) =>
 {
     const texture = createTexture();
-
     toFetch.push({ texture, parami, src });
 
     if (toFetch.length === 1)

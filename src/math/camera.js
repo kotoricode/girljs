@@ -75,9 +75,9 @@ const n = 1;
 const dist = f - n;
 const fov = Math.tan(DEG_TO_RAD * 30 / 2);
 
-const transform = new Transform(0, 2.7, 8),
-      viewProjection = new Matrix4(),
-      invViewProjection = new Matrix4();
+const transform = new Transform(0, 2.7, 8);
+const viewProjection = new Matrix4();
+const invViewProjection = new Matrix4();
 
 transform.rotation.fromEuler(0.2, 0, 0);
 

@@ -15,20 +15,20 @@ export class Matrix4 extends SettableArray
 
     fromTransform({ scale, rotation, translation })
     {
-        const [sx, sy, sz] = scale,
-              [rx, ry, rz, rw] = rotation,
-              [tx, ty, tz] = translation;
+        const [sx, sy, sz] = scale;
+        const [rx, ry, rz, rw] = rotation;
+        const [tx, ty, tz] = translation;
 
-        const rxx = rx * rx,
-              ryy = ry * ry,
-              rzz = rz * rz,
-              rww = rw * rw,
-              rxy = rx * ry,
-              rxz = rx * rz,
-              rxw = rx * rw,
-              ryz = ry * rz,
-              ryw = ry * rw,
-              rzw = rz * rw;
+        const rxx = rx * rx;
+        const ryy = ry * ry;
+        const rzz = rz * rz;
+        const rww = rw * rw;
+        const rxy = rx * ry;
+        const rxz = rx * rz;
+        const rxw = rx * rw;
+        const ryz = ry * rz;
+        const ryw = ry * rw;
+        const rzw = rz * rw;
 
         this.set(
             sx * (rww + rxx - ryy - rzz),
@@ -67,38 +67,38 @@ export class Matrix4 extends SettableArray
             MC, MD, ME, MF
         ] = matrix;
 
-        const M49 = M4 * M9,
-              M4A = M4 * MA,
-              M4B = M4 * MB,
-              M58 = M5 * M8,
-              M5A = M5 * MA,
-              M5B = M5 * MB,
-              M68 = M6 * M8,
-              M69 = M6 * M9,
-              M6B = M6 * MB,
-              M78 = M7 * M8,
-              M79 = M7 * M9,
-              M7A = M7 * MA;
+        const M49 = M4 * M9;
+        const M4A = M4 * MA;
+        const M4B = M4 * MB;
+        const M58 = M5 * M8;
+        const M5A = M5 * MA;
+        const M5B = M5 * MB;
+        const M68 = M6 * M8;
+        const M69 = M6 * M9;
+        const M6B = M6 * MB;
+        const M78 = M7 * M8;
+        const M79 = M7 * M9;
+        const M7A = M7 * MA;
 
-        const A0 = M5A*MF + M6B*MD + M79*ME - M5B*ME - M69*MF - M7A*MD,
-              A1 = M4B*ME + M68*MF + M7A*MC - M4A*MF - M6B*MC - M78*ME,
-              A2 = M49*MF + M5B*MC + M78*MD - M4B*MD - M58*MF - M79*MC,
-              A3 = M4A*MD + M58*ME + M69*MC - M49*ME - M5A*MC - M68*MD;
+        const A0 = M5A*MF + M6B*MD + M79*ME - M5B*ME - M69*MF - M7A*MD;
+        const A1 = M4B*ME + M68*MF + M7A*MC - M4A*MF - M6B*MC - M78*ME;
+        const A2 = M49*MF + M5B*MC + M78*MD - M4B*MD - M58*MF - M79*MC;
+        const A3 = M4A*MD + M58*ME + M69*MC - M49*ME - M5A*MC - M68*MD;
 
         const id = 1 / (M0*A0 + M1*A1 + M2*A2 + M3*A3);
 
-        const M0D = M0 * MD,
-              M0E = M0 * ME,
-              M0F = M0 * MF,
-              M1C = M1 * MC,
-              M1E = M1 * ME,
-              M1F = M1 * MF,
-              M2C = M2 * MC,
-              M2D = M2 * MD,
-              M2F = M2 * MF,
-              M3D = M3 * MD,
-              M3E = M3 * ME,
-              M3C = M3 * MC;
+        const M0D = M0 * MD;
+        const M0E = M0 * ME;
+        const M0F = M0 * MF;
+        const M1C = M1 * MC;
+        const M1E = M1 * ME;
+        const M1F = M1 * MF;
+        const M2C = M2 * MC;
+        const M2D = M2 * MD;
+        const M2F = M2 * MF;
+        const M3D = M3 * MD;
+        const M3E = M3 * ME;
+        const M3C = M3 * MC;
 
         this.set(
             id * A0,

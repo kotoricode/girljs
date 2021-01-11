@@ -141,21 +141,16 @@ const renderTriangle = (vao) =>
     drawArraysVao($.TRIANGLES, 0, 6, vao);
 };
 
-const framebuffer = gl.createFramebuffer();
-
-let isCanvasResized = true,
-    framebufferTexture;
-
 subscribe($.EVENT_CANVAS_RESIZED, () => isCanvasResized = true);
-
-const viewProgramData = getViewProgramData();
 
 enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
-
-// Sprites turn by flipping scale.x sign, so no face culling
-// TODO: maybe do add face culling for static (no Motion component) entities
 disable($.CULL_FACE);
+
+const framebuffer = gl.createFramebuffer();
+const viewProgramData = getViewProgramData();
+let isCanvasResized = true;
+let framebufferTexture;
 
 const queues = new Map([
     [$.PROGRAM_SPRITE, []],

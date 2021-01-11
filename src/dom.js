@@ -42,9 +42,9 @@ window.addEventListener("mousedown", initAudio, once);
 /*------------------------------------------------------------------------------
     Canvases
 ------------------------------------------------------------------------------*/
-const canvasHolder = getElement("canvasHolder"),
-      gameCanvas = getElement("gameCanvas"),
-      uiCanvas = getElement("uiCanvas");
+const canvasHolder = getElement("canvasHolder");
+const gameCanvas = getElement("gameCanvas");
+const uiCanvas = getElement("uiCanvas");
 
 export const gl = gameCanvas.getContext("webgl2", { alpha: false });
 export const ui = uiCanvas.getContext("2d");
@@ -75,11 +75,11 @@ export const mouse = {
 // UI canvas receives clicks, propagate to container if no UI interaction
 uiCanvas.addEventListener("click", (e) =>
 {
-    const relX = (e.clientX - canvasRect.left) / gameCanvas.clientWidth,
-          relY = (e.clientY - canvasRect.top) / gameCanvas.clientHeight;
+    const x = (e.clientX - canvasRect.left) / gameCanvas.clientWidth;
+    const y = (e.clientY - canvasRect.top) / gameCanvas.clientHeight;
 
-    mouse.screen.set(relX * $.SCREEN_WIDTH, relY * $.SCREEN_HEIGHT);
-    mouse.clip.set(2*relX - 1, 1 - 2*relY);
+    mouse.screen.set(x * $.SCREEN_WIDTH, y * $.SCREEN_HEIGHT);
+    mouse.clip.set(2*x - 1, 1 - 2*y);
 
     if (isUiInteraction())
     {

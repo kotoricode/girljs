@@ -35,9 +35,9 @@ export class Motion extends Component
         this.idx = this.maxIdx = -1;
     }
 
-    setMainTarget(vec2)
+    setMainTarget(vec)
     {
-        this.waypoints[0].copyFrom(vec2);
+        this.waypoints[0].copyFrom(vec);
         this.idx = this.maxIdx = 0;
     }
 }
