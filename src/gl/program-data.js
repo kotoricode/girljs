@@ -9,11 +9,7 @@ export class ProgramData
 {
     constructor(programId)
     {
-        const {
-            program,
-            attributes,
-            uniforms
-        } = getProgram(programId);
+        const { program, attributes, uniforms } = getProgram(programId);
 
         this.programId = programId;
         this.program = program;
@@ -37,6 +33,7 @@ export class ProgramData
 
     setAttributes(bufferId, attribOffsets)
     {
+        // TODO: share vaos if program & model are the same
         bindVao(this.vao);
         bindBuffer(bufferId);
 

@@ -13,24 +13,27 @@ export class Sprite extends Component
         this.programData = new ProgramData(programId);
         this.isVisible = true;
 
+        this.attribOffsets = {
+            [$.A_POSITION]: null,
+            [$.A_UV]: null
+        };
+
         this.setModel(modelId);
         this.setProgramUniforms(uniforms);
     }
 
     setModel(modelId)
     {
+        // Model
         this.model = getModel(modelId);
-        const { meshOffset, uvOffset, subTextureId } = this.model;
+        this.attribOffsets[$.A_POSITION] = this.model.meshOffset;
+        this.attribOffsets[$.A_UV] = this.model.uvOffset;
 
-        const subTexData = getSubTextureData(subTextureId);
+        this.programData.setAttributes($.BUFFER_SPRITE, this.attribOffsets);
+
+        // Texture
+        const subTexData = getSubTextureData(this.model.subTextureId);
         this.texture = subTexData.baseData.texture;
-
-        const attribOffsets = {
-            [$.A_POSITION]: meshOffset,
-            [$.A_UV]: uvOffset
-        };
-
-        this.programData.setAttributes($.BUFFER_SPRITE, attribOffsets);
     }
 
     setProgramUniforms(uniforms)

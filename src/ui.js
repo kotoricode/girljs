@@ -3,8 +3,7 @@ import { ui } from "./dom";
 
 export const clearUi = () =>
 {
-    const { width, height } = ui.canvas;
-    ui.clearRect(0, 0, width, height);
+    ui.clearRect(0, 0, ui.canvas.width, ui.canvas.height);
 };
 
 export const drawCircle = () =>

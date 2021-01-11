@@ -22,21 +22,21 @@ export class Scene
         this.dirtyEntities = new Set();
     }
 
-    static * yieldComponents(entity, components)
-    {
-        for (const comp of components)
-        {
-            yield entity.components.get(comp);
-        }
-    }
-
-    static * yieldEntities(entity)
+    static * walkEntities(entity)
     {
         yield entity;
 
         for (const child of entity.children)
         {
-            yield Scene.yieldGraph(child);
+            yield Scene.walkEntities(child);
+        }
+    }
+
+    static * yieldComponents(entity, components)
+    {
+        for (const comp of components)
+        {
+            yield entity.components.get(comp);
         }
     }
 
@@ -106,25 +106,19 @@ export class Scene
         throw entityId;
     }
 
-    initNewSprites()
+    initNewSpriteUniforms()
     {
         const vp = getViewProjection();
 
         for (const entity of this.newSpriteEntities)
         {
-            const [sprite, space] = entity.getComponents(Sprite, Space);
-
-            sprite.programData.stageUniformAtIndex(
-                $.U_TRANSFORM,
-                1,
-                space.matrix
+            const [{ programData }, { matrix }] = entity.getComponents(
+                Sprite,
+                Space
             );
 
-            sprite.programData.stageUniformAtIndex(
-                $.U_VIEWPROJECTION,
-                1,
-                vp
-            );
+            programData.stageUniformAtIndex($.U_TRANSFORM, 1, matrix);
+            programData.stageUniformAtIndex($.U_VIEWPROJECTION, 1, vp);
         }
     }
 
@@ -204,8 +198,7 @@ export class Scene
 
         if (this.newSpriteEntities.size)
         {
-            // Connect new sprites' uniforms to transforms
-            this.initNewSprites();
+            this.initNewSpriteUniforms();
         }
 
         if (this.hasDirty)
@@ -221,6 +214,8 @@ export class Scene
             process(this);
         }
 
+        // TODO: check for lost context
+        // https://www.khronos.org/webgl/wiki/HandlingContextLost
         render(this);
     }
 
@@ -242,11 +237,12 @@ export class Scene
     updateSpaces(entity, isAncestorDirty, parentMatrix)
     {
         const space = entity.getComponent(Space);
-        const { matrix, world } = space;
         const isDirty = isAncestorDirty || space.isDirty;
 
         if (isDirty)
         {
+            const { matrix } = space;
+
             matrix.fromTransform(space.local);
 
             if (parentMatrix)
@@ -255,7 +251,7 @@ export class Scene
             }
 
             // TODO: rotation, scale
-            world.translation.set(matrix[12], matrix[13], matrix[14]);
+            space.world.translation.set(matrix[12], matrix[13], matrix[14]);
 
             space.isDirty = false;
         }
@@ -270,7 +266,7 @@ export class Scene
     {
         for (const child of this.root.children)
         {
-            yield Scene.yieldEntities(child);
+            yield Scene.walkEntities(child);
         }
     }
 }

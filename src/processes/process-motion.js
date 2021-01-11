@@ -15,13 +15,12 @@ export const processMotion = (scene) =>
 
         if (motion.hasTarget())
         {
-            const { local, world } = space;
             const { direction } = motion;
 
             // Distance to target
             const target = motion.getTarget();
             distance.copyFrom(target);
-            distance.subVec(world.translation);
+            distance.subVec(space.world.translation);
 
             // Direction
             direction.copyFrom(distance);
@@ -30,7 +29,7 @@ export const processMotion = (scene) =>
             // Flip sprite X according to direction
             if (direction.x)
             {
-                local.scale.x = Math.sign(direction.x);
+                space.local.scale.x = Math.sign(direction.x);
 
                 if (direction.x > 0)
                 {
@@ -63,7 +62,7 @@ export const processMotion = (scene) =>
             }
 
             // Step to or towards target
-            local.translation.addVec(distance);
+            space.local.translation.addVec(distance);
             scene.markDirty(space);
         }
     }

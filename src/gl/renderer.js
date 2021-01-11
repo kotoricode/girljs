@@ -51,18 +51,15 @@ export const render = (scene) =>
     if (isCanvasResized)
     {
         gl.deleteTexture(framebufferTexture);
-
         framebufferTexture = createTexture();
-        const { width, height } = gl.canvas;
-
         bindTexture(framebufferTexture);
 
         gl.texImage2D(
             $.TEXTURE_2D,
             0,
             $.RGB,
-            width,
-            height,
+            gl.canvas.width,
+            gl.canvas.height,
             0,
             $.RGB,
             $.UNSIGNED_BYTE,
@@ -93,10 +90,10 @@ export const render = (scene) =>
 
     // Framebuffer to canvas
     gl.bindFramebuffer($.FRAMEBUFFER, null);
-    useProgram(viewProgram);
+    useProgram(viewProgramData.program);
 
     bindTexture(framebufferTexture);
-    renderTriangle(viewVao);
+    renderTriangle(viewProgramData.vao);
     //renderTriangleStrip(viewVao);
     unbindTexture();
 
@@ -153,7 +150,7 @@ let isCanvasResized = true,
 
 subscribe($.EVENT_CANVAS_RESIZED, () => isCanvasResized = true);
 
-const { program: viewProgram, vao: viewVao } = getViewProgramData();
+const viewProgramData = getViewProgramData();
 
 enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
