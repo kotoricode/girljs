@@ -1,7 +1,7 @@
 import * as $ from "../const";
 import { gl } from "../dom";
 import { getPreparedProgram } from "./program";
-import { bindArrayBuffer, unbindArrayBuffer} from "./gl-helper";
+import { bindArrayBuffer, unbindArrayBuffer} from "./buffer";
 import { Vao } from "./vao";
 
 export class ProgramData

@@ -1,6 +1,6 @@
 import * as $ from "../const";
 import { BufferData } from "../math/buffer-data";
-import { setArrayBuffer } from "./gl-helper";
+import { setArrayBuffer } from "./buffer";
 import { ProgramData } from "./program-data";
 
 export const getDebugProgram = () =>

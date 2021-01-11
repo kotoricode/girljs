@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { setUniformBuffer } from "../gl/gl-helper";
+import { setUniformBuffer } from "../gl/buffer";
 import { BufferData } from "./buffer-data";
 import { DEG_TO_RAD } from "./math-helper";
 import { Matrix4 } from "./matrix4";

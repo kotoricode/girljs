@@ -9,9 +9,12 @@ import {
     disable,
     drawArraysVao,
     enable,
-    getArrayBufferSize,
     setProgram
 } from "./gl-helper";
+
+import {
+    getArrayBufferSize
+} from "./buffer";
 
 import {
     bindTexture, createTexture, setTextureParami, unbindTexture
