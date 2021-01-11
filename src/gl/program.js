@@ -31,7 +31,7 @@ const detachDeleteShader = (program, shader) =>
     gl.deleteShader(shader);
 };
 
-export const getProgram = (programId) =>
+export const getPreparedProgram = (programId) =>
 {
     if (preparedPrograms.has(programId))
     {
@@ -129,14 +129,11 @@ const fragDef = {
 /*------------------------------------------------------------------------------
     Program definitions
 ------------------------------------------------------------------------------*/
-
-// TODO: add uniform block bindings for each program
-
-const newProgramDef = [
-    $.PROGRAM_VIEW,   vertDef.view,   fragDef.view,
-    $.PROGRAM_SPRITE, vertDef.sprite, fragDef.sprite,
-    $.PROGRAM_TILED,  vertDef.tiled,  fragDef.tiled,
-    $.PROGRAM_DEBUG,  vertDef.color,  fragDef.color
+const programDef = [
+    $.PROGRAM_VIEW,   vertDef.view,   fragDef.view,   null,
+    $.PROGRAM_SPRITE, vertDef.sprite, fragDef.sprite, [$.UB_CAMERA],
+    $.PROGRAM_TILED,  vertDef.tiled,  fragDef.tiled,  [$.UB_CAMERA],
+    $.PROGRAM_DEBUG,  vertDef.color,  fragDef.color,  [$.UB_CAMERA]
 ];
 
 /*------------------------------------------------------------------------------
@@ -144,11 +141,12 @@ const newProgramDef = [
 ------------------------------------------------------------------------------*/
 const preparedPrograms = new Map();
 
-for (let i = 0; i < newProgramDef.length;)
+for (let i = 0; i < programDef.length;)
 {
-    const programId = newProgramDef[i++];
-    const vert = newProgramDef[i++];
-    const frag = newProgramDef[i++];
+    const programId = programDef[i++];
+    const vert = programDef[i++];
+    const frag = programDef[i++];
+    const blocks = programDef[i++];
     const { attributes } = vert;
 
     /*--------------------------------------------------------------------------
@@ -173,7 +171,8 @@ for (let i = 0; i < newProgramDef.length;)
     const uniforms = {
         setters: new Map(),
         defaults: new Map(),
-        staging: null
+        staging: null,
+        blocks
     };
 
     for (const shader of [vert, frag])

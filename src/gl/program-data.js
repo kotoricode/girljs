@@ -1,6 +1,6 @@
 import * as $ from "../const";
 import { gl } from "../dom";
-import { getProgram } from "./program";
+import { getPreparedProgram } from "./program";
 import {
     bindArrayBuffer, bindVao, createVao, deleteVao, unbindArrayBuffer, unbindVao
 } from "./gl-helper";
@@ -9,16 +9,16 @@ export class ProgramData
 {
     constructor(programId)
     {
-        const { program, attributes, uniforms } = getProgram(programId);
+        const prepared = getPreparedProgram(programId);
 
         this.programId = programId;
-        this.program = program;
-        this.uniforms = uniforms;
+        this.program = prepared.program;
+        this.uniforms = prepared.uniforms;
         this.uniforms.staging = new Map();
 
         // TODO: maybe pool vaos?
         this.vao = createVao(this);
-        this.attributes = attributes;
+        this.attributes = prepared.attributes;
 
         for (const [name, defaults] of this.uniforms.defaults)
         {

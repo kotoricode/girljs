@@ -18,7 +18,7 @@ const bufferData = [
     -2, 2, -2
 ];
 
-setArrayBufferData($.ARRAY_BUFFER_DEBUG, bufferData);
+setArrayBufferData($.ARRAY_BUFFER_DEBUG, bufferData, $.DYNAMIC_DRAW);
 
 const debugProgram = new ProgramData($.PROGRAM_DEBUG);
 debugProgram.setAttributes($.ARRAY_BUFFER_DEBUG, { [$.A_POSITION]: 0 });

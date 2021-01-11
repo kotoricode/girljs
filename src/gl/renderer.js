@@ -13,9 +13,8 @@ import {
     enable,
     getBufferSize,
     setTextureParami,
-    bindUniformBlock,
     unbindTexture,
-    useProgram
+    useProgramBindBlocks
 } from "./gl-helper";
 import { ProgramData } from "./program-data";
 
@@ -90,7 +89,7 @@ export const render = (scene) =>
 
     // Framebuffer to canvas
     gl.bindFramebuffer($.FRAMEBUFFER, null);
-    useProgram(viewProgramData.program);
+    useProgramBindBlocks(viewProgramData);
 
     bindTexture(framebufferTexture);
     renderTriangle(viewProgramData.vao);
@@ -105,12 +104,11 @@ const renderDebug = () =>
     disable($.DEPTH_TEST);
     depthMask(false);
 
-    const { program, vao } = getDebugProgram();
-    useProgram(program);
+    const programData = getDebugProgram();
+    useProgramBindBlocks(programData);
 
-    bindUniformBlock(program, $.UNIFORM_BUFFER_CAMERA, $.UB_CAMERA);
     const bufferSize = getBufferSize($.ARRAY_BUFFER_DEBUG);
-    drawArraysVao($.LINES, 0, bufferSize / 3, vao);
+    drawArraysVao($.LINES, 0, bufferSize / 3, programData.vao);
 };
 
 const renderQueue = (queueId) =>
@@ -119,11 +117,7 @@ const renderQueue = (queueId) =>
 
     for (const { programData, texture } of queue)
     {
-        const { program } = programData;
-
-        useProgram(program);
-        bindUniformBlock(program, $.UNIFORM_BUFFER_CAMERA, $.UB_CAMERA);
-
+        useProgramBindBlocks(programData);
         bindTexture(texture);
         programData.setUniforms();
         renderTriangleStrip(programData.vao);
