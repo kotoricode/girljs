@@ -34,8 +34,10 @@ const onResize = () =>
     canvasRect = gameCanvas.getBoundingClientRect();
 };
 
+const once = { once: true };
+
 // Modern browsers won't autoplay audio before user interaction
-window.addEventListener("mousedown", initAudio, { once: true });
+window.addEventListener("mousedown", initAudio, once);
 
 /*------------------------------------------------------------------------------
     Canvases
@@ -54,10 +56,12 @@ const uiStyle = uiCanvas.style;
 
 let canvasRect;
 
-for (const resizeEvent of ["DOMContentLoaded", "load", "resize"])
+for (const loadEvent of ["DOMContentLoaded", "load"])
 {
-    window.addEventListener(resizeEvent, onResize);
+    window.addEventListener(loadEvent, onResize, once);
 }
+
+window.addEventListener("resize", onResize);
 
 /*------------------------------------------------------------------------------
     Mouse
