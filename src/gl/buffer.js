@@ -1,69 +1,73 @@
 import * as $ from "../const";
 import { gl } from "../dom";
 
-export const bindArrayBuffer = (bufferId) => bindBuffer(
-    $.ARRAY_BUFFER, bufferId
-);
-
-const bindBuffer = (bufferType, bufferId) =>
-{
-    const buffer = getBuffer(bufferType, bufferId);
-    gl.bindBuffer(bufferType, buffer);
-};
-
-const bufferData = (bufferType, data, usage) => gl.bufferData(
-    bufferType, data, usage
-);
-
-export const getArrayBufferSize = (bufferId) =>
-{
-    if (arrayBufferSizes.has(bufferId))
+export const Buffer = {
+    bindAsArray(bufferId)
     {
-        return arrayBufferSizes.get(bufferId);
-    }
-
-    throw bufferId;
-};
-
-const getBuffer = (bufferType, bufferId) =>
-{
-    if (!buffers.has(bufferType))
+        Buffer.bind($.ARRAY_BUFFER, bufferId);
+    },
+    bind(bufferType, bufferId)
     {
-        throw bufferType;
-    }
-
-    const typeBuffers = buffers.get(bufferType);
-
-    if (typeBuffers.has(bufferId))
+        const buffer = Buffer.get(bufferType, bufferId);
+        gl.bindBuffer(bufferType, buffer);
+    },
+    data(bufferType, data, usage)
     {
-        return typeBuffers.get(bufferId);
+        gl.bufferData(bufferType, data, usage);
+    },
+    get(bufferType, bufferId)
+    {
+        if (!buffers.has(bufferType))
+        {
+            throw bufferType;
+        }
+
+        const typeBuffers = buffers.get(bufferType);
+
+        if (typeBuffers.has(bufferId))
+        {
+            return typeBuffers.get(bufferId);
+        }
+
+        throw bufferId;
+    },
+    getAsUniform(bufferId)
+    {
+        return Buffer.get($.UNIFORM_BUFFER, bufferId);
+    },
+    getSize(bufferId)
+    {
+        if (arrayBufferSizes.has(bufferId))
+        {
+            return arrayBufferSizes.get(bufferId);
+        }
+
+        throw bufferId;
+    },
+    set(bufferType, bufferId, data, usage)
+    {
+        Buffer.bind(bufferType, bufferId);
+        Buffer.data(bufferType, data, usage);
+        Buffer.unbind(bufferType);
+    },
+    setAsArray(bufferId, data, usage)
+    {
+        Buffer.set($.ARRAY_BUFFER, bufferId, data, usage);
+        arrayBufferSizes.set(bufferId, data.length);
+    },
+    setAsUniform(bufferId, data)
+    {
+        Buffer.set($.UNIFORM_BUFFER, bufferId, data, $.DYNAMIC_DRAW);
+    },
+    unbind(bufferType)
+    {
+        gl.bindBuffer(bufferType, null);
+    },
+    unbindAsArray()
+    {
+        Buffer.unbind($.ARRAY_BUFFER);
     }
-
-    throw bufferId;
 };
-
-const getUniformBuffer = (bufferId) => getBuffer($.UNIFORM_BUFFER, bufferId);
-
-export const setArrayBuffer = (bufferId, data, usage) =>
-{
-    setBuffer($.ARRAY_BUFFER, bufferId, data, usage);
-    arrayBufferSizes.set(bufferId, data.length);
-};
-
-const setBuffer = (bufferType, bufferId, data, usage) =>
-{
-    bindBuffer(bufferType, bufferId);
-    bufferData(bufferType, data, usage);
-    unbindBuffer(bufferType);
-};
-
-export const setUniformBuffer = (bufferId, data) => setBuffer(
-    $.UNIFORM_BUFFER, bufferId, data, $.DYNAMIC_DRAW
-);
-
-export const unbindArrayBuffer = () => unbindBuffer($.ARRAY_BUFFER);
-
-const unbindBuffer = (bufferType) => gl.bindBuffer(bufferType, null);
 
 const reduceFunc = (array, bufferId) => (
     array.push([bufferId, gl.createBuffer()]),
@@ -91,7 +95,7 @@ export const bindingPoints = [$.BUF_UNI_CAMERA];
 for (let i = 0; i < bindingPoints.length; i++)
 {
     const bufferId = bindingPoints[i];
-    const buffer = getUniformBuffer(bufferId);
+    const buffer = Buffer.getAsUniform(bufferId);
     gl.bindBufferBase($.UNIFORM_BUFFER, i, buffer);
 }
 

@@ -1,6 +1,6 @@
 import * as $ from "../const";
 import { BufferData } from "../math/buffer-data";
-import { setArrayBuffer } from "./buffer";
+import { Buffer } from "./buffer";
 import { ProgramData } from "./program-data";
 
 export const getDebugProgram = () =>
@@ -19,7 +19,7 @@ const bufferData = new BufferData([
     -2, 2, -2
 ]);
 
-setArrayBuffer(
+Buffer.setAsArray(
     $.BUF_ARR_DEBUG,
     bufferData,
     $.DYNAMIC_DRAW
