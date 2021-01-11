@@ -27,7 +27,7 @@ const getViewProgramData = () =>
         [$.A_UV]: model.uvOffset
     };
 
-    const programData = new ProgramData($.PROGRAM_GRAY);
+    const programData = new ProgramData($.PROGRAM_VIEW);
     programData.setAttributes($.BUFFER_POLYGON, offsets);
 
     return programData;
@@ -94,7 +94,6 @@ export const render = (scene) =>
 
     bindTexture(framebufferTexture);
     renderTriangle(viewProgramData.vao);
-    //renderTriangleStrip(viewVao);
     unbindTexture();
 
     // Debug

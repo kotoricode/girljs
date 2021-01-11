@@ -1,14 +1,14 @@
 import * as $ from "../const";
 import { gl } from "../dom";
 
-import vsStandard from "./shaders/standard.vert";
-import fsGray     from "./shaders/gray.frag";
-import vsSprite   from "./shaders/sprite.vert";
-import fsSprite   from "./shaders/sprite.frag";
-import vsTiled    from "./shaders/tiled.vert";
-import fsTiled    from "./shaders/tiled.frag";
-import vsColor    from "./shaders/color.vert";
-import fsColor    from "./shaders/color.frag";
+import vsView   from "./shaders/view.vert";
+import fsView   from "./shaders/view.frag";
+import vsSprite from "./shaders/sprite.vert";
+import fsSprite from "./shaders/sprite.frag";
+import vsTiled  from "./shaders/tiled.vert";
+import fsTiled  from "./shaders/tiled.frag";
+import vsColor  from "./shaders/color.vert";
+import fsColor  from "./shaders/color.frag";
 
 const createAttachShader = (program, shaderId, vertFrag) =>
 {
@@ -88,8 +88,8 @@ const vertDef = {
         },
         attributes: attribPos
     },
-    standard: {
-        src: vsStandard,
+    view: {
+        src: vsView,
         attributes: attribPosUv
     },
     sprite: {
@@ -116,8 +116,8 @@ const fragDef = {
     color: {
         src: fsColor
     },
-    gray: {
-        src: fsGray
+    view: {
+        src: fsView
     },
     sprite: {
         src: fsSprite,
@@ -138,10 +138,10 @@ const fragDef = {
     Program definitions
 ------------------------------------------------------------------------------*/
 const newProgramDef = [
-    $.PROGRAM_GRAY,   vertDef.standard, fragDef.gray,
-    $.PROGRAM_SPRITE, vertDef.sprite,   fragDef.sprite,
-    $.PROGRAM_TILED,  vertDef.tiled,    fragDef.tiled,
-    $.PROGRAM_DEBUG,  vertDef.color,    fragDef.color
+    $.PROGRAM_VIEW,   vertDef.view,   fragDef.view,
+    $.PROGRAM_SPRITE, vertDef.sprite, fragDef.sprite,
+    $.PROGRAM_TILED,  vertDef.tiled,  fragDef.tiled,
+    $.PROGRAM_DEBUG,  vertDef.color,  fragDef.color
 ];
 
 /*------------------------------------------------------------------------------

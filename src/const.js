@@ -17,7 +17,7 @@ export const
 
 export const
     PROGRAM_DEBUG = 0,
-    PROGRAM_GRAY = 1,
+    PROGRAM_VIEW = 1,
     PROGRAM_SPRITE = 2,
     PROGRAM_TILED = 3;
 
