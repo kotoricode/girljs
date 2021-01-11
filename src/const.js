@@ -4,10 +4,10 @@ export const
     SCREEN_ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT;
 
 export const
-    ARRAY_BUFFER_SPRITE = 0,
-    ARRAY_BUFFER_POLYGON = 1,
-    ARRAY_BUFFER_DEBUG = 2,
-    UNIFORM_BUFFER_CAMERA = 3;
+    BUF_ARR_SPRITE = 0,
+    BUF_ARR_POLYGON = 1,
+    BUF_ARR_DEBUG = 2,
+    BUF_UNI_CAMERA = 3;
 
 export const
     MODEL_GROUND = 0,
@@ -17,10 +17,10 @@ export const
     MODEL_POLYGON = 4;
 
 export const
-    PROGRAM_DEBUG = 0,
-    PROGRAM_VIEW = 1,
-    PROGRAM_SPRITE = 2,
-    PROGRAM_TILED = 3;
+    PROG_DEBUG = 0,
+    PROG_VIEW = 1,
+    PROG_SPRITE = 2,
+    PROG_TILED = 3;
 
 export const
     ENTITY_GROUND = 0,
@@ -31,12 +31,12 @@ export const
     SCENE_TEST = 0;
 
 export const
-    EVENT_CANVAS_RESIZED = 0;
+    EVENT_RESIZED = 0;
 
 export const
-    SUBTEXTURE_BRAID = 0,
-    SUBTEXTURE_BG = 1,
-    SUBTEXTURE_UKKO = 2;
+    SUBTEX_BRAID = 0,
+    SUBTEX_BG = 1,
+    SUBTEX_UKKO = 2;
 
 export const
     AUDIO_OMOIDE = "omoide_loft.ogg";
@@ -65,12 +65,12 @@ export const
     A_UV = "a_uv";
 
 export const
-    UNIFORM_BLOCK_CAMERA = "camera";
+    UB_CAMERA = "camera";
 
 export const
-    TEXTURE_POLY = "texture.png",
-    TEXTURE_SPRITE = "test.png",
-    TEXTURE_BRAID = "braid.png";
+    TEX_POLY = "texture.png",
+    TEX_SPRITE = "test.png",
+    TEX_BRAID = "braid.png";
 
 export const
     /*--------------------------------------------------------------------------

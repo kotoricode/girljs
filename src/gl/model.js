@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { setArrayBufferData } from "./gl-helper";
+import { setArrayBuffer } from "./gl-helper";
 import { getSubTextureData } from "./texture";
 
 const getXy = (minX, maxX, minY, maxY) =>
@@ -60,9 +60,9 @@ const bytes = Float32Array.BYTES_PER_ELEMENT;
     Sprites
 ------------------------------------------------------------------------------*/
 const spriteModelData = [
-    $.MODEL_GROUND,  getXz(-2, 2, -2, 2),      $.SUBTEXTURE_BG,
-    $.MODEL_PLAYER,  getXy(-0.4, 0.4, 0, 1.5), $.SUBTEXTURE_UKKO,
-    $.MODEL_PLAYER2, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEXTURE_BRAID,
+    $.MODEL_GROUND,  getXz(-2, 2, -2, 2),      $.SUBTEX_BG,
+    $.MODEL_PLAYER,  getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_UKKO,
+    $.MODEL_PLAYER2, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID,
 ];
 
 const xyzSize = 12;
@@ -99,7 +99,11 @@ for (let i = 0; i < spriteModelData.length;)
     }
 }
 
-setArrayBufferData($.ARRAY_BUFFER_SPRITE, spriteBufferData, $.STATIC_DRAW);
+setArrayBuffer(
+    $.BUF_ARR_SPRITE,
+    new Float32Array(spriteBufferData),
+    $.STATIC_DRAW
+);
 
 /*------------------------------------------------------------------------------
     Polygons
@@ -140,4 +144,8 @@ for (let i = 0; i < polygonModelData.length;)
     }
 }
 
-setArrayBufferData($.ARRAY_BUFFER_POLYGON, polygonBufferData, $.STATIC_DRAW);
+setArrayBuffer(
+    $.BUF_ARR_POLYGON,
+    new Float32Array(polygonBufferData),
+    $.STATIC_DRAW
+);

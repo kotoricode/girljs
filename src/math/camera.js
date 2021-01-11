@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { setUniformBufferData } from "../gl/gl-helper";
+import { setUniformBuffer } from "../gl/gl-helper";
 import { DEG_TO_RAD } from "./math-helper";
 import { Matrix4 } from "./matrix4";
 import { Transform } from "./transform";
@@ -52,7 +52,7 @@ export const setCameraPosition = (vec) =>
         Update UBO
     --------------------------------------------------------------------------*/
     vpData.set(viewProjection);
-    setUniformBufferData($.UNIFORM_BUFFER_CAMERA, vpData);
+    setUniformBuffer($.BUF_UNI_CAMERA, vpData);
 };
 
 const f = 1000;

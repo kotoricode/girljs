@@ -27,7 +27,7 @@ const onResize = () =>
             uiStyle.height = height + "px";
 
             gl.viewport(0, 0, width, height);
-            publish($.EVENT_CANVAS_RESIZED);
+            publish($.EVENT_RESIZED);
         }
     }
 

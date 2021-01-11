@@ -2,26 +2,30 @@ import * as $ from "../const";
 import { gl } from "../dom";
 import { bindVao, unbindVao } from "./vao";
 
-export const bindArrayBuffer = (bufferId) =>
+/*------------------------------------------------------------------------------
+    Helper functions
+------------------------------------------------------------------------------*/
+export const bindArrayBuffer = (bufferId) => bindBuffer(
+    $.ARRAY_BUFFER, bufferId
+);
+
+const bindBuffer = (bufferType, bufferId) =>
 {
-    const buffer = getArrayBuffer(bufferId);
-    gl.bindBuffer($.ARRAY_BUFFER, buffer);
+    const buffer = getBuffer(bufferType, bufferId);
+    gl.bindBuffer(bufferType, buffer);
 };
 
-export const depthMask = (state) =>
-{
-    gl.depthMask(state);
-};
+const bufferData = (bufferType, data, usage) => gl.bufferData(
+    bufferType, data, usage
+);
 
-export const disable = (cap) =>
-{
-    gl.disable(cap);
-};
+export const depthMask = (state) => gl.depthMask(state);
 
-export const drawArrays = (mode, offset, length) =>
-{
-    gl.drawArrays(mode, offset, length);
-};
+export const disable = (cap) => gl.disable(cap);
+
+export const drawArrays = (mode, offset, length) => gl.drawArrays(
+    mode, offset, length
+);
 
 export const drawArraysVao = (mode, offset, length, vao) =>
 {
@@ -30,64 +34,51 @@ export const drawArraysVao = (mode, offset, length, vao) =>
     unbindVao();
 };
 
-export const enable = (cap) =>
-{
-    gl.enable(cap);
-};
+export const enable = (cap) => gl.enable(cap);
 
-const getArrayBuffer = (bufferId) =>
+export const getArrayBufferSize = (bufferId) =>
 {
-    if (arrayBuffers.has(bufferId))
+    if (arrayBufferSizes.has(bufferId))
     {
-        return arrayBuffers.get(bufferId);
+        return arrayBufferSizes.get(bufferId);
     }
 
     throw bufferId;
 };
 
-export const getBufferSize = (bufferId) =>
+const getBuffer = (bufferType, bufferId) =>
 {
-    if (bufferSizes.has(bufferId))
+    if (!buffers.has(bufferType))
     {
-        return bufferSizes.get(bufferId);
+        throw bufferType;
+    }
+
+    const typeBuffers = buffers.get(bufferType);
+
+    if (typeBuffers.has(bufferId))
+    {
+        return typeBuffers.get(bufferId);
     }
 
     throw bufferId;
 };
 
-const getUniformBuffer = (bufferId) =>
-{
-    if (uniformBuffers.has(bufferId))
-    {
-        return uniformBuffers.get(bufferId);
-    }
+const getUniformBuffer = (bufferId) => getBuffer($.UNIFORM_BUFFER, bufferId);
 
-    throw bufferId;
+export const setArrayBuffer = (bufferId, data, usage) =>
+{
+    setBuffer($.ARRAY_BUFFER, bufferId, data, usage);
+    arrayBufferSizes.set(bufferId, data.length);
 };
 
-export const setArrayBufferData = (bufferId, data, usage) =>
+const setBuffer = (bufferType, bufferId, data, usage) =>
 {
-    bindArrayBuffer(bufferId);
-    gl.bufferData($.ARRAY_BUFFER, new Float32Array(data), usage);
-    unbindArrayBuffer();
-
-    bufferSizes.set(bufferId, data.length);
+    bindBuffer(bufferType, bufferId);
+    bufferData(bufferType, data, usage);
+    unbindBuffer(bufferType);
 };
 
-export const setUniformBufferData = (bufferId, data) =>
-{
-    const buffer = getUniformBuffer(bufferId);
-    gl.bindBuffer($.UNIFORM_BUFFER, buffer);
-    gl.bufferData($.UNIFORM_BUFFER, data, $.DYNAMIC_DRAW);
-    gl.bindBuffer($.UNIFORM_BUFFER, null);
-};
-
-export const unbindArrayBuffer = () =>
-{
-    gl.bindBuffer($.ARRAY_BUFFER, null);
-};
-
-export const useProgramBindBlocks = (programData) =>
+export const setProgram = (programData) =>
 {
     const program = programData.program;
 
@@ -117,24 +108,43 @@ export const useProgramBindBlocks = (programData) =>
     }
 };
 
+export const setUniformBuffer = (bufferId, data) => setBuffer(
+    $.UNIFORM_BUFFER, bufferId, data, $.DYNAMIC_DRAW
+);
+
+export const unbindArrayBuffer = () => unbindBuffer($.ARRAY_BUFFER);
+const unbindBuffer = (bufferType) => gl.bindBuffer(bufferType, null);
+
+/*------------------------------------------------------------------------------
+    Setup
+------------------------------------------------------------------------------*/
 const reduceFunc = (array, bufferId) => (
     array.push([bufferId, gl.createBuffer()]),
     array
 );
 
-const arrayBuffers = new Map([
-    $.ARRAY_BUFFER_SPRITE,
-    $.ARRAY_BUFFER_POLYGON,
-    $.ARRAY_BUFFER_DEBUG
-].reduce(reduceFunc, []));
+const arrayBuffers = new Map(
+    [
+        $.BUF_ARR_SPRITE,
+        $.BUF_ARR_POLYGON,
+        $.BUF_ARR_DEBUG
+    ].reduce(reduceFunc, [])
+);
 
-const uniformBuffers = new Map([
-    $.UNIFORM_BUFFER_CAMERA
-].reduce(reduceFunc, []));
+const uniformBuffers = new Map(
+    [
+        $.BUF_UNI_CAMERA
+    ].reduce(reduceFunc, [])
+);
+
+const buffers = new Map([
+    [$.ARRAY_BUFFER, arrayBuffers],
+    [$.UNIFORM_BUFFER, uniformBuffers]
+]);
 
 let oldProgram;
-const bufferSizes = new Map();
-const bindingPoints = [$.UNIFORM_BUFFER_CAMERA];
+const arrayBufferSizes = new Map();
+const bindingPoints = [$.BUF_UNI_CAMERA];
 
 for (let i = 0; i < bindingPoints.length; i++)
 {
@@ -144,5 +154,5 @@ for (let i = 0; i < bindingPoints.length; i++)
 }
 
 const blockBuffers = new Map([
-    [$.UNIFORM_BLOCK_CAMERA, $.UNIFORM_BUFFER_CAMERA]
+    [$.UB_CAMERA, $.BUF_UNI_CAMERA]
 ]);

@@ -15,7 +15,7 @@ export const blueprint = new Map([
                     new Space(),
                     new Motion(3),
                     new Player(),
-                    new Sprite($.PROGRAM_SPRITE, $.MODEL_PLAYER2)
+                    new Sprite($.PROG_SPRITE, $.MODEL_PLAYER2)
                 ],
                 children: null
             }],
@@ -25,7 +25,7 @@ export const blueprint = new Map([
                     new Ground(-2, 2, -2, 2),
                     //new Collider(new BoxCollider(-300, -300, 600, 600)),
                     new Sprite(
-                        $.PROGRAM_TILED,
+                        $.PROG_TILED,
                         $.MODEL_GROUND,
                         {
                             [$.U_UVREPEAT]: [4, 4],

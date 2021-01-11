@@ -46,7 +46,7 @@ export const getPreparedProgram = (programId) =>
 ------------------------------------------------------------------------------*/
 const uniArrZeroZero = [0, 0];
 
-const ubCamera = [$.UNIFORM_BLOCK_CAMERA];
+const ubCamera = [$.UB_CAMERA];
 
 const attribPos = {
     [$.A_POSITION]: 3
@@ -140,10 +140,10 @@ const fragDef = {
     Program definitions
 ------------------------------------------------------------------------------*/
 const programDef = [
-    $.PROGRAM_VIEW,   vertDef.view,   fragDef.view,
-    $.PROGRAM_SPRITE, vertDef.sprite, fragDef.sprite,
-    $.PROGRAM_TILED,  vertDef.tiled,  fragDef.tiled,
-    $.PROGRAM_DEBUG,  vertDef.color,  fragDef.color
+    $.PROG_VIEW,   vertDef.view,   fragDef.view,
+    $.PROG_SPRITE, vertDef.sprite, fragDef.sprite,
+    $.PROG_TILED,  vertDef.tiled,  fragDef.tiled,
+    $.PROG_DEBUG,  vertDef.color,  fragDef.color
 ];
 
 /*------------------------------------------------------------------------------

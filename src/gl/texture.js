@@ -102,9 +102,9 @@ const paramiMinLinMaxLin = [
 
 // name/url, width, height, parami[]
 const textureDef = [
-    $.TEXTURE_BRAID, 1024, 1024, paramiMinLinMaxLin,
-    $.TEXTURE_POLY,   512,  512, paramiMinLinMaxLin,
-    $.TEXTURE_SPRITE, 256,  256, paramiMinLinMaxLin
+    $.TEX_BRAID, 1024, 1024, paramiMinLinMaxLin,
+    $.TEX_POLY,   512,  512, paramiMinLinMaxLin,
+    $.TEX_SPRITE, 256,  256, paramiMinLinMaxLin
 ];
 
 const textureData = new Map();
@@ -125,9 +125,9 @@ for (let i = 0; i < textureDef.length;)
 ------------------------------------------------------------------------------*/
 // name, x, y, width, height, textureData name/url
 const subTextureDef = [
-    $.SUBTEXTURE_BRAID, 8, 10, 119, 129, $.TEXTURE_BRAID,
-    $.SUBTEXTURE_BG,   94, 97, 256, 256, $.TEXTURE_POLY,
-    $.SUBTEXTURE_UKKO,  0,  0, 256, 256, $.TEXTURE_SPRITE
+    $.SUBTEX_BRAID, 8, 10, 119, 129, $.TEX_BRAID,
+    $.SUBTEX_BG,   94, 97, 256, 256, $.TEX_POLY,
+    $.SUBTEX_UKKO,  0,  0, 256, 256, $.TEX_SPRITE
 ];
 
 const subTextureData = new Map();

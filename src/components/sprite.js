@@ -30,7 +30,7 @@ export class Sprite extends Component
         this.attribOffsets[$.A_UV] = this.model.uvOffset;
 
         this.programData.setAttributes(
-            $.ARRAY_BUFFER_SPRITE,
+            $.BUF_ARR_SPRITE,
             this.attribOffsets
         );
 
@@ -50,7 +50,7 @@ export class Sprite extends Component
         }
 
         // Program-specific uniforms
-        if (this.programData.programId === $.PROGRAM_TILED)
+        if (this.programData.programId === $.PROG_TILED)
         {
             const [
                 uvMinX, uvMaxY,

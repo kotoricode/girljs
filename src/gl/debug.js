@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { setArrayBufferData } from "./gl-helper";
+import { setArrayBuffer } from "./gl-helper";
 import { ProgramData } from "./program-data";
 
 export const getDebugProgram = () =>
@@ -18,7 +18,11 @@ const bufferData = [
     -2, 2, -2
 ];
 
-setArrayBufferData($.ARRAY_BUFFER_DEBUG, bufferData, $.DYNAMIC_DRAW);
+setArrayBuffer(
+    $.BUF_ARR_DEBUG,
+    new Float32Array(bufferData),
+    $.DYNAMIC_DRAW
+);
 
-const debugProgram = new ProgramData($.PROGRAM_DEBUG);
-debugProgram.setAttributes($.ARRAY_BUFFER_DEBUG, { [$.A_POSITION]: 0 });
+const debugProgram = new ProgramData($.PROG_DEBUG);
+debugProgram.setAttributes($.BUF_ARR_DEBUG, { [$.A_POSITION]: 0 });

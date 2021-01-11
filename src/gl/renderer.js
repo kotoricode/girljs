@@ -9,8 +9,8 @@ import {
     disable,
     drawArraysVao,
     enable,
-    getBufferSize,
-    useProgramBindBlocks
+    getArrayBufferSize,
+    setProgram
 } from "./gl-helper";
 
 import {
@@ -27,8 +27,8 @@ const getViewProgramData = () =>
         [$.A_UV]: model.uvOffset
     };
 
-    const programData = new ProgramData($.PROGRAM_VIEW);
-    programData.setAttributes($.ARRAY_BUFFER_POLYGON, offsets);
+    const programData = new ProgramData($.PROG_VIEW);
+    programData.setAttributes($.BUF_ARR_POLYGON, offsets);
 
     return programData;
 };
@@ -85,12 +85,12 @@ export const render = (scene) =>
     depthMask(true);
 
     // Render world to framebuffer
-    renderQueue($.PROGRAM_TILED);
-    renderQueue($.PROGRAM_SPRITE);
+    renderQueue($.PROG_TILED);
+    renderQueue($.PROG_SPRITE);
 
     // Framebuffer to canvas
     gl.bindFramebuffer($.FRAMEBUFFER, null);
-    useProgramBindBlocks(viewProgramData);
+    setProgram(viewProgramData);
 
     bindTexture(framebufferTexture);
     renderTriangle(viewProgramData.vao);
@@ -106,9 +106,9 @@ const renderDebug = () =>
     depthMask(false);
 
     const programData = getDebugProgram();
-    useProgramBindBlocks(programData);
+    setProgram(programData);
 
-    const bufferSize = getBufferSize($.ARRAY_BUFFER_DEBUG);
+    const bufferSize = getArrayBufferSize($.BUF_ARR_DEBUG);
     drawArraysVao($.LINES, 0, bufferSize / 3, programData.vao);
 };
 
@@ -118,7 +118,7 @@ const renderQueue = (queueId) =>
 
     for (const { programData, texture } of queue)
     {
-        useProgramBindBlocks(programData);
+        setProgram(programData);
         bindTexture(texture);
         programData.setUniforms();
         renderTriangleStrip(programData.vao);
@@ -137,7 +137,7 @@ const renderTriangle = (vao) =>
     drawArraysVao($.TRIANGLES, 0, 6, vao);
 };
 
-subscribe($.EVENT_CANVAS_RESIZED, () => isCanvasResized = true);
+subscribe($.EVENT_RESIZED, () => isCanvasResized = true);
 
 enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
@@ -149,6 +149,6 @@ let isCanvasResized = true;
 let framebufferTexture;
 
 const queues = new Map([
-    [$.PROGRAM_SPRITE, []],
-    [$.PROGRAM_TILED, []]
+    [$.PROG_SPRITE, []],
+    [$.PROG_TILED, []]
 ]);
