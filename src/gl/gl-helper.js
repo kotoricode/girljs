@@ -1,19 +1,13 @@
 import * as $ from "../const";
 import { gl } from "../dom";
 
-export const bindBuffer = (bufferId) =>
+export const bindArrayBuffer = (bufferId) =>
 {
-    if (activeBuffer)
-    {
-        throw Error(`${bufferId}, ${activeBuffer}`);
-    }
-
     if (!buffers.has(bufferId))
     {
         throw bufferId;
     }
 
-    activeBuffer = bufferId;
     const buffer = buffers.get(bufferId);
     gl.bindBuffer($.ARRAY_BUFFER, buffer);
 };
@@ -31,8 +25,6 @@ export const bindVao = (vao) =>
 {
     gl.bindVertexArray(vao);
 };
-
-export const createBuffer = () => gl.createBuffer();
 
 export const createTexture = () => gl.createTexture();
 
@@ -95,9 +87,9 @@ export const getBufferSize = (bufferId) =>
 
 export const setBufferData = (bufferId, data, usage) =>
 {
-    bindBuffer(bufferId);
+    bindArrayBuffer(bufferId);
     gl.bufferData($.ARRAY_BUFFER, new Float32Array(data), usage);
-    unbindBuffer();
+    unbindArrayBuffer();
 
     bufferSizes.set(bufferId, data.length);
 };
@@ -117,9 +109,8 @@ export const unbindVao = () =>
     bindVao(null);
 };
 
-export const unbindBuffer = () =>
+export const unbindArrayBuffer = () =>
 {
-    activeBuffer = null;
     gl.bindBuffer($.ARRAY_BUFFER, null);
 };
 
@@ -132,16 +123,24 @@ export const useProgram = (program) =>
     }
 };
 
-const buffers = new Map([
-    [ $.BUFFER_SPRITE, createBuffer() ],
-    [ $.BUFFER_POLYGON, createBuffer() ],
-    [ $.BUFFER_DEBUG, createBuffer() ]
-]);
+const buffers = new Map(
+    [
+        $.BUFFER_ARRAY_SPRITE,
+        $.BUFFER_ARRAY_POLYGON,
+        $.BUFFER_ARRAY_DEBUG,
+        $.BUFFER_UNIFORM_VIEWPROJECTION
+    ].reduce(
+        (array, bufferId) => (
+            array.push([bufferId, gl.createBuffer()]),
+            array
+        ),
+        []
+    )
+);
 
 const bufferSizes = new Map();
 
 const vaos = new Map();
 
-let activeBuffer;
 let oldProgram;
 let oldTexture;

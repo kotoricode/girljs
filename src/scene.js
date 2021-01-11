@@ -108,8 +108,6 @@ export class Scene
 
     initNewSpriteUniforms()
     {
-        const vp = getViewProjection();
-
         for (const entity of this.newSpriteEntities)
         {
             const [{ programData }, { matrix }] = entity.getComponents(
@@ -118,7 +116,6 @@ export class Scene
             );
 
             programData.stageUniformAtIndex($.U_TRANSFORM, 1, matrix);
-            programData.stageUniformAtIndex($.U_VIEWPROJECTION, 1, vp);
         }
     }
 

@@ -99,7 +99,7 @@ for (let i = 0; i < spriteModelData.length;)
     }
 }
 
-setBufferData($.BUFFER_SPRITE, spriteBufferData, $.STATIC_DRAW);
+setBufferData($.BUFFER_ARRAY_SPRITE, spriteBufferData, $.STATIC_DRAW);
 
 /*------------------------------------------------------------------------------
     Polygons
@@ -140,4 +140,4 @@ for (let i = 0; i < polygonModelData.length;)
     }
 }
 
-setBufferData($.BUFFER_POLYGON, polygonBufferData, $.STATIC_DRAW);
+setBufferData($.BUFFER_ARRAY_POLYGON, polygonBufferData, $.STATIC_DRAW);

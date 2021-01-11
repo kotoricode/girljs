@@ -3,7 +3,6 @@ import { gl } from "../dom";
 import { Sprite } from "../components/sprite";
 import { getModel } from "./model";
 import { subscribe } from "../utils/publisher";
-import { getViewProjection } from "../math/camera";
 import { getDebugProgram } from "./debug";
 import {
     bindTexture,
@@ -18,6 +17,7 @@ import {
     useProgram
 } from "./gl-helper";
 import { ProgramData } from "./program-data";
+import { cameraBindUniformBlock } from "../math/camera";
 
 const getViewProgramData = () =>
 {
@@ -28,7 +28,7 @@ const getViewProgramData = () =>
     };
 
     const programData = new ProgramData($.PROGRAM_VIEW);
-    programData.setAttributes($.BUFFER_POLYGON, offsets);
+    programData.setAttributes($.BUFFER_ARRAY_POLYGON, offsets);
 
     return programData;
 };
@@ -106,18 +106,8 @@ const renderDebug = () =>
     depthMask(false);
 
     const programData = getDebugProgram();
-
     useProgram(programData.program);
-
-    // gl.uniformBlockBinding(
-    //     programData.program,
-    //     gl.getUniformBlockIndex(programData.program, "perScene"),
-    //     0
-    // );
-
-    const vp = getViewProjection();
-    programData.setUniform($.U_VIEWPROJECTION, [0, vp]);
-    const bufferSize = getBufferSize($.BUFFER_DEBUG);
+    const bufferSize = getBufferSize($.BUFFER_ARRAY_DEBUG);
 
     drawArraysVao($.LINES, 0, bufferSize / 3, programData.vao);
 };
@@ -128,7 +118,11 @@ const renderQueue = (queueId) =>
 
     for (const { programData, texture } of queue)
     {
-        useProgram(programData.program);
+        const { program } = programData;
+
+        useProgram(program);
+        cameraBindUniformBlock(program);
+
         bindTexture(texture);
         programData.setUniforms();
         renderTriangleStrip(programData.vao);

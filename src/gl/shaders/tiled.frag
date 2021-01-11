@@ -6,9 +6,7 @@ uniform vec4 u_color;
 uniform vec2 u_uvOffset;
 uniform vec2 u_uvSize;
 uniform vec2 u_uvRepeat;
-
 in vec2 v_uv;
-
 out vec4 outColor;
 
 void main()

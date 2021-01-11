@@ -29,7 +29,7 @@ export class Sprite extends Component
         this.attribOffsets[$.A_POSITION] = this.model.meshOffset;
         this.attribOffsets[$.A_UV] = this.model.uvOffset;
 
-        this.programData.setAttributes($.BUFFER_SPRITE, this.attribOffsets);
+        this.programData.setAttributes($.BUFFER_ARRAY_SPRITE, this.attribOffsets);
 
         // Texture
         const subTexData = getSubTextureData(this.model.subTextureId);

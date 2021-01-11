@@ -47,6 +47,27 @@ export const setCameraPosition = (vec) =>
     ]);
 
     invViewProjection.invertFrom(viewProjection);
+
+    /*--------------------------------------------------------------------------
+        Update UBO
+    --------------------------------------------------------------------------*/
+    gl.bindBuffer($.UNIFORM_BUFFER, buffer);
+
+    vpData.set(viewProjection);
+
+    gl.bufferData(
+        $.UNIFORM_BUFFER,
+        vpData,
+        $.DYNAMIC_DRAW
+    );
+
+    gl.bindBuffer($.UNIFORM_BUFFER, null);
+};
+
+export const cameraBindUniformBlock = (program) =>
+{
+    const ubIdx = gl.getUniformBlockIndex(program, $.UB_CAMERA);
+    gl.uniformBlockBinding(program, ubIdx, vpIndex);
 };
 
 const f = 1000;
@@ -61,7 +82,6 @@ const transform = new Transform(0, 2.7, 8),
 transform.rotation.fromEuler(0.2, 0, 0);
 
 const buffer = gl.createBuffer();
-gl.bindBuffer(gl.UNIFORM_BUFFER, buffer);
-gl.bufferData(gl.UNIFORM_BUFFER, new Float32Array([2.0]), gl.DYNAMIC_DRAW);
-gl.bindBuffer(gl.UNIFORM_BUFFER, null);
-gl.bindBufferBase(gl.UNIFORM_BUFFER, 0, buffer);
+const vpData = new Float32Array(16);
+const vpIndex = 0;
+gl.bindBufferBase(gl.UNIFORM_BUFFER, vpIndex, buffer);

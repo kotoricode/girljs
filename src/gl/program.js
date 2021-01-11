@@ -56,12 +56,7 @@ const attribPosUv = {
 };
 
 const uniTransVP = {
-    [$.U_TRANSFORM]: uniArrZeroZero,
-    [$.U_VIEWPROJECTION]: uniArrZeroZero,
-};
-
-const uniVP = {
-    [$.U_VIEWPROJECTION]: uniArrZeroZero
+    [$.U_TRANSFORM]: uniArrZeroZero
 };
 
 const uniColor = {
@@ -83,9 +78,6 @@ const uniUvOffsetSize = {
 const vertDef = {
     color: {
         src: vsColor,
-        uniforms: {
-            uniformMatrix4fv: uniVP
-        },
         attributes: attribPos
     },
     view: {

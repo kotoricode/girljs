@@ -2,7 +2,7 @@ import * as $ from "../const";
 import { gl } from "../dom";
 import { getProgram } from "./program";
 import {
-    bindBuffer, bindVao, createVao, deleteVao, unbindBuffer, unbindVao
+    bindArrayBuffer, bindVao, createVao, deleteVao, unbindArrayBuffer, unbindVao
 } from "./gl-helper";
 
 export class ProgramData
@@ -35,7 +35,7 @@ export class ProgramData
     {
         // TODO: share vaos if program & model are the same
         bindVao(this.vao);
-        bindBuffer(bufferId);
+        bindArrayBuffer(bufferId);
 
         for (const [name, attribSize] of Object.entries(this.attributes))
         {
@@ -51,7 +51,7 @@ export class ProgramData
             );
         }
 
-        unbindBuffer();
+        unbindArrayBuffer();
         unbindVao();
     }
 

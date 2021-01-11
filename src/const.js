@@ -4,9 +4,10 @@ export const
     SCREEN_ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT;
 
 export const
-    BUFFER_SPRITE = 0,
-    BUFFER_POLYGON = 1,
-    BUFFER_DEBUG = 2;
+    BUFFER_ARRAY_SPRITE = 0,
+    BUFFER_ARRAY_POLYGON = 1,
+    BUFFER_ARRAY_DEBUG = 2,
+    BUFFER_UNIFORM_VIEWPROJECTION = 3;
 
 export const
     MODEL_GROUND = 0,
@@ -62,13 +63,16 @@ export const
     U_TRANSFORM = "u_transform",
     U_UVOFFSET = "u_uvOffset",
     U_UVREPEAT = "u_uvRepeat",
-    U_UVSIZE = "u_uvSize",
-    U_VIEWPROJECTION = "u_viewprojection";
+    U_UVSIZE = "u_uvSize";
 
 // STRING --- Shader variables
 export const
     A_POSITION = "a_position",
     A_UV = "a_uv";
+
+// STRING --- Uniform block names
+export const
+    UB_CAMERA = "camera";
 
 // STRING --- Filenames
 export const
