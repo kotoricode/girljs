@@ -19,14 +19,12 @@ export const Texture = {
         const texture = Texture.create();
         Texture.bind(texture);
 
-        const { width, height } = gl.canvas;
-
         gl.texImage2D(
             $.TEXTURE_2D,
             0,
             $.RGB,
-            width,
-            height,
+            gl.canvas.width,
+            gl.canvas.height,
             0,
             $.RGB,
             $.UNSIGNED_BYTE,

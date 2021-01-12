@@ -39,12 +39,10 @@ const uvFromSubTexture = (subTextureId) =>
         x, y, width, height, baseData
     } = Texture.getSubTextureData(subTextureId);
 
-    const { width: baseWidth, height: baseHeight } = baseData;
-
-    const minX = x / baseWidth;
-    const maxX = (x + width) / baseWidth;
-    const minY = y / baseHeight;
-    const maxY = (y + height) / baseHeight;
+    const minX = x / baseData.width;
+    const maxX = (x + width) / baseData.width;
+    const minY = y / baseData.height;
+    const maxY = (y + height) / baseData.height;
 
     return [
         minX, maxY,

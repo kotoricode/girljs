@@ -26,6 +26,7 @@ export class Sprite extends Component
     {
         // Model
         this.model = getModel(modelId);
+
         this.attribOffsets[$.A_POSITION] = this.model.meshOffset;
         this.attribOffsets[$.A_UV] = this.model.uvOffset;
 

@@ -17,18 +17,18 @@ export const drawArraysVao = (mode, offset, length, vao) =>
 
 export const enable = (cap) => gl.enable(cap);
 
-export const setProgram = ({ program, uniforms }) =>
+export const setProgram = (programData) =>
 {
+    const { program, uniforms } = programData;
+
     if (program !== oldProgram)
     {
         gl.useProgram(program);
         oldProgram = program;
 
-        const { blocks } = uniforms;
-
-        if (blocks)
+        if (uniforms.blocks)
         {
-            for (const blockId of blocks)
+            for (const blockId of uniforms.blocks)
             {
                 const bufferId = BufferUniform.getBufferByBlock(blockId);
                 const bindingPoint = BufferUniform.getBindingPoint(bufferId);
