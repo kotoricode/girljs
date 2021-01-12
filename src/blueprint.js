@@ -25,7 +25,7 @@ export const blueprint = new Map([
                     new Ground(-2, 2, -2, 2),
                     //new Collider(new BoxCollider(-300, -300, 600, 600)),
                     new Sprite(
-                        $.PROG_TILED,
+                        $.PROG_POLYGON,
                         $.MODEL_GROUND,
                         {
                             [$.U_UVREPEAT]: [4, 4],

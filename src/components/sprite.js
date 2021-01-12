@@ -50,7 +50,7 @@ export class Sprite extends Component
         }
 
         // Program-specific uniforms
-        if (this.programData.programId === $.PROG_TILED)
+        if (this.programData.programId === $.PROG_POLYGON)
         {
             const [
                 uvMinX, uvMaxY,

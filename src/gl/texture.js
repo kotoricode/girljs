@@ -14,6 +14,36 @@ export const Texture = {
     {
         return gl.createTexture();
     },
+    createFramebufferTexture()
+    {
+        const texture = Texture.create();
+        Texture.bind(texture);
+
+        gl.texImage2D(
+            $.TEXTURE_2D,
+            0,
+            $.RGB,
+            gl.canvas.width,
+            gl.canvas.height,
+            0,
+            $.RGB,
+            $.UNSIGNED_BYTE,
+            null
+        );
+
+        Texture.setParami($.TEXTURE_MIN_FILTER, $.LINEAR);
+        Texture.unbind();
+
+        gl.framebufferTexture2D(
+            $.FRAMEBUFFER,
+            $.COLOR_ATTACHMENT0,
+            $.TEXTURE_2D,
+            texture,
+            0
+        );
+
+        return texture;
+    },
     getSubTextureData(subTextureId)
     {
         if (subTextureData.has(subTextureId))

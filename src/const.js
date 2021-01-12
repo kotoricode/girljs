@@ -20,7 +20,7 @@ export const
     PROG_DEBUG = 0,
     PROG_VIEW = 1,
     PROG_SPRITE = 2,
-    PROG_TILED = 3;
+    PROG_POLYGON = 3;
 
 export const
     ENTITY_GROUND = 0,

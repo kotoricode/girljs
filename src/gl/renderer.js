@@ -48,42 +48,17 @@ export const render = (scene) =>
     if (isCanvasResized)
     {
         gl.deleteTexture(framebufferTexture);
-        framebufferTexture = Texture.create();
-        Texture.bind(framebufferTexture);
-
-        gl.texImage2D(
-            $.TEXTURE_2D,
-            0,
-            $.RGB,
-            gl.canvas.width,
-            gl.canvas.height,
-            0,
-            $.RGB,
-            $.UNSIGNED_BYTE,
-            null
-        );
-
-        Texture.setParami($.TEXTURE_MIN_FILTER, $.LINEAR);
-        Texture.unbind();
-
-        gl.framebufferTexture2D(
-            $.FRAMEBUFFER,
-            $.COLOR_ATTACHMENT0,
-            $.TEXTURE_2D,
-            framebufferTexture,
-            0
-        );
-
+        framebufferTexture = Texture.createFramebufferTexture();
         isCanvasResized = false;
     }
 
     gl.clear($.COLOR_BUFFER_BIT);
-    enable($.DEPTH_TEST);
-    depthMask(true);
 
     // Render world to framebuffer
-    renderQueue($.PROG_TILED);
-    renderQueue($.PROG_SPRITE);
+    for (const queue of queues.values())
+    {
+        renderQueue(queue);
+    }
 
     // Framebuffer to canvas
     gl.bindFramebuffer($.FRAMEBUFFER, null);
@@ -99,9 +74,6 @@ export const render = (scene) =>
 
 const renderDebug = () =>
 {
-    disable($.DEPTH_TEST);
-    depthMask(false);
-
     const programData = getDebugProgram();
     setProgram(programData);
 
@@ -109,10 +81,8 @@ const renderDebug = () =>
     drawArraysVao($.LINES, 0, bufferSize / 3, programData.vao);
 };
 
-const renderQueue = (queueId) =>
+const renderQueue = (queue) =>
 {
-    const queue = queues.get(queueId);
-
     for (const { programData, texture } of queue)
     {
         setProgram(programData);
@@ -136,16 +106,18 @@ const renderTriangle = (vao) =>
 
 subscribe($.EVENT_RESIZED, () => isCanvasResized = true);
 
+disable($.DEPTH_TEST);
+disable($.CULL_FACE);
 enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
-disable($.CULL_FACE);
 
 const framebuffer = gl.createFramebuffer();
 const viewProgramData = getViewProgramData();
 let isCanvasResized = true;
 let framebufferTexture;
 
+// Queues are ordered
 const queues = new Map([
+    [$.PROG_POLYGON, []],
     [$.PROG_SPRITE, []],
-    [$.PROG_TILED, []]
 ]);
