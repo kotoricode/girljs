@@ -33,6 +33,9 @@ export const Texture = {
     }
 };
 
+/*------------------------------------------------------------------------------
+    Image
+------------------------------------------------------------------------------*/
 const createImageTexture = (src, parami) =>
 {
     const texture = Texture.create();
@@ -52,9 +55,6 @@ const fetchNextImage = () =>
     image.src = `${$.PATH_IMG}${src}`;
 };
 
-/*------------------------------------------------------------------------------
-    Image
-------------------------------------------------------------------------------*/
 const image = new Image();
 const toFetch = [];
 
@@ -103,9 +103,9 @@ const paramiMinLinMaxLin = [
 
 // name/url, width, height, parami[]
 const textureDef = [
-    $.TEX_BRAID, 1024, 1024, paramiMinLinMaxLin,
-    $.TEX_POLY,   512,  512, paramiMinLinMaxLin,
-    $.TEX_SPRITE, 256,  256, paramiMinLinMaxLin
+    $.TEX_BRAID,  1024, 1024, paramiMinLinMaxLin,
+    $.TEX_POLY,   512,  512,  paramiMinLinMaxLin,
+    $.TEX_SPRITE, 256,  256,  paramiMinLinMaxLin
 ];
 
 const textureData = new Map();

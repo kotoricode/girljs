@@ -2,7 +2,7 @@
 
 uniform camera
 {
-	mat4 u_viewProjection;
+    mat4 u_viewProjection;
 };
 
 in vec3 a_position;

@@ -2,7 +2,7 @@
 
 uniform camera
 {
-	mat4 u_viewProjection;
+    mat4 u_viewProjection;
 };
 
 uniform mat4 u_transform;
