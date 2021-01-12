@@ -1,4 +1,4 @@
-import { SettableArray } from "./settable-array";
+import { SettableArray } from "../settable-array";
 
 export class Vector extends SettableArray
 {
@@ -37,7 +37,7 @@ export class Vector extends SettableArray
         this[2] = value;
     }
 
-    addVec(vec)
+    add(vec)
     {
         this.x += vec.x;
         this.y += vec.y;
@@ -72,7 +72,7 @@ export class Vector extends SettableArray
         this.z *= scalar;
     }
 
-    mulVec(vec)
+    mul(vec)
     {
         this.x *= vec.x;
         this.y *= vec.y;
@@ -106,7 +106,7 @@ export class Vector extends SettableArray
         return this.dot(this);
     }
 
-    subVec(vec)
+    sub(vec)
     {
         this.x -= vec.x;
         this.y -= vec.y;

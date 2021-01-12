@@ -1,9 +1,9 @@
-import * as $ from "../const";
-import { BufferUniform } from "../gl/buffer";
+import * as $ from "./const";
+import { BufferUniform } from "./gl/buffer";
 import { BufferData } from "./buffer-data";
-import { DEG_TO_RAD } from "./math-helper";
-import { Matrix4 } from "./matrix4";
-import { Transform } from "./transform";
+import { DEG_TO_RAD } from "./math/math-helper";
+import { Matrix4 } from "./math/matrix4";
+import { Transform } from "./math/transform";
 
 export const getInvViewProjection = () => invViewProjection;
 
@@ -28,7 +28,7 @@ export const setCameraPosition = (vec) =>
     BufferUniform.set($.BUF_UNI_CAMERA, viewProjectionData);
 };
 
-const far = 1000;
+const far = 600;
 const near = 1;
 const fov = Math.tan(DEG_TO_RAD * 30 / 2);
 

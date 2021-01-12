@@ -58,31 +58,15 @@ export const Texture = {
 /*------------------------------------------------------------------------------
     Image
 ------------------------------------------------------------------------------*/
-const createImageTexture = (src, parami) =>
-{
-    const texture = Texture.create();
-    toFetch.push({ texture, parami, src });
-
-    if (toFetch.length === 1)
-    {
-        fetchNextImage();
-    }
-
-    return texture;
-};
-
-const fetchNextImage = () =>
-{
-    const src = toFetch[0].src;
-    image.src = `${$.PATH_IMG}${src}`;
-};
+const fetchNextImage = () => image.src = `${$.PATH_IMG}${toFetch[0]}`;
 
 const image = new Image();
-const toFetch = [];
 
-image.onload = () =>
+image.addEventListener("load", () =>
 {
-    const { texture, parami } = toFetch.shift();
+    const src = toFetch.shift();
+    const { texture } = textureData.get(src);
+    const parami = textureParami.get(src);
 
     Texture.bind(texture);
     gl.texImage2D($.TEXTURE_2D, 0, $.RGBA, $.RGBA, $.UNSIGNED_BYTE, image);
@@ -102,16 +86,18 @@ image.onload = () =>
 
     Texture.unbind();
 
+    textureParami.delete(src);
+
     if (toFetch.length)
     {
         fetchNextImage();
     }
-};
+});
 
-image.onerror = () =>
+image.addEventListener("error", (e) =>
 {
-    throw Error;
-};
+    throw Error(e);
+});
 
 /*------------------------------------------------------------------------------
     Textures
@@ -131,6 +117,7 @@ const textureDef = [
 ];
 
 const textureData = new Map();
+const textureParami = new Map();
 
 for (let i = 0; i < textureDef.length;)
 {
@@ -139,9 +126,14 @@ for (let i = 0; i < textureDef.length;)
     textureData.set(src, {
         width: textureDef[i++],
         height: textureDef[i++],
-        texture: createImageTexture(src, textureDef[i++])
+        texture: Texture.create()
     });
+
+    textureParami.set(src, textureDef[i++]);
 }
+
+const toFetch = [...textureData.keys()];
+fetchNextImage();
 
 /*------------------------------------------------------------------------------
     Subtextures

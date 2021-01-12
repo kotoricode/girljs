@@ -20,7 +20,7 @@ export const processMotion = (scene) =>
             // Distance to target
             const target = motion.getTarget();
             distance.from(target);
-            distance.subVec(space.world.translation);
+            distance.sub(space.world.translation);
 
             // Direction
             direction.from(distance);
@@ -62,7 +62,7 @@ export const processMotion = (scene) =>
             }
 
             // Step to or towards target
-            space.local.translation.addVec(distance);
+            space.local.translation.add(distance);
             scene.markDirty(space);
         }
     }

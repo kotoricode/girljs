@@ -2,7 +2,7 @@ import * as $ from "../const";
 import { mouse } from "../dom";
 import { Motion } from "../components/motion";
 import { Space } from "../components/space";
-import { getInvViewProjection, setCameraPosition } from "../math/camera";
+import { getInvViewProjection, setCameraPosition } from "../camera";
 import { Ground } from "../components/ground";
 import { Ray } from "../math/ray";
 

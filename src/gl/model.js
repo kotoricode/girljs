@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { BufferData } from "../math/buffer-data";
+import { BufferData } from "../buffer-data";
 import { BufferArray } from "./buffer";
 import { Texture } from "./texture";
 

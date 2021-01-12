@@ -16,29 +16,25 @@ export class Ray
 
     setDirection()
     {
-        this.direction.set(
-            this.end.x - this.start.x,
-            this.end.y - this.start.y,
-            this.end.z - this.start.z
-        );
-
+        this.direction.from(this.end);
+        this.direction.sub(this.start);
         this.direction.normalize();
     }
 
     fromMouse(ivp, mouse)
     {
-        const [x, y] = mouse;
+        const { x, y } = mouse;
         const w = ivp[3]*x + ivp[7]*y + ivp[15];
         const zw = ivp[11];
-        const iwNear = 1 / (w - zw);
-        const iwFar = 1 / (w + zw);
+        const iwNear = w - zw;
+        const iwFar = w + zw;
 
         for (let i = 0; i < 3; i++)
         {
             const coord = ivp[i]*x + ivp[4+i]*y + ivp[12+i];
             const zcoord = ivp[8+i];
-            this.start[i] = (coord - zcoord) * iwNear;
-            this.end[i] = (coord + zcoord) * iwFar;
+            this.start[i] = (coord - zcoord) / iwNear;
+            this.end[i] = (coord + zcoord) / iwFar;
         }
 
         this.setDirection();

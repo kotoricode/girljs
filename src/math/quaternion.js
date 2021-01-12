@@ -1,4 +1,4 @@
-import { SettableArray } from "./settable-array";
+import { SettableArray } from "../settable-array";
 
 export class Quaternion extends SettableArray
 {
@@ -9,16 +9,16 @@ export class Quaternion extends SettableArray
 
     fromEuler(x, y, z)
     {
-        const hz = z / 2;
-        const hy = y / 2;
         const hx = x / 2;
+        const hy = y / 2;
+        const hz = z / 2;
 
-        const cz = Math.cos(hz);
-        const sz = Math.sin(hz);
-        const cy = Math.cos(hy);
-        const sy = Math.sin(hy);
-        const cx = Math.cos(hx);
         const sx = Math.sin(hx);
+        const cx = Math.cos(hx);
+        const sy = Math.sin(hy);
+        const cy = Math.cos(hy);
+        const sz = Math.sin(hz);
+        const cz = Math.cos(hz);
 
         this.set(
             sx*cy*cz - cx*sy*sz,

@@ -1,4 +1,4 @@
-import { lerp } from "./math-helper";
+import { lerp } from "./math/math-helper";
 
 export class AnimArray
 {
