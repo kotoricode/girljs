@@ -2,8 +2,6 @@ import { gl } from "../dom";
 import { BufferUniform } from "./buffer";
 import { Vao } from "./vao";
 
-export const depthMask = (state) => gl.depthMask(state);
-
 export const disable = (cap) => gl.disable(cap);
 
 export const drawArrays = (mode, offset, length) => gl.drawArrays(
@@ -19,26 +17,24 @@ export const drawArraysVao = (mode, offset, length, vao) =>
 
 export const enable = (cap) => gl.enable(cap);
 
-export const setProgram = (programData) =>
+export const setProgram = ({ program, uniforms }) =>
 {
-    const program = programData.program;
-
     if (program !== oldProgram)
     {
         gl.useProgram(program);
         oldProgram = program;
-    }
 
-    const blocks = programData.uniforms.blocks;
+        const { blocks } = uniforms;
 
-    if (blocks)
-    {
-        for (const blockId of blocks)
+        if (blocks)
         {
-            const bufferId = BufferUniform.getBufferByBlock(blockId);
-            const bindingPoint = BufferUniform.getBindingPoint(bufferId);
-            const blockIdx = gl.getUniformBlockIndex(program, blockId);
-            gl.uniformBlockBinding(program, blockIdx, bindingPoint);
+            for (const blockId of blocks)
+            {
+                const bufferId = BufferUniform.getBufferByBlock(blockId);
+                const bindingPoint = BufferUniform.getBindingPoint(bufferId);
+                const blockIdx = gl.getUniformBlockIndex(program, blockId);
+                gl.uniformBlockBinding(program, blockIdx, bindingPoint);
+            }
         }
     }
 };

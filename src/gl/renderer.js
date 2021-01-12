@@ -5,7 +5,6 @@ import { getModel } from "./model";
 import { subscribe } from "../utils/publisher";
 import { getDebugProgram } from "./debug";
 import {
-    depthMask,
     disable,
     drawArraysVao,
     enable,
@@ -18,10 +17,11 @@ import { ProgramData } from "./program-data";
 
 const getViewProgramData = () =>
 {
-    const model = getModel($.MODEL_IMAGE);
+    const { meshOffset, uvOffset } = getModel($.MODEL_IMAGE);
+
     const offsets = {
-        [$.A_POSITION]: model.meshOffset,
-        [$.A_UV]: model.uvOffset
+        [$.A_POSITION]: meshOffset,
+        [$.A_UV]: uvOffset
     };
 
     const programData = new ProgramData($.PROG_VIEW);
@@ -32,13 +32,13 @@ const getViewProgramData = () =>
 
 export const render = (scene) =>
 {
-    // TODO: queue must be based on scenegraph, not .all()
     for (const [sprite] of scene.all(Sprite))
     {
         if (sprite.isVisible)
         {
             const queue = queues.get(sprite.programData.programId);
             queue.push(sprite);
+            // TODO: sort by z-position
         }
     }
 
@@ -49,6 +49,15 @@ export const render = (scene) =>
     {
         gl.deleteTexture(framebufferTexture);
         framebufferTexture = Texture.createFramebufferTexture();
+
+        gl.framebufferTexture2D(
+            $.FRAMEBUFFER,
+            $.COLOR_ATTACHMENT0,
+            $.TEXTURE_2D,
+            framebufferTexture,
+            0
+        );
+
         isCanvasResized = false;
     }
 

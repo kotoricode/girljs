@@ -19,12 +19,14 @@ export const Texture = {
         const texture = Texture.create();
         Texture.bind(texture);
 
+        const { width, height } = gl.canvas;
+
         gl.texImage2D(
             $.TEXTURE_2D,
             0,
             $.RGB,
-            gl.canvas.width,
-            gl.canvas.height,
+            width,
+            height,
             0,
             $.RGB,
             $.UNSIGNED_BYTE,
@@ -33,14 +35,6 @@ export const Texture = {
 
         Texture.setParami($.TEXTURE_MIN_FILTER, $.LINEAR);
         Texture.unbind();
-
-        gl.framebufferTexture2D(
-            $.FRAMEBUFFER,
-            $.COLOR_ATTACHMENT0,
-            $.TEXTURE_2D,
-            texture,
-            0
-        );
 
         return texture;
     },
