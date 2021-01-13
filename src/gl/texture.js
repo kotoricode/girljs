@@ -65,7 +65,7 @@ const image = new Image();
 image.addEventListener("load", () =>
 {
     const src = toFetch.shift();
-    const { texture } = textureData.get(src);
+    const texture = textures.get(src);
     const parami = textureParami.get(src);
 
     Texture.bind(texture);
@@ -86,6 +86,7 @@ image.addEventListener("load", () =>
 
     Texture.unbind();
 
+    textures.delete(src);
     textureParami.delete(src);
 
     if (toFetch.length)
@@ -109,78 +110,76 @@ const paramiMinLinMaxLin = [
     $.TEXTURE_MAG_FILTER, $.LINEAR
 ];
 
-// name/url, width, height, parami[]
+// id/url, width, height, parami[], subtextures[ id, x, y, width, height ]
 const textureDef = [
-    $.TEX_BRAID,  1024, 1024, paramiMinLinMaxLin,
-    $.TEX_POLY,   512,  512,  paramiMinLinMaxLin,
-    $.TEX_SPRITE, 256,  256,  paramiMinLinMaxLin
+    $.TEX_BRAID, 1024, 1024, paramiMinLinMaxLin, [
+        $.SUBTEX_BRAID_00, 0*128, 10,  136, 136,
+        $.SUBTEX_BRAID_01, 1*128, 10,  136, 136,
+        $.SUBTEX_BRAID_02, 2*128, 10,  136, 136,
+        $.SUBTEX_BRAID_03, 3*128, 10,  136, 136,
+        $.SUBTEX_BRAID_04, 4*128, 10,  136, 136,
+        $.SUBTEX_BRAID_05, 5*128, 10,  136, 136,
+        $.SUBTEX_BRAID_06, 6*128, 10,  136, 136,
+        $.SUBTEX_BRAID_07, 0*128, 158, 136, 136,
+        $.SUBTEX_BRAID_08, 1*128, 158, 136, 136,
+        $.SUBTEX_BRAID_09, 2*128, 158, 136, 136,
+        $.SUBTEX_BRAID_10, 3*128, 158, 136, 136,
+        $.SUBTEX_BRAID_11, 4*128, 158, 136, 136,
+        $.SUBTEX_BRAID_12, 5*128, 158, 136, 136,
+        $.SUBTEX_BRAID_13, 6*128, 158, 136, 136,
+        $.SUBTEX_BRAID_14, 0*128, 309, 136, 136,
+        $.SUBTEX_BRAID_15, 1*128, 309, 136, 136,
+        $.SUBTEX_BRAID_16, 2*128, 309, 136, 136,
+        $.SUBTEX_BRAID_17, 3*128, 309, 136, 136,
+        $.SUBTEX_BRAID_18, 4*128, 309, 136, 136,
+        $.SUBTEX_BRAID_19, 5*128, 309, 136, 136,
+        $.SUBTEX_BRAID_20, 6*128, 309, 136, 136,
+        $.SUBTEX_BRAID_21, 0*128, 461, 136, 136,
+        $.SUBTEX_BRAID_22, 1*128, 461, 136, 136,
+        $.SUBTEX_BRAID_23, 2*128, 461, 136, 136,
+        $.SUBTEX_BRAID_24, 3*128, 461, 136, 136,
+        $.SUBTEX_BRAID_25, 4*128, 461, 136, 136,
+        $.SUBTEX_BRAID_26, 5*128, 461, 136, 136,
+    ],
+    $.TEX_POLY, 512, 512, paramiMinLinMaxLin, [
+        $.SUBTEX_BG, 94, 97, 256, 256
+    ],
+    $.TEX_SPRITE, 256, 256, paramiMinLinMaxLin, [
+        $.SUBTEX_UKKO, 0, 0, 256, 256,
+    ]
 ];
 
-const textureData = new Map();
+const textures = new Map();
 const textureParami = new Map();
+const subTextureData = new Map();
 
 for (let i = 0; i < textureDef.length;)
 {
     const src = textureDef[i++];
+    const texture = Texture.create();
 
-    textureData.set(src, {
+    const baseData = {
         width: textureDef[i++],
         height: textureDef[i++],
-        texture: Texture.create()
-    });
+        texture
+    };
 
+    textures.set(src, texture);
     textureParami.set(src, textureDef[i++]);
+
+    const subTextures = textureDef[i++];
+
+    for (let j = 0; j < subTextures.length;)
+    {
+        subTextureData.set(subTextures[j++], {
+            x: subTextures[j++],
+            y: subTextures[j++],
+            width: subTextures[j++],
+            height: subTextures[j++],
+            baseData: baseData
+        });
+    }
 }
 
-const toFetch = [...textureData.keys()];
+const toFetch = [...textures.keys()];
 fetchNextImage();
-
-/*------------------------------------------------------------------------------
-    Subtextures
-------------------------------------------------------------------------------*/
-// name, x, y, width, height, textureData name/url
-const subTextureDef = [
-    $.SUBTEX_BRAID_00, 0*128, 10,  136, 136, $.TEX_BRAID,
-    $.SUBTEX_BRAID_01, 1*128, 10,  136, 136, $.TEX_BRAID,
-    $.SUBTEX_BRAID_02, 2*128, 10,  136, 136, $.TEX_BRAID,
-    $.SUBTEX_BRAID_03, 3*128, 10,  136, 136, $.TEX_BRAID,
-    $.SUBTEX_BRAID_04, 4*128, 10,  136, 136, $.TEX_BRAID,
-    $.SUBTEX_BRAID_05, 5*128, 10,  136, 136, $.TEX_BRAID,
-    $.SUBTEX_BRAID_06, 6*128, 10,  136, 136, $.TEX_BRAID,
-    $.SUBTEX_BRAID_07, 0*128, 158, 136, 136, $.TEX_BRAID,
-    $.SUBTEX_BRAID_08, 1*128, 158, 136, 136, $.TEX_BRAID,
-    $.SUBTEX_BRAID_09, 2*128, 158, 136, 136, $.TEX_BRAID,
-    $.SUBTEX_BRAID_10, 3*128, 158, 136, 136, $.TEX_BRAID,
-    $.SUBTEX_BRAID_11, 4*128, 158, 136, 136, $.TEX_BRAID,
-    $.SUBTEX_BRAID_12, 5*128, 158, 136, 136, $.TEX_BRAID,
-    $.SUBTEX_BRAID_13, 6*128, 158, 136, 136, $.TEX_BRAID,
-    $.SUBTEX_BRAID_14, 0*128, 309, 136, 136, $.TEX_BRAID,
-    $.SUBTEX_BRAID_15, 1*128, 309, 136, 136, $.TEX_BRAID,
-    $.SUBTEX_BRAID_16, 2*128, 309, 136, 136, $.TEX_BRAID,
-    $.SUBTEX_BRAID_17, 3*128, 309, 136, 136, $.TEX_BRAID,
-    $.SUBTEX_BRAID_18, 4*128, 309, 136, 136, $.TEX_BRAID,
-    $.SUBTEX_BRAID_19, 5*128, 309, 136, 136, $.TEX_BRAID,
-    $.SUBTEX_BRAID_20, 6*128, 309, 136, 136, $.TEX_BRAID,
-    $.SUBTEX_BRAID_21, 0*128, 461, 136, 136, $.TEX_BRAID,
-    $.SUBTEX_BRAID_22, 1*128, 461, 136, 136, $.TEX_BRAID,
-    $.SUBTEX_BRAID_23, 2*128, 461, 136, 136, $.TEX_BRAID,
-    $.SUBTEX_BRAID_24, 3*128, 461, 136, 136, $.TEX_BRAID,
-    $.SUBTEX_BRAID_25, 4*128, 461, 136, 136, $.TEX_BRAID,
-    $.SUBTEX_BRAID_26, 5*128, 461, 136, 136, $.TEX_BRAID,
-
-    $.SUBTEX_BG,   94, 97, 256, 256, $.TEX_POLY,
-    $.SUBTEX_UKKO,  0,  0, 256, 256, $.TEX_SPRITE
-];
-
-const subTextureData = new Map();
-
-for (let i = 0; i < subTextureDef.length;)
-{
-    subTextureData.set(subTextureDef[i++], {
-        x: subTextureDef[i++],
-        y: subTextureDef[i++],
-        width: subTextureDef[i++],
-        height: subTextureDef[i++],
-        baseData: textureData.get(subTextureDef[i++])
-    });
-}
