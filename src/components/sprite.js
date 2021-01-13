@@ -36,7 +36,7 @@ export class Sprite extends Component
         );
 
         // Texture
-        const subTexData = Texture.getSubTextureData(this.model.subTextureId);
+        const subTexData = Texture.getSubTextureData(modelId);
         this.texture = subTexData.baseData.texture;
     }
 
