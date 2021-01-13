@@ -13,14 +13,17 @@ export const processAnimation = (scene) =>
 
         if (animation.delay <= 0)
         {
+            const { delays, models } = animation;
+
             do
             {
-                animation.delay += animation.frameDelay;
                 animation.frameIdx++;
+                const nextDelay = delays[animation.frameIdx % delays.length];
+                animation.delay += nextDelay;
             } while (animation.delay <= 0);
 
-            animation.frameIdx %= animation.models.length;
-            const model = animation.models[animation.frameIdx];
+            animation.frameIdx %= models.length;
+            const model = models[animation.frameIdx];
             sprite.setModel(model);
         }
     }

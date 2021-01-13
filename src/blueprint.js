@@ -48,9 +48,11 @@ export const blueprint = new Map([
                             $.MODEL_BRAID_23,
                             $.MODEL_BRAID_24,
                             $.MODEL_BRAID_25,
-                            $.MODEL_BRAID_26
+                            $.MODEL_BRAID_26,
                         ]],
-                    ]), 0.05)
+                    ]), new Map([
+                        [$.ANIM_IDLE, [0.04]]
+                    ]))
                 ],
                 children: null
             }],
