@@ -62,9 +62,35 @@ const bytes = Float32Array.BYTES_PER_ELEMENT;
     Sprites
 ------------------------------------------------------------------------------*/
 const spriteModelData = [
-    $.MODEL_GROUND,  getXz(-2, 2, -2, 2),      $.SUBTEX_BG,
-    $.MODEL_PLAYER,  getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_UKKO,
-    $.MODEL_PLAYER2, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID,
+    $.MODEL_GROUND, getXz(-2, 2, -2, 2),      $.SUBTEX_BG,
+    $.MODEL_PLAYER, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_UKKO,
+    $.MODEL_BRAID_00, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_00,
+    $.MODEL_BRAID_01, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_01,
+    $.MODEL_BRAID_02, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_02,
+    $.MODEL_BRAID_03, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_03,
+    $.MODEL_BRAID_04, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_04,
+    $.MODEL_BRAID_05, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_05,
+    $.MODEL_BRAID_06, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_06,
+    $.MODEL_BRAID_07, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_07,
+    $.MODEL_BRAID_08, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_08,
+    $.MODEL_BRAID_09, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_09,
+    $.MODEL_BRAID_10, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_10,
+    $.MODEL_BRAID_11, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_11,
+    $.MODEL_BRAID_12, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_12,
+    $.MODEL_BRAID_13, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_13,
+    $.MODEL_BRAID_14, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_14,
+    $.MODEL_BRAID_15, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_15,
+    $.MODEL_BRAID_16, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_16,
+    $.MODEL_BRAID_17, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_17,
+    $.MODEL_BRAID_18, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_18,
+    $.MODEL_BRAID_19, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_19,
+    $.MODEL_BRAID_20, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_20,
+    $.MODEL_BRAID_21, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_21,
+    $.MODEL_BRAID_22, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_22,
+    $.MODEL_BRAID_23, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_23,
+    $.MODEL_BRAID_24, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_24,
+    $.MODEL_BRAID_25, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_25,
+    $.MODEL_BRAID_26, getXy(-0.4, 0.4, 0, 1.5), $.SUBTEX_BRAID_26,
 ];
 
 const xyzSize = 12;

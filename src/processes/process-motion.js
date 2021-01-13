@@ -30,15 +30,6 @@ export const processMotion = (scene) =>
             if (direction.x)
             {
                 space.local.scale.x = Math.sign(direction.x);
-
-                if (direction.x > 0)
-                {
-                    sprite.setModel($.MODEL_PLAYER2);
-                }
-                else
-                {
-                    sprite.setModel($.MODEL_PLAYER);
-                }
             }
 
             const moveDistance = motion.speed * scene.dt;

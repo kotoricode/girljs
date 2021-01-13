@@ -3,26 +3,21 @@ import { Motion } from "../components/motion";
 import { Space } from "../components/space";
 import { Sprite } from "../components/sprite";
 import { Vector } from "../math/vector";
+import { SpriteAnimation } from "../components/sprite-animation";
 
 export const processAnimation = (scene) =>
 {
-    for (const [motion, animation] of scene.all(Motion, Animation))
+    for (const [sprite, animation] of scene.all(Sprite, SpriteAnimation))
     {
-        if (motion.hasTarget())
-        {
-            if (animation.isState($.ANIM_IDLE))
-            {
-                animation.setState($.ANIM_MOVE);
-            }
-        }
-        else if (animation.isState($.ANIM_MOVE))
-        {
-            animation.setState($.ANIM_IDLE);
-        }
-    }
+        animation.delay -= scene.dt;
 
-    for (const [animation] of animation)
-    {
-        animation.step(scene.dt);
+        if (animation.delay <= 0)
+        {
+            const models = animation.stateModels.get($.ANIM_IDLE);
+
+            animation.delay = animation.frameDelay;
+            animation.frameIdx = (animation.frameIdx + 1) % models.length;
+            sprite.setModel(models[animation.frameIdx]);
+        }
     }
 };
