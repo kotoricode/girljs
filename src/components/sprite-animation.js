@@ -9,16 +9,34 @@ export class SpriteAnimation extends Component
 
         this.stateModels = stateModels;
         this.stateDelays = stateDelays;
+        this.state = $.ANIM_IDLE;
 
-        this.models = stateModels.get($.ANIM_IDLE);
-        this.delays = stateDelays.get($.ANIM_IDLE);
+        this.setState(this.state);
+    }
 
-        if (!Array.isArray(this.models) || !Array.isArray(this.delays))
+    getModel()
+    {
+        return this.models[this.frameIdx];
+    }
+
+    isState(state)
+    {
+        return this.state === state;
+    }
+
+    setState(state)
+    {
+        this.state = state;
+
+        if (!this.stateModels.has(state) || !this.stateDelays.has(state))
         {
-            throw Error;
+            throw state;
         }
 
+        this.models = this.stateModels.get(state);
+        this.delays = this.stateDelays.get(state);
+
         this.frameIdx = 0;
-        this.delay = 0;
+        this.delay = this.delays[0];
     }
 }

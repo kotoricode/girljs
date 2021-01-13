@@ -1,12 +1,10 @@
-import * as $ from "../const";
 import { Motion } from "../components/motion";
 import { Space } from "../components/space";
-import { Sprite } from "../components/sprite";
 import { Vector } from "../math/vector";
 
 export const processMotion = (scene) =>
 {
-    for (const [motion, space, sprite] of scene.all(Motion, Space, Sprite))
+    for (const [motion, space] of scene.all(Motion, Space))
     {
         if (space.isDirty)
         {

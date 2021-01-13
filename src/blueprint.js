@@ -21,7 +21,8 @@ export const blueprint = new Map([
                     new Player(),
                     new Sprite($.PROG_SPRITE, $.MODEL_BRAID_00),
                     new SpriteAnimation(new Map([
-                        [$.ANIM_IDLE, [
+                        [$.ANIM_IDLE, [$.MODEL_BRAID_00]],
+                        [$.ANIM_MOVE, [
                             $.MODEL_BRAID_00,
                             $.MODEL_BRAID_01,
                             $.MODEL_BRAID_02,
@@ -51,7 +52,8 @@ export const blueprint = new Map([
                             $.MODEL_BRAID_26,
                         ]],
                     ]), new Map([
-                        [$.ANIM_IDLE, [0.04]]
+                        [$.ANIM_IDLE, [Infinity]],
+                        [$.ANIM_MOVE, [0.045]],
                     ]))
                 ],
                 children: null

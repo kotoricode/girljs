@@ -7,6 +7,27 @@ import { SpriteAnimation } from "../components/sprite-animation";
 
 export const processAnimation = (scene) =>
 {
+    for (const [sprite, animation, motion] of scene.all(
+        Sprite, SpriteAnimation, Motion
+    ))
+    {
+        if (motion.hasTarget())
+        {
+            if (animation.isState($.ANIM_IDLE))
+            {
+                animation.setState($.ANIM_MOVE);
+                const model = animation.getModel();
+                sprite.setModel(model);
+            }
+        }
+        else if (animation.isState($.ANIM_MOVE))
+        {
+            animation.setState($.ANIM_IDLE);
+            const model = animation.getModel();
+            sprite.setModel(model);
+        }
+    }
+
     for (const [sprite, animation] of scene.all(Sprite, SpriteAnimation))
     {
         animation.delay -= scene.dt;
@@ -23,7 +44,7 @@ export const processAnimation = (scene) =>
             } while (animation.delay <= 0);
 
             animation.frameIdx %= models.length;
-            const model = models[animation.frameIdx];
+            const model = animation.getModel();
             sprite.setModel(model);
         }
     }
