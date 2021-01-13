@@ -4,6 +4,10 @@ export const
     SCREEN_ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT;
 
 export const
+    ANIM_IDLE = 0,
+    ANIM_MOVE = 1;
+
+export const
     BUF_ARR_SPRITE = 0,
     BUF_ARR_POLYGON = 1,
     BUF_ARR_DEBUG = 2,
