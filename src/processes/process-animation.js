@@ -3,48 +3,46 @@ import { Motion } from "../components/motion";
 import { Space } from "../components/space";
 import { Sprite } from "../components/sprite";
 import { Vector } from "../math/vector";
-import { SpriteAnimation } from "../components/sprite-animation";
+import { Anim } from "../components/anim";
 
 export const processAnimation = (scene) =>
 {
-    for (const [sprite, animation, motion] of scene.all(
-        Sprite, SpriteAnimation, Motion
-    ))
+    for (const [sprite, anim, motion] of scene.all(Sprite, Anim, Motion))
     {
         if (motion.hasTarget())
         {
-            if (animation.isState($.ANIM_IDLE))
+            if (anim.isState($.ANIM_IDLE))
             {
-                animation.setState($.ANIM_MOVE);
-                const model = animation.getModel();
+                anim.setState($.ANIM_MOVE);
+                const model = anim.getModel();
                 sprite.setModel(model);
             }
         }
-        else if (animation.isState($.ANIM_MOVE))
+        else if (anim.isState($.ANIM_MOVE))
         {
-            animation.setState($.ANIM_IDLE);
-            const model = animation.getModel();
+            anim.setState($.ANIM_IDLE);
+            const model = anim.getModel();
             sprite.setModel(model);
         }
     }
 
-    for (const [sprite, animation] of scene.all(Sprite, SpriteAnimation))
+    for (const [sprite, anim] of scene.all(Sprite, Anim))
     {
-        animation.delay -= scene.dt;
+        anim.delay -= scene.dt;
 
-        if (animation.delay <= 0)
+        if (anim.delay <= 0)
         {
-            const { delays, models } = animation;
+            const { delays, models } = anim;
 
             do
             {
-                animation.frameIdx++;
-                const nextDelay = delays[animation.frameIdx % delays.length];
-                animation.delay += nextDelay;
-            } while (animation.delay <= 0);
+                anim.frameIdx++;
+                const nextDelay = delays[anim.frameIdx % delays.length];
+                anim.delay += nextDelay;
+            } while (anim.delay <= 0);
 
-            animation.frameIdx %= models.length;
-            const model = animation.getModel();
+            anim.frameIdx %= models.length;
+            const model = anim.getModel();
             sprite.setModel(model);
         }
     }

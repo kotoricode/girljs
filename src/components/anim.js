@@ -1,7 +1,7 @@
 import * as $ from "../const";
 import { Component } from "./component";
 
-export class SpriteAnimation extends Component
+export class Anim extends Component
 {
     constructor(stateModels, stateDelays)
     {

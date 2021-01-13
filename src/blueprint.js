@@ -5,7 +5,7 @@ import { Motion } from "./components/motion";
 import { Player } from "./components/player";
 import { Sprite } from "./components/sprite";
 import { Ground } from "./components/ground";
-import { SpriteAnimation } from "./components/sprite-animation";
+import { Anim } from "./components/anim";
 
 import { processMotion } from "./processes/process-motion";
 import { processCamera } from "./processes/process-camera";
@@ -20,7 +20,7 @@ export const blueprint = new Map([
                     new Motion(3),
                     new Player(),
                     new Sprite($.PROG_SPRITE, $.MODEL_BRAID_00),
-                    new SpriteAnimation(new Map([
+                    new Anim(new Map([
                         [$.ANIM_IDLE, [$.MODEL_BRAID_00]],
                         [$.ANIM_MOVE, [
                             $.MODEL_BRAID_00,
