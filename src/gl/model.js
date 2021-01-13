@@ -100,7 +100,7 @@ const spriteBufferData = new Array(xyzUvSize * spriteModelData.length / 2);
 
 for (let i = 0; i < spriteModelData.length;)
 {
-    const meshOffset = (i / 3) * xyzUvSize;
+    const meshOffset = (i / 2) * xyzUvSize;
 
     const modelId = spriteModelData[i++];
     const mesh = spriteModelData[i++];
