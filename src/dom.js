@@ -4,6 +4,8 @@ import { Vector } from "./math/vector";
 import { publish } from "./utils/publisher";
 import { isUiInteraction } from "./ui";
 
+export const LISTENER_ONCE = { once: true };
+
 const getElement = (elementId) => window.document.getElementById(elementId);
 
 const onResize = () =>
@@ -22,9 +24,8 @@ const onResize = () =>
         {
             gameCanvas.width = width;
             gameCanvas.height = height;
-
-            uiStyle.width = width + "px";
-            uiStyle.height = height + "px";
+            uiCanvas.style.width = width + "px";
+            uiCanvas.style.height = height + "px";
 
             gl.viewport(0, 0, width, height);
             publish($.EVENT_RESIZED);
@@ -34,10 +35,8 @@ const onResize = () =>
     canvasRect = gameCanvas.getBoundingClientRect();
 };
 
-const once = { once: true };
-
 // Modern browsers won't autoplay audio before user interaction
-window.addEventListener("mousedown", initAudio, once);
+window.addEventListener("mousedown", initAudio, LISTENER_ONCE);
 
 /*------------------------------------------------------------------------------
     Canvases
@@ -52,13 +51,12 @@ export const ui = uiCanvas.getContext("2d");
 // UI canvas is scaled rather than resized, so width & height never change
 uiCanvas.width = $.SCREEN_WIDTH;
 uiCanvas.height = $.SCREEN_HEIGHT;
-const uiStyle = uiCanvas.style;
 
 let canvasRect;
 
 for (const loadEvent of ["DOMContentLoaded", "load"])
 {
-    window.addEventListener(loadEvent, onResize, once);
+    window.addEventListener(loadEvent, onResize, LISTENER_ONCE);
 }
 
 window.addEventListener("resize", onResize);
@@ -78,8 +76,8 @@ uiCanvas.addEventListener("click", (e) =>
     const x = (e.clientX - canvasRect.left) / gameCanvas.clientWidth;
     const y = (e.clientY - canvasRect.top) / gameCanvas.clientHeight;
 
-    mouse.screen.set(x * $.SCREEN_WIDTH, y * $.SCREEN_HEIGHT);
     mouse.clip.set(2*x - 1, 1 - 2*y);
+    mouse.screen.set(x * $.SCREEN_WIDTH, y * $.SCREEN_HEIGHT);
 
     if (isUiInteraction())
     {

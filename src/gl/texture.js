@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { gl } from "../dom";
+import { gl, LISTENER_ONCE } from "../dom";
 
 export const Texture = {
     bind(texture)
@@ -98,7 +98,7 @@ image.addEventListener("load", () =>
 image.addEventListener("error", (e) =>
 {
     throw Error(e);
-});
+}, LISTENER_ONCE);
 
 /*------------------------------------------------------------------------------
     Textures
@@ -113,33 +113,33 @@ const paramiMinLinMaxLin = [
 // id/url, width, height, parami[], subtextures[ id, x, y, width, height ]
 const textureDef = [
     $.TEX_BRAID, 1024, 1024, paramiMinLinMaxLin, [
-        $.SUBTEX_BRAID_00, 0*128, 10,  136, 136,
-        $.SUBTEX_BRAID_01, 1*128, 10,  136, 136,
-        $.SUBTEX_BRAID_02, 2*128, 10,  136, 136,
-        $.SUBTEX_BRAID_03, 3*128, 10,  136, 136,
-        $.SUBTEX_BRAID_04, 4*128, 10,  136, 136,
-        $.SUBTEX_BRAID_05, 5*128, 10,  136, 136,
-        $.SUBTEX_BRAID_06, 6*128, 10,  136, 136,
-        $.SUBTEX_BRAID_07, 0*128, 158, 136, 136,
-        $.SUBTEX_BRAID_08, 1*128, 158, 136, 136,
-        $.SUBTEX_BRAID_09, 2*128, 158, 136, 136,
-        $.SUBTEX_BRAID_10, 3*128, 158, 136, 136,
-        $.SUBTEX_BRAID_11, 4*128, 158, 136, 136,
-        $.SUBTEX_BRAID_12, 5*128, 158, 136, 136,
-        $.SUBTEX_BRAID_13, 6*128, 158, 136, 136,
-        $.SUBTEX_BRAID_14, 0*128, 309, 136, 136,
-        $.SUBTEX_BRAID_15, 1*128, 309, 136, 136,
-        $.SUBTEX_BRAID_16, 2*128, 309, 136, 136,
-        $.SUBTEX_BRAID_17, 3*128, 309, 136, 136,
-        $.SUBTEX_BRAID_18, 4*128, 309, 136, 136,
-        $.SUBTEX_BRAID_19, 5*128, 309, 136, 136,
-        $.SUBTEX_BRAID_20, 6*128, 309, 136, 136,
-        $.SUBTEX_BRAID_21, 0*128, 461, 136, 136,
-        $.SUBTEX_BRAID_22, 1*128, 461, 136, 136,
-        $.SUBTEX_BRAID_23, 2*128, 461, 136, 136,
-        $.SUBTEX_BRAID_24, 3*128, 461, 136, 136,
-        $.SUBTEX_BRAID_25, 4*128, 461, 136, 136,
-        $.SUBTEX_BRAID_26, 5*128, 461, 136, 136,
+        $.SUBTEX_BRAID_00, 0,   10,  136, 136,
+        $.SUBTEX_BRAID_01, 128, 10,  136, 136,
+        $.SUBTEX_BRAID_02, 256, 10,  136, 136,
+        $.SUBTEX_BRAID_03, 384, 10,  136, 136,
+        $.SUBTEX_BRAID_04, 512, 10,  136, 136,
+        $.SUBTEX_BRAID_05, 640, 10,  136, 136,
+        $.SUBTEX_BRAID_06, 768, 10,  136, 136,
+        $.SUBTEX_BRAID_07, 0,   158, 136, 136,
+        $.SUBTEX_BRAID_08, 128, 158, 136, 136,
+        $.SUBTEX_BRAID_09, 256, 158, 136, 136,
+        $.SUBTEX_BRAID_10, 384, 158, 136, 136,
+        $.SUBTEX_BRAID_11, 512, 158, 136, 136,
+        $.SUBTEX_BRAID_12, 640, 158, 136, 136,
+        $.SUBTEX_BRAID_13, 768, 158, 136, 136,
+        $.SUBTEX_BRAID_14, 0,   309, 136, 136,
+        $.SUBTEX_BRAID_15, 128, 309, 136, 136,
+        $.SUBTEX_BRAID_16, 256, 309, 136, 136,
+        $.SUBTEX_BRAID_17, 384, 309, 136, 136,
+        $.SUBTEX_BRAID_18, 512, 309, 136, 136,
+        $.SUBTEX_BRAID_19, 640, 309, 136, 136,
+        $.SUBTEX_BRAID_20, 768, 309, 136, 136,
+        $.SUBTEX_BRAID_21, 0,   461, 136, 136,
+        $.SUBTEX_BRAID_22, 128, 461, 136, 136,
+        $.SUBTEX_BRAID_23, 256, 461, 136, 136,
+        $.SUBTEX_BRAID_24, 384, 461, 136, 136,
+        $.SUBTEX_BRAID_25, 512, 461, 136, 136,
+        $.SUBTEX_BRAID_26, 640, 461, 136, 136,
     ],
     $.TEX_POLY, 512, 512, paramiMinLinMaxLin, [
         $.SUBTEX_BG, 94, 97, 256, 256
