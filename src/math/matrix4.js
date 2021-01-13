@@ -160,7 +160,6 @@ export class Matrix4 extends SettableArray
         );
     }
 
-    // TODO: can be simplified for 2D stuff (at least translation Z = 0)
     multiplyTransformMatrix(matrix)
     {
         const [

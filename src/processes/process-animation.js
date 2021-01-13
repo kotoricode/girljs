@@ -13,11 +13,15 @@ export const processAnimation = (scene) =>
 
         if (animation.delay <= 0)
         {
-            const models = animation.stateModels.get($.ANIM_IDLE);
+            do
+            {
+                animation.delay += animation.frameDelay;
+                animation.frameIdx++;
+            } while (animation.delay <= 0);
 
-            animation.delay = animation.frameDelay;
-            animation.frameIdx = (animation.frameIdx + 1) % models.length;
-            sprite.setModel(models[animation.frameIdx]);
+            animation.frameIdx %= animation.models.length;
+            const model = animation.models[animation.frameIdx];
+            sprite.setModel(model);
         }
     }
 };
