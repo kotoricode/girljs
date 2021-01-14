@@ -3,6 +3,7 @@ import { gl } from "../dom";
 import { getPreparedProgram } from "./program";
 import { BufferArray } from "./buffer";
 import { Vao } from "./vao";
+import { MapDebug } from "../utils/map-debug";
 
 export class ProgramData
 {
@@ -13,7 +14,7 @@ export class ProgramData
         this.programId = programId;
         this.program = prepared.program;
         this.uniforms = prepared.uniforms;
-        this.uniforms.staging = new Map();
+        this.uniforms.staging = new MapDebug();
 
         // TODO: maybe pool vaos?
         this.vao = Vao.create(this);
@@ -84,11 +85,6 @@ export class ProgramData
 
     stageUniformAtIndex(key, idx, value)
     {
-        if (!this.uniforms.staging.has(key))
-        {
-            throw key;
-        }
-
         const staging = this.uniforms.staging.get(key);
 
         if (!Array.isArray(staging))

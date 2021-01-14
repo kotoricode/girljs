@@ -1,6 +1,7 @@
 import * as $ from "./const";
 import { mouse } from "./dom";
 import { Scene } from "./scene";
+import { MapDebug } from "./utils/map-debug";
 
 const mainLoop = (timestamp) =>
 {
@@ -37,7 +38,7 @@ export const setActiveScene = (sceneId) =>
     activeScene.load();
 };
 
-const scenes = new Map();
+const scenes = new MapDebug();
 
 let activeScene;
 setActiveScene($.SCENE_TEST);

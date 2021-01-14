@@ -1,5 +1,6 @@
 import * as $ from "../const";
 import { gl } from "../dom";
+import { MapDebug } from "../utils/map-debug";
 
 const Buffer = {
     bind(bufferType, bufferId)
@@ -13,19 +14,9 @@ const Buffer = {
     },
     get(bufferType, bufferId)
     {
-        if (!buffers.has(bufferType))
-        {
-            throw bufferType;
-        }
-
         const typeBuffers = buffers.get(bufferType);
 
-        if (typeBuffers.has(bufferId))
-        {
-            return typeBuffers.get(bufferId);
-        }
-
-        throw bufferId;
+        return typeBuffers.get(bufferId);
     },
     set(bufferType, bufferId, data, usage)
     {
@@ -46,12 +37,7 @@ export const BufferArray = {
     },
     getSize(bufferId)
     {
-        if (arrayBufferSizes.has(bufferId))
-        {
-            return arrayBufferSizes.get(bufferId);
-        }
-
-        throw bufferId;
+        return arrayBufferSizes.get(bufferId);
     },
     set(bufferId, data, usage)
     {
@@ -82,12 +68,7 @@ export const BufferUniform = {
     },
     getBufferByBlock(blockId)
     {
-        if (blockBuffers.has(blockId))
-        {
-            return blockBuffers.get(blockId);
-        }
-
-        throw blockId;
+        return blockBuffers.get(blockId);
     },
     set(bufferId, data)
     {
@@ -100,22 +81,22 @@ const reduceFunc = (array, bufferId) => (
     array
 );
 
-const buffers = new Map([
-    [$.ARRAY_BUFFER, new Map(
+const buffers = new MapDebug([
+    [$.ARRAY_BUFFER, new MapDebug(
         [
             $.BUF_ARR_SPRITE,
             $.BUF_ARR_POLYGON,
             $.BUF_ARR_DEBUG
         ].reduce(reduceFunc, [])
     )],
-    [$.UNIFORM_BUFFER, new Map(
+    [$.UNIFORM_BUFFER, new MapDebug(
         [
             $.BUF_UNI_CAMERA
         ].reduce(reduceFunc, [])
     )]
 ]);
 
-const arrayBufferSizes = new Map();
+const arrayBufferSizes = new MapDebug();
 const bindingPoints = [$.BUF_UNI_CAMERA];
 
 for (let i = 0; i < bindingPoints.length; i++)
@@ -125,6 +106,6 @@ for (let i = 0; i < bindingPoints.length; i++)
     gl.bindBufferBase($.UNIFORM_BUFFER, i, buffer);
 }
 
-const blockBuffers = new Map([
+const blockBuffers = new MapDebug([
     [$.UB_CAMERA, $.BUF_UNI_CAMERA]
 ]);

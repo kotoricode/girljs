@@ -1,5 +1,6 @@
 import * as $ from "../const";
 import { gl, LISTENER_ONCE } from "../dom";
+import { MapDebug } from "../utils/map-debug";
 
 export const Texture = {
     bind(texture)
@@ -38,12 +39,7 @@ export const Texture = {
     },
     getSubTextureData(modelId)
     {
-        if (subTextureData.has(modelId))
-        {
-            return subTextureData.get(modelId);
-        }
-
-        throw Error;
+        return subTextureData.get(modelId);
     },
     getUvFromSubTexture(subTexId)
     {
@@ -167,9 +163,9 @@ const textureData = [
     ]
 ];
 
-const textures = new Map();
-const textureParami = new Map();
-const subTextureData = new Map();
+const textures = new MapDebug();
+const textureParami = new MapDebug();
+const subTextureData = new MapDebug();
 
 for (let i = 0; i < textureData.length;)
 {

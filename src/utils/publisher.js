@@ -1,3 +1,5 @@
+import { MapDebug } from "./map-debug";
+
 export const Publisher = {
     publish(event)
     {
@@ -34,11 +36,6 @@ export const Publisher = {
     },
     unsubscribe(event, subFunc)
     {
-        if (!eventSubs.has(event))
-        {
-            throw Error;
-        }
-
         const subs = eventSubs.get(event);
 
         if (!subs.has(subFunc))
@@ -55,4 +52,4 @@ export const Publisher = {
     }
 };
 
-const eventSubs = new Map();
+const eventSubs = new MapDebug();

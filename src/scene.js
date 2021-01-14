@@ -4,6 +4,7 @@ import { Space } from "./components/space";
 import { Entity } from "./entity";
 import { render } from "./gl/renderer";
 import { blueprint } from "./blueprint";
+import { MapDebug } from "./utils/map-debug";
 
 export class Scene
 {
@@ -11,11 +12,11 @@ export class Scene
     {
         this.sceneId = sceneId;
         this.dt = 0;
-        this.entities = new Map();
+        this.entities = new MapDebug();
         this.newSpriteEntities = new Set();
 
         /** @const {Map<number, Set>} */
-        this.cached = new Map();
+        this.cached = new MapDebug();
 
         // TODO: implement this
         this.dirtyEntities = new Set();
@@ -97,12 +98,7 @@ export class Scene
 
     getEntity(entityId)
     {
-        if (this.entities.has(entityId))
-        {
-            return this.entities.get(entityId);
-        }
-
-        throw entityId;
+        return this.entities.get(entityId);
     }
 
     initNewSpriteUniforms()

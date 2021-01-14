@@ -9,6 +9,7 @@ import fsView    from "./shaders/view.frag";
 import fsSprite  from "./shaders/sprite.frag";
 import fsPolygon from "./shaders/polygon.frag";
 import fsColor   from "./shaders/color.frag";
+import { MapDebug } from "../utils/map-debug";
 
 const createAttachShader = (program, shaderId, vertFrag) =>
 {
@@ -33,12 +34,7 @@ const detachDeleteShader = (program, shader) =>
 
 export const getPreparedProgram = (programId) =>
 {
-    if (preparedPrograms.has(programId))
-    {
-        return preparedPrograms.get(programId);
-    }
-
-    throw programId;
+    return preparedPrograms.get(programId);
 };
 
 /*------------------------------------------------------------------------------
@@ -141,7 +137,7 @@ const programDef = [
 /*------------------------------------------------------------------------------
     Create and prepare programs
 ------------------------------------------------------------------------------*/
-const preparedPrograms = new Map();
+const preparedPrograms = new MapDebug();
 
 for (let i = 0; i < programDef.length;)
 {
@@ -191,8 +187,8 @@ for (let i = 0; i < programDef.length;)
         Uniforms
     --------------------------------------------------------------------------*/
     const uniforms = {
-        setters: new Map(),
-        defaults: new Map(),
+        setters: new MapDebug(),
+        defaults: new MapDebug(),
         staging: null,
         blocks
     };

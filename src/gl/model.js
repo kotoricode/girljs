@@ -1,27 +1,18 @@
 import * as $ from "../const";
-import { BufferData } from "../buffer-data";
+import { BufferData } from "../utils/buffer-data";
 import { BufferArray } from "./buffer";
 import { Texture } from "./texture";
 import { getMesh } from "./mesh";
+import { MapDebug } from "../utils/map-debug";
 
 export const Model = {
     get(modelId)
     {
-        if (models.has(modelId))
-        {
-            return models.get(modelId);
-        }
-
-        throw modelId;
+        return models.get(modelId);
     },
     getTexture(modelId)
     {
-        if (modelTextures.has(modelId))
-        {
-            return modelTextures.get(modelId);
-        }
-
-        throw modelId;
+        return modelTextures.get(modelId);
     }
 };
 
@@ -72,11 +63,11 @@ const modelData = [
     General
 ------------------------------------------------------------------------------*/
 const spriteBufferData = [];
-const xyzOffsets = new Map();
-const uvOffsets = new Map();
-const uvs = new Map();
-const models = new Map();
-const modelTextures = new Map();
+const xyzOffsets = new MapDebug();
+const uvOffsets = new MapDebug();
+const uvs = new MapDebug();
+const models = new MapDebug();
+const modelTextures = new MapDebug();
 
 for (let i = 0; i < modelData.length;)
 {

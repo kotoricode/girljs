@@ -1,3 +1,4 @@
+import { MapDebug } from "../utils/map-debug";
 import { Vector } from "./vector";
 
 export class PathNode
@@ -7,7 +8,7 @@ export class PathNode
         this.score = 0;
         this.comeFrom = null;
         this.position = new Vector(x, y, z);
-        this.adjacent = new Map(); // <adjacent, distanceTo>
+        this.adjacent = new MapDebug(); // <adjacent, distanceTo>
 
         this.isAdjacentToStart = false;
         this.isAdjacentToEnd = false;

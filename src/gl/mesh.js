@@ -1,13 +1,9 @@
 import * as $ from "../const";
+import { MapDebug } from "../utils/map-debug";
 
 export const getMesh = (meshId) =>
 {
-    if (meshData.has(meshId))
-    {
-        return meshData.get(meshId);
-    }
-
-    throw meshId;
+    return meshData.get(meshId);
 };
 
 const getXy = (minX, maxX, minY, maxY) =>
@@ -30,7 +26,7 @@ const getXz = (minX, maxX, minZ, maxZ) =>
     ];
 };
 
-const meshData = new Map([
+const meshData = new MapDebug([
     [$.MESH_GROUND, getXz(-2, 2, -2, 2)],
     [$.MESH_PLAYER, getXy(-0.4, 0.4, 0, 1.5)],
 ]);

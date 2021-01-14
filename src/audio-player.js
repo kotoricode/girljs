@@ -1,6 +1,7 @@
 import * as $ from "./const";
 import { clamp } from "./math/math-helper";
 import { Prefs } from "./save";
+import { MapDebug } from "./utils/map-debug";
 
 export const AudioPlayer = {
     init()
@@ -21,11 +22,6 @@ export const AudioPlayer = {
     },
     setFile(soundId, fileName)
     {
-        if (!audio.has(soundId))
-        {
-            throw soundId;
-        }
-
         const audioObj = audio.get(soundId);
         audioObj.fileName = fileName;
     },
@@ -35,11 +31,6 @@ export const AudioPlayer = {
 
         if (context)
         {
-            if (!gains.has(gainId))
-            {
-                throw gainId;
-            }
-
             gains.get(gainId).gain.value = clamped;
         }
 
@@ -64,11 +55,6 @@ const createGain = (gainId, parent) =>
 
 const play = (soundId) =>
 {
-    if (!audio.has(soundId))
-    {
-        throw soundId;
-    }
-
     const { fileName, element } = audio.get(soundId);
 
     if (!fileName)
@@ -82,7 +68,7 @@ const play = (soundId) =>
     }
 };
 
-const audio = new Map([
+const audio = new MapDebug([
     [$.AUDIO_MUSIC, {
         element: null,
         fileName: $.FILE_OMOIDE,
@@ -111,6 +97,6 @@ for (const audioObj of audio.values())
     audioObj.element = element;
 }
 
-const gains = new Map();
+const gains = new MapDebug();
 
 let context;

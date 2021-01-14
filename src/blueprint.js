@@ -10,17 +10,18 @@ import { Anim } from "./components/anim";
 import { processMotion } from "./processes/process-motion";
 import { processCamera } from "./processes/process-camera";
 import { processAnimation } from "./processes/process-animation";
+import { MapDebug } from "./utils/map-debug";
 
-export const blueprint = new Map([
+export const blueprint = new MapDebug([
     [$.SCENE_TEST, () => ({
-        entities: new Map([
+        entities: new MapDebug([
             [$.ENTITY_PLAYER, {
                 components: [
                     new Space(),
                     new Motion(3),
                     new Player(),
                     new Sprite($.PROG_SPRITE, $.MODEL_BRAID_00),
-                    new Anim(new Map([
+                    new Anim(new MapDebug([
                         [$.ANIM_IDLE, [$.MODEL_BRAID_00]],
                         [$.ANIM_MOVE, [
                             $.MODEL_BRAID_00,
@@ -51,7 +52,7 @@ export const blueprint = new Map([
                             $.MODEL_BRAID_25,
                             $.MODEL_BRAID_26,
                         ]],
-                    ]), new Map([
+                    ]), new MapDebug([
                         [$.ANIM_IDLE, [Infinity]],
                         [$.ANIM_MOVE, [0.045]],
                     ]))

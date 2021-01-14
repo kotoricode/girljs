@@ -1,4 +1,5 @@
 import { gl } from "../dom";
+import { MapDebug } from "../utils/map-debug";
 
 export const Vao = {
     bind(vao)
@@ -14,11 +15,6 @@ export const Vao = {
     },
     delete(programData)
     {
-        if (!vaos.has(programData))
-        {
-            throw programData;
-        }
-
         const vao = vaos.get(programData);
         vaos.delete(programData);
         gl.deleteVertexArray(vao);
@@ -29,4 +25,4 @@ export const Vao = {
     }
 };
 
-const vaos = new Map();
+const vaos = new MapDebug();
