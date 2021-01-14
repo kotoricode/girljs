@@ -88,14 +88,6 @@ const vertDef = {
         blocks: null,
         attributes: attribPosUv
     },
-    sprite: {
-        src: vsStandard,
-        blocks: ubCamera,
-        attributes: attribPosUv,
-        uniforms: {
-            uniformMatrix4fv: uniTransVP
-        }
-    },
     standard: {
         src: vsStandard,
         blocks: ubCamera,
