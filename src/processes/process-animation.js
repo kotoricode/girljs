@@ -1,8 +1,6 @@
 import * as $ from "../const";
 import { Motion } from "../components/motion";
-import { Space } from "../components/space";
 import { Sprite } from "../components/sprite";
-import { Vector } from "../math/vector";
 import { Anim } from "../components/anim";
 
 export const processAnimation = (scene) =>

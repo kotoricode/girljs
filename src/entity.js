@@ -22,12 +22,7 @@ export class Entity
         for (const comp of components)
         {
             const ctor = comp.constructor;
-
-            if (this.components.has(ctor))
-            {
-                throw Error;
-            }
-
+            this.components.assertHasNot(ctor);
             this.components.set(ctor, comp);
             this.flags |= ctor.flag;
         }

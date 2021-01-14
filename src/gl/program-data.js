@@ -70,10 +70,7 @@ export class ProgramData
 
     stageUniform(key, value)
     {
-        if (!this.uniforms.staging.has(key))
-        {
-            throw key;
-        }
+        this.uniforms.staging.assertHas(key);
 
         if (!Array.isArray(value))
         {

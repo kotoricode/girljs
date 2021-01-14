@@ -5,6 +5,22 @@ export class SafeMap extends Map
         super(...params);
     }
 
+    assertHas(key)
+    {
+        if (!this.has(key))
+        {
+            throw key;
+        }
+    }
+
+    assertHasNot(key)
+    {
+        if (this.has(key))
+        {
+            throw key;
+        }
+    }
+
     delete(key)
     {
         if (!super.delete(key))
@@ -15,10 +31,7 @@ export class SafeMap extends Map
 
     get(key)
     {
-        if (!this.has(key))
-        {
-            throw key;
-        }
+        this.assertHas(key);
 
         return super.get(key);
     }
@@ -31,12 +44,25 @@ export class SafeSet extends Set
         super(...params);
     }
 
+    assertHas(key)
+    {
+        if (!this.has(key))
+        {
+            throw key;
+        }
+    }
+
+    assertHasNot(key)
+    {
+        if (this.has(key))
+        {
+            throw key;
+        }
+    }
+
     add(value)
     {
-        if (this.has(value))
-        {
-            throw value;
-        }
+        this.assertHasNot(value);
 
         return super.add(value);
     }
