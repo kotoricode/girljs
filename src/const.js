@@ -3,101 +3,103 @@ export const
     SCREEN_HEIGHT = 648,
     SCREEN_ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT;
 
-export const
-    ANIM_IDLE = 0,
-    ANIM_MOVE = 1;
+let i = 0;
 
 export const
-    BUF_ARR_SPRITE = 0,
-    BUF_ARR_POLYGON = 1,
-    BUF_ARR_DEBUG = 2,
-    BUF_UNI_CAMERA = 3;
+    ANIM_IDLE = i++,
+    ANIM_MOVE = i++;
 
 export const
-    MODEL_GROUND = 2000,
-    MODEL_IMAGE = 2001,
-    MODEL_PLAYER = 2002,
-    MODEL_BRAID_00 = 2100,
-    MODEL_BRAID_01 = 2101,
-    MODEL_BRAID_02 = 2102,
-    MODEL_BRAID_03 = 2103,
-    MODEL_BRAID_04 = 2104,
-    MODEL_BRAID_05 = 2105,
-    MODEL_BRAID_06 = 2106,
-    MODEL_BRAID_07 = 2107,
-    MODEL_BRAID_08 = 2108,
-    MODEL_BRAID_09 = 2109,
-    MODEL_BRAID_10 = 2110,
-    MODEL_BRAID_11 = 2111,
-    MODEL_BRAID_12 = 2112,
-    MODEL_BRAID_13 = 2113,
-    MODEL_BRAID_14 = 2114,
-    MODEL_BRAID_15 = 2115,
-    MODEL_BRAID_16 = 2116,
-    MODEL_BRAID_17 = 2117,
-    MODEL_BRAID_18 = 2118,
-    MODEL_BRAID_19 = 2119,
-    MODEL_BRAID_20 = 2120,
-    MODEL_BRAID_21 = 2121,
-    MODEL_BRAID_22 = 2122,
-    MODEL_BRAID_23 = 2123,
-    MODEL_BRAID_24 = 2124,
-    MODEL_BRAID_25 = 2125,
-    MODEL_BRAID_26 = 2126;
+    BUF_ARR_SPRITE = i++,
+    BUF_ARR_POLYGON = i++,
+    BUF_ARR_DEBUG = i++,
+    BUF_UNI_CAMERA = i++;
 
 export const
-    SUBTEX_GROUND = 1000,
-    SUBTEX_IMAGE = 1001,
-    SUBTEX_PLAYER = 1002,
-    SUBTEX_BRAID_00 = 1100,
-    SUBTEX_BRAID_01 = 1101,
-    SUBTEX_BRAID_02 = 1102,
-    SUBTEX_BRAID_03 = 1103,
-    SUBTEX_BRAID_04 = 1104,
-    SUBTEX_BRAID_05 = 1105,
-    SUBTEX_BRAID_06 = 1106,
-    SUBTEX_BRAID_07 = 1107,
-    SUBTEX_BRAID_08 = 1108,
-    SUBTEX_BRAID_09 = 1109,
-    SUBTEX_BRAID_10 = 1110,
-    SUBTEX_BRAID_11 = 1111,
-    SUBTEX_BRAID_12 = 1112,
-    SUBTEX_BRAID_13 = 1113,
-    SUBTEX_BRAID_14 = 1114,
-    SUBTEX_BRAID_15 = 1115,
-    SUBTEX_BRAID_16 = 1116,
-    SUBTEX_BRAID_17 = 1117,
-    SUBTEX_BRAID_18 = 1118,
-    SUBTEX_BRAID_19 = 1119,
-    SUBTEX_BRAID_20 = 1120,
-    SUBTEX_BRAID_21 = 1121,
-    SUBTEX_BRAID_22 = 1122,
-    SUBTEX_BRAID_23 = 1123,
-    SUBTEX_BRAID_24 = 1124,
-    SUBTEX_BRAID_25 = 1125,
-    SUBTEX_BRAID_26 = 1126;
+    MODEL_GROUND = i++,
+    MODEL_IMAGE = i++,
+    MODEL_PLAYER = i++,
+    MODEL_BRAID_00 = i++,
+    MODEL_BRAID_01 = i++,
+    MODEL_BRAID_02 = i++,
+    MODEL_BRAID_03 = i++,
+    MODEL_BRAID_04 = i++,
+    MODEL_BRAID_05 = i++,
+    MODEL_BRAID_06 = i++,
+    MODEL_BRAID_07 = i++,
+    MODEL_BRAID_08 = i++,
+    MODEL_BRAID_09 = i++,
+    MODEL_BRAID_10 = i++,
+    MODEL_BRAID_11 = i++,
+    MODEL_BRAID_12 = i++,
+    MODEL_BRAID_13 = i++,
+    MODEL_BRAID_14 = i++,
+    MODEL_BRAID_15 = i++,
+    MODEL_BRAID_16 = i++,
+    MODEL_BRAID_17 = i++,
+    MODEL_BRAID_18 = i++,
+    MODEL_BRAID_19 = i++,
+    MODEL_BRAID_20 = i++,
+    MODEL_BRAID_21 = i++,
+    MODEL_BRAID_22 = i++,
+    MODEL_BRAID_23 = i++,
+    MODEL_BRAID_24 = i++,
+    MODEL_BRAID_25 = i++,
+    MODEL_BRAID_26 = i++;
 
 export const
-    MESH_GROUND = 0,
-    MESH_IMAGE = 1,
-    MESH_PLAYER = 2;
+    SUBTEX_GROUND = i++,
+    SUBTEX_IMAGE = i++,
+    SUBTEX_PLAYER = i++,
+    SUBTEX_BRAID_00 = i++,
+    SUBTEX_BRAID_01 = i++,
+    SUBTEX_BRAID_02 = i++,
+    SUBTEX_BRAID_03 = i++,
+    SUBTEX_BRAID_04 = i++,
+    SUBTEX_BRAID_05 = i++,
+    SUBTEX_BRAID_06 = i++,
+    SUBTEX_BRAID_07 = i++,
+    SUBTEX_BRAID_08 = i++,
+    SUBTEX_BRAID_09 = i++,
+    SUBTEX_BRAID_10 = i++,
+    SUBTEX_BRAID_11 = i++,
+    SUBTEX_BRAID_12 = i++,
+    SUBTEX_BRAID_13 = i++,
+    SUBTEX_BRAID_14 = i++,
+    SUBTEX_BRAID_15 = i++,
+    SUBTEX_BRAID_16 = i++,
+    SUBTEX_BRAID_17 = i++,
+    SUBTEX_BRAID_18 = i++,
+    SUBTEX_BRAID_19 = i++,
+    SUBTEX_BRAID_20 = i++,
+    SUBTEX_BRAID_21 = i++,
+    SUBTEX_BRAID_22 = i++,
+    SUBTEX_BRAID_23 = i++,
+    SUBTEX_BRAID_24 = i++,
+    SUBTEX_BRAID_25 = i++,
+    SUBTEX_BRAID_26 = i++;
 
 export const
-    PROG_DEBUG = 0,
-    PROG_VIEW = 1,
-    PROG_SPRITE = 2,
-    PROG_POLYGON = 3;
+    MESH_GROUND = i++,
+    MESH_IMAGE = i++,
+    MESH_PLAYER = i++;
 
 export const
-    ENTITY_GROUND = 0,
-    ENTITY_PLAYER = 1,
-    ENTITY_ROOT = 2;
+    PROG_DEBUG = i++,
+    PROG_VIEW = i++,
+    PROG_SPRITE = i++,
+    PROG_POLYGON = i++;
 
 export const
-    SCENE_TEST = 0;
+    ENTITY_GROUND = i++,
+    ENTITY_PLAYER = i++,
+    ENTITY_ROOT = i++;
 
 export const
-    EVENT_RESIZED = 0;
+    SCENE_TEST = i++;
+
+export const
+    EVENT_RESIZED = i++;
 
 export const
     AUDIO_OMOIDE = "omoide_loft.ogg";
