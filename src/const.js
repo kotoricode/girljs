@@ -124,7 +124,7 @@ export const
     U_UVSIZE = "u_uvSize";
 
 export const
-    A_POSITION = "a_position",
+    A_XYZ = "a_xyz",
     A_UV = "a_uv";
 
 export const

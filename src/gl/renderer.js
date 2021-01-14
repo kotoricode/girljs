@@ -20,7 +20,7 @@ const getViewProgramData = () =>
     const { xyzOffset, uvOffset } = getModel($.MODEL_IMAGE);
 
     const offsets = {
-        [$.A_POSITION]: xyzOffset,
+        [$.A_XYZ]: xyzOffset,
         [$.A_UV]: uvOffset
     };
 

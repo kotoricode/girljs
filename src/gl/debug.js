@@ -22,4 +22,4 @@ const bufferData = new BufferData([
 BufferArray.set($.BUF_ARR_DEBUG, bufferData, $.DYNAMIC_DRAW);
 
 const debugProgram = new ProgramData($.PROG_DEBUG);
-debugProgram.setAttributes($.BUF_ARR_DEBUG, { [$.A_POSITION]: 0 });
+debugProgram.setAttributes($.BUF_ARR_DEBUG, { [$.A_XYZ]: 0 });

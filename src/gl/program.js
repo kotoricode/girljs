@@ -49,11 +49,11 @@ const uniArrZeroZero = [0, 0];
 const ubCamera = [$.UB_CAMERA];
 
 const attribPos = {
-    [$.A_POSITION]: 3
+    [$.A_XYZ]: 3
 };
 
 const attribPosUv = {
-    [$.A_POSITION]: 3,
+    [$.A_XYZ]: 3,
     [$.A_UV]: 2,
 };
 

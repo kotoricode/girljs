@@ -14,7 +14,7 @@ export class Sprite extends Component
         this.isVisible = true;
 
         this.attribOffsets = {
-            [$.A_POSITION]: null,
+            [$.A_XYZ]: null,
             [$.A_UV]: null
         };
 
@@ -27,7 +27,7 @@ export class Sprite extends Component
         // Model
         this.model = getModel(modelId);
 
-        this.attribOffsets[$.A_POSITION] = this.model.xyzOffset;
+        this.attribOffsets[$.A_XYZ] = this.model.xyzOffset;
         this.attribOffsets[$.A_UV] = this.model.uvOffset;
 
         this.programData.setAttributes(
