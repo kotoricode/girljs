@@ -1,5 +1,5 @@
 import * as $ from "./const";
-import { Sound } from "./sound";
+import { AudioPlayer } from "./audio-player";
 import { Vector } from "./math/vector";
 import { Publisher } from "./utils/publisher";
 import { isUiInteraction } from "./ui";
@@ -36,7 +36,7 @@ const onResize = () =>
 };
 
 // Modern browsers won't autoplay audio before user interaction
-window.addEventListener("mousedown", Sound.init, LISTENER_ONCE);
+window.addEventListener("mousedown", AudioPlayer.init, LISTENER_ONCE);
 
 /*------------------------------------------------------------------------------
     Canvases

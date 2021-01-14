@@ -130,7 +130,7 @@ const paramiMinLinMaxLin = [
 
 // id/url, width, height, parami[], subtextures[ id, x, y, width, height ]
 const textureData = [
-    $.TEX_BRAID, 1024, 1024, paramiMinLinMaxLin, [
+    $.FILE_BRAID, 1024, 1024, paramiMinLinMaxLin, [
         $.SUBTEX_BRAID_00, 0,   10,  136, 136,
         $.SUBTEX_BRAID_01, 128, 10,  136, 136,
         $.SUBTEX_BRAID_02, 256, 10,  136, 136,
@@ -159,10 +159,10 @@ const textureData = [
         $.SUBTEX_BRAID_25, 512, 461, 136, 136,
         $.SUBTEX_BRAID_26, 640, 461, 136, 136,
     ],
-    $.TEX_POLY, 512, 512, paramiMinLinMaxLin, [
+    $.FILE_POLY, 512, 512, paramiMinLinMaxLin, [
         $.SUBTEX_GROUND, 94, 97, 256, 256
     ],
-    $.TEX_SPRITE, 256, 256, paramiMinLinMaxLin, [
+    $.FILE_SPRITE, 256, 256, paramiMinLinMaxLin, [
         $.SUBTEX_PLAYER, 0, 0, 256, 256,
     ]
 ];

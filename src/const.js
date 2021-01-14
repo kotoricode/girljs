@@ -102,7 +102,9 @@ export const
     EVENT_RESIZED = i++;
 
 export const
-    AUDIO_OMOIDE = "omoide_loft.ogg";
+    AUDIO_MUSIC = i++,
+    AUDIO_SOUND = i++,
+    AUDIO_SOUND_LOOP = i++;
 
 export const
     PREF_MASTER = "master",
@@ -131,9 +133,10 @@ export const
     UB_CAMERA = "camera";
 
 export const
-    TEX_POLY = "texture.png",
-    TEX_SPRITE = "test.png",
-    TEX_BRAID = "braid.png";
+    FILE_OMOIDE = "omoide_loft.ogg",
+    FILE_POLY = "texture.png",
+    FILE_SPRITE = "test.png",
+    FILE_BRAID = "braid.png";
 
 export const
     /*--------------------------------------------------------------------------
