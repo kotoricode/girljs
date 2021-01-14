@@ -1,6 +1,6 @@
 import * as $ from "../const";
 import { gl } from "../dom";
-import { SafeMap } from "../utils/safe-builtins";
+import { SafeMap } from "../utils/better-builtins";
 
 const Buffer = {
     bind(bufferType, bufferId)

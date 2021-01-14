@@ -3,7 +3,7 @@ import { gl } from "../dom";
 import { getPreparedProgram } from "./program";
 import { BufferArray } from "./buffer";
 import { Vao } from "./vao";
-import { SafeMap } from "../utils/safe-builtins";
+import { SafeMap } from "../utils/better-builtins";
 
 export class ProgramData
 {

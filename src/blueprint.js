@@ -10,7 +10,7 @@ import { Anim } from "./components/anim";
 import { processMotion } from "./processes/process-motion";
 import { processCamera } from "./processes/process-camera";
 import { processAnimation } from "./processes/process-animation";
-import { SafeMap } from "./utils/safe-builtins";
+import { SafeMap } from "./utils/better-builtins";
 
 export const blueprint = new SafeMap([
     [$.SCENE_TEST, () => ({

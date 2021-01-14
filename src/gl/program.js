@@ -9,7 +9,7 @@ import fsView    from "./shaders/view.frag";
 import fsSprite  from "./shaders/sprite.frag";
 import fsPolygon from "./shaders/polygon.frag";
 import fsColor   from "./shaders/color.frag";
-import { SafeMap } from "../utils/safe-builtins";
+import { SafeMap } from "../utils/better-builtins";
 
 const createAttachShader = (program, shaderId, vertFrag) =>
 {

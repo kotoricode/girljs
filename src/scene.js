@@ -4,7 +4,7 @@ import { Space } from "./components/space";
 import { Entity } from "./entity";
 import { render } from "./gl/renderer";
 import { blueprint } from "./blueprint";
-import { SafeMap, SafeSet } from "./utils/safe-builtins";
+import { SafeMap, SafeSet } from "./utils/better-builtins";
 
 export class Scene
 {

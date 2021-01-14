@@ -1,6 +1,6 @@
 import * as $ from "./const";
 import { BufferUniform } from "./gl/buffer";
-import { BufferData } from "./utils/buffer-data";
+import { BufferData } from "./utils/better-builtins";
 import { DEG_TO_RAD } from "./math/math-helper";
 import { Matrix4 } from "./math/matrix4";
 import { Transform } from "./math/transform";

@@ -1,4 +1,4 @@
-import { SettableArray } from "../utils/settable-array";
+import { SettableArray } from "../utils/better-builtins";
 
 export class Vector extends SettableArray
 {

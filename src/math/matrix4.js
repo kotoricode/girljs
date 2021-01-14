@@ -1,6 +1,6 @@
 // https://ncalculators.com/matrix/4x4-matrix-multiplication-calculator.htm
 import * as $ from "../const";
-import { SettableArray } from "../utils/settable-array";
+import { SettableArray } from "../utils/better-builtins";
 
 export class Matrix4 extends SettableArray
 {

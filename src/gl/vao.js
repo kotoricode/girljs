@@ -1,5 +1,5 @@
 import { gl } from "../dom";
-import { SafeMap } from "../utils/safe-builtins";
+import { SafeMap } from "../utils/better-builtins";
 
 export const Vao = {
     bind(vao)

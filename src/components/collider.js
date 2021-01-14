@@ -1,4 +1,4 @@
-import { SafeSet } from "../utils/safe-builtins";
+import { SafeSet } from "../utils/better-builtins";
 import { Component } from "./component";
 
 export class Collider extends Component

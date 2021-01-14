@@ -1,3 +1,27 @@
+// javascript is designed by a battalion of braindead baboons
+// these classes seek to alleviate the symptoms, even if only palliatively
+
+export class BufferData extends Float32Array
+{
+    constructor(param)
+    {
+        super(param);
+    }
+
+    from(array)
+    {
+        if (this.length !== array.length)
+        {
+            throw Error;
+        }
+
+        for (let i = 0; i < array.length; i++)
+        {
+            this[i] = array[i];
+        }
+    }
+}
+
 export class SafeMap extends Map
 {
     constructor(...params)
@@ -72,6 +96,40 @@ export class SafeSet extends Set
         if (!super.delete(value))
         {
             throw value;
+        }
+    }
+}
+
+export class SettableArray extends Array
+{
+    constructor(...values)
+    {
+        super(...values);
+    }
+
+    from(array)
+    {
+        if (this.length !== array.length)
+        {
+            throw Error;
+        }
+
+        for (let i = 0; i < array.length; i++)
+        {
+            this[i] = array[i];
+        }
+    }
+
+    set(...values)
+    {
+        if (this.length < values.length)
+        {
+            throw Error;
+        }
+
+        for (let i = 0; i < values.length; i++)
+        {
+            this[i] = values[i];
         }
     }
 }

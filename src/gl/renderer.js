@@ -14,7 +14,7 @@ import {
 import { BufferArray } from "./buffer";
 import { Texture } from "./texture";
 import { ProgramData } from "./program-data";
-import { SafeMap } from "../utils/safe-builtins";
+import { SafeMap } from "../utils/better-builtins";
 
 const getViewProgramData = () =>
 {

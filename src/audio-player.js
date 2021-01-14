@@ -1,7 +1,7 @@
 import * as $ from "./const";
 import { clamp } from "./math/math-helper";
 import { Prefs } from "./save";
-import { SafeMap } from "./utils/safe-builtins";
+import { SafeMap } from "./utils/better-builtins";
 
 export const AudioPlayer = {
     init()

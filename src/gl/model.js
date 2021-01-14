@@ -1,9 +1,9 @@
 import * as $ from "../const";
-import { BufferData } from "../utils/buffer-data";
+import { BufferData } from "../utils/better-builtins";
 import { BufferArray } from "./buffer";
 import { Texture } from "./texture";
 import { getMesh } from "./mesh";
-import { SafeMap } from "../utils/safe-builtins";
+import { SafeMap } from "../utils/better-builtins";
 
 export const Model = {
     get(modelId)

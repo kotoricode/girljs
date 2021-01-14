@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { BufferData } from "../utils/buffer-data";
+import { BufferData } from "../utils/better-builtins";
 import { BufferArray } from "./buffer";
 import { ProgramData } from "./program-data";
 

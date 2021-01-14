@@ -1,4 +1,4 @@
-import { SafeMap, SafeSet } from "./safe-builtins";
+import { SafeMap, SafeSet } from "./better-builtins";
 
 export const Publisher = {
     publish(event)
