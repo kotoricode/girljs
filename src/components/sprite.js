@@ -27,9 +27,7 @@ export class Sprite extends Component
         // Model
         this.model = getModel(modelId);
 
-        console.log(this.model);
-
-        this.attribOffsets[$.A_POSITION] = this.model.meshOffset;
+        this.attribOffsets[$.A_POSITION] = this.model.xyzOffset;
         this.attribOffsets[$.A_UV] = this.model.uvOffset;
 
         this.programData.setAttributes(
@@ -38,7 +36,7 @@ export class Sprite extends Component
         );
 
         // Texture
-        const subTexData = Texture.getSubTextureData(modelId);
+        const subTexData = Texture.getSubTextureData(this.model.subTexId);
         this.texture = subTexData.baseData.texture;
     }
 
@@ -55,11 +53,7 @@ export class Sprite extends Component
         // Program-specific uniforms
         if (this.programData.programId === $.PROG_POLYGON)
         {
-            const [
-                uvMinX, uvMaxY,
-                uvMaxX, ,
-                , uvMinY
-            ] = this.model.uvCoords;
+            const [uvMinX, uvMaxY, uvMaxX, , , uvMinY] = this.model.uv;
 
             const width = uvMaxX - uvMinX;
             const height = uvMaxY - uvMinY;

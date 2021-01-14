@@ -1,27 +1,8 @@
 import * as $ from "../const";
 import { BufferData } from "../buffer-data";
 import { BufferArray } from "./buffer";
-import { Texture, subTextureData } from "./texture";
-
-const getXy = (minX, maxX, minY, maxY) =>
-{
-    return [
-        minX, minY, 0,
-        maxX, minY, 0,
-        minX, maxY, 0,
-        maxX, maxY, 0,
-    ];
-};
-
-const getXz = (minX, maxX, minZ, maxZ) =>
-{
-    return [
-        minX, 0, maxZ,
-        maxX, 0, maxZ,
-        minX, 0, minZ,
-        maxX, 0, minZ,
-    ];
-};
+import { Texture } from "./texture";
+import { getMesh } from "./mesh";
 
 export const getModel = (modelId) =>
 {
@@ -33,60 +14,17 @@ export const getModel = (modelId) =>
     throw modelId;
 };
 
-const uvFromSubTexture = (subTex) =>
+const pushData = (buffer, data) =>
 {
-    const {
-        x, y, width, height, baseData
-    } = Texture.getSubTextureData(subTex);
+    const offset = buffer.length * Float32Array.BYTES_PER_ELEMENT;
+    buffer.push(...data);
 
-    const minX = x / baseData.width;
-    const maxX = (x + width) / baseData.width;
-    const minY = y / baseData.height;
-    const maxY = (y + height) / baseData.height;
-
-    return [
-        minX, maxY,
-        maxX, maxY,
-        minX, minY,
-        maxX, minY,
-    ];
+    return offset;
 };
 
 /*------------------------------------------------------------------------------
-    General
+    Data
 ------------------------------------------------------------------------------*/
-const bytes = Float32Array.BYTES_PER_ELEMENT;
-
-const spriteBufferData = [];
-const xyOffsets = new Map();
-const uvOffsets = new Map();
-const uvCoords = new Map();
-const models = new Map();
-
-const meshData = [
-    $.MESH_GROUND, getXz(-2, 2, -2, 2),
-    $.MESH_PLAYER, getXy(-0.4, 0.4, 0, 1.5),
-];
-
-for (let i = 0; i < meshData.length;)
-{
-    const id = meshData[i++];
-    const coords = meshData[i++];
-
-    const xyOffset = spriteBufferData.length * bytes;
-    xyOffsets.set(id, xyOffset);
-    spriteBufferData.push(...coords);
-}
-
-for (const subTexId of subTextureData.keys())
-{
-    const coords = uvFromSubTexture(subTexId);
-    const uvOffset = spriteBufferData.length * bytes;
-    uvOffsets.set(subTexId, uvOffset);
-    uvCoords.set(subTexId, coords);
-    spriteBufferData.push(...coords);
-}
-
 const modelData = [
     $.MODEL_GROUND,   $.MESH_GROUND, $.SUBTEX_GROUND,
     $.MODEL_PLAYER,   $.MESH_PLAYER, $.SUBTEX_PLAYER,
@@ -119,16 +57,42 @@ const modelData = [
     $.MODEL_BRAID_26, $.MESH_PLAYER, $.SUBTEX_BRAID_26,
 ];
 
+/*------------------------------------------------------------------------------
+    General
+------------------------------------------------------------------------------*/
+const spriteBufferData = [];
+const xyzOffsets = new Map();
+const uvOffsets = new Map();
+const uvs = new Map();
+const models = new Map();
+
 for (let i = 0; i < modelData.length;)
 {
     const modelId = modelData[i++];
     const meshId = modelData[i++];
-    const uvId = modelData[i++];
+    const subTexId = modelData[i++];
+
+    if (!xyzOffsets.has(meshId))
+    {
+        const coords = getMesh(meshId);
+        const xyzOffset = pushData(spriteBufferData, coords);
+        xyzOffsets.set(meshId, xyzOffset);
+    }
+
+    if (!uvOffsets.has(subTexId))
+    {
+        const coords = Texture.getUvFromSubTexture(subTexId);
+        uvs.set(subTexId, coords);
+
+        const uvOffset = pushData(spriteBufferData, coords);
+        uvOffsets.set(subTexId, uvOffset);
+    }
 
     models.set(modelId, {
-        meshOffset: xyOffsets.get(meshId),
-        uvOffset: uvOffsets.get(uvId),
-        uvCoords: uvCoords.get(uvId)
+        xyzOffset: xyzOffsets.get(meshId),
+        uvOffset: uvOffsets.get(subTexId),
+        uv: uvs.get(subTexId),
+        subTexId
     });
 }
 
@@ -143,18 +107,15 @@ BufferArray.set(
 ------------------------------------------------------------------------------*/
 const polygonData = [];
 
-const xyImage = [-1, 1, 0, -1, -1, 0, 1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0];
-const meshOffset = polygonData.length * bytes;
-polygonData.push(...xyImage);
+const xyzImage = [-1, 1, 0, -1, -1, 0, 1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0];
+const xyzOffset = pushData(polygonData, xyzImage);
 
 const uvImage = [0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1];
-const uvOffset = polygonData.length * bytes;
-polygonData.push(...uvImage);
+const uvOffset = pushData(polygonData, uvImage);
 
 models.set($.MODEL_IMAGE, {
-    meshOffset,
-    uvOffset,
-    uvCoords: uvImage
+    xyzOffset,
+    uvOffset
 });
 
 BufferArray.set(

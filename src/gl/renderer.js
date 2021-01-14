@@ -17,10 +17,10 @@ import { ProgramData } from "./program-data";
 
 const getViewProgramData = () =>
 {
-    const { meshOffset, uvOffset } = getModel($.MODEL_IMAGE);
+    const { xyzOffset, uvOffset } = getModel($.MODEL_IMAGE);
 
     const offsets = {
-        [$.A_POSITION]: meshOffset,
+        [$.A_POSITION]: xyzOffset,
         [$.A_UV]: uvOffset
     };
 

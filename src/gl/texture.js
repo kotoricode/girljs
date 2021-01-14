@@ -45,6 +45,24 @@ export const Texture = {
 
         throw Error;
     },
+    getUvFromSubTexture(subTexId)
+    {
+        const {
+            x, y, width, height, baseData
+        } = Texture.getSubTextureData(subTexId);
+
+        const minX = x / baseData.width;
+        const maxX = (x + width) / baseData.width;
+        const minY = y / baseData.height;
+        const maxY = (y + height) / baseData.height;
+
+        return [
+            minX, maxY,
+            maxX, maxY,
+            minX, minY,
+            maxX, minY,
+        ];
+    },
     setParami(key, value)
     {
         gl.texParameteri($.TEXTURE_2D, key, value);
@@ -151,7 +169,7 @@ const textureData = [
 
 const textures = new Map();
 const textureParami = new Map();
-export const subTextureData = new Map();
+const subTextureData = new Map();
 
 for (let i = 0; i < textureData.length;)
 {
