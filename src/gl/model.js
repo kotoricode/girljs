@@ -1,7 +1,7 @@
 import * as $ from "../const";
 import { BufferData } from "../buffer-data";
 import { BufferArray } from "./buffer";
-import { Texture } from "./texture";
+import { Texture, subTextureData } from "./texture";
 
 const getXy = (minX, maxX, minY, maxY) =>
 {
@@ -33,11 +33,11 @@ export const getModel = (modelId) =>
     throw modelId;
 };
 
-const uvFromSubTexture = (modelId) =>
+const uvFromSubTexture = (subTex) =>
 {
     const {
         x, y, width, height, baseData
-    } = Texture.getSubTextureData(modelId);
+    } = Texture.getSubTextureData(subTex);
 
     const minX = x / baseData.width;
     const maxX = (x + width) / baseData.width;
@@ -55,75 +55,81 @@ const uvFromSubTexture = (modelId) =>
 /*------------------------------------------------------------------------------
     General
 ------------------------------------------------------------------------------*/
-const models = new Map();
 const bytes = Float32Array.BYTES_PER_ELEMENT;
 
-/*------------------------------------------------------------------------------
-    Sprites
-------------------------------------------------------------------------------*/
-const spriteModelData = [
-    $.MODEL_GROUND,   getXz(-2, 2, -2, 2),
-    $.MODEL_PLAYER,   getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_00, getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_01, getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_02, getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_03, getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_04, getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_05, getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_06, getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_07, getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_08, getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_09, getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_10, getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_11, getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_12, getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_13, getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_14, getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_15, getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_16, getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_17, getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_18, getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_19, getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_20, getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_21, getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_22, getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_23, getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_24, getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_25, getXy(-0.4, 0.4, 0, 1.5),
-    $.MODEL_BRAID_26, getXy(-0.4, 0.4, 0, 1.5),
+const spriteBufferData = [];
+const xyOffsets = new Map();
+const uvOffsets = new Map();
+const uvCoords = new Map();
+const models = new Map();
+
+const meshData = [
+    $.MESH_GROUND, getXz(-2, 2, -2, 2),
+    $.MESH_PLAYER, getXy(-0.4, 0.4, 0, 1.5),
 ];
 
-const xyzSize = 12;
-const uvSize = 8;
-const xyzUvSize = xyzSize + uvSize;
-const spriteBufferData = new Array(xyzUvSize * spriteModelData.length / 2);
-
-for (let i = 0; i < spriteModelData.length;)
+for (let i = 0; i < meshData.length;)
 {
-    const meshOffset = (i / 2) * xyzUvSize;
+    const id = meshData[i++];
+    const coords = meshData[i++];
 
-    const modelId = spriteModelData[i++];
-    const mesh = spriteModelData[i++];
+    const xyOffset = spriteBufferData.length * bytes;
+    xyOffsets.set(id, xyOffset);
+    spriteBufferData.push(...coords);
+}
 
-    const uvOffset = meshOffset + xyzSize;
-    const uvCoords = uvFromSubTexture(modelId);
+for (const subTexId of subTextureData.keys())
+{
+    const coords = uvFromSubTexture(subTexId);
+    const uvOffset = spriteBufferData.length * bytes;
+    uvOffsets.set(subTexId, uvOffset);
+    uvCoords.set(subTexId, coords);
+    spriteBufferData.push(...coords);
+}
+
+const modelData = [
+    $.MODEL_GROUND,   $.MESH_GROUND, $.SUBTEX_GROUND,
+    $.MODEL_PLAYER,   $.MESH_PLAYER, $.SUBTEX_PLAYER,
+    $.MODEL_BRAID_00, $.MESH_PLAYER, $.SUBTEX_BRAID_00,
+    $.MODEL_BRAID_01, $.MESH_PLAYER, $.SUBTEX_BRAID_01,
+    $.MODEL_BRAID_02, $.MESH_PLAYER, $.SUBTEX_BRAID_02,
+    $.MODEL_BRAID_03, $.MESH_PLAYER, $.SUBTEX_BRAID_03,
+    $.MODEL_BRAID_04, $.MESH_PLAYER, $.SUBTEX_BRAID_04,
+    $.MODEL_BRAID_05, $.MESH_PLAYER, $.SUBTEX_BRAID_05,
+    $.MODEL_BRAID_06, $.MESH_PLAYER, $.SUBTEX_BRAID_06,
+    $.MODEL_BRAID_07, $.MESH_PLAYER, $.SUBTEX_BRAID_07,
+    $.MODEL_BRAID_08, $.MESH_PLAYER, $.SUBTEX_BRAID_08,
+    $.MODEL_BRAID_09, $.MESH_PLAYER, $.SUBTEX_BRAID_09,
+    $.MODEL_BRAID_10, $.MESH_PLAYER, $.SUBTEX_BRAID_10,
+    $.MODEL_BRAID_11, $.MESH_PLAYER, $.SUBTEX_BRAID_11,
+    $.MODEL_BRAID_12, $.MESH_PLAYER, $.SUBTEX_BRAID_12,
+    $.MODEL_BRAID_13, $.MESH_PLAYER, $.SUBTEX_BRAID_13,
+    $.MODEL_BRAID_14, $.MESH_PLAYER, $.SUBTEX_BRAID_14,
+    $.MODEL_BRAID_15, $.MESH_PLAYER, $.SUBTEX_BRAID_15,
+    $.MODEL_BRAID_16, $.MESH_PLAYER, $.SUBTEX_BRAID_16,
+    $.MODEL_BRAID_17, $.MESH_PLAYER, $.SUBTEX_BRAID_17,
+    $.MODEL_BRAID_18, $.MESH_PLAYER, $.SUBTEX_BRAID_18,
+    $.MODEL_BRAID_19, $.MESH_PLAYER, $.SUBTEX_BRAID_19,
+    $.MODEL_BRAID_20, $.MESH_PLAYER, $.SUBTEX_BRAID_20,
+    $.MODEL_BRAID_21, $.MESH_PLAYER, $.SUBTEX_BRAID_21,
+    $.MODEL_BRAID_22, $.MESH_PLAYER, $.SUBTEX_BRAID_22,
+    $.MODEL_BRAID_23, $.MESH_PLAYER, $.SUBTEX_BRAID_23,
+    $.MODEL_BRAID_24, $.MESH_PLAYER, $.SUBTEX_BRAID_24,
+    $.MODEL_BRAID_25, $.MESH_PLAYER, $.SUBTEX_BRAID_25,
+    $.MODEL_BRAID_26, $.MESH_PLAYER, $.SUBTEX_BRAID_26,
+];
+
+for (let i = 0; i < modelData.length;)
+{
+    const modelId = modelData[i++];
+    const meshId = modelData[i++];
+    const uvId = modelData[i++];
 
     models.set(modelId, {
-        meshOffset: meshOffset * bytes,
-        uvOffset: uvOffset * bytes,
-        uvCoords,
-        modelId
+        meshOffset: xyOffsets.get(meshId),
+        uvOffset: uvOffsets.get(uvId),
+        uvCoords: uvCoords.get(uvId)
     });
-
-    for (let j = 0; j < xyzSize; j++)
-    {
-        spriteBufferData[meshOffset+j] = mesh[j];
-    }
-
-    for (let j = 0; j < uvSize; j++)
-    {
-        spriteBufferData[uvOffset+j] = uvCoords[j];
-    }
 }
 
 BufferArray.set(
@@ -133,46 +139,26 @@ BufferArray.set(
 );
 
 /*------------------------------------------------------------------------------
-    Polygons
+    Polygon
 ------------------------------------------------------------------------------*/
-const polygonModelData = [
-    $.MODEL_IMAGE,
-    [ -1, 1, 0, -1, -1, 0, 1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0 ],
-    [ 0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1 ]
-];
+const polygonData = [];
 
-const polygonBufferData = [];
+const xyImage = [-1, 1, 0, -1, -1, 0, 1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0];
+const meshOffset = polygonData.length * bytes;
+polygonData.push(...xyImage);
 
-for (let i = 0; i < polygonModelData.length;)
-{
-    const modelId = polygonModelData[i++];
-    const mesh = polygonModelData[i++];
-    const uvCoords = polygonModelData[i++];
+const uvImage = [0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1];
+const uvOffset = polygonData.length * bytes;
+polygonData.push(...uvImage);
 
-    const meshOffset = polygonBufferData.length;
-    polygonBufferData.length += mesh.length + uvCoords.length;
-
-    const uvOffset = meshOffset + mesh.length;
-
-    models.set(modelId, {
-        meshOffset: meshOffset * bytes,
-        uvOffset: uvOffset * bytes,
-        uvCoords
-    });
-
-    for (let j = 0; j < mesh.length; j++)
-    {
-        polygonBufferData[meshOffset+j] = mesh[j];
-    }
-
-    for (let j = 0; j < uvCoords.length; j++)
-    {
-        polygonBufferData[uvOffset+j] = uvCoords[j];
-    }
-}
+models.set($.MODEL_IMAGE, {
+    meshOffset,
+    uvOffset,
+    uvCoords: uvImage
+});
 
 BufferArray.set(
     $.BUF_ARR_POLYGON,
-    new BufferData(polygonBufferData),
+    new BufferData(polygonData),
     $.STATIC_DRAW
 );

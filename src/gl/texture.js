@@ -111,63 +111,63 @@ const paramiMinLinMaxLin = [
 ];
 
 // id/url, width, height, parami[], subtextures[ id, x, y, width, height ]
-const textureDef = [
+const textureData = [
     $.TEX_BRAID, 1024, 1024, paramiMinLinMaxLin, [
-        $.MODEL_BRAID_00, 0,   10,  136, 136,
-        $.MODEL_BRAID_01, 128, 10,  136, 136,
-        $.MODEL_BRAID_02, 256, 10,  136, 136,
-        $.MODEL_BRAID_03, 384, 10,  136, 136,
-        $.MODEL_BRAID_04, 512, 10,  136, 136,
-        $.MODEL_BRAID_05, 640, 10,  136, 136,
-        $.MODEL_BRAID_06, 768, 10,  136, 136,
-        $.MODEL_BRAID_07, 0,   158, 136, 136,
-        $.MODEL_BRAID_08, 128, 158, 136, 136,
-        $.MODEL_BRAID_09, 256, 158, 136, 136,
-        $.MODEL_BRAID_10, 384, 158, 136, 136,
-        $.MODEL_BRAID_11, 512, 158, 136, 136,
-        $.MODEL_BRAID_12, 640, 158, 136, 136,
-        $.MODEL_BRAID_13, 768, 158, 136, 136,
-        $.MODEL_BRAID_14, 0,   309, 136, 136,
-        $.MODEL_BRAID_15, 128, 309, 136, 136,
-        $.MODEL_BRAID_16, 256, 309, 136, 136,
-        $.MODEL_BRAID_17, 384, 309, 136, 136,
-        $.MODEL_BRAID_18, 512, 309, 136, 136,
-        $.MODEL_BRAID_19, 640, 309, 136, 136,
-        $.MODEL_BRAID_20, 768, 309, 136, 136,
-        $.MODEL_BRAID_21, 0,   461, 136, 136,
-        $.MODEL_BRAID_22, 128, 461, 136, 136,
-        $.MODEL_BRAID_23, 256, 461, 136, 136,
-        $.MODEL_BRAID_24, 384, 461, 136, 136,
-        $.MODEL_BRAID_25, 512, 461, 136, 136,
-        $.MODEL_BRAID_26, 640, 461, 136, 136,
+        $.SUBTEX_BRAID_00, 0,   10,  136, 136,
+        $.SUBTEX_BRAID_01, 128, 10,  136, 136,
+        $.SUBTEX_BRAID_02, 256, 10,  136, 136,
+        $.SUBTEX_BRAID_03, 384, 10,  136, 136,
+        $.SUBTEX_BRAID_04, 512, 10,  136, 136,
+        $.SUBTEX_BRAID_05, 640, 10,  136, 136,
+        $.SUBTEX_BRAID_06, 768, 10,  136, 136,
+        $.SUBTEX_BRAID_07, 0,   158, 136, 136,
+        $.SUBTEX_BRAID_08, 128, 158, 136, 136,
+        $.SUBTEX_BRAID_09, 256, 158, 136, 136,
+        $.SUBTEX_BRAID_10, 384, 158, 136, 136,
+        $.SUBTEX_BRAID_11, 512, 158, 136, 136,
+        $.SUBTEX_BRAID_12, 640, 158, 136, 136,
+        $.SUBTEX_BRAID_13, 768, 158, 136, 136,
+        $.SUBTEX_BRAID_14, 0,   309, 136, 136,
+        $.SUBTEX_BRAID_15, 128, 309, 136, 136,
+        $.SUBTEX_BRAID_16, 256, 309, 136, 136,
+        $.SUBTEX_BRAID_17, 384, 309, 136, 136,
+        $.SUBTEX_BRAID_18, 512, 309, 136, 136,
+        $.SUBTEX_BRAID_19, 640, 309, 136, 136,
+        $.SUBTEX_BRAID_20, 768, 309, 136, 136,
+        $.SUBTEX_BRAID_21, 0,   461, 136, 136,
+        $.SUBTEX_BRAID_22, 128, 461, 136, 136,
+        $.SUBTEX_BRAID_23, 256, 461, 136, 136,
+        $.SUBTEX_BRAID_24, 384, 461, 136, 136,
+        $.SUBTEX_BRAID_25, 512, 461, 136, 136,
+        $.SUBTEX_BRAID_26, 640, 461, 136, 136,
     ],
     $.TEX_POLY, 512, 512, paramiMinLinMaxLin, [
-        $.MODEL_GROUND, 94, 97, 256, 256
+        $.SUBTEX_GROUND, 94, 97, 256, 256
     ],
     $.TEX_SPRITE, 256, 256, paramiMinLinMaxLin, [
-        $.MODEL_PLAYER, 0, 0, 256, 256,
+        $.SUBTEX_PLAYER, 0, 0, 256, 256,
     ]
 ];
 
 const textures = new Map();
 const textureParami = new Map();
-const subTextureData = new Map();
+export const subTextureData = new Map();
 
-for (let i = 0; i < textureDef.length;)
+for (let i = 0; i < textureData.length;)
 {
-    const src = textureDef[i++];
+    const src = textureData[i++];
     const texture = Texture.create();
 
     const baseData = {
-        width: textureDef[i++],
-        height: textureDef[i++],
+        width: textureData[i++],
+        height: textureData[i++],
         texture
     };
 
     textures.set(src, texture);
-    textureParami.set(src, textureDef[i++]);
+    textureParami.set(src, textureData[i++]);
 
-    const subTextures = textureDef[i++];
+    const subTextures = textureData[i++];
 
     for (let j = 0; j < subTextures.length;)
     {
