@@ -1,7 +1,14 @@
 import * as $ from "../const";
-import { BufferData } from "../buffer-data";
-import { BufferArray } from "./buffer";
-import { Texture } from "./texture";
+
+export const getMesh = (meshId) =>
+{
+    if (meshData.has(meshId))
+    {
+        return meshData.get(meshId);
+    }
+
+    throw meshId;
+};
 
 const getXy = (minX, maxX, minY, maxY) =>
 {
@@ -21,16 +28,6 @@ const getXz = (minX, maxX, minZ, maxZ) =>
         minX, 0, minZ,
         maxX, 0, minZ,
     ];
-};
-
-export const getMesh = (meshId) =>
-{
-    if (meshData.has(meshId))
-    {
-        return meshData.get(meshId);
-    }
-
-    throw meshId;
 };
 
 const meshData = new Map([

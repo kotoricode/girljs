@@ -1,6 +1,5 @@
 import * as $ from "../const";
-import { Texture } from "../gl/texture";
-import { getModel } from "../gl/model";
+import { Model } from "../gl/model";
 import { Component } from "./component";
 import { ProgramData } from "../gl/program-data";
 
@@ -24,20 +23,13 @@ export class Sprite extends Component
 
     setModel(modelId)
     {
-        // Model
-        this.model = getModel(modelId);
+        this.model = Model.get(modelId);
 
         this.attribOffsets[$.A_XYZ] = this.model.xyzOffset;
         this.attribOffsets[$.A_UV] = this.model.uvOffset;
+        this.programData.setAttributes($.BUF_ARR_SPRITE, this.attribOffsets);
 
-        this.programData.setAttributes(
-            $.BUF_ARR_SPRITE,
-            this.attribOffsets
-        );
-
-        // Texture
-        const subTexData = Texture.getSubTextureData(this.model.subTexId);
-        this.texture = subTexData.baseData.texture;
+        this.texture = Model.getTexture(modelId);
     }
 
     setProgramUniforms(uniforms)

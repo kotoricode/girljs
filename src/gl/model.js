@@ -4,14 +4,25 @@ import { BufferArray } from "./buffer";
 import { Texture } from "./texture";
 import { getMesh } from "./mesh";
 
-export const getModel = (modelId) =>
-{
-    if (models.has(modelId))
+export const Model = {
+    get(modelId)
     {
-        return models.get(modelId);
-    }
+        if (models.has(modelId))
+        {
+            return models.get(modelId);
+        }
 
-    throw modelId;
+        throw modelId;
+    },
+    getTexture(modelId)
+    {
+        if (modelTextures.has(modelId))
+        {
+            return modelTextures.get(modelId);
+        }
+
+        throw modelId;
+    }
 };
 
 const pushData = (buffer, data) =>
@@ -65,6 +76,7 @@ const xyzOffsets = new Map();
 const uvOffsets = new Map();
 const uvs = new Map();
 const models = new Map();
+const modelTextures = new Map();
 
 for (let i = 0; i < modelData.length;)
 {
@@ -91,9 +103,11 @@ for (let i = 0; i < modelData.length;)
     models.set(modelId, {
         xyzOffset: xyzOffsets.get(meshId),
         uvOffset: uvOffsets.get(subTexId),
-        uv: uvs.get(subTexId),
-        subTexId
+        uv: uvs.get(subTexId)
     });
+
+    const tex = Texture.getSubTextureData(subTexId).baseData.texture;
+    modelTextures.set(modelId, tex);
 }
 
 BufferArray.set(

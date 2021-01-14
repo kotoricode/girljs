@@ -14,11 +14,11 @@ export class Matrix4 extends SettableArray
         );
     }
 
-    fromTransform({ scale, rotation, translation })
+    fromTransform(transform)
     {
-        const [sx, sy, sz] = scale;
-        const [rx, ry, rz, rw] = rotation;
-        const [tx, ty, tz] = translation;
+        const [sx, sy, sz] = transform.scale;
+        const [rx, ry, rz, rw] = transform.rotation;
+        const [tx, ty, tz] = transform.translation;
 
         const rxx = rx * rx;
         const ryy = ry * ry;

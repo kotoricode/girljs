@@ -1,7 +1,7 @@
 import * as $ from "./const";
-import { initAudio } from "./audio";
+import { Sound } from "./sound";
 import { Vector } from "./math/vector";
-import { publish } from "./utils/publisher";
+import { Publisher } from "./utils/publisher";
 import { isUiInteraction } from "./ui";
 
 export const LISTENER_ONCE = { once: true };
@@ -28,7 +28,7 @@ const onResize = () =>
             uiCanvas.style.height = height + "px";
 
             gl.viewport(0, 0, width, height);
-            publish($.EVENT_RESIZED);
+            Publisher.publish($.EVENT_RESIZED);
         }
     }
 
@@ -36,7 +36,7 @@ const onResize = () =>
 };
 
 // Modern browsers won't autoplay audio before user interaction
-window.addEventListener("mousedown", initAudio, LISTENER_ONCE);
+window.addEventListener("mousedown", Sound.init, LISTENER_ONCE);
 
 /*------------------------------------------------------------------------------
     Canvases

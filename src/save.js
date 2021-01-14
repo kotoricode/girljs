@@ -1,45 +1,44 @@
 import * as $ from "./const";
-import { getStored, setStored } from "./utils/storage";
+import { Storage } from "./utils/storage";
 
-export const getPref = (prefId) =>
-{
-    if (prefId in prefs)
+export const Prefs = {
+    get(prefId)
     {
-        return prefs[prefId];
-    }
-
-    throw prefId;
-};
-
-export const prefsFromStored = () =>
-{
-    for (const key of Object.keys(prefs))
-    {
-        const stored = getStored(key);
-
-        if (stored !== null)
+        if (prefId in prefs)
         {
-            prefs[key] = stored;
+            return prefs[prefId];
         }
-    }
-};
 
-export const prefsToStored = () =>
-{
-    for (const [key, value] of Object.entries(prefs))
-    {
-        setStored(key, value);
-    }
-};
-
-export const setPref = (prefId, value) =>
-{
-    if (!(prefId in prefs))
-    {
         throw prefId;
-    }
+    },
+    load()
+    {
+        for (const key of Object.keys(prefs))
+        {
+            const stored = Storage.get(key);
 
-    prefs[prefId] = value;
+            if (stored !== null)
+            {
+                prefs[key] = stored;
+            }
+        }
+    },
+    save()
+    {
+        for (const [key, value] of Object.entries(prefs))
+        {
+            Storage.set(key, value);
+        }
+    },
+    set(prefId, value)
+    {
+        if (!(prefId in prefs))
+        {
+            throw prefId;
+        }
+
+        prefs[prefId] = value;
+    }
 };
 
 const prefs = {
@@ -52,4 +51,4 @@ const state = {
 
 };
 
-prefsFromStored();
+Prefs.load();

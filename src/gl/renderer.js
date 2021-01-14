@@ -1,8 +1,8 @@
 import * as $ from "../const";
 import { gl } from "../dom";
 import { Sprite } from "../components/sprite";
-import { getModel } from "./model";
-import { subscribe } from "../utils/publisher";
+import { Model } from "./model";
+import { Publisher } from "../utils/publisher";
 import { getDebugProgram } from "./debug";
 import {
     disable,
@@ -17,14 +17,14 @@ import { ProgramData } from "./program-data";
 
 const getViewProgramData = () =>
 {
-    const { xyzOffset, uvOffset } = getModel($.MODEL_IMAGE);
+    const programData = new ProgramData($.PROG_VIEW);
+    const model = Model.get($.MODEL_IMAGE);
 
     const offsets = {
-        [$.A_XYZ]: xyzOffset,
-        [$.A_UV]: uvOffset
+        [$.A_XYZ]: model.xyzOffset,
+        [$.A_UV]: model.uvOffset
     };
 
-    const programData = new ProgramData($.PROG_VIEW);
     programData.setAttributes($.BUF_ARR_POLYGON, offsets);
 
     return programData;
@@ -113,7 +113,7 @@ const renderTriangle = (vao) =>
     drawArraysVao($.TRIANGLES, 0, 6, vao);
 };
 
-subscribe($.EVENT_RESIZED, () => isCanvasResized = true);
+Publisher.subscribe($.EVENT_RESIZED, () => isCanvasResized = true);
 
 disable($.DEPTH_TEST);
 disable($.CULL_FACE);

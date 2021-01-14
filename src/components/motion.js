@@ -14,10 +14,8 @@ export class Motion extends Component
 
         this.speed = speed;
         this.direction = new Vector();
-
-        this.idx = -1;
-        this.maxIdx = -1;
         this.waypoints = [new Vector()];
+        this.resetTargets();
     }
 
     hasTarget()
@@ -27,6 +25,11 @@ export class Motion extends Component
 
     getTarget()
     {
+        if (this.idx < 0 || this.waypoints.length <= this.idx)
+        {
+            throw this.idx;
+        }
+
         return this.waypoints[this.idx];
     }
 
