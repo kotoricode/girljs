@@ -26,23 +26,11 @@ export const Publisher = {
         }
 
         const subs = eventSubs.get(event);
-
-        if (subs.has(subFunc))
-        {
-            throw Error;
-        }
-
         subs.add(subFunc);
     },
     unsubscribe(event, subFunc)
     {
         const subs = eventSubs.get(event);
-
-        if (!subs.has(subFunc))
-        {
-            throw Error;
-        }
-
         subs.delete(subFunc);
 
         if (!subs.size)

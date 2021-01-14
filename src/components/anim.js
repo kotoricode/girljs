@@ -28,11 +28,6 @@ export class Anim extends Component
     {
         this.state = state;
 
-        if (!this.stateModels.has(state) || !this.stateDelays.has(state))
-        {
-            throw state;
-        }
-
         this.models = this.stateModels.get(state);
         this.delays = this.stateDelays.get(state);
 
