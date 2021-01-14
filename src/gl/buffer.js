@@ -47,7 +47,7 @@ export const BufferArray = {
     unbind()
     {
         Buffer.unbind($.ARRAY_BUFFER);
-    },
+    }
 };
 
 export const BufferUniform = {
@@ -66,13 +66,12 @@ export const BufferUniform = {
     set(bufferId, data)
     {
         Buffer.set($.UNIFORM_BUFFER, bufferId, data, $.DYNAMIC_DRAW);
-    },
+    }
 };
 
-const reduceFunc = (array, bufferId) => (
-    array.push([bufferId, gl.createBuffer()]),
-    array
-);
+const reduceFunc = (array, bufferId) => (array.push(
+    [bufferId, gl.createBuffer()]
+), array);
 
 const buffers = new SafeMap([
     [$.ARRAY_BUFFER, new SafeMap(

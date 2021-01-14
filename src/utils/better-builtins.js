@@ -1,6 +1,3 @@
-// javascript is designed by a battalion of braindead baboons
-// these classes seek to alleviate the symptoms, even if only palliatively
-
 export class BufferData extends Float32Array
 {
     constructor(...param)

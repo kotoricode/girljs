@@ -1,10 +1,11 @@
 import { lerp } from "./math/math-helper";
+import { Vector } from "./math/vector";
 
 export class AnimArray
 {
     constructor(keyValues, times)
     {
-        this.curValue = [0, 0, 0];
+        this.curValue = new Vector();
         this.keyValues = keyValues;
         this.times = times;
 
