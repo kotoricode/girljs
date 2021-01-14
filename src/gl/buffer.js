@@ -57,14 +57,7 @@ export const BufferUniform = {
     },
     getBindingPoint(bufferId)
     {
-        const bindingPoint = bindingPoints.indexOf(bufferId);
-
-        if (bindingPoint >= 0)
-        {
-            return bindingPoint;
-        }
-
-        throw bufferId;
+        return bindingPoints.get(bufferId);
     },
     getBufferByBlock(blockId)
     {
@@ -97,15 +90,13 @@ const buffers = new SafeMap([
 ]);
 
 const arrayBufferSizes = new SafeMap();
-const bindingPoints = [$.BUF_UNI_CAMERA];
 
-for (let i = 0; i < bindingPoints.length; i++)
+const blockBuffers = new SafeMap([[$.UB_CAMERA, $.BUF_UNI_CAMERA]]);
+
+const bindingPoints = new SafeMap([$.BUF_UNI_CAMERA].map((x, i) => [x, i]));
+
+for (const [bufferId, idx] of bindingPoints)
 {
-    const bufferId = bindingPoints[i];
     const buffer = BufferUniform.get(bufferId);
-    gl.bindBufferBase($.UNIFORM_BUFFER, i, buffer);
+    gl.bindBufferBase($.UNIFORM_BUFFER, idx, buffer);
 }
-
-const blockBuffers = new SafeMap([
-    [$.UB_CAMERA, $.BUF_UNI_CAMERA]
-]);

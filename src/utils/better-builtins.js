@@ -3,9 +3,9 @@
 
 export class BufferData extends Float32Array
 {
-    constructor(param)
+    constructor(...param)
     {
-        super(param);
+        super(...param);
     }
 
     from(array)
@@ -18,6 +18,19 @@ export class BufferData extends Float32Array
         for (let i = 0; i < array.length; i++)
         {
             this[i] = array[i];
+        }
+    }
+
+    set(...values)
+    {
+        if (this.length < values.length)
+        {
+            throw Error;
+        }
+
+        for (let i = 0; i < values.length; i++)
+        {
+            this[i] = values[i];
         }
     }
 }
