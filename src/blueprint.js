@@ -10,18 +10,18 @@ import { Anim } from "./components/anim";
 import { processMotion } from "./processes/process-motion";
 import { processCamera } from "./processes/process-camera";
 import { processAnimation } from "./processes/process-animation";
-import { MapDebug } from "./utils/map-debug";
+import { SafeMap } from "./utils/safe-builtins";
 
-export const blueprint = new MapDebug([
+export const blueprint = new SafeMap([
     [$.SCENE_TEST, () => ({
-        entities: new MapDebug([
+        entities: new SafeMap([
             [$.ENTITY_PLAYER, {
                 components: [
                     new Space(),
                     new Motion(3),
                     new Player(),
                     new Sprite($.PROG_SPRITE, $.MODEL_BRAID_00),
-                    new Anim(new MapDebug([
+                    new Anim(new SafeMap([
                         [$.ANIM_IDLE, [$.MODEL_BRAID_00]],
                         [$.ANIM_MOVE, [
                             $.MODEL_BRAID_00,
@@ -52,7 +52,7 @@ export const blueprint = new MapDebug([
                             $.MODEL_BRAID_25,
                             $.MODEL_BRAID_26,
                         ]],
-                    ]), new MapDebug([
+                    ]), new SafeMap([
                         [$.ANIM_IDLE, [Infinity]],
                         [$.ANIM_MOVE, [0.045]],
                     ]))

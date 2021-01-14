@@ -3,7 +3,7 @@ import { BufferData } from "../utils/buffer-data";
 import { BufferArray } from "./buffer";
 import { Texture } from "./texture";
 import { getMesh } from "./mesh";
-import { MapDebug } from "../utils/map-debug";
+import { SafeMap } from "../utils/safe-builtins";
 
 export const Model = {
     get(modelId)
@@ -63,11 +63,11 @@ const modelData = [
     General
 ------------------------------------------------------------------------------*/
 const spriteBufferData = [];
-const xyzOffsets = new MapDebug();
-const uvOffsets = new MapDebug();
-const uvs = new MapDebug();
-const models = new MapDebug();
-const modelTextures = new MapDebug();
+const xyzOffsets = new SafeMap();
+const uvOffsets = new SafeMap();
+const uvs = new SafeMap();
+const models = new SafeMap();
+const modelTextures = new SafeMap();
 
 for (let i = 0; i < modelData.length;)
 {

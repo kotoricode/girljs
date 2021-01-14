@@ -1,6 +1,6 @@
 import * as $ from "../const";
 import { gl, LISTENER_ONCE } from "../dom";
-import { MapDebug } from "../utils/map-debug";
+import { SafeMap } from "../utils/safe-builtins";
 
 export const Texture = {
     bind(texture)
@@ -163,9 +163,9 @@ const textureData = [
     ]
 ];
 
-const textures = new MapDebug();
-const textureParami = new MapDebug();
-const subTextureData = new MapDebug();
+const textures = new SafeMap();
+const textureParami = new SafeMap();
+const subTextureData = new SafeMap();
 
 for (let i = 0; i < textureData.length;)
 {

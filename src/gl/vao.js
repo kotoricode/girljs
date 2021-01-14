@@ -1,5 +1,5 @@
 import { gl } from "../dom";
-import { MapDebug } from "../utils/map-debug";
+import { SafeMap } from "../utils/safe-builtins";
 
 export const Vao = {
     bind(vao)
@@ -25,4 +25,4 @@ export const Vao = {
     }
 };
 
-const vaos = new MapDebug();
+const vaos = new SafeMap();

@@ -1,7 +1,7 @@
 import * as $ from "./const";
 import { clamp } from "./math/math-helper";
 import { Prefs } from "./save";
-import { MapDebug } from "./utils/map-debug";
+import { SafeMap } from "./utils/safe-builtins";
 
 export const AudioPlayer = {
     init()
@@ -68,7 +68,7 @@ const play = (soundId) =>
     }
 };
 
-const audio = new MapDebug([
+const audio = new SafeMap([
     [$.AUDIO_MUSIC, {
         element: null,
         fileName: $.FILE_OMOIDE,
@@ -97,6 +97,6 @@ for (const audioObj of audio.values())
     audioObj.element = element;
 }
 
-const gains = new MapDebug();
+const gains = new SafeMap();
 
 let context;

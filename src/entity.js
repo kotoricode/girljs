@@ -1,4 +1,4 @@
-import { MapDebug } from "./utils/map-debug";
+import { SafeMap, SafeSet } from "./utils/safe-builtins";
 
 export class Entity
 {
@@ -6,8 +6,8 @@ export class Entity
     {
         this.id = id;
         this.flags = 0;
-        this.components = new MapDebug();
-        this.children = new Set();
+        this.components = new SafeMap();
+        this.children = new SafeSet();
 
         this.addComponent(...comps);
     }

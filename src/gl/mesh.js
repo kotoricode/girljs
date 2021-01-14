@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { MapDebug } from "../utils/map-debug";
+import { SafeMap } from "../utils/safe-builtins";
 
 export const getMesh = (meshId) =>
 {
@@ -26,7 +26,7 @@ const getXz = (minX, maxX, minZ, maxZ) =>
     ];
 };
 
-const meshData = new MapDebug([
+const meshData = new SafeMap([
     [$.MESH_GROUND, getXz(-2, 2, -2, 2)],
     [$.MESH_PLAYER, getXy(-0.4, 0.4, 0, 1.5)],
 ]);

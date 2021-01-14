@@ -1,3 +1,4 @@
+import { SafeSet } from "../utils/safe-builtins";
 import { Component } from "./component";
 
 export class Collider extends Component
@@ -7,7 +8,7 @@ export class Collider extends Component
         super();
 
         // TODO: order meshes so that cheapest ones are checked first
-        this.meshes = new Set(meshes);
+        this.meshes = new SafeSet(meshes);
     }
 
     hasPoint(vec)

@@ -1,6 +1,6 @@
 import * as $ from "../const";
 import { gl } from "../dom";
-import { MapDebug } from "../utils/map-debug";
+import { SafeMap } from "../utils/safe-builtins";
 
 const Buffer = {
     bind(bufferType, bufferId)
@@ -81,22 +81,22 @@ const reduceFunc = (array, bufferId) => (
     array
 );
 
-const buffers = new MapDebug([
-    [$.ARRAY_BUFFER, new MapDebug(
+const buffers = new SafeMap([
+    [$.ARRAY_BUFFER, new SafeMap(
         [
             $.BUF_ARR_SPRITE,
             $.BUF_ARR_POLYGON,
             $.BUF_ARR_DEBUG
         ].reduce(reduceFunc, [])
     )],
-    [$.UNIFORM_BUFFER, new MapDebug(
+    [$.UNIFORM_BUFFER, new SafeMap(
         [
             $.BUF_UNI_CAMERA
         ].reduce(reduceFunc, [])
     )]
 ]);
 
-const arrayBufferSizes = new MapDebug();
+const arrayBufferSizes = new SafeMap();
 const bindingPoints = [$.BUF_UNI_CAMERA];
 
 for (let i = 0; i < bindingPoints.length; i++)
@@ -106,6 +106,6 @@ for (let i = 0; i < bindingPoints.length; i++)
     gl.bindBufferBase($.UNIFORM_BUFFER, i, buffer);
 }
 
-const blockBuffers = new MapDebug([
+const blockBuffers = new SafeMap([
     [$.UB_CAMERA, $.BUF_UNI_CAMERA]
 ]);

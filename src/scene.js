@@ -4,7 +4,7 @@ import { Space } from "./components/space";
 import { Entity } from "./entity";
 import { render } from "./gl/renderer";
 import { blueprint } from "./blueprint";
-import { MapDebug } from "./utils/map-debug";
+import { SafeMap, SafeSet } from "./utils/safe-builtins";
 
 export class Scene
 {
@@ -12,14 +12,14 @@ export class Scene
     {
         this.sceneId = sceneId;
         this.dt = 0;
-        this.entities = new MapDebug();
-        this.newSpriteEntities = new Set();
+        this.entities = new SafeMap();
+        this.newSpriteEntities = new SafeSet();
 
         /** @const {Map<number, Set>} */
-        this.cached = new MapDebug();
+        this.cached = new SafeMap();
 
         // TODO: implement this
-        this.dirtyEntities = new Set();
+        this.dirtyEntities = new SafeSet();
     }
 
     static * walkEntities(entity)
@@ -80,7 +80,7 @@ export class Scene
 
         if (!this.cached.has(flags))
         {
-            const cache = new Set();
+            const cache = new SafeSet();
 
             for (const entity of this.entities.values())
             {

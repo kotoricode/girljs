@@ -1,4 +1,4 @@
-import { MapDebug } from "./map-debug";
+import { SafeMap, SafeSet } from "./safe-builtins";
 
 export const Publisher = {
     publish(event)
@@ -22,7 +22,7 @@ export const Publisher = {
 
         if (!eventSubs.has(event))
         {
-            eventSubs.set(event, new Set());
+            eventSubs.set(event, new SafeSet());
         }
 
         const subs = eventSubs.get(event);
@@ -52,4 +52,4 @@ export const Publisher = {
     }
 };
 
-const eventSubs = new MapDebug();
+const eventSubs = new SafeMap();

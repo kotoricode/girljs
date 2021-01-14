@@ -1,3 +1,4 @@
+import { SafeSet } from "../utils/safe-builtins";
 import { PathNode } from "./path-node";
 
 export class Path
@@ -8,7 +9,7 @@ export class Path
         this.heapSize = 0;
         this.heapMaxSize = heapMaxSize;
 
-        this.nodes = new Set();
+        this.nodes = new SafeSet();
         this.startNode = new PathNode();
         this.endNode = new PathNode();
     }

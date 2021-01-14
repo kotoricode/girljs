@@ -1,4 +1,6 @@
-const flagged = new Set();
+import { SafeSet } from "../utils/safe-builtins";
+
+const flagged = new SafeSet();
 
 export class Component
 {

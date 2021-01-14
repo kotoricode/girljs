@@ -14,7 +14,7 @@ import {
 import { BufferArray } from "./buffer";
 import { Texture } from "./texture";
 import { ProgramData } from "./program-data";
-import { MapDebug } from "../utils/map-debug";
+import { SafeMap } from "../utils/safe-builtins";
 
 const getViewProgramData = () =>
 {
@@ -127,7 +127,7 @@ let isCanvasResized = true;
 let framebufferTexture;
 
 // Queues are ordered
-const queues = new MapDebug([
+const queues = new SafeMap([
     [$.PROG_POLYGON, []],
     [$.PROG_SPRITE, []],
 ]);

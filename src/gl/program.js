@@ -9,7 +9,7 @@ import fsView    from "./shaders/view.frag";
 import fsSprite  from "./shaders/sprite.frag";
 import fsPolygon from "./shaders/polygon.frag";
 import fsColor   from "./shaders/color.frag";
-import { MapDebug } from "../utils/map-debug";
+import { SafeMap } from "../utils/safe-builtins";
 
 const createAttachShader = (program, shaderId, vertFrag) =>
 {
@@ -137,7 +137,7 @@ const programDef = [
 /*------------------------------------------------------------------------------
     Create and prepare programs
 ------------------------------------------------------------------------------*/
-const preparedPrograms = new MapDebug();
+const preparedPrograms = new SafeMap();
 
 for (let i = 0; i < programDef.length;)
 {
@@ -187,8 +187,8 @@ for (let i = 0; i < programDef.length;)
         Uniforms
     --------------------------------------------------------------------------*/
     const uniforms = {
-        setters: new MapDebug(),
-        defaults: new MapDebug(),
+        setters: new SafeMap(),
+        defaults: new SafeMap(),
         staging: null,
         blocks
     };

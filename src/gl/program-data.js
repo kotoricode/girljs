@@ -3,7 +3,7 @@ import { gl } from "../dom";
 import { getPreparedProgram } from "./program";
 import { BufferArray } from "./buffer";
 import { Vao } from "./vao";
-import { MapDebug } from "../utils/map-debug";
+import { SafeMap } from "../utils/safe-builtins";
 
 export class ProgramData
 {
@@ -14,7 +14,7 @@ export class ProgramData
         this.programId = programId;
         this.program = prepared.program;
         this.uniforms = prepared.uniforms;
-        this.uniforms.staging = new MapDebug();
+        this.uniforms.staging = new SafeMap();
 
         // TODO: maybe pool vaos?
         this.vao = Vao.create(this);
