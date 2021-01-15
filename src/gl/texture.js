@@ -80,28 +80,14 @@ image.addEventListener("load", () =>
 {
     const src = toFetch.shift();
     const texture = textures.get(src);
-    const parami = textureParami.get(src);
 
     Texture.bind(texture);
     gl.texImage2D($.TEXTURE_2D, 0, $.RGBA, $.RGBA, $.UNSIGNED_BYTE, image);
 
-    for (let i = 0; i < parami.length;)
-    {
-        Texture.setParami(parami[i++], parami[i++]);
-    }
-
-    const minFilter = gl.getTexParameter($.TEXTURE_2D, $.TEXTURE_MIN_FILTER);
-
-    // TODO: do we ever even use mipmaps?
-    if (minFilter >= $.NEAREST_MIPMAP_NEAREST)
-    {
-        gl.generateMipmap($.TEXTURE_2D);
-    }
+    Texture.setParami($.TEXTURE_MIN_FILTER, $.LINEAR);
 
     Texture.unbind();
-
     textures.delete(src);
-    textureParami.delete(src);
 
     if (toFetch.length)
     {
@@ -119,14 +105,9 @@ image.addEventListener("error", (e) =>
 ------------------------------------------------------------------------------*/
 let oldTexture;
 
-const paramiMinLinMaxLin = [
-    $.TEXTURE_MIN_FILTER, $.LINEAR,
-    $.TEXTURE_MAG_FILTER, $.LINEAR
-];
-
 // id/url, width, height, parami[], subtextures[ id, x, y, width, height ]
 const textureData = [
-    $.FILE_BRAID, 1024, 1024, paramiMinLinMaxLin, [
+    $.FILE_BRAID, 1024, 1024, [
         $.SUBTEX_BRAID_00, 0,   10,  136, 136,
         $.SUBTEX_BRAID_01, 128, 10,  136, 136,
         $.SUBTEX_BRAID_02, 256, 10,  136, 136,
@@ -155,16 +136,15 @@ const textureData = [
         $.SUBTEX_BRAID_25, 512, 461, 136, 136,
         $.SUBTEX_BRAID_26, 640, 461, 136, 136,
     ],
-    $.FILE_POLY, 512, 512, paramiMinLinMaxLin, [
+    $.FILE_POLY, 512, 512, [
         $.SUBTEX_GROUND, 94, 97, 256, 256
     ],
-    $.FILE_SPRITE, 256, 256, paramiMinLinMaxLin, [
+    $.FILE_SPRITE, 256, 256, [
         $.SUBTEX_PLAYER, 0, 0, 256, 256,
     ]
 ];
 
 const textures = new SafeMap();
-const textureParami = new SafeMap();
 const subTextureData = new SafeMap();
 
 for (let i = 0; i < textureData.length;)
@@ -179,7 +159,6 @@ for (let i = 0; i < textureData.length;)
     };
 
     textures.set(src, texture);
-    textureParami.set(src, textureData[i++]);
 
     const subTextures = textureData[i++];
 
