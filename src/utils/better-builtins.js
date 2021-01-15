@@ -1,26 +1,18 @@
 export class BufferData extends Float32Array
 {
-    constructor(...param)
+    constructor(...params)
     {
-        super(...param);
+        super(...params);
     }
 
     from(array)
     {
-        if (this.length !== array.length)
-        {
-            throw Error;
-        }
-
-        for (let i = 0; i < array.length; i++)
-        {
-            this[i] = array[i];
-        }
+        this.set(...array);
     }
 
     set(...values)
     {
-        if (this.length < values.length)
+        if (this.length !== values.length)
         {
             throw Error;
         }
@@ -112,27 +104,19 @@ export class SafeSet extends Set
 
 export class SettableArray extends Array
 {
-    constructor(...values)
+    constructor(...params)
     {
-        super(...values);
+        super(...params);
     }
 
     from(array)
     {
-        if (this.length !== array.length)
-        {
-            throw Error;
-        }
-
-        for (let i = 0; i < array.length; i++)
-        {
-            this[i] = array[i];
-        }
+        this.set(...array);
     }
 
     set(...values)
     {
-        if (this.length < values.length)
+        if (this.length !== values.length)
         {
             throw Error;
         }

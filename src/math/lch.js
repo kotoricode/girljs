@@ -8,7 +8,7 @@ export class Lch
     constructor(l=0, c=0, h=0)
     {
         this.lch = [l, c, h];
-        this.rgb = new SettableArray();
+        this.rgb = new SettableArray(3);
 
         this.generateRgb();
     }

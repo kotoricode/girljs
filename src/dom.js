@@ -76,8 +76,8 @@ uiCanvas.addEventListener("click", (e) =>
     const x = (e.clientX - canvasRect.left) / gameCanvas.clientWidth;
     const y = (e.clientY - canvasRect.top) / gameCanvas.clientHeight;
 
-    mouse.clip.set(2*x - 1, 1 - 2*y);
-    mouse.screen.set(x * $.SCREEN_WIDTH, y * $.SCREEN_HEIGHT);
+    mouse.clip.set(2*x - 1, 1 - 2*y, 0);
+    mouse.screen.set(x * $.SCREEN_WIDTH, y * $.SCREEN_HEIGHT, 0);
 
     if (isUiInteraction())
     {

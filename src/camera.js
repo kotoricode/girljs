@@ -11,7 +11,7 @@ export const getViewProjection = () => viewProjection;
 
 export const setCameraPosition = (vec) =>
 {
-    transform.translation.set(vec.x);
+    transform.translation.x = vec.x;
 
     /*--------------------------------------------------------------------------
         ViewProjection & Inverted ViewProjection
