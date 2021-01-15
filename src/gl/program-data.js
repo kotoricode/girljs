@@ -39,15 +39,10 @@ export class ProgramData
 
         for (const [name, attribSize] of Object.entries(this.attributes))
         {
-            if (!(name in attribOffsets))
-            {
-                throw name;
-            }
-
             const pos = gl.getAttribLocation(this.program, name);
             gl.enableVertexAttribArray(pos);
             gl.vertexAttribPointer(
-                pos, attribSize, $.FLOAT, false, 0, attribOffsets[name]
+                pos, attribSize, $.FLOAT, false, 0, attribOffsets.get(name)
             );
         }
 

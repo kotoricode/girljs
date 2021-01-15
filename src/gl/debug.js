@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { BufferData } from "../utils/better-builtins";
+import { BufferData, SafeMap } from "../utils/better-builtins";
 import { BufferArray } from "./buffer";
 import { ProgramData } from "./program-data";
 
@@ -22,4 +22,4 @@ const bufferData = new BufferData([
 BufferArray.set($.BUF_ARR_DEBUG, bufferData, $.DYNAMIC_DRAW);
 
 const debugProgram = new ProgramData($.PROG_DEBUG);
-debugProgram.setAttributes($.BUF_ARR_DEBUG, { [$.A_XYZ]: 0 });
+debugProgram.setAttributes($.BUF_ARR_DEBUG, new SafeMap([[$.A_XYZ, 0]]));

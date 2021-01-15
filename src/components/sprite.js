@@ -2,6 +2,7 @@ import * as $ from "../const";
 import { Model } from "../gl/model";
 import { Component } from "./component";
 import { ProgramData } from "../gl/program-data";
+import { SafeMap } from "../utils/better-builtins";
 
 export class Sprite extends Component
 {
@@ -12,10 +13,10 @@ export class Sprite extends Component
         this.programData = new ProgramData(programId);
         this.isVisible = true;
 
-        this.attribOffsets = {
-            [$.A_XYZ]: null,
-            [$.A_UV]: null
-        };
+        this.attribOffsets = new SafeMap([
+            [$.A_XYZ, null],
+            [$.A_UV, null]
+        ]);
 
         this.setModel(modelId);
         this.setProgramUniforms(uniforms);
@@ -25,8 +26,8 @@ export class Sprite extends Component
     {
         this.model = Model.get(modelId);
 
-        this.attribOffsets[$.A_XYZ] = this.model.xyzOffset;
-        this.attribOffsets[$.A_UV] = this.model.uvOffset;
+        this.attribOffsets.set($.A_XYZ, this.model.xyzOffset);
+        this.attribOffsets.set($.A_UV, this.model.uvOffset);
         this.programData.setAttributes($.BUF_ARR_SPRITE, this.attribOffsets);
 
         this.texture = Model.getTexture(modelId);
