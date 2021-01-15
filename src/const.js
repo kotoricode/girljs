@@ -6,8 +6,52 @@ export const
 let i = 0;
 
 export const
-    ANIM_IDLE = i++,
-    ANIM_MOVE = i++;
+    ENTITY_GROUND = i++,
+    ENTITY_PLAYER = i++,
+    ENTITY_ROOT = i++;
+
+export const
+    SCENE_TEST = i++;
+
+export const
+    EVENT_RESIZED = i++;
+
+export const
+    AUDIO_MUSIC = i++,
+    AUDIO_SOUND = i++,
+    AUDIO_SOUND_LOOP = i++;
+
+/*------------------------------------------------------------------------------
+    Storage
+------------------------------------------------------------------------------*/
+export const
+    PREF_MASTER = "master",
+    PREF_MUSIC = "music",
+    PREF_SOUND = "sound";
+
+export const
+    STATE_MONEY = "money";
+
+/*------------------------------------------------------------------------------
+    File System
+------------------------------------------------------------------------------*/
+export const
+    PATH_IMG = "./img/",
+    PATH_SND = "./snd/";
+
+export const
+    FILE_OMOIDE = "omoide_loft.ogg",
+    FILE_POLY = "texture.png",
+    FILE_BRAID = "braid.png";
+
+/*------------------------------------------------------------------------------
+    GL
+------------------------------------------------------------------------------*/
+export const
+    PROG_DEBUG = i++,
+    PROG_VIEW = i++,
+    PROG_SPRITE = i++,
+    PROG_POLYGON = i++;
 
 export const
     BUF_ARR_SPRITE = i++,
@@ -84,49 +128,8 @@ export const
     MESH_PLAYER = i++;
 
 export const
-    PROG_DEBUG = i++,
-    PROG_VIEW = i++,
-    PROG_SPRITE = i++,
-    PROG_POLYGON = i++;
-
-export const
-    ENTITY_GROUND = i++,
-    ENTITY_PLAYER = i++,
-    ENTITY_ROOT = i++;
-
-export const
-    SCENE_TEST = i++;
-
-export const
-    EVENT_RESIZED = i++;
-
-export const
-    AUDIO_MUSIC = i++,
-    AUDIO_SOUND = i++,
-    AUDIO_SOUND_LOOP = i++;
-
-/*------------------------------------------------------------------------------
-    Storage
-------------------------------------------------------------------------------*/
-export const
-    PREF_MASTER = "master",
-    PREF_MUSIC = "music",
-    PREF_SOUND = "sound";
-
-export const
-    STATE_MONEY = "money";
-
-/*------------------------------------------------------------------------------
-    File System
-------------------------------------------------------------------------------*/
-export const
-    PATH_IMG = "./img/",
-    PATH_SND = "./snd/";
-
-export const
-    FILE_OMOIDE = "omoide_loft.ogg",
-    FILE_POLY = "texture.png",
-    FILE_BRAID = "braid.png";
+    ANIM_IDLE = i++,
+    ANIM_MOVE = i++;
 
 /*------------------------------------------------------------------------------
     Shaders
