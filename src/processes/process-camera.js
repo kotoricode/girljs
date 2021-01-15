@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { mouse } from "../dom";
+import { Mouse } from "../dom";
 import { Motion } from "../components/motion";
 import { Space } from "../components/space";
 import { getInvViewProjection, setCameraPosition } from "../camera";
@@ -11,13 +11,13 @@ export const processCamera = (scene) =>
     const [plMotion, plSpace] = scene.one($.ENTITY_PLAYER, Motion, Space);
     setCameraPosition(plSpace.world.translation);
 
-    if (mouse.isWorldClick)
+    if (Mouse.isWorldClick)
     {
         const [ground] = scene.one($.ENTITY_GROUND, Ground);
         const ivp = getInvViewProjection();
 
         ray.numHits = 0;
-        ray.fromMouse(ivp, mouse.clip);
+        ray.fromMouse(ivp, Mouse.clip);
         ray.collide(ground);
 
         // Update player, marker paths

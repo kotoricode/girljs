@@ -50,7 +50,6 @@ export const
 export const
     SUBTEX_GROUND = i++,
     SUBTEX_IMAGE = i++,
-    SUBTEX_PLAYER = i++,
     SUBTEX_BRAID_00 = i++,
     SUBTEX_BRAID_01 = i++,
     SUBTEX_BRAID_02 = i++,
@@ -106,6 +105,9 @@ export const
     AUDIO_SOUND = i++,
     AUDIO_SOUND_LOOP = i++;
 
+/*------------------------------------------------------------------------------
+    Storage
+------------------------------------------------------------------------------*/
 export const
     PREF_MASTER = "master",
     PREF_MUSIC = "music",
@@ -114,9 +116,24 @@ export const
 export const
     STATE_MONEY = "money";
 
+/*------------------------------------------------------------------------------
+    File System
+------------------------------------------------------------------------------*/
 export const
     PATH_IMG = "./img/",
     PATH_SND = "./snd/";
+
+export const
+    FILE_OMOIDE = "omoide_loft.ogg",
+    FILE_POLY = "texture.png",
+    FILE_BRAID = "braid.png";
+
+/*------------------------------------------------------------------------------
+    Shaders
+------------------------------------------------------------------------------*/
+export const
+    A_XYZ = "a_xyz",
+    A_UV = "a_uv";
 
 export const
     U_COLOR = "u_color",
@@ -126,18 +143,11 @@ export const
     U_UVSIZE = "u_uvSize";
 
 export const
-    A_XYZ = "a_xyz",
-    A_UV = "a_uv";
-
-export const
     UB_CAMERA = "camera";
 
-export const
-    FILE_OMOIDE = "omoide_loft.ogg",
-    FILE_POLY = "texture.png",
-    FILE_SPRITE = "test.png",
-    FILE_BRAID = "braid.png";
-
+/*------------------------------------------------------------------------------
+    GL enums
+------------------------------------------------------------------------------*/
 export const
     /*--------------------------------------------------------------------------
         WebGLRenderingContextBase

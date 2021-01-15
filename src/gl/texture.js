@@ -138,9 +138,6 @@ const textureData = [
     ],
     $.FILE_POLY, 512, 512, [
         $.SUBTEX_GROUND, 94, 97, 256, 256
-    ],
-    $.FILE_SPRITE, 256, 256, [
-        $.SUBTEX_PLAYER, 0, 0, 256, 256,
     ]
 ];
 

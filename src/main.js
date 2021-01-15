@@ -1,5 +1,5 @@
 import * as $ from "./const";
-import { mouse } from "./dom";
+import { Mouse } from "./dom";
 import { Scene } from "./scene";
 import { SafeMap } from "./utils/better-builtins";
 
@@ -11,7 +11,7 @@ const mainLoop = (timestamp) =>
         activeScene.update(dt);
     }
 
-    mouse.isWorldClick = false;
+    Mouse.isWorldClick = false;
     oldTimestamp = timestamp;
     window.requestAnimationFrame(mainLoop);
 };
