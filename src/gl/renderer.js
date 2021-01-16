@@ -15,14 +15,6 @@ import { Texture } from "./texture";
 import { ProgramData } from "./program-data";
 import { SafeMap } from "../utils/better-builtins";
 
-const getViewProgramData = () =>
-{
-    const programData = new ProgramData($.PROG_VIEW);
-    programData.setAttributes($.MODEL_IMAGE);
-
-    return programData;
-};
-
 export const render = (scene) =>
 {
     for (const [sprite] of scene.all(Sprite))
@@ -35,7 +27,7 @@ export const render = (scene) =>
     }
 
     gl.bindFramebuffer($.FRAMEBUFFER, fbo);
-    gl.bindRenderbuffer(gl.RENDERBUFFER, rboDepth);
+    gl.bindRenderbuffer($.RENDERBUFFER, rboDepth);
 
     if (isCanvasResized)
     {
@@ -80,12 +72,12 @@ export const render = (scene) =>
 
     gl.bindFramebuffer($.FRAMEBUFFER, null);
     gl.bindRenderbuffer($.RENDERBUFFER, null);
+    disable($.DEPTH_TEST);
 
     // Transfer to canvas
-    disable($.DEPTH_TEST);
     setProgram(viewProgramData);
     Texture.bind(fbTexture);
-    renderTriangle(viewProgramData.vao);
+    drawArraysVao($.TRIANGLES, 0, 6, viewProgramData.vao);
     Texture.unbind();
 
     // Debug
@@ -108,33 +100,26 @@ const renderQueue = (queue) =>
         setProgram(programData);
         Texture.bind(texture);
         programData.setUniforms();
-        renderTriangleStrip(programData.vao);
+        drawArraysVao($.TRIANGLE_STRIP, 0, 4, programData.vao);
     }
 
     queue.length = 0;
 };
 
-const renderTriangleStrip = (vao) =>
-{
-    drawArraysVao($.TRIANGLE_STRIP, 0, 4, vao);
-};
-
-const renderTriangle = (vao) =>
-{
-    drawArraysVao($.TRIANGLES, 0, 6, vao);
-};
-
 Publisher.subscribe($.EVENT_RESIZED, () => isCanvasResized = true);
 
+// Blending
 enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
+// Buffers
 const fbo = gl.createFramebuffer();
-const viewProgramData = getViewProgramData();
+const rboDepth = gl.createRenderbuffer();
+
+const viewProgramData = new ProgramData($.PROG_VIEW);
+viewProgramData.setAttributes($.MODEL_IMAGE);
 let isCanvasResized = true;
 let fbTexture;
-
-const rboDepth = gl.createRenderbuffer();
 
 // Queues are ordered
 const queues = new SafeMap([
