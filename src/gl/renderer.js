@@ -1,7 +1,6 @@
 import * as $ from "../const";
 import { gl } from "../dom";
 import { Sprite } from "../components/sprite";
-import { Model } from "./model";
 import { Publisher } from "../utils/publisher";
 import { getDebugProgram } from "./debug";
 import {
@@ -32,42 +31,60 @@ export const render = (scene) =>
         {
             const queue = queues.get(sprite.programData.programId);
             queue.push(sprite);
-            // TODO: sort by z-position
         }
     }
 
-    // Prepare framebuffer
-    gl.bindFramebuffer($.FRAMEBUFFER, framebuffer);
+    gl.bindFramebuffer($.FRAMEBUFFER, fbo);
+    gl.bindRenderbuffer(gl.RENDERBUFFER, rboDepth);
 
     if (isCanvasResized)
     {
-        gl.deleteTexture(framebufferTexture);
-        framebufferTexture = Texture.createFramebufferTexture();
+        const { width, height } = gl.canvas;
+
+        gl.deleteTexture(fbTexture);
+        fbTexture = Texture.createFramebufferTexture(width, height);
 
         gl.framebufferTexture2D(
             $.FRAMEBUFFER,
             $.COLOR_ATTACHMENT0,
             $.TEXTURE_2D,
-            framebufferTexture,
+            fbTexture,
             0
+        );
+
+        gl.renderbufferStorage(
+            $.RENDERBUFFER,
+            $.DEPTH_COMPONENT16,
+            width,
+            height
+        );
+
+        gl.framebufferRenderbuffer(
+            $.FRAMEBUFFER,
+            $.DEPTH_ATTACHMENT,
+            $.RENDERBUFFER,
+            rboDepth
         );
 
         isCanvasResized = false;
     }
 
-    gl.clear($.COLOR_BUFFER_BIT);
+    // Draw world
+    gl.clear($.COLOR_BUFFER_BIT | $.DEPTH_BUFFER_BIT);
+    enable($.DEPTH_TEST);
 
-    // Render world to framebuffer
     for (const queue of queues.values())
     {
         renderQueue(queue);
     }
 
-    // Framebuffer to canvas
     gl.bindFramebuffer($.FRAMEBUFFER, null);
-    setProgram(viewProgramData);
+    gl.bindRenderbuffer($.RENDERBUFFER, null);
 
-    Texture.bind(framebufferTexture);
+    // Transfer to canvas
+    disable($.DEPTH_TEST);
+    setProgram(viewProgramData);
+    Texture.bind(fbTexture);
     renderTriangle(viewProgramData.vao);
     Texture.unbind();
 
@@ -109,15 +126,15 @@ const renderTriangle = (vao) =>
 
 Publisher.subscribe($.EVENT_RESIZED, () => isCanvasResized = true);
 
-disable($.DEPTH_TEST);
-disable($.CULL_FACE);
 enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
-const framebuffer = gl.createFramebuffer();
+const fbo = gl.createFramebuffer();
 const viewProgramData = getViewProgramData();
 let isCanvasResized = true;
-let framebufferTexture;
+let fbTexture;
+
+const rboDepth = gl.createRenderbuffer();
 
 // Queues are ordered
 const queues = new SafeMap([

@@ -15,7 +15,7 @@ export const Texture = {
     {
         return gl.createTexture();
     },
-    createFramebufferTexture()
+    createFramebufferTexture(width, height)
     {
         const texture = Texture.create();
         Texture.bind(texture);
@@ -24,8 +24,8 @@ export const Texture = {
             $.TEXTURE_2D,
             0,
             $.RGB,
-            gl.canvas.width,
-            gl.canvas.height,
+            width,
+            height,
             0,
             $.RGB,
             $.UNSIGNED_BYTE,
