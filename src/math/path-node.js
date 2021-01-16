@@ -1,4 +1,4 @@
-import { StrictMap } from "../utils/strict-builtins";
+import { SafeMap } from "../utils/better-builtins";
 import { Vector } from "./vector";
 
 export class PathNode
@@ -8,7 +8,7 @@ export class PathNode
         this.score = 0;
         this.comeFrom = null;
         this.position = new Vector(x, y, z);
-        this.adjacent = new StrictMap(); // <adjacent, distanceTo>
+        this.adjacent = new SafeMap(); // <adjacent, distanceTo>
 
         this.isAdjacentToStart = false;
         this.isAdjacentToEnd = false;

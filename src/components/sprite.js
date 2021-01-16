@@ -26,8 +26,8 @@ export class Sprite extends Component
     {
         this.model = Model.get(modelId);
 
-        this.attribOffsets.set($.A_XYZ, this.model.xyzOffset);
-        this.attribOffsets.set($.A_UV, this.model.uvOffset);
+        this.attribOffsets.replace($.A_XYZ, this.model.xyzOffset);
+        this.attribOffsets.replace($.A_UV, this.model.uvOffset);
         this.programData.setAttributes($.BUF_ARR_SPRITE, this.attribOffsets);
 
         this.texture = Model.getTexture(modelId);

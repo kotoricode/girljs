@@ -22,7 +22,6 @@ export class Entity
         for (const comp of components)
         {
             const ctor = comp.constructor;
-            this.components.assertHasNot(ctor);
             this.components.set(ctor, comp);
             this.flags |= ctor.flag;
         }

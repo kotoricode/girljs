@@ -65,14 +65,12 @@ export class ProgramData
 
     stageUniform(key, value)
     {
-        this.uniforms.staging.assertHas(key);
-
         if (!Array.isArray(value))
         {
             throw value;
         }
 
-        this.uniforms.staging.set(key, value);
+        this.uniforms.staging.replace(key, value);
     }
 
     stageUniformAtIndex(key, idx, value)

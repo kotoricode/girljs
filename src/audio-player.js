@@ -7,11 +7,11 @@ export const AudioPlayer = {
     init()
     {
         context = new AudioContext();
-        const master = createGain($.PREF_MASTER, context.destination);
+        const master = getGain($.PREF_MASTER, context.destination);
 
         for (const [audioId, audioObj] of audio)
         {
-            const gain = createGain(audioObj.gainId, master);
+            const gain = getGain(audioObj.gainId, master);
             context.createMediaElementSource(audioObj.element).connect(gain);
 
             if (audioObj.fileName)
@@ -41,16 +41,21 @@ export const AudioPlayer = {
     }
 };
 
-const createGain = (gainId, parent) =>
+const getGain = (gainId, parent) =>
 {
-    const gainObj = context.createGain();
-    gainObj.connect(parent);
-    gains.set(gainId, gainObj);
+    if (gains.has(gainId))
+    {
+        return gains.get(gainId);
+    }
+
+    const gain = context.createGain();
+    gain.connect(parent);
+    gains.set(gainId, gain);
 
     const volume = Prefs.get(gainId);
     AudioPlayer.setGain(gainId, volume, false);
 
-    return gainObj;
+    return gain;
 };
 
 const play = (soundId) =>
