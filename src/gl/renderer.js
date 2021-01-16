@@ -3,13 +3,7 @@ import { gl } from "../dom";
 import { Sprite } from "../components/sprite";
 import { Publisher } from "../utils/publisher";
 import { getDebugProgram } from "./debug";
-import {
-    disable,
-    drawArraysVao,
-    enable,
-    setProgram
-} from "./gl-helper";
-
+import { drawArraysVao, setProgram } from "./gl-helper";
 import { BufferArray } from "./buffer";
 import { Texture } from "./texture";
 import { ProgramData } from "./program-data";
@@ -63,7 +57,7 @@ export const render = (scene) =>
 
     // Draw world
     gl.clear($.COLOR_BUFFER_BIT | $.DEPTH_BUFFER_BIT);
-    enable($.DEPTH_TEST);
+    gl.enable($.DEPTH_TEST);
 
     for (const queue of queues.values())
     {
@@ -72,7 +66,7 @@ export const render = (scene) =>
 
     gl.bindFramebuffer($.FRAMEBUFFER, null);
     gl.bindRenderbuffer($.RENDERBUFFER, null);
-    disable($.DEPTH_TEST);
+    gl.disable($.DEPTH_TEST);
 
     // Transfer to canvas
     setProgram(viewProgramData);
@@ -109,7 +103,7 @@ const renderQueue = (queue) =>
 Publisher.subscribe($.EVENT_RESIZED, () => isCanvasResized = true);
 
 // Blending
-enable($.BLEND);
+gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
 // Buffers

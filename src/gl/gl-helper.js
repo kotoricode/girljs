@@ -2,8 +2,6 @@ import { gl } from "../dom";
 import { BufferUniform } from "./buffer";
 import { Vao } from "./vao";
 
-export const disable = (cap) => gl.disable(cap);
-
 export const drawArrays = (mode, offset, length) => gl.drawArrays(
     mode, offset, length
 );
@@ -14,8 +12,6 @@ export const drawArraysVao = (mode, offset, length, vao) =>
     drawArrays(mode, offset, length);
     Vao.unbind();
 };
-
-export const enable = (cap) => gl.enable(cap);
 
 export const setProgram = (programData) =>
 {
