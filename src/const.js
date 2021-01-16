@@ -60,6 +60,7 @@ export const
     BUF_UNI_CAMERA = i++;
 
 export const
+    MODEL_DEBUG = i++,
     MODEL_GROUND = i++,
     MODEL_IMAGE = i++,
     MODEL_PLAYER = i++,
@@ -90,11 +91,6 @@ export const
     MODEL_BRAID_24 = i++,
     MODEL_BRAID_25 = i++,
     MODEL_BRAID_26 = i++;
-
-export const
-    MODELDATA_OFFSET_XYZ = i++,
-    MODELDATA_OFFSET_UV = i++,
-    MODELDATA_UV = i++;
 
 export const
     SUBTEX_GROUND = i++,

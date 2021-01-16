@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { BufferData, SafeSet } from "../utils/better-builtins";
+import { BufferData } from "../utils/better-builtins";
 import { BufferArray } from "./buffer";
 import { Texture } from "./texture";
 import { getMesh } from "./mesh";
@@ -13,6 +13,10 @@ export const Model = {
     getTexture(modelId)
     {
         return modelTextures.get(modelId);
+    },
+    getUv(modelId)
+    {
+        return modelUvCoords.get(modelId);
     }
 };
 
@@ -67,6 +71,7 @@ const uvOffsets = new SafeMap();
 const uvs = new SafeMap();
 const models = new SafeMap();
 const modelTextures = new SafeMap();
+const modelUvCoords = new SafeMap();
 
 for (let i = 0; i < modelData.length;)
 {
@@ -91,13 +96,13 @@ for (let i = 0; i < modelData.length;)
     }
 
     models.set(modelId, new SafeMap([
-        [$.MODELDATA_OFFSET_XYZ, xyzOffsets.get(meshId)],
-        [$.MODELDATA_OFFSET_UV, uvOffsets.get(subTexId)],
-        [$.MODELDATA_UV, uvs.get(subTexId)]
+        [$.A_XYZ, xyzOffsets.get(meshId)],
+        [$.A_UV, uvOffsets.get(subTexId)]
     ]));
 
     const tex = Texture.getSubTextureData(subTexId).baseData.texture;
     modelTextures.set(modelId, tex);
+    modelUvCoords.set(modelId, uvs.get(subTexId));
 }
 
 BufferArray.data(
@@ -118,12 +123,40 @@ const uvImage = [0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1];
 const uvOffset = pushData(polygonData, uvImage);
 
 models.set($.MODEL_IMAGE, new SafeMap([
-    [$.MODELDATA_OFFSET_XYZ, xyzOffset],
-    [$.MODELDATA_OFFSET_UV, uvOffset]
+    [$.A_XYZ, xyzOffset],
+    [$.A_UV, uvOffset]
 ]));
 
 BufferArray.data(
     $.BUF_ARR_POLYGON,
     new BufferData(polygonData),
     $.STATIC_DRAW
+);
+
+/*------------------------------------------------------------------------------
+    Debug
+------------------------------------------------------------------------------*/
+const debugData = [];
+
+const lines = [
+    0, 0, 0,
+    2, 2, 2,
+    0, 0, 0,
+    -2, 2, 2,
+    0, 0, 0,
+    2, -2, 2,
+    0, 0, 0,
+    -2, 2, -2
+];
+
+const lineXyzOffset = pushData(debugData, lines);
+
+models.set($.MODEL_DEBUG, new SafeMap([
+    [$.A_XYZ, lineXyzOffset]
+]));
+
+BufferArray.data(
+    $.BUF_ARR_DEBUG,
+    new BufferData(debugData),
+    $.DYNAMIC_DRAW
 );

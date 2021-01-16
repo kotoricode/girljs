@@ -31,9 +31,8 @@ export class ProgramData
         Vao.delete(this);
     }
 
-    setAttributes(bufferId, attribOffsets)
+    setAttributes(bufferId, model)
     {
-        // TODO: share vaos if program & model are the same
         Vao.bind(this.vao);
         BufferArray.bind(bufferId);
 
@@ -42,7 +41,7 @@ export class ProgramData
             const pos = gl.getAttribLocation(this.program, name);
             gl.enableVertexAttribArray(pos);
             gl.vertexAttribPointer(
-                pos, attribSize, $.FLOAT, false, 0, attribOffsets.get(name)
+                pos, attribSize, $.FLOAT, false, 0, model.get(name)
             );
         }
 
