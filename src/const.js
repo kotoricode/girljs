@@ -92,6 +92,11 @@ export const
     MODEL_BRAID_26 = i++;
 
 export const
+    MODELDATA_OFFSET_XYZ = i++,
+    MODELDATA_OFFSET_UV = i++,
+    MODELDATA_UV = i++;
+
+export const
     SUBTEX_GROUND = i++,
     SUBTEX_IMAGE = i++,
     SUBTEX_BRAID_00 = i++,

@@ -26,8 +26,16 @@ export class Sprite extends Component
     {
         this.model = Model.get(modelId);
 
-        this.attribOffsets.update($.A_XYZ, this.model.xyzOffset);
-        this.attribOffsets.update($.A_UV, this.model.uvOffset);
+        this.attribOffsets.update(
+            $.A_XYZ,
+            this.model.get($.MODELDATA_OFFSET_XYZ)
+        );
+
+        this.attribOffsets.update(
+            $.A_UV,
+            this.model.get($.MODELDATA_OFFSET_UV)
+        );
+
         this.programData.setAttributes($.BUF_ARR_SPRITE, this.attribOffsets);
 
         this.texture = Model.getTexture(modelId);
@@ -46,7 +54,11 @@ export class Sprite extends Component
         // Program-specific uniforms
         if (this.programData.programId === $.PROG_POLYGON)
         {
-            const [uvMinX, uvMaxY, uvMaxX, , , uvMinY] = this.model.uv;
+            const [
+                uvMinX, uvMaxY,
+                uvMaxX, ,
+                , uvMinY
+            ] = this.model.get($.MODELDATA_UV);
 
             const width = uvMaxX - uvMinX;
             const height = uvMaxY - uvMinY;

@@ -22,8 +22,8 @@ const getViewProgramData = () =>
     const model = Model.get($.MODEL_IMAGE);
 
     const offsets = new SafeMap([
-        [$.A_XYZ, model.xyzOffset],
-        [$.A_UV, model.uvOffset]
+        [$.A_XYZ, model.get($.MODELDATA_OFFSET_XYZ)],
+        [$.A_UV, model.get($.MODELDATA_OFFSET_UV)]
     ]);
 
     programData.setAttributes($.BUF_ARR_POLYGON, offsets);

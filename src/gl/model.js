@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { BufferData } from "../utils/better-builtins";
+import { BufferData, SafeSet } from "../utils/better-builtins";
 import { BufferArray } from "./buffer";
 import { Texture } from "./texture";
 import { getMesh } from "./mesh";
@@ -59,7 +59,7 @@ const modelData = [
 ];
 
 /*------------------------------------------------------------------------------
-    General
+    Sprite
 ------------------------------------------------------------------------------*/
 const spriteBufferData = [];
 const xyzOffsets = new SafeMap();
@@ -90,11 +90,11 @@ for (let i = 0; i < modelData.length;)
         uvOffsets.set(subTexId, uvOffset);
     }
 
-    models.set(modelId, {
-        xyzOffset: xyzOffsets.get(meshId),
-        uvOffset: uvOffsets.get(subTexId),
-        uv: uvs.get(subTexId)
-    });
+    models.set(modelId, new SafeMap([
+        [$.MODELDATA_OFFSET_XYZ, xyzOffsets.get(meshId)],
+        [$.MODELDATA_OFFSET_UV, uvOffsets.get(subTexId)],
+        [$.MODELDATA_UV, uvs.get(subTexId)]
+    ]));
 
     const tex = Texture.getSubTextureData(subTexId).baseData.texture;
     modelTextures.set(modelId, tex);
@@ -117,10 +117,10 @@ const xyzOffset = pushData(polygonData, xyzImage);
 const uvImage = [0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1];
 const uvOffset = pushData(polygonData, uvImage);
 
-models.set($.MODEL_IMAGE, {
-    xyzOffset,
-    uvOffset
-});
+models.set($.MODEL_IMAGE, new SafeMap([
+    [$.MODELDATA_OFFSET_XYZ, xyzOffset],
+    [$.MODELDATA_OFFSET_UV, uvOffset]
+]));
 
 BufferArray.data(
     $.BUF_ARR_POLYGON,
