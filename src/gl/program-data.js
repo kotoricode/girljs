@@ -70,7 +70,7 @@ export class ProgramData
             throw value;
         }
 
-        this.uniforms.staging.replace(key, value);
+        this.uniforms.staging.update(key, value);
     }
 
     stageUniformAtIndex(key, idx, value)

@@ -244,7 +244,11 @@ export class Scene
             }
 
             // TODO: rotation, scale
-            space.world.translation.set(matrix[12], matrix[13], matrix[14]);
+            space.world.translation.setValues(
+                matrix[12],
+                matrix[13],
+                matrix[14]
+            );
 
             space.isDirty = false;
         }

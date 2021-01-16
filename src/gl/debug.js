@@ -19,7 +19,7 @@ const bufferData = new BufferData([
     -2, 2, -2
 ]);
 
-BufferArray.set($.BUF_ARR_DEBUG, bufferData, $.DYNAMIC_DRAW);
+BufferArray.data($.BUF_ARR_DEBUG, bufferData, $.DYNAMIC_DRAW);
 
 const debugProgram = new ProgramData($.PROG_DEBUG);
 debugProgram.setAttributes($.BUF_ARR_DEBUG, new SafeMap([[$.A_XYZ, 0]]));

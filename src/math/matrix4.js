@@ -31,7 +31,7 @@ export class Matrix4 extends SettableArray
         const ryw = ry * rw;
         const rzw = rz * rw;
 
-        this.set(
+        this.setValues(
             sx * (rww + rxx - ryy - rzz),
             sx * (rxy - rzw) * 2,
             sx * (rxz + ryw) * 2,
@@ -101,7 +101,7 @@ export class Matrix4 extends SettableArray
         const M3E = M3 * ME;
         const M3C = M3 * MC;
 
-        this.set(
+        this.setValues(
             id * A0,
             id * (M1E*MB + M2F*M9 + M3D*MA - M1F*MA - M2D*MB - M3E*M9),
             id * (M1F*M6 + M2D*M7 + M3E*M5 - M1E*M7 - M2F*M5 - M3D*M6),
@@ -140,7 +140,7 @@ export class Matrix4 extends SettableArray
             RC, RD, RE, RF
         ] = this;
 
-        this.set(
+        this.setValues(
             L0*R0 + L4*R1 + L8*R2 + LC*R3,
             L1*R0 + L5*R1 + L9*R2 + LD*R3,
             L2*R0 + L6*R1 + LA*R2 + LE*R3,
@@ -176,7 +176,7 @@ export class Matrix4 extends SettableArray
             RC, RD, RE
         ] = this;
 
-        this.set(
+        this.setValues(
             L0*R0 + L4*R1 + L8*R2,
             L1*R0 + L5*R1 + L9*R2,
             L2*R0 + L6*R1 + LA*R2,
@@ -215,7 +215,7 @@ export class Matrix4 extends SettableArray
             RC, RD, RE, RF
         ] = this;
 
-        this.set(
+        this.setValues(
             L0*R0,
             L5*R1,
             LA*R2 + LE*R3,

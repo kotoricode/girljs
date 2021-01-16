@@ -25,7 +25,7 @@ export const setCameraPosition = (vec) =>
         Update UBO
     --------------------------------------------------------------------------*/
     viewProjectionData.from(viewProjection);
-    BufferUniform.set($.BUF_UNI_CAMERA, viewProjectionData);
+    BufferUniform.data($.BUF_UNI_CAMERA, viewProjectionData);
 };
 
 const far = 600;

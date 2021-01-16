@@ -100,7 +100,7 @@ for (let i = 0; i < modelData.length;)
     modelTextures.set(modelId, tex);
 }
 
-BufferArray.set(
+BufferArray.data(
     $.BUF_ARR_SPRITE,
     new BufferData(spriteBufferData),
     $.STATIC_DRAW
@@ -122,7 +122,7 @@ models.set($.MODEL_IMAGE, {
     uvOffset
 });
 
-BufferArray.set(
+BufferArray.data(
     $.BUF_ARR_POLYGON,
     new BufferData(polygonData),
     $.STATIC_DRAW

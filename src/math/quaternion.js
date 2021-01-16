@@ -20,7 +20,7 @@ export class Quaternion extends SettableArray
         const sz = Math.sin(hz);
         const cz = Math.cos(hz);
 
-        this.set(
+        this.setValues(
             sx*cy*cz - cx*sy*sz,
             cx*sy*cz + sx*cy*sz,
             cx*cy*sz - sx*sy*cz,

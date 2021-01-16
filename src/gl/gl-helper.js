@@ -30,10 +30,7 @@ export const setProgram = (programData) =>
         {
             for (const blockId of uniforms.blocks)
             {
-                const bufferId = BufferUniform.getBufferByBlock(blockId);
-                const bindingPoint = BufferUniform.getBindingPoint(bufferId);
-                const blockIdx = gl.getUniformBlockIndex(program, blockId);
-                gl.uniformBlockBinding(program, blockIdx, bindingPoint);
+                BufferUniform.prepareBlock(program, blockId);
             }
         }
     }

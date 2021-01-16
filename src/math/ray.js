@@ -79,6 +79,6 @@ export class Ray
             this.hit.push(new Vector());
         }
 
-        this.hit[this.numHits++].set(x, y, z);
+        this.hit[this.numHits++].setValues(x, y, z);
     }
 }

@@ -45,7 +45,7 @@ export const processMotion = (scene) =>
                 if (motion.idx > motion.maxIdx)
                 {
                     // No more targets, stop moving
-                    direction.set(0, 0, 0);
+                    direction.setValues(0, 0, 0);
                     motion.resetTargets();
                 }
             }

@@ -32,7 +32,7 @@ export class Segment
                 // intersection at that point should be registered just once
                 if (0 <= t && (isPoly ? t < 1 : t <= 1))
                 {
-                    return this.intersection.set(
+                    return this.intersection.setValues(
                         this.start.x + (t * ax),
                         0,
                         this.start.z + (t * az)
@@ -42,7 +42,7 @@ export class Segment
         }
     }
 
-    set(start, end)
+    setStartEnd(start, end)
     {
         this.start.from(start);
         this.end.from(end);

@@ -5,23 +5,19 @@ import { SafeMap } from "../utils/better-builtins";
 const Buffer = {
     bind(bufferType, bufferId)
     {
-        const buffer = Buffer.get(bufferType, bufferId);
+        const buffer = Buffer.getBuffer(bufferType, bufferId);
         gl.bindBuffer(bufferType, buffer);
     },
-    data(bufferType, data, usage)
-    {
-        gl.bufferData(bufferType, data, usage);
-    },
-    get(bufferType, bufferId)
+    getBuffer(bufferType, bufferId)
     {
         const typeBuffers = buffers.get(bufferType);
 
         return typeBuffers.get(bufferId);
     },
-    set(bufferType, bufferId, data, usage)
+    data(bufferType, bufferId, data, usage)
     {
         Buffer.bind(bufferType, bufferId);
-        Buffer.data(bufferType, data, usage);
+        gl.bufferData(bufferType, data, usage);
         Buffer.unbind(bufferType);
     },
     unbind(bufferType)
@@ -39,9 +35,9 @@ export const BufferArray = {
     {
         return arrayBufferSizes.get(bufferId);
     },
-    set(bufferId, data, usage)
+    data(bufferId, data, usage)
     {
-        Buffer.set($.ARRAY_BUFFER, bufferId, data, usage);
+        Buffer.data($.ARRAY_BUFFER, bufferId, data, usage);
         arrayBufferSizes.set(bufferId, data.length);
     },
     unbind()
@@ -51,21 +47,20 @@ export const BufferArray = {
 };
 
 export const BufferUniform = {
-    get(bufferId)
+    getBuffer(bufferId)
     {
-        return Buffer.get($.UNIFORM_BUFFER, bufferId);
+        return Buffer.getBuffer($.UNIFORM_BUFFER, bufferId);
     },
-    getBindingPoint(bufferId)
+    data(bufferId, data)
     {
-        return bindingPoints.get(bufferId);
+        Buffer.data($.UNIFORM_BUFFER, bufferId, data, $.DYNAMIC_DRAW);
     },
-    getBufferByBlock(blockId)
+    prepareBlock(program, blockId)
     {
-        return blockBuffers.get(blockId);
-    },
-    set(bufferId, data)
-    {
-        Buffer.set($.UNIFORM_BUFFER, bufferId, data, $.DYNAMIC_DRAW);
+        const bufferId = blockBuffers.get(blockId);
+        const bindingPoint = bindingPoints.get(bufferId);
+        const blockIdx = gl.getUniformBlockIndex(program, blockId);
+        gl.uniformBlockBinding(program, blockIdx, bindingPoint);
     }
 };
 
@@ -96,6 +91,6 @@ const bindingPoints = new SafeMap([$.BUF_UNI_CAMERA].map((x, i) => [x, i]));
 
 for (const [bufferId, idx] of bindingPoints)
 {
-    const buffer = BufferUniform.get(bufferId);
+    const buffer = BufferUniform.getBuffer(bufferId);
     gl.bindBufferBase($.UNIFORM_BUFFER, idx, buffer);
 }

@@ -24,7 +24,7 @@ export class BoxCollider
         const posX = vec.x - this.anchor.x*this.width;
         const posY = vec.y - this.anchor.y*this.height;
 
-        this.position.set(posX, posY);
-        this.bottomRight.set(posX + this.width, posY + this.height);
+        this.position.setValues(posX, posY);
+        this.bottomRight.setValues(posX + this.width, posY + this.height);
     }
 }

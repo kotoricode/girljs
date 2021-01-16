@@ -37,7 +37,7 @@ export class Polygon
 
         for (let i = 0; i < this.points.length;)
         {
-            this.activeSegment.set(
+            this.activeSegment.setValues(
                 this.points[i],
                 this.points[++i % this.points.length]
             );

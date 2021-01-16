@@ -7,10 +7,10 @@ export class BufferData extends Float32Array
 
     from(array)
     {
-        this.set(...array);
+        this.setValues(...array);
     }
 
-    set(...values)
+    setValues(...values)
     {
         if (this.length !== values.length)
         {
@@ -64,7 +64,7 @@ export class SafeMap extends Map
         return super.set(key, value);
     }
 
-    replace(key, value)
+    update(key, value)
     {
         this.assertHas(key);
 
@@ -107,10 +107,10 @@ export class SettableArray extends Array
 
     from(array)
     {
-        this.set(...array);
+        this.setValues(...array);
     }
 
-    set(...values)
+    setValues(...values)
     {
         if (this.length !== values.length)
         {
