@@ -20,19 +20,14 @@ export const Texture = {
         const texture = Texture.create();
         Texture.bind(texture);
 
-        gl.texImage2D(
+        gl.texStorage2D(
             $.TEXTURE_2D,
-            0,
-            $.RGB,
+            1,
+            $.RGB8,
             width,
-            height,
-            0,
-            $.RGB,
-            $.UNSIGNED_BYTE,
-            null
+            height
         );
 
-        Texture.setParami($.TEXTURE_MIN_FILTER, $.LINEAR);
         Texture.unbind();
 
         return texture;
