@@ -58,13 +58,19 @@ export const BufferUniform = {
     prepareBlock(program, blockId)
     {
         const bufferId = blockBuffers.get(blockId);
-        const bindingPoint = bindingPoints.get(bufferId);
+        const bindingPoint = uniformBuffers.indexOf(bufferId);
+
+        if (bindingPoint === -1)
+        {
+            throw Error;
+        }
+
         const blockIdx = gl.getUniformBlockIndex(program, blockId);
         gl.uniformBlockBinding(program, blockIdx, bindingPoint);
     }
 };
 
-const reduceFunc = (array, bufferId) => (array.push(
+const bufferCreator = (array, bufferId) => (array.push(
     [bufferId, gl.createBuffer()]
 ), array);
 
@@ -74,23 +80,26 @@ const buffers = new SafeMap([
             $.BUF_ARR_SPRITE,
             $.BUF_ARR_POLYGON,
             $.BUF_ARR_DEBUG
-        ].reduce(reduceFunc, [])
+        ].reduce(bufferCreator, [])
     )],
     [$.UNIFORM_BUFFER, new SafeMap(
         [
             $.BUF_UNI_CAMERA
-        ].reduce(reduceFunc, [])
+        ].reduce(bufferCreator, [])
     )]
 ]);
 
 const arrayBufferSizes = new SafeMap();
 
-const blockBuffers = new SafeMap([[$.UB_CAMERA, $.BUF_UNI_CAMERA]]);
+const blockBuffers = new SafeMap([
+    [$.UB_CAMERA, $.BUF_UNI_CAMERA]
+]);
 
-const bindingPoints = new SafeMap([$.BUF_UNI_CAMERA].map((x, i) => [x, i]));
+const uniformBuffers = [$.BUF_UNI_CAMERA];
 
-for (const [bufferId, idx] of bindingPoints)
+for (let i = 0; i < uniformBuffers.length; i++)
 {
+    const bufferId = uniformBuffers[i];
     const buffer = BufferUniform.getBuffer(bufferId);
-    gl.bindBufferBase($.UNIFORM_BUFFER, idx, buffer);
+    gl.bindBufferBase($.UNIFORM_BUFFER, i, buffer);
 }
