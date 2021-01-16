@@ -11,7 +11,7 @@ export const Storage = {
         }
         catch
         {
-            throw key;
+            throw Error;
         }
     },
     set(key, value)

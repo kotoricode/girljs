@@ -158,7 +158,7 @@ for (let i = 0; i < programDef.length;)
 
     if (!gl.getProgramParameter(program, $.LINK_STATUS))
     {
-        throw gl.getProgramInfoLog(program);
+        throw Error;
     }
 
     detachDeleteShader(program, vs);

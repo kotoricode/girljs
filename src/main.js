@@ -22,7 +22,7 @@ export const setActiveScene = (sceneId) =>
     {
         if (activeScene.sceneId === sceneId)
         {
-            throw sceneId;
+            throw Error;
         }
 
         activeScene.unload();

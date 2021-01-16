@@ -47,7 +47,7 @@ export class Entity
             return (flags & this.flags) === flags;
         }
 
-        throw flags;
+        throw Error;
     }
 
     removeComponent(...components)

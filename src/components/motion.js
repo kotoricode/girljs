@@ -27,7 +27,7 @@ export class Motion extends Component
     {
         if (this.idx < 0 || this.waypoints.length <= this.idx)
         {
-            throw this.idx;
+            throw Error;
         }
 
         return this.waypoints[this.idx];

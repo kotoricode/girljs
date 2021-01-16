@@ -8,7 +8,7 @@ export const processMotion = (scene) =>
     {
         if (space.isDirty)
         {
-            throw space;
+            throw Error;
         }
 
         if (motion.hasTarget())

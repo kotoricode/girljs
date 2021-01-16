@@ -14,7 +14,7 @@ export class Component
             if (flagged.size > 31)
             {
                 // TODO: switch to bigint if tons of comps
-                throw flagged;
+                throw Error;
             }
 
             ctor.flag = 1 << flagged.size;

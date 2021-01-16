@@ -9,7 +9,7 @@ export const Prefs = {
             return prefs[prefId];
         }
 
-        throw prefId;
+        throw Error;
     },
     load()
     {
@@ -34,7 +34,7 @@ export const Prefs = {
     {
         if (!(prefId in prefs))
         {
-            throw prefId;
+            throw Error;
         }
 
         prefs[prefId] = value;
