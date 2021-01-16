@@ -21,8 +21,7 @@ export class Sprite extends Component
 
     setModel(modelId)
     {
-        const model = Model.get(modelId);
-        this.programData.setAttributes($.BUF_ARR_SPRITE, model);
+        this.programData.setAttributes(modelId);
         this.texture = Model.getTexture(modelId);
     }
 

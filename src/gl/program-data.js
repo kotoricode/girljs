@@ -4,6 +4,7 @@ import { getPreparedProgram } from "./program";
 import { BufferArray } from "./buffer";
 import { Vao } from "./vao";
 import { SafeMap } from "../utils/better-builtins";
+import { Model } from "./model";
 
 export class ProgramData
 {
@@ -31,8 +32,11 @@ export class ProgramData
         Vao.delete(this);
     }
 
-    setAttributes(bufferId, model)
+    setAttributes(modelId)
     {
+        const model = Model.get(modelId);
+        const bufferId = Model.getBufferId(modelId);
+
         Vao.bind(this.vao);
         BufferArray.bind(bufferId);
 

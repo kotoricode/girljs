@@ -19,8 +19,7 @@ import { SafeMap } from "../utils/better-builtins";
 const getViewProgramData = () =>
 {
     const programData = new ProgramData($.PROG_VIEW);
-    const model = Model.get($.MODEL_IMAGE);
-    programData.setAttributes($.BUF_ARR_POLYGON, model);
+    programData.setAttributes($.MODEL_IMAGE);
 
     return programData;
 };
