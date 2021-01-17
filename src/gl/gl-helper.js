@@ -2,14 +2,10 @@ import { gl } from "../dom";
 import { BufferUniform } from "./buffer";
 import { Vao } from "./vao";
 
-export const drawArrays = (mode, offset, length) => gl.drawArrays(
-    mode, offset, length
-);
-
 export const drawArraysVao = (mode, offset, length, vao) =>
 {
     Vao.bind(vao);
-    drawArrays(mode, offset, length);
+    gl.drawArrays(mode, offset, length);
     Vao.unbind();
 };
 

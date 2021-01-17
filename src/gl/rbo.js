@@ -11,7 +11,7 @@ export const Rbo = {
     },
     createDepth()
     {
-        if (!isBound) throw Error;
+        assertIsBound();
 
         gl.renderbufferStorage(
             $.RENDERBUFFER,
@@ -24,11 +24,16 @@ export const Rbo = {
     },
     unbind()
     {
-        if (!isBound) throw Error;
+        assertIsBound();
 
         gl.bindRenderbuffer($.RENDERBUFFER, null);
         isBound = false;
     }
+};
+
+const assertIsBound = () =>
+{
+    if (!isBound) throw Error;
 };
 
 const rboDepth = gl.createRenderbuffer();

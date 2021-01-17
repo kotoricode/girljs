@@ -5,7 +5,7 @@ import { Texture } from "./texture";
 export const Fbo = {
     attachDepth(rbo)
     {
-        if (!isBound) throw Error;
+        assertIsBound();
 
         gl.framebufferRenderbuffer(
             $.FRAMEBUFFER,
@@ -23,7 +23,7 @@ export const Fbo = {
     },
     createTexture()
     {
-        if (!isBound) throw Error;
+        assertIsBound();
 
         if (texture)
         {
@@ -51,11 +51,16 @@ export const Fbo = {
     },
     unbind()
     {
-        if (!isBound) throw Error;
+        assertIsBound();
 
         gl.bindFramebuffer($.FRAMEBUFFER, null);
         isBound = false;
     }
+};
+
+const assertIsBound = () =>
+{
+    if (!isBound) throw Error;
 };
 
 const fbo = gl.createFramebuffer();

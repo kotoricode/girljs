@@ -91,9 +91,6 @@ Publisher.subscribe($.EVENT_RESIZED, () => isCanvasResized = true);
 gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
-// Buffers
-//const rboDepth = gl.createRenderbuffer();
-
 const viewProgramData = new ProgramData($.PROG_VIEW);
 viewProgramData.setAttributes($.MODEL_IMAGE);
 let isCanvasResized = true;

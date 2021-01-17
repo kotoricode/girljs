@@ -4,7 +4,7 @@ import { Storage } from "./utils/storage";
 export const Prefs = {
     get(prefId)
     {
-        if (!(prefId in prefs)) throw Error;
+        assertHasKey(prefId);
 
         return prefs[prefId];
     },
@@ -29,10 +29,15 @@ export const Prefs = {
     },
     set(prefId, value)
     {
-        if (!(prefId in prefs)) throw Error;
+        assertHasKey(prefId);
 
         prefs[prefId] = value;
     }
+};
+
+const assertHasKey = (prefId) =>
+{
+    if (!(prefId in prefs)) throw Error;
 };
 
 const prefs = {
