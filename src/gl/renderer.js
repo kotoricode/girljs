@@ -25,26 +25,17 @@ export const render = (scene) =>
     Fbo.bind(fbo);
     Rbo.bind(rboDepth);
 
+    let fbTexture = Fbo.getTexture();
+
     if (isCanvasResized)
     {
-        const { width, height } = gl.canvas;
-
-        gl.deleteTexture(fbTexture);
-        fbTexture = Texture.createFramebufferTexture(width, height);
-
-        gl.framebufferTexture2D(
-            $.FRAMEBUFFER,
-            $.COLOR_ATTACHMENT0,
-            $.TEXTURE_2D,
-            fbTexture,
-            0
-        );
+        fbTexture = Fbo.createTexture();
 
         gl.renderbufferStorage(
             $.RENDERBUFFER,
             $.DEPTH_COMPONENT16,
-            width,
-            height
+            gl.canvas.width,
+            gl.canvas.height
         );
 
         gl.framebufferRenderbuffer(
@@ -115,7 +106,6 @@ const rboDepth = gl.createRenderbuffer();
 const viewProgramData = new ProgramData($.PROG_VIEW);
 viewProgramData.setAttributes($.MODEL_IMAGE);
 let isCanvasResized = true;
-let fbTexture;
 
 // Queues are ordered
 const queues = new SafeMap([
