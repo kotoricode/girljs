@@ -4,12 +4,9 @@ import { Storage } from "./utils/storage";
 export const Prefs = {
     get(prefId)
     {
-        if (prefId in prefs)
-        {
-            return prefs[prefId];
-        }
+        if (!(prefId in prefs)) throw Error;
 
-        throw Error;
+        return prefs[prefId];
     },
     load()
     {
@@ -32,10 +29,7 @@ export const Prefs = {
     },
     set(prefId, value)
     {
-        if (!(prefId in prefs))
-        {
-            throw Error;
-        }
+        if (!(prefId in prefs)) throw Error;
 
         prefs[prefId] = value;
     }

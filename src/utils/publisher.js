@@ -15,10 +15,7 @@ export const Publisher = {
     },
     subscribe(event, subFunc)
     {
-        if (!(subFunc instanceof Function))
-        {
-            throw Error;
-        }
+        if (!(subFunc instanceof Function)) throw Error;
 
         if (!eventSubs.has(event))
         {

@@ -60,10 +60,7 @@ export const BufferUniform = {
         const bufferId = blockBuffers.get(blockId);
         const bindingPoint = uniformBuffers.indexOf(bufferId);
 
-        if (bindingPoint === -1)
-        {
-            throw Error;
-        }
+        if (bindingPoint === -1) throw Error;
 
         const blockIdx = gl.getUniformBlockIndex(program, blockId);
         gl.uniformBlockBinding(program, blockIdx, bindingPoint);

@@ -4,11 +4,7 @@ export class Polygon
 {
     constructor(points)
     {
-        if (points.length < 3)
-        {
-            // must have volume
-            throw Error;
-        }
+        if (points.length < 3) throw Error;
 
         this.points = points;
         this.activeSegment = new Segment();

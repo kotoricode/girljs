@@ -151,10 +151,7 @@ for (let i = 0; i < programDef.length;)
     const fs = createAttachShader(program, $.FRAGMENT_SHADER, frag);
     gl.linkProgram(program);
 
-    if (!gl.getProgramParameter(program, $.LINK_STATUS))
-    {
-        throw Error;
-    }
+    if (!gl.getProgramParameter(program, $.LINK_STATUS)) throw Error;
 
     detachDeleteShader(program, vs);
     detachDeleteShader(program, fs);

@@ -62,10 +62,7 @@ const play = (soundId) =>
 {
     const { fileName, element } = audio.get(soundId);
 
-    if (!fileName)
-    {
-        throw Error;
-    }
+    if (!fileName) throw Error;
 
     if (context)
     {

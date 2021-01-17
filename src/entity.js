@@ -42,12 +42,9 @@ export class Entity
 
     hasFlags(flags)
     {
-        if (Number.isInteger(flags))
-        {
-            return (flags & this.flags) === flags;
-        }
+        if (!Number.isInteger(flags)) throw Error;
 
-        throw Error;
+        return (flags & this.flags) === flags;
     }
 
     removeComponent(...components)

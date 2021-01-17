@@ -12,10 +12,7 @@ export class BufferData extends Float32Array
 
     setValues(...values)
     {
-        if (this.length !== values.length)
-        {
-            throw Error;
-        }
+        if (this.length !== values.length) throw Error;
 
         for (let i = 0; i < values.length; i++)
         {
@@ -33,18 +30,12 @@ export class SafeMap extends Map
 
     assertHas(key)
     {
-        if (!this.has(key))
-        {
-            throw Error;
-        }
+        if (!this.has(key)) throw Error;
     }
 
     delete(key)
     {
-        if (!super.delete(key))
-        {
-            throw Error;
-        }
+        if (!super.delete(key)) throw Error;
     }
 
     get(key)
@@ -56,10 +47,7 @@ export class SafeMap extends Map
 
     set(key, value)
     {
-        if (this.has(key))
-        {
-            throw Error;
-        }
+        if (this.has(key)) throw Error;
 
         return super.set(key, value);
     }
@@ -81,20 +69,14 @@ export class SafeSet extends Set
 
     add(value)
     {
-        if (this.has(value))
-        {
-            throw Error;
-        }
+        if (this.has(value)) throw Error;
 
         return super.add(value);
     }
 
     delete(value)
     {
-        if (!super.delete(value))
-        {
-            throw Error;
-        }
+        if (!super.delete(value)) throw Error;
     }
 }
 
@@ -112,10 +94,7 @@ export class SettableArray extends Array
 
     setValues(...values)
     {
-        if (this.length !== values.length)
-        {
-            throw Error;
-        }
+        if (this.length !== values.length) throw Error;
 
         for (let i = 0; i < values.length; i++)
         {

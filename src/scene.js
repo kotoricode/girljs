@@ -214,10 +214,7 @@ export class Scene
 
     updateGraph()
     {
-        if (!this.hasDirty)
-        {
-            throw Error;
-        }
+        if (!this.hasDirty) throw Error;
 
         for (const child of this.root.children)
         {

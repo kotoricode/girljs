@@ -52,10 +52,7 @@ export class Path
 
     heapAdd(value)
     {
-        if (this.heapSize === this.heapMaxSize)
-        {
-            throw Error;
-        }
+        if (this.heapSize === this.heapMaxSize) throw Error;
 
         let idx = this.heapSize++;
         this.heap[idx] = value;

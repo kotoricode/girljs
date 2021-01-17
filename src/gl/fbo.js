@@ -3,20 +3,37 @@ import { gl } from "../dom";
 import { Texture } from "./texture";
 
 export const Fbo = {
-    bind(fbo)
+    attachDepth(rbo)
     {
+        if (!isBound) throw Error;
+
+        gl.framebufferRenderbuffer(
+            $.FRAMEBUFFER,
+            $.DEPTH_ATTACHMENT,
+            $.RENDERBUFFER,
+            rbo
+        );
+    },
+    bind()
+    {
+        if (isBound) throw Error;
+
         gl.bindFramebuffer($.FRAMEBUFFER, fbo);
+        isBound = true;
     },
     createTexture()
     {
+        if (!isBound) throw Error;
+
         if (texture)
         {
             gl.deleteTexture(texture);
         }
 
-        const { width, height } = gl.canvas;
-
-        texture = Texture.createFramebufferTexture(width, height);
+        texture = Texture.createFramebufferTexture(
+            gl.canvas.width,
+            gl.canvas.height
+        );
 
         gl.framebufferTexture2D(
             $.FRAMEBUFFER,
@@ -34,13 +51,13 @@ export const Fbo = {
     },
     unbind()
     {
-        Fbo.bind(null);
+        if (!isBound) throw Error;
+
+        gl.bindFramebuffer($.FRAMEBUFFER, null);
+        isBound = false;
     }
 };
 
-const createTexture = (width, height) =>
-{
-
-};
-
+const fbo = gl.createFramebuffer();
 let texture;
+let isBound = false;

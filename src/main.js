@@ -20,10 +20,7 @@ export const setActiveScene = (sceneId) =>
 {
     if (activeScene)
     {
-        if (activeScene.sceneId === sceneId)
-        {
-            throw Error;
-        }
+        if (activeScene.sceneId === sceneId) throw Error;
 
         activeScene.unload();
     }

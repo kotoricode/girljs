@@ -22,30 +22,22 @@ export const render = (scene) =>
         }
     }
 
-    Fbo.bind(fbo);
-    Rbo.bind(rboDepth);
+    Fbo.bind();
+    Rbo.bindDepth();
 
-    let fbTexture = Fbo.getTexture();
+    let fbTexture;
 
     if (isCanvasResized)
     {
         fbTexture = Fbo.createTexture();
-
-        gl.renderbufferStorage(
-            $.RENDERBUFFER,
-            $.DEPTH_COMPONENT16,
-            gl.canvas.width,
-            gl.canvas.height
-        );
-
-        gl.framebufferRenderbuffer(
-            $.FRAMEBUFFER,
-            $.DEPTH_ATTACHMENT,
-            $.RENDERBUFFER,
-            rboDepth
-        );
+        const rboDepth = Rbo.createDepth();
+        Fbo.attachDepth(rboDepth);
 
         isCanvasResized = false;
+    }
+    else
+    {
+        fbTexture = Fbo.getTexture();
     }
 
     // Draw world
@@ -100,8 +92,7 @@ gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
 // Buffers
-const fbo = gl.createFramebuffer();
-const rboDepth = gl.createRenderbuffer();
+//const rboDepth = gl.createRenderbuffer();
 
 const viewProgramData = new ProgramData($.PROG_VIEW);
 viewProgramData.setAttributes($.MODEL_IMAGE);

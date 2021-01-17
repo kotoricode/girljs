@@ -2,21 +2,34 @@ import * as $ from "../const";
 import { gl } from "../dom";
 
 export const Rbo = {
-    bind(rbo)
+    bindDepth()
     {
-        gl.bindRenderbuffer($.RENDERBUFFER, rbo);
+        if (isBound) throw Error;
+
+        gl.bindRenderbuffer($.RENDERBUFFER, rboDepth);
+        isBound = true;
     },
-    initDepth(width, height)
+    createDepth()
     {
+        if (!isBound) throw Error;
+
         gl.renderbufferStorage(
             $.RENDERBUFFER,
             $.DEPTH_COMPONENT16,
-            width,
-            height
+            gl.canvas.width,
+            gl.canvas.height
         );
+
+        return rboDepth;
     },
     unbind()
     {
-        Rbo.bind(null);
+        if (!isBound) throw Error;
+
+        gl.bindRenderbuffer($.RENDERBUFFER, null);
+        isBound = false;
     }
 };
+
+const rboDepth = gl.createRenderbuffer();
+let isBound = false;

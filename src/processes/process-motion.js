@@ -6,10 +6,7 @@ export const processMotion = (scene) =>
 {
     for (const [motion, space] of scene.all(Motion, Space))
     {
-        if (space.isDirty)
-        {
-            throw Error;
-        }
+        if (space.isDirty) throw Error;
 
         if (motion.hasTarget())
         {

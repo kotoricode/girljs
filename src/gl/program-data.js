@@ -67,10 +67,7 @@ export class ProgramData
 
     stageUniform(key, value)
     {
-        if (!Array.isArray(value))
-        {
-            throw Error;
-        }
+        if (!Array.isArray(value)) throw Error;
 
         this.uniforms.staging.update(key, value);
     }
@@ -79,15 +76,8 @@ export class ProgramData
     {
         const staged = this.uniforms.staging.get(key);
 
-        if (!Array.isArray(staged))
-        {
-            throw Error;
-        }
-
-        if (staged.length <= idx)
-        {
-            throw Error;
-        }
+        if (!Array.isArray(staged)) throw Error;
+        if (staged.length <= idx) throw Error;
 
         staged[idx] = value;
     }
