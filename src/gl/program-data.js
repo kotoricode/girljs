@@ -15,11 +15,10 @@ export class ProgramData
         this.programId = programId;
         this.program = prepared.program;
         this.uniforms = prepared.uniforms;
-        this.uniforms.staging = new SafeMap();
-
-        // TODO: maybe pool vaos?
-        this.vao = Vao.create(this);
         this.attributes = prepared.attributes;
+
+        this.uniforms.staging = new SafeMap();
+        this.vao = gl.createVertexArray();
 
         for (const [name, defaults] of this.uniforms.defaults)
         {
@@ -29,7 +28,7 @@ export class ProgramData
 
     delete()
     {
-        Vao.delete(this);
+        gl.deleteVertexArray(this.vao);
     }
 
     setAttributes(modelId)

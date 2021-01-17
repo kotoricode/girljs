@@ -81,7 +81,6 @@ const vertDef = {
     },
     view: {
         src: vsView,
-        blocks: null,
         attributes: attribPosUv
     },
     standard: {
@@ -100,23 +99,19 @@ const vertDef = {
 ------------------------------------------------------------------------------*/
 const fragDef = {
     color: {
-        src: fsColor,
-        blocks: null
+        src: fsColor
     },
     view: {
-        src: fsView,
-        blocks: null
+        src: fsView
     },
     sprite: {
         src: fsSprite,
-        blocks: null,
         uniforms: {
             uniform4f: uniColor
         }
     },
     polygon: {
         src: fsPolygon,
-        blocks: null,
         uniforms: {
             uniform2f: uniUvOffsetSize,
             uniform4f: uniColor

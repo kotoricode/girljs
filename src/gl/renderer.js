@@ -8,6 +8,8 @@ import { BufferArray } from "./buffer";
 import { Texture } from "./texture";
 import { ProgramData } from "./program-data";
 import { SafeMap } from "../utils/better-builtins";
+import { Rbo } from "./rbo";
+import { Fbo } from "./fbo";
 
 export const render = (scene) =>
 {
@@ -20,8 +22,8 @@ export const render = (scene) =>
         }
     }
 
-    gl.bindFramebuffer($.FRAMEBUFFER, fbo);
-    gl.bindRenderbuffer($.RENDERBUFFER, rboDepth);
+    Fbo.bind(fbo);
+    Rbo.bind(rboDepth);
 
     if (isCanvasResized)
     {
@@ -64,8 +66,8 @@ export const render = (scene) =>
         renderQueue(queue);
     }
 
-    gl.bindFramebuffer($.FRAMEBUFFER, null);
-    gl.bindRenderbuffer($.RENDERBUFFER, null);
+    Rbo.unbind();
+    Fbo.unbind();
     gl.disable($.DEPTH_TEST);
 
     // Transfer to canvas
