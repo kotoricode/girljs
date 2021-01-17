@@ -15,17 +15,17 @@ export class Sprite extends Component
 
         if (uniforms)
         {
-            this.setProgramUniforms(modelId, uniforms);
+            this.setProgramUniforms(uniforms);
         }
     }
 
     setModel(modelId)
     {
         this.programData.setAttributes(modelId);
-        this.texture = Model.getTexture(modelId);
+        this.modelId = modelId;
     }
 
-    setProgramUniforms(modelId, uniforms)
+    setProgramUniforms(uniforms)
     {
         for (const [key, value] of Object.entries(uniforms))
         {
@@ -39,7 +39,7 @@ export class Sprite extends Component
                 uvMinX, uvMaxY,
                 uvMaxX, ,
                 , uvMinY
-            ] = Model.getUv(modelId);
+            ] = Model.getUv(this.modelId);
 
             const width = uvMaxX - uvMinX;
             const height = uvMaxY - uvMinY;

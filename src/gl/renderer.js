@@ -10,6 +10,7 @@ import { ProgramData } from "./program-data";
 import { SafeMap } from "../utils/better-builtins";
 import { Rbo } from "./rbo";
 import { Fbo } from "./fbo";
+import { Model } from "./model";
 
 export const render = (scene) =>
 {
@@ -74,8 +75,10 @@ const renderDebug = () =>
 
 const renderQueue = (queue) =>
 {
-    for (const { programData, texture } of queue)
+    for (const { programData, modelId } of queue)
     {
+        const texture = Model.getTexture(modelId);
+
         setProgram(programData);
         Texture.bind(texture);
         programData.setUniforms();
