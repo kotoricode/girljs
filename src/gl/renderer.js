@@ -43,6 +43,7 @@ export const render = (scene) =>
 
     // Draw world
     gl.clear($.COLOR_BUFFER_BIT | $.DEPTH_BUFFER_BIT);
+    gl.clearColor(0.8, 0.8, 0.8, 1.0);
     gl.enable($.DEPTH_TEST);
 
     for (const queue of queues.values())
@@ -57,6 +58,7 @@ export const render = (scene) =>
     // Transfer to canvas
     setProgram(viewProgramData);
     Texture.bind(fbTexture);
+    //Texture.bind(textTexture);
     drawArraysVao($.TRIANGLES, 0, 6, viewProgramData.vao);
     Texture.unbind();
 
@@ -103,3 +105,23 @@ const queues = new SafeMap([
     [$.PROG_POLYGON, []],
     [$.PROG_SPRITE, []],
 ]);
+
+const textCanvas = window.document.createElement("canvas");
+textCanvas.width = 1280;
+textCanvas.height = 720;
+const ctx = textCanvas.getContext("2d");
+ctx.fillStyle = "#00FF00";
+ctx.textAlign = "center";
+ctx.textBaseline = "middle";
+ctx.font = "18px monospace";
+ctx.fillText("HTML5 Rocks!", textCanvas.width/2, textCanvas.height/2);
+
+const textTexture = gl.createTexture();
+
+gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
+gl.bindTexture(gl.TEXTURE_2D, textTexture);
+gl.texImage2D($.TEXTURE_2D, 0, $.RGBA, $.RGBA, $.UNSIGNED_BYTE, textCanvas);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
+gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
+gl.bindTexture(gl.TEXTURE_2D, null);
+gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);
