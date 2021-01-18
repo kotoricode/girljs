@@ -22,29 +22,6 @@ export const
     AUDIO_SOUND_LOOP = i++;
 
 /*------------------------------------------------------------------------------
-    Storage
-------------------------------------------------------------------------------*/
-export const
-    PREF_MASTER = "master",
-    PREF_MUSIC = "music",
-    PREF_SOUND = "sound";
-
-export const
-    STATE_MONEY = "money";
-
-/*------------------------------------------------------------------------------
-    File System
-------------------------------------------------------------------------------*/
-export const
-    PATH_IMG = "./img/",
-    PATH_SND = "./snd/";
-
-export const
-    FILE_OMOIDE = "omoide_loft.ogg",
-    FILE_POLY = "texture.png",
-    FILE_BRAID = "braid.png";
-
-/*------------------------------------------------------------------------------
     GL
 ------------------------------------------------------------------------------*/
 export const
@@ -148,6 +125,29 @@ export const
 
 export const
     UB_CAMERA = "camera";
+
+/*------------------------------------------------------------------------------
+    Storage
+------------------------------------------------------------------------------*/
+export const
+    PREF_MASTER = "master",
+    PREF_MUSIC = "music",
+    PREF_SOUND = "sound";
+
+export const
+    STATE_MONEY = "money";
+
+/*------------------------------------------------------------------------------
+    File System
+------------------------------------------------------------------------------*/
+export const
+    PATH_IMG = "./img/",
+    PATH_SND = "./snd/";
+
+export const
+    FILE_OMOIDE = "omoide_loft.ogg",
+    FILE_POLY = "texture.png",
+    FILE_BRAID = "braid.png";
 
 /*------------------------------------------------------------------------------
     GL enums

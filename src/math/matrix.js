@@ -2,7 +2,7 @@
 import * as $ from "../const";
 import { SettableArray } from "../utils/better-builtins";
 
-export class Matrix4 extends SettableArray
+export class Matrix extends SettableArray
 {
     constructor()
     {

@@ -2,7 +2,7 @@ import * as $ from "./const";
 import { BufferUniform } from "./gl/buffer";
 import { BufferData } from "./utils/better-builtins";
 import { DEG_TO_RAD } from "./math/math-helper";
-import { Matrix4 } from "./math/matrix4";
+import { Matrix } from "./math/matrix";
 import { Transform } from "./math/transform";
 
 export const getInvViewProjection = () => invViewProjection;
@@ -33,8 +33,8 @@ const near = 1;
 const fov = Math.tan(DEG_TO_RAD * 30 / 2);
 
 const transform = new Transform(0, 2.7, 8);
-const viewProjection = new Matrix4();
-const invViewProjection = new Matrix4();
+const viewProjection = new Matrix();
+const invViewProjection = new Matrix();
 
 transform.rotation.fromEuler(0.2, 0, 0);
 

@@ -1,4 +1,4 @@
-import { Matrix4 } from "../math/matrix4";
+import { Matrix } from "../math/matrix";
 import { Transform } from "../math/transform";
 import { Component } from "./component";
 
@@ -8,7 +8,7 @@ export class Space extends Component
     {
         super();
 
-        this.matrix = new Matrix4();
+        this.matrix = new Matrix();
         this.isDirty = true;
 
         this.local = new Transform(tx, ty, tz);
