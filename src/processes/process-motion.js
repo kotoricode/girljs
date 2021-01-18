@@ -1,5 +1,6 @@
 import { Motion } from "../components/motion";
 import { Space } from "../components/space";
+import { setUiText } from "../gl/ui";
 import { Vector } from "../math/vector";
 
 export const processMotion = (scene) =>
@@ -11,6 +12,8 @@ export const processMotion = (scene) =>
         if (motion.hasTarget())
         {
             const { direction } = motion;
+
+            setUiText("Hello", "World", "Testing...");
 
             // Distance to target
             const target = motion.getTarget();

@@ -11,6 +11,7 @@ import { SafeMap } from "../utils/better-builtins";
 import { Rbo } from "./rbo";
 import { Fbo } from "./fbo";
 import { Model } from "./model";
+import { getUiProgram, getUiTexture } from "./ui";
 
 export const render = (scene) =>
 {
@@ -64,15 +65,28 @@ export const render = (scene) =>
 
     // Debug
     renderDebug();
+
+    // Text
+    renderText();
 };
 
 const renderDebug = () =>
 {
     const programData = getDebugProgram();
     setProgram(programData);
-
     const bufferSize = BufferArray.getSize($.BUF_ARR_DEBUG);
     drawArraysVao($.LINES, 0, bufferSize / 3, programData.vao);
+};
+
+const renderText = () =>
+{
+    const programData = getUiProgram();
+    const uiTexture = getUiTexture();
+
+    setProgram(programData);
+    Texture.bind(uiTexture);
+    drawArraysVao($.TRIANGLES, 0, 6, programData.vao);
+    Texture.unbind();
 };
 
 const renderQueue = (queue) =>
@@ -105,23 +119,3 @@ const queues = new SafeMap([
     [$.PROG_POLYGON, []],
     [$.PROG_SPRITE, []],
 ]);
-
-const textCanvas = window.document.createElement("canvas");
-textCanvas.width = 1280;
-textCanvas.height = 720;
-const ctx = textCanvas.getContext("2d");
-ctx.fillStyle = "#00FF00";
-ctx.textAlign = "center";
-ctx.textBaseline = "middle";
-ctx.font = "18px monospace";
-ctx.fillText("HTML5 Rocks!", textCanvas.width/2, textCanvas.height/2);
-
-const textTexture = gl.createTexture();
-
-gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, true);
-gl.bindTexture(gl.TEXTURE_2D, textTexture);
-gl.texImage2D($.TEXTURE_2D, 0, $.RGBA, $.RGBA, $.UNSIGNED_BYTE, textCanvas);
-gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MAG_FILTER, gl.NEAREST);
-gl.texParameteri(gl.TEXTURE_2D, gl.TEXTURE_MIN_FILTER, gl.NEAREST);
-gl.bindTexture(gl.TEXTURE_2D, null);
-gl.pixelStorei(gl.UNPACK_FLIP_Y_WEBGL, false);

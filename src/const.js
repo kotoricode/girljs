@@ -25,6 +25,7 @@ export const
     GL
 ------------------------------------------------------------------------------*/
 export const
+    PROG_SCREEN = i++,
     PROG_DEBUG = i++,
     PROG_VIEW = i++,
     PROG_SPRITE = i++,
@@ -37,6 +38,7 @@ export const
     BUF_UNI_CAMERA = i++;
 
 export const
+    MODEL_DIALOGUE = i++,
     MODEL_DEBUG = i++,
     MODEL_GROUND = i++,
     MODEL_IMAGE = i++,

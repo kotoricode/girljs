@@ -76,5 +76,3 @@ canvas.addEventListener("click", (e) =>
     //e.preventDefault();
     //e.stopPropagation();
 });
-
-canvas.addEventListener("contextmenu", (e) => e.preventDefault());

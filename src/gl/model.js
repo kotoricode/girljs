@@ -122,18 +122,44 @@ BufferArray.data(
 ------------------------------------------------------------------------------*/
 const polygonData = [];
 
-const xyzImage = [-1, 1, 0, -1, -1, 0, 1, -1, 0, 1, -1, 0, 1, 1, 0, -1, 1, 0];
-const xyzOffset = pushData(polygonData, xyzImage);
-
-const uvImage = [0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1];
-const uvOffset = pushData(polygonData, uvImage);
-
 models.set($.MODEL_IMAGE, new SafeMap([
-    [$.A_XYZ, xyzOffset],
-    [$.A_UV, uvOffset]
+    [$.A_XYZ, pushData(polygonData,
+        [
+            -1, 1, 0,
+            -1, -1, 0,
+            1, -1, 0,
+            1, -1, 0,
+            1, 1, 0,
+            -1, 1, 0
+        ]
+    )],
+    [$.A_UV, pushData(polygonData, [
+        0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1
+    ])]
 ]));
 
 modelBuffers.set($.MODEL_IMAGE, $.BUF_ARR_POLYGON);
+
+/*------------------------------------------------------------------------------
+    Dialogue
+------------------------------------------------------------------------------*/
+models.set($.MODEL_DIALOGUE, new SafeMap([
+    [$.A_XYZ, pushData(polygonData,
+        [
+            -1, 1, 0,
+            -1, -1, 0,
+            1, -1, 0,
+            1, -1, 0,
+            1, 1, 0,
+            -1, 1, 0
+        ]
+    )],
+    [$.A_UV, pushData(polygonData, [
+        0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1
+    ])]
+]));
+
+modelBuffers.set($.MODEL_DIALOGUE, $.BUF_ARR_POLYGON);
 
 BufferArray.data(
     $.BUF_ARR_POLYGON,

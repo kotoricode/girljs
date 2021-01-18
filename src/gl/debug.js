@@ -3,8 +3,8 @@ import { ProgramData } from "./program-data";
 
 export const getDebugProgram = () =>
 {
-    return debugProgram;
+    return program;
 };
 
-const debugProgram = new ProgramData($.PROG_DEBUG);
-debugProgram.setAttributes($.MODEL_DEBUG);
+const program = new ProgramData($.PROG_DEBUG);
+program.setAttributes($.MODEL_DEBUG);

@@ -1,15 +1,16 @@
 import * as $ from "../const";
 import { gl } from "../dom";
-
-import vsStandard from "./shaders/standard.vert";
-import vsView     from "./shaders/view.vert";
-import vsColor    from "./shaders/color.vert";
-
-import fsView    from "./shaders/view.frag";
-import fsSprite  from "./shaders/sprite.frag";
-import fsPolygon from "./shaders/polygon.frag";
-import fsColor   from "./shaders/color.frag";
 import { SafeMap } from "../utils/better-builtins";
+
+import vsStandard from "./shaders/vert/standard.vert";
+import vsScreen   from "./shaders/vert/screen.vert";
+import vsColor    from "./shaders/vert/color.vert";
+
+import fsView    from "./shaders/frag/view.frag";
+import fsScreen  from "./shaders/frag/screen.frag";
+import fsSprite  from "./shaders/frag/sprite.frag";
+import fsPolygon from "./shaders/frag/polygon.frag";
+import fsColor   from "./shaders/frag/color.frag";
 
 const createAttachShader = (program, shaderId, vertFrag) =>
 {
@@ -79,8 +80,8 @@ const vertDef = {
         blocks: ubCamera,
         attributes: attribPos
     },
-    view: {
-        src: vsView,
+    screen: {
+        src: vsScreen,
         attributes: attribPosUv
     },
     standard: {
@@ -104,6 +105,9 @@ const fragDef = {
     view: {
         src: fsView
     },
+    screen: {
+        src: fsScreen
+    },
     sprite: {
         src: fsSprite,
         uniforms: {
@@ -123,7 +127,8 @@ const fragDef = {
     Program definitions
 ------------------------------------------------------------------------------*/
 const programDef = [
-    $.PROG_VIEW,    vertDef.view,     fragDef.view,
+    $.PROG_SCREEN,  vertDef.screen,   fragDef.screen,
+    $.PROG_VIEW,    vertDef.screen,   fragDef.view,
     $.PROG_SPRITE,  vertDef.standard, fragDef.sprite,
     $.PROG_POLYGON, vertDef.standard, fragDef.polygon,
     $.PROG_DEBUG,   vertDef.color,    fragDef.color
