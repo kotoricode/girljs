@@ -12,7 +12,7 @@ export const Dialogue = {
     {
         return texture;
     },
-    setText(str, str2, str3)
+    setText(str)
     {
         ctx.clearRect(
             x - clearMargin,
@@ -25,23 +25,13 @@ export const Dialogue = {
         ctx.fillRect(x, y, width, height);
 
         Dialogue.setFontSettings();
-        ctx.fillText(str, x, y);
-
-        if (str2)
-        {
-            ctx.fillText(str2, x, y + fontSize);
-
-            if (str3)
-            {
-                ctx.fillText(str3, x, y + fontSize * 2);
-            }
-        }
+        drawSplitString(str, y);
 
         gl.pixelStorei($.UNPACK_FLIP_Y_WEBGL, true);
 
         Texture.bind(texture);
-        Texture.setFromSource(canvas);
-        Texture.setParami($.TEXTURE_MIN_FILTER, $.LINEAR);
+        Texture.from(canvas);
+        Texture.parami($.TEXTURE_MIN_FILTER, $.LINEAR);
         Texture.unbind();
 
         gl.pixelStorei($.UNPACK_FLIP_Y_WEBGL, false);
@@ -63,6 +53,37 @@ export const Dialogue = {
     }
 };
 
+const drawSplitString = (str, yPos) =>
+{
+    if (ctx.measureText(str).width < width)
+    {
+        ctx.fillText(str, x, yPos);
+    }
+    else
+    {
+        const words = str.match(/(\s)?[^\s]+/g);
+        let fits;
+
+        for (let i = 0; i < words.length; i++)
+        {
+            const maybeFits = words.slice(0, i+1).join("");
+
+            if (ctx.measureText(maybeFits).width < width)
+            {
+                fits = maybeFits;
+            }
+            else
+            {
+                ctx.fillText(fits, x, yPos);
+                const remaining = words.slice(i,).join("").trim();
+                drawSplitString(remaining, yPos + fontSize);
+
+                break;
+            }
+        }
+    }
+};
+
 const program = new ProgramData($.PROG_SCREEN);
 program.setAttributes($.MODEL_SCREEN);
 const texture = Texture.create();
@@ -75,15 +96,15 @@ canvas.height = $.SCREEN_HEIGHT;
 /*------------------------------------------------------------------------------
     Draw area
 ------------------------------------------------------------------------------*/
+const fontSize = 48;
 const x = canvas.width / 6;
-const y = canvas.height / 1.3333;
+const y = canvas.height - fontSize*4;
 const width = canvas.width - 2*x;
 const height = canvas.height - y;
 const clearMargin = 8;
 
-const fontSize = 48;
 ctx.textAlign = "left";
 ctx.textBaseline = "top";
 ctx.font = `${fontSize}px Arial`;
 
-Dialogue.setText("iこんにちはせかい");
+Dialogue.setText("yksi kaksi kolme neljä viisi kuusi seitsemän kahdeksan yhdeksän kymmenen yksitoista kaksitoista kolmetoista");

@@ -22,10 +22,7 @@ const createAttachShader = (program, shaderId, vertFrag) =>
     return shader;
 };
 
-const createUniSetter = (type, loc) => (values) =>
-{
-    gl[type](loc, ...values);
-};
+const createUniSetter = (type, loc) => (values) => gl[type](loc, ...values);
 
 const detachDeleteShader = (program, shader) =>
 {

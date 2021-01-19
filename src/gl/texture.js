@@ -46,11 +46,11 @@ export const Texture = {
             maxX, minY,
         ];
     },
-    setFromSource(src)
+    from(src)
     {
         gl.texImage2D($.TEXTURE_2D, 0, $.RGBA, $.RGBA, $.UNSIGNED_BYTE, src);
     },
-    setParami(key, value)
+    parami(key, value)
     {
         gl.texParameteri($.TEXTURE_2D, key, value);
     },
@@ -73,8 +73,8 @@ image.addEventListener("load", () =>
     const texture = textures.get(src);
 
     Texture.bind(texture);
-    Texture.setFromSource(image);
-    Texture.setParami($.TEXTURE_MIN_FILTER, $.LINEAR);
+    Texture.from(image);
+    Texture.parami($.TEXTURE_MIN_FILTER, $.LINEAR);
     Texture.unbind();
 
     textures.delete(src);
