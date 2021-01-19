@@ -74,9 +74,24 @@ const drawSplitString = (str, yPos) =>
             }
             else
             {
-                ctx.fillText(fits, x, yPos);
+                if (!fits)
+                {
+                    console.warn(`String too long: ${maybeFits}`);
+
+                    ctx.fillText(maybeFits, x, yPos);
+                    i++;
+                }
+                else
+                {
+                    ctx.fillText(fits, x, yPos);
+                }
+
                 const remaining = words.slice(i,).join("").trim();
-                drawSplitString(remaining, yPos + fontSize);
+
+                if (remaining)
+                {
+                    drawSplitString(remaining, yPos + fontSize);
+                }
 
                 break;
             }
@@ -107,4 +122,4 @@ ctx.textAlign = "left";
 ctx.textBaseline = "top";
 ctx.font = `${fontSize}px Arial`;
 
-Dialogue.setText("yksi kaksi kolme neljä viisi kuusi seitsemän kahdeksan yhdeksän kymmenen yksitoista kaksitoista kolmetoista");
+Dialogue.setText("yksiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
