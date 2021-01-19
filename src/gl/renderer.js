@@ -6,12 +6,11 @@ import { drawArraysVao, setProgram } from "./gl-helper";
 import { BufferArray } from "./buffer";
 import { Texture } from "./texture";
 import { ProgramData } from "./program-data";
-import { SafeMap, Publisher } from "../utility";
+import { SafeMap, Publisher, SafeSet } from "../utility";
 import { Rbo } from "./rbo";
 import { Fbo } from "./fbo";
 import { Model } from "./model";
 import { Dialogue } from "../dialogue";
-import { UiSprite } from "../components/ui-sprite";
 
 export const render = (scene) =>
 {
@@ -20,13 +19,8 @@ export const render = (scene) =>
         if (sprite.isVisible)
         {
             const queue = queues.get(sprite.programData.programId);
-            queue.push(sprite);
+            queue.add(sprite);
         }
-    }
-
-    for (const [uiElement] of scene.all(UiSprite))
-    {
-        uiQueue.push(uiElement);
     }
 
     Fbo.bind();
@@ -52,10 +46,8 @@ export const render = (scene) =>
     gl.clearColor(0.8, 0.8, 0.8, 1.0);
     gl.enable($.DEPTH_TEST);
 
-    for (const queue of queues.values())
-    {
-        renderQueue(queue);
-    }
+    renderQueue($.PROG_POLYGON);
+    renderQueue($.PROG_SPRITE);
 
     Rbo.unbind();
     Fbo.unbind();
@@ -68,14 +60,19 @@ export const render = (scene) =>
     Texture.unbind();
 
     // UI
-    renderQueue(uiQueue);
-    uiQueue.length = 0;
+    renderQueue($.PROG_SCREEN2);
 
     // Debug
     renderDebug();
 
     // Text
     renderText();
+
+    // Clean queues
+    for (const queue of queues.values())
+    {
+        queue.clear();
+    }
 };
 
 const renderDebug = () =>
@@ -97,8 +94,10 @@ const renderText = () =>
     Texture.unbind();
 };
 
-const renderQueue = (queue) =>
+const renderQueue = (programId) =>
 {
+    const queue = queues.get(programId);
+
     for (const { programData, modelId } of queue)
     {
         const texture = Model.getTexture(modelId);
@@ -108,8 +107,6 @@ const renderQueue = (queue) =>
         programData.setUniforms();
         drawArraysVao($.TRIANGLE_STRIP, 0, 4, programData.vao);
     }
-
-    queue.length = 0;
 };
 
 Publisher.subscribe($.EVENT_RESIZED, () => isCanvasResized = true);
@@ -122,10 +119,8 @@ const viewProgramData = new ProgramData($.PROG_VIEW);
 viewProgramData.setAttributes($.MODEL_SCREEN);
 let isCanvasResized = true;
 
-// Queues are ordered
 const queues = new SafeMap([
-    [$.PROG_POLYGON, []],
-    [$.PROG_SPRITE, []]
+    [$.PROG_POLYGON, new SafeSet()],
+    [$.PROG_SPRITE, new SafeSet()],
+    [$.PROG_SCREEN2, new SafeSet()]
 ]);
-
-const uiQueue = [];

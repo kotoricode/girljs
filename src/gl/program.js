@@ -71,7 +71,7 @@ const vertDef = {
         attributes: attrMapPosUv
     },
     screen2: {
-        src: vsScreen,
+        src: vsScreen2,
         attributes: attrMapPosUv,
         uniforms: {
             uniformMatrix4fv: new SafeMap([uniTransform])

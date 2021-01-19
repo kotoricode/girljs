@@ -16,20 +16,12 @@ const getXy = (minX, maxX, minY, maxY) =>
     ];
 };
 
-const getXyPx = (x, y, width, height) =>
+const getXyDim = (width, height) =>
 {
-    const minX = (x / $.SCREEN_WIDTH) * 2 - 1;
-    const maxX = ((x + width) / $.SCREEN_WIDTH) * 2 - 1;
+    const x = width / $.SCREEN_WIDTH;
+    const y = height / $.SCREEN_HEIGHT;
 
-    const maxY = 1 - (y / $.SCREEN_HEIGHT) * 2;
-    const minY = 1 - ((y + height) / $.SCREEN_HEIGHT) * 2;
-
-    return [
-        minX, minY, 0,
-        maxX, minY, 0,
-        minX, maxY, 0,
-        maxX, maxY, 0,
-    ];
+    return getXy(-x, x, -y, y);
 };
 
 const getXz = (minX, maxX, minZ, maxZ) =>
@@ -45,5 +37,5 @@ const getXz = (minX, maxX, minZ, maxZ) =>
 const meshData = new SafeMap([
     [$.MESH_GROUND, getXz(-2, 2, -2, 2)],
     [$.MESH_PLAYER, getXy(-0.4, 0.4, 0, 1.5)],
-    [$.MESH_GIRL,   getXyPx(1000, 120, 187, 600)]
+    [$.MESH_GIRL,   getXyDim(187, 600)]
 ]);
