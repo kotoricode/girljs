@@ -1,6 +1,6 @@
 import * as $ from "../const";
 import { gl } from "../dom";
-import { getPreparedProgram } from "./program";
+import { Program } from "./program";
 import { BufferArray } from "./buffer";
 import { Vao } from "./vao";
 import { SafeMap } from "../utility";
@@ -10,19 +10,20 @@ export class ProgramData
 {
     constructor(programId)
     {
-        const prepared = getPreparedProgram(programId);
+        const prepared = Program.getPrepared(programId);
 
         this.programId = programId;
         this.program = prepared.program;
-        this.uniforms = prepared.uniforms;
+        this.uniSetters = prepared.uniSetters;
         this.attributes = prepared.attributes;
+        this.uniBlocks = prepared.uniBlocks;
 
-        this.uniforms.staging = new SafeMap();
+        this.uniStaging = new SafeMap();
         this.vao = gl.createVertexArray();
 
-        for (const [name, defaults] of this.uniforms.defaults)
+        for (const [name, defaults] of prepared.uniDefaults)
         {
-            this.uniforms.staging.set(name, defaults.slice());
+            this.uniStaging.set(name, defaults.slice());
         }
     }
 
@@ -59,12 +60,12 @@ export class ProgramData
 
     setUniform(key, value)
     {
-        this.uniforms.setters.get(key)(value);
+        this.uniSetters.get(key)(value);
     }
 
     setUniforms()
     {
-        for (const [key, value] of this.uniforms.staging)
+        for (const [key, value] of this.uniStaging)
         {
             this.setUniform(key, value);
         }
@@ -74,12 +75,12 @@ export class ProgramData
     {
         if (!Array.isArray(value)) throw Error;
 
-        this.uniforms.staging.update(key, value);
+        this.uniStaging.update(key, value);
     }
 
     stageUniformAtIndex(key, idx, value)
     {
-        const staged = this.uniforms.staging.get(key);
+        const staged = this.uniStaging.get(key);
 
         if (!Array.isArray(staged) || staged.length <= idx) throw Error;
 

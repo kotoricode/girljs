@@ -33,9 +33,11 @@ const detachDeleteShader = (program, shader) =>
     gl.deleteShader(shader);
 };
 
-export const getPreparedProgram = (programId) =>
-{
-    return preparedPrograms.get(programId);
+export const Program = {
+    getPrepared(programId)
+    {
+        return preparedPrograms.get(programId);
+    }
 };
 
 /*------------------------------------------------------------------------------
@@ -48,22 +50,14 @@ const ubCamera = [$.UB_CAMERA];
 const attribPos = [$.A_XYZ, 3];
 const attribUv = [$.A_UV, 2];
 
-const uniTransVP = {
-    [$.U_TRANSFORM]: uniArrZeroZero
-};
+const uniTransVp = [$.U_TRANSFORM, uniArrZeroZero];
+const uniColor = [$.U_COLOR, [1, 1, 1, 1]];
+const uniUvRepeat = [$.U_UVREPEAT, [1, 1]];
+const uniUvOffset = [$.U_UVOFFSET, uniArrZeroZero];
+const uniUvSize = [$.U_UVSIZE, uniArrZeroZero];
 
-const uniColor = {
-    [$.U_COLOR]: [1, 1, 1, 1]
-};
-
-const uniUvRepeat = {
-    [$.U_UVREPEAT]: [1, 1]
-};
-
-const uniUvOffsetSize = {
-    [$.U_UVOFFSET]: uniArrZeroZero,
-    [$.U_UVSIZE]: uniArrZeroZero
-};
+const uniMapPosUv = new SafeMap([attribPos, attribUv]);
+const uniMapColor = new SafeMap([uniColor]);
 
 /*------------------------------------------------------------------------------
     Vertex shader definitions
@@ -76,15 +70,15 @@ const vertDef = {
     },
     screen: {
         src: vsScreen,
-        attributes: new SafeMap([attribPos, attribUv])
+        attributes: uniMapPosUv
     },
     standard: {
         src: vsStandard,
         blocks: ubCamera,
-        attributes: new SafeMap([attribPos, attribUv]),
+        attributes: uniMapPosUv,
         uniforms: {
-            uniformMatrix4fv: uniTransVP,
-            uniform2f: uniUvRepeat
+            uniformMatrix4fv: new SafeMap([uniTransVp]),
+            uniform2f: new SafeMap([uniUvRepeat])
         }
     }
 };
@@ -105,14 +99,14 @@ const fragDef = {
     sprite: {
         src: fsSprite,
         uniforms: {
-            uniform4f: uniColor
+            uniform4f: uniMapColor
         }
     },
     polygon: {
         src: fsPolygon,
         uniforms: {
-            uniform2f: uniUvOffsetSize,
-            uniform4f: uniColor
+            uniform2f: new SafeMap([uniUvOffset, uniUvSize]),
+            uniform4f: uniMapColor
         }
     }
 };
@@ -158,52 +152,50 @@ for (let i = 0; i < programDef.length;)
     /*--------------------------------------------------------------------------
         Uniform blocks
     --------------------------------------------------------------------------*/
-    let blocks = null;
+    let uniBlocks = null;
 
     if (vsBlocks)
     {
-        blocks = [...vsBlocks];
+        uniBlocks = [...vsBlocks];
 
         if (fsBlocks)
         {
-            blocks.push(...fsBlocks);
+            uniBlocks.push(...fsBlocks);
         }
     }
     else if (fsBlocks)
     {
-        blocks = [...fsBlocks];
+        uniBlocks = [...fsBlocks];
     }
 
     /*--------------------------------------------------------------------------
         Uniforms
     --------------------------------------------------------------------------*/
-    const uniforms = {
-        setters: new SafeMap(),
-        defaults: new SafeMap(),
-        staging: null,
-        blocks
-    };
+    const uniSetters = new SafeMap();
+    const uniDefaults = new SafeMap();
 
     for (const shader of [vert, frag])
     {
         if (shader.uniforms)
         {
-            for (const [type, typeObj] of Object.entries(shader.uniforms))
+            for (const [type, map] of Object.entries(shader.uniforms))
             {
-                for (const [name, defValueArr] of Object.entries(typeObj))
+                for (const [name, defaultValues] of map)
                 {
                     const pos = gl.getUniformLocation(program, name);
                     const uniSetter = createUniSetter(type, pos);
-                    uniforms.setters.set(name, uniSetter);
-                    uniforms.defaults.set(name, defValueArr);
+                    uniSetters.set(name, uniSetter);
+                    uniDefaults.set(name, defaultValues);
                 }
             }
         }
     }
 
-    preparedPrograms.set(programId, {
+    preparedPrograms.set(programId, Object.freeze({
         program,
         attributes,
-        uniforms
-    });
+        uniDefaults,
+        uniSetters,
+        uniBlocks
+    }));
 }

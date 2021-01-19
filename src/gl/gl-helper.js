@@ -11,16 +11,16 @@ export const drawArraysVao = (mode, offset, length, vao) =>
 
 export const setProgram = (programData) =>
 {
-    const { program, uniforms } = programData;
+    const { program, uniBlocks } = programData;
 
     if (program !== oldProgram)
     {
         gl.useProgram(program);
         oldProgram = program;
 
-        if (uniforms.blocks)
+        if (uniBlocks)
         {
-            for (const blockId of uniforms.blocks)
+            for (const blockId of uniBlocks)
             {
                 BufferUniform.prepareBlock(program, blockId);
             }
