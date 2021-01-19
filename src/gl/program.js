@@ -45,14 +45,8 @@ const uniArrZeroZero = [0, 0];
 
 const ubCamera = [$.UB_CAMERA];
 
-const attribPos = {
-    [$.A_XYZ]: 3
-};
-
-const attribPosUv = {
-    [$.A_XYZ]: 3,
-    [$.A_UV]: 2,
-};
+const attribPos = [$.A_XYZ, 3];
+const attribUv = [$.A_UV, 2];
 
 const uniTransVP = {
     [$.U_TRANSFORM]: uniArrZeroZero
@@ -78,16 +72,16 @@ const vertDef = {
     color: {
         src: vsColor,
         blocks: ubCamera,
-        attributes: attribPos
+        attributes: new SafeMap([attribPos])
     },
     screen: {
         src: vsScreen,
-        attributes: attribPosUv
+        attributes: new SafeMap([attribPos, attribUv])
     },
     standard: {
         src: vsStandard,
         blocks: ubCamera,
-        attributes: attribPosUv,
+        attributes: new SafeMap([attribPos, attribUv]),
         uniforms: {
             uniformMatrix4fv: uniTransVP,
             uniform2f: uniUvRepeat

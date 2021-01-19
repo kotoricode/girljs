@@ -39,12 +39,17 @@ export class ProgramData
         Vao.bind(this.vao);
         BufferArray.bind(bufferId);
 
-        for (const [name, attribSize] of Object.entries(this.attributes))
+        for (const [name, attribSize] of this.attributes)
         {
             const pos = gl.getAttribLocation(this.program, name);
             gl.enableVertexAttribArray(pos);
             gl.vertexAttribPointer(
-                pos, attribSize, $.FLOAT, false, 0, model.get(name)
+                pos,
+                attribSize,
+                $.FLOAT,
+                false,
+                0,
+                model.get(name)
             );
         }
 
@@ -76,8 +81,7 @@ export class ProgramData
     {
         const staged = this.uniforms.staging.get(key);
 
-        if (!Array.isArray(staged)) throw Error;
-        if (staged.length <= idx) throw Error;
+        if (!Array.isArray(staged) || staged.length <= idx) throw Error;
 
         staged[idx] = value;
     }
