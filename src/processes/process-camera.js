@@ -5,7 +5,7 @@ import { Space } from "../components/space";
 import { getInvViewProjection, setCameraPosition } from "../camera";
 import { Ground } from "../components/ground";
 import { Ray } from "../math/ray";
-import { Dialogue } from "../gl/dialogue";
+import { Dialogue } from "../dialogue";
 
 export const processCamera = (scene) =>
 {

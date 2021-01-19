@@ -1,7 +1,7 @@
-import * as $ from "../const";
-import { gl } from "../dom";
-import { ProgramData } from "./program-data";
-import { Texture } from "./texture";
+import * as $ from "./const";
+import { gl } from "./dom";
+import { ProgramData } from "./gl/program-data";
+import { Texture } from "./gl/texture";
 
 export const Dialogue = {
     getProgramData()
@@ -64,7 +64,7 @@ const drawSplitString = (str, yPos) =>
     }
     else
     {
-        const words = str.match(/(\s)?[^\s]+/g);
+        const words = str.split(/(?=\s)/);
         let fits;
 
         for (let i = 0; i < words.length; i++)
@@ -114,7 +114,7 @@ canvas.height = $.SCREEN_HEIGHT;
 /*------------------------------------------------------------------------------
     Draw area
 ------------------------------------------------------------------------------*/
-const fontSize = 48;
+const fontSize = 42;
 const x = canvas.width / 6;
 const y = canvas.height - fontSize*4;
 const width = canvas.width - 2*x;
@@ -125,4 +125,4 @@ ctx.textAlign = "left";
 ctx.textBaseline = "top";
 ctx.font = `${fontSize}px Arial`;
 
-Dialogue.setText("yksiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa");
+Dialogue.setText("yksi kaksi kolme neljä viisi kuusi seitsemän kahdeksan");

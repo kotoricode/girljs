@@ -10,7 +10,7 @@ import { SafeMap, Publisher } from "../utility";
 import { Rbo } from "./rbo";
 import { Fbo } from "./fbo";
 import { Model } from "./model";
-import { Dialogue } from "./dialogue";
+import { Dialogue } from "../dialogue";
 
 export const render = (scene) =>
 {
