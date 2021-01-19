@@ -14,15 +14,9 @@ export const Dialogue = {
     },
     setText(str)
     {
-        ctx.clearRect(
-            x - clearMargin,
-            y - clearMargin,
-            width + 2*clearMargin,
-            height + 2*clearMargin
-        );
+        ctx.clearRect(0, 0, canvas.width, canvas.height);
 
-        Dialogue.setBackgroundSettings();
-        ctx.fillRect(x, y, width, height);
+        drawBackground();
 
         Dialogue.setFontSettings();
         drawSplitString(str, y);
@@ -38,14 +32,14 @@ export const Dialogue = {
     },
     setBackgroundSettings()
     {
-        ctx.fillStyle = "#0000007F";
+        ctx.fillStyle = "#0000009f";
         ctx.shadowBlur = 0;
         ctx.shadowOffsetX = 0;
         ctx.shadowOffsetY = 0;
     },
     setFontSettings()
     {
-        ctx.fillStyle = "#fff";
+        ctx.fillStyle = "#dfdfdf";
         ctx.shadowColor = "#000";
         ctx.shadowBlur = 5;
         ctx.shadowOffsetX = 3;
@@ -53,11 +47,34 @@ export const Dialogue = {
     }
 };
 
+const drawBackground = () =>
+{
+    Dialogue.setBackgroundSettings();
+
+    const x0 = x - margin;
+    const x2 = x + width;
+    const x3 = x2 + margin;
+
+    const y0 = y - margin;
+    const y2 = y + height;
+    const y3 = y2 + margin;
+
+    ctx.beginPath();
+    ctx.moveTo(x2, y0);
+    ctx.quadraticCurveTo(x3, y0, x3, y);
+    ctx.lineTo(x3, y2);
+    ctx.quadraticCurveTo(x3, y3, x2, y3);
+    ctx.lineTo(x, y3);
+    ctx.quadraticCurveTo(x0, y3, x0, y2);
+    ctx.lineTo(x0, y);
+    ctx.quadraticCurveTo(x0, y0, x, y0);
+    ctx.closePath();
+    ctx.fill();
+};
+
 // TODO: this needs to be optimized
 const drawSplitString = (str, yPos) =>
 {
-    console.log(str);
-
     if (ctx.measureText(str).width < width)
     {
         ctx.fillText(str, x, yPos);
@@ -114,15 +131,20 @@ canvas.height = $.SCREEN_HEIGHT;
 /*------------------------------------------------------------------------------
     Draw area
 ------------------------------------------------------------------------------*/
+const margin = 24;
 const fontSize = 42;
+const bottomMargin = margin / 2;
+
 const x = canvas.width / 6;
-const y = canvas.height - fontSize*4;
 const width = canvas.width - 2*x;
-const height = canvas.height - y;
+
+const height = fontSize*3;
+const y = canvas.height - height - margin - bottomMargin;
+
 const clearMargin = 8;
 
 ctx.textAlign = "left";
 ctx.textBaseline = "top";
 ctx.font = `${fontSize}px Arial`;
 
-Dialogue.setText("yksi kaksi kolme neljä viisi kuusi seitsemän kahdeksan");
+Dialogue.setText("yksi kaksi kolme neljä viisi kuusi seitsemän kahdeksan yhdeksän kymmenen yksitoista kaksitoista kolmetoista");
