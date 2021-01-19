@@ -1,7 +1,7 @@
 import * as $ from "./const";
-import { Mouse } from "./mouse";
+import { Mouse } from "./dom";
 import { Scene } from "./scene";
-import { SafeMap } from "./utils/better-builtins";
+import { SafeMap } from "./utility";
 import "./audio-player";
 
 const mainLoop = (timestamp) =>

@@ -1,4 +1,4 @@
-import { SettableArray } from "../utils/better-builtins";
+import { SettableArray } from "../utility";
 
 export class Quaternion extends SettableArray
 {

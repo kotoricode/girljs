@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { Mouse } from "../mouse";
+import { Mouse } from "../dom";
 import { Motion } from "../components/motion";
 import { Space } from "../components/space";
 import { getInvViewProjection, setCameraPosition } from "../camera";

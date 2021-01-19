@@ -1,3 +1,13 @@
+export const LISTENER_ONCE = { once: true };
+
+export const clamp = (val, min=0, max=1) => Math.min(max, Math.max(min, val));
+
+export const lerp = (start, end, amount) => start*(1-amount) + end*amount;
+
+export const DEG_TO_RAD = Math.PI / 180;
+
+export const getElement = (elemId) => window.document.getElementById(elemId);
+
 export class BufferData extends Float32Array
 {
     constructor(...params)
@@ -102,3 +112,65 @@ export class SettableArray extends Array
         }
     }
 }
+
+export const Publisher = {
+    publish(event)
+    {
+        if (eventSubs.has(event))
+        {
+            const subs = eventSubs.get(event);
+
+            for (const func of subs)
+            {
+                func();
+            }
+        }
+    },
+    subscribe(event, subFunc)
+    {
+        if (!(subFunc instanceof Function)) throw Error;
+
+        if (!eventSubs.has(event))
+        {
+            eventSubs.set(event, new SafeSet());
+        }
+
+        const subs = eventSubs.get(event);
+        subs.add(subFunc);
+    },
+    unsubscribe(event, subFunc)
+    {
+        const subs = eventSubs.get(event);
+        subs.delete(subFunc);
+
+        if (!subs.size)
+        {
+            eventSubs.delete(subs);
+        }
+    }
+};
+
+export const Storage = {
+    get(key)
+    {
+        const data = window.localStorage.getItem(key);
+
+        try
+        {
+            const parsed = JSON.parse(data);
+
+            return parsed;
+        }
+        catch
+        {
+            throw Error;
+        }
+    },
+    set(key, value)
+    {
+        const json = JSON.stringify(value);
+        window.localStorage.setItem(key, json);
+    }
+};
+
+const eventSubs = new SafeMap();

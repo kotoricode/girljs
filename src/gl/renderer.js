@@ -1,13 +1,12 @@
 import * as $ from "../const";
 import { gl } from "../dom";
 import { Sprite } from "../components/sprite";
-import { Publisher } from "../utils/publisher";
 import { getDebugProgram } from "./debug";
 import { drawArraysVao, setProgram } from "./gl-helper";
 import { BufferArray } from "./buffer";
 import { Texture } from "./texture";
 import { ProgramData } from "./program-data";
-import { SafeMap } from "../utils/better-builtins";
+import { SafeMap, Publisher } from "../utility";
 import { Rbo } from "./rbo";
 import { Fbo } from "./fbo";
 import { Model } from "./model";

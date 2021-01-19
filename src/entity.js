@@ -1,4 +1,4 @@
-import { SafeMap, SafeSet } from "./utils/better-builtins";
+import { SafeMap, SafeSet } from "./utility";
 
 export class Entity
 {

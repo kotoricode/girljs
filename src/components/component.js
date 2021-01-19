@@ -1,4 +1,4 @@
-import { SafeSet } from "../utils/better-builtins";
+import { SafeSet } from "../utility";
 
 const flagged = new SafeSet();
 

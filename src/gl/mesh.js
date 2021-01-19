@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { SafeMap } from "../utils/better-builtins";
+import { SafeMap } from "../utility";
 
 export const getMesh = (meshId) =>
 {

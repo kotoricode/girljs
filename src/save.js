@@ -1,5 +1,5 @@
 import * as $ from "./const";
-import { Storage } from "./utils/storage";
+import { Storage } from "./utility";
 
 export const Prefs = {
     get(prefId)

@@ -1,8 +1,7 @@
 import * as $ from "./const";
-import { clamp } from "./utils/helper";
+import { clamp } from "./utility";
 import { Prefs } from "./save";
-import { SafeMap } from "./utils/better-builtins";
-import { LISTENER_ONCE } from "./utils/helper";
+import { SafeMap, LISTENER_ONCE } from "./utility";
 
 export const AudioPlayer = {
     setFile(soundId, fileName)

@@ -1,6 +1,6 @@
 import * as $ from "../const";
 import { gl } from "../dom";
-import { SafeMap } from "../utils/better-builtins";
+import { SafeMap } from "../utility";
 
 import vsStandard from "./shaders/vert/standard.vert";
 import vsScreen   from "./shaders/vert/screen.vert";
