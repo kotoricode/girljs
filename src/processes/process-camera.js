@@ -18,7 +18,7 @@ export const processCamera = (scene) =>
 
         ray.numHits = 0;
         ray.fromMouse(ivp, Mouse.clip);
-        ray.collide(ground);
+        ray.collideGround(ground);
 
         // Update player, marker paths
         if (ray.numHits)

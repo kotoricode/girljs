@@ -124,7 +124,7 @@ export class Matrix extends SettableArray
         );
     }
 
-    multiply(leftMatrix)
+    mul(leftMatrix)
     {
         const [
             L0, L1, L2, L3,
@@ -160,7 +160,7 @@ export class Matrix extends SettableArray
         );
     }
 
-    multiplyTransformMatrix(matrix)
+    mulTransformMatrix(matrix)
     {
         const [
             L0, L1, L2, ,
@@ -199,7 +199,7 @@ export class Matrix extends SettableArray
         );
     }
 
-    multiplyPerspective(fov, near, far)
+    mulPerspective(fov, near, far)
     {
         const dist = far - near;
 

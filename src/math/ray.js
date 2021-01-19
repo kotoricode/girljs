@@ -40,32 +40,32 @@ export class Ray
         this.setDirection();
     }
 
-    // collide(box)
-    // {
-    //     const multi = -this.origin.z / this.direction.z;
-    //     const x = this.origin.x + multi*this.direction.x;
-
-    //     if (box.min.x <= x && x <= box.max.x)
-    //     {
-    //         const y = this.origin.y + multi*this.direction.y;
-
-    //         if (box.min.y <= y && y <= box.max.y)
-    //         {
-    //             this.addHit(x, y, 0);
-    //         }
-    //     }
-    // }
-
-    collide(box)
+    collideBox(box)
     {
-        const multi = -this.start.y / this.direction.y;
-        const x = this.start.x + multi*this.direction.x;
+        const multi = this.start.z / this.direction.z;
+        const x = this.start.x - multi*this.direction.x;
 
         if (box.min.x <= x && x <= box.max.x)
         {
-            const z = this.start.z + multi*this.direction.z;
+            const y = this.start.y - multi*this.direction.y;
 
-            if (box.min.y <= z && z <= box.max.y)
+            if (box.min.y <= y && y <= box.max.y)
+            {
+                this.addHit(x, y, 0);
+            }
+        }
+    }
+
+    collideGround(ground)
+    {
+        const multi = this.start.y / this.direction.y;
+        const x = this.start.x - multi*this.direction.x;
+
+        if (ground.min.x <= x && x <= ground.max.x)
+        {
+            const z = this.start.z - multi*this.direction.z;
+
+            if (ground.min.z <= z && z <= ground.max.z)
             {
                 this.addHit(x, 0, z);
             }
@@ -76,9 +76,11 @@ export class Ray
     {
         if (this.numHits === this.hit.length)
         {
-            this.hit.push(new Vector());
+            const vec = new Vector();
+            this.hit.push(vec);
         }
 
-        this.hit[this.numHits++].setValues(x, y, z);
+        const vec = this.hit[this.numHits++];
+        vec.setValues(x, y, z);
     }
 }

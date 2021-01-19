@@ -1,7 +1,7 @@
 import * as $ from "../const";
 import { gl } from "../dom";
 import { Sprite } from "../components/sprite";
-import { getDebugProgram } from "./debug";
+import { getDebugProgramData } from "./debug";
 import { drawArraysVao, setProgram } from "./gl-helper";
 import { BufferArray } from "./buffer";
 import { Texture } from "./texture";
@@ -10,7 +10,7 @@ import { SafeMap, Publisher } from "../utility";
 import { Rbo } from "./rbo";
 import { Fbo } from "./fbo";
 import { Model } from "./model";
-import { getUiProgram, getUiTexture } from "./ui";
+import { Dialogue } from "./dialogue";
 
 export const render = (scene) =>
 {
@@ -71,7 +71,7 @@ export const render = (scene) =>
 
 const renderDebug = () =>
 {
-    const programData = getDebugProgram();
+    const programData = getDebugProgramData();
     setProgram(programData);
     const bufferSize = BufferArray.getSize($.BUF_ARR_DEBUG);
     drawArraysVao($.LINES, 0, bufferSize / 3, programData.vao);
@@ -79,11 +79,11 @@ const renderDebug = () =>
 
 const renderText = () =>
 {
-    const programData = getUiProgram();
-    const uiTexture = getUiTexture();
+    const programData = Dialogue.getProgramData();
+    const texture = Dialogue.getTexture();
 
     setProgram(programData);
-    Texture.bind(uiTexture);
+    Texture.bind(texture);
     drawArraysVao($.TRIANGLES, 0, 6, programData.vao);
     Texture.unbind();
 };

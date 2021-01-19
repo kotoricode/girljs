@@ -3,10 +3,10 @@ import { Component } from "./component";
 
 export class Ground extends Component
 {
-    constructor(minx, maxx, miny, maxy)
+    constructor(minx, maxx, minz, maxz)
     {
         super();
-        this.min = new Vector(minx, miny);
-        this.max = new Vector(maxx, maxy);
+        this.min = new Vector(minx, 0, minz);
+        this.max = new Vector(maxx, 0, maxz);
     }
 }

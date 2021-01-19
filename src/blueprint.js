@@ -1,16 +1,16 @@
 import * as $ from "./const";
+import { SafeMap } from "./utility";
 
-import { Space } from "./components/space";
+import { Space }  from "./components/space";
 import { Motion } from "./components/motion";
 import { Player } from "./components/player";
 import { Sprite } from "./components/sprite";
 import { Ground } from "./components/ground";
-import { Anim } from "./components/anim";
+import { Anim }   from "./components/anim";
 
-import { processMotion } from "./processes/process-motion";
-import { processCamera } from "./processes/process-camera";
+import { processMotion }    from "./processes/process-motion";
+import { processCamera }    from "./processes/process-camera";
 import { processAnimation } from "./processes/process-animation";
-import { SafeMap } from "./utility";
 
 export const blueprint = new SafeMap([
     [$.SCENE_TEST, () => ({

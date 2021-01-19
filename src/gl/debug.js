@@ -1,7 +1,7 @@
 import * as $ from "../const";
 import { ProgramData } from "./program-data";
 
-export const getDebugProgram = () =>
+export const getDebugProgramData = () =>
 {
     return program;
 };
