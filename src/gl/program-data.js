@@ -60,16 +60,11 @@ export class ProgramData
         Vao.unbind();
     }
 
-    setUniform(key, value)
-    {
-        this.uniSetters.get(key)(value);
-    }
-
     setUniforms()
     {
         for (const [key, value] of this.uniStaging)
         {
-            this.setUniform(key, value);
+            this.uniSetters.get(key)(value);
         }
     }
 

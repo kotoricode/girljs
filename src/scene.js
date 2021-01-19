@@ -1,10 +1,11 @@
 import * as $ from "./const";
-import { Sprite } from "./components/sprite";
+import { Drawable } from "./components/drawable";
 import { Space } from "./components/space";
 import { Entity } from "./entity";
 import { render } from "./gl/renderer";
 import { blueprint } from "./blueprint";
 import { SafeMap, SafeSet } from "./utility";
+import { Model } from "./gl/model";
 
 export class Scene
 {
@@ -13,7 +14,7 @@ export class Scene
         this.sceneId = sceneId;
         this.dt = 0;
         this.entities = new SafeMap();
-        this.newSpriteEntities = new SafeSet();
+        this.newDrawables = new SafeSet();
 
         /** @const {Map<number, Set>} */
         this.cached = new SafeMap();
@@ -55,9 +56,9 @@ export class Scene
 
         this.hasDirty = true;
 
-        if (entity.hasFlags(Sprite.flag))
+        if (entity.hasFlags(Drawable.flag))
         {
-            this.newSpriteEntities.add(entity);
+            this.newDrawables.add(entity);
         }
     }
 
@@ -101,17 +102,33 @@ export class Scene
         return this.entities.get(entityId);
     }
 
-    initNewSpriteUniforms()
+    initNewDrawables()
     {
-        for (const entity of this.newSpriteEntities)
+        for (const entity of this.newDrawables)
         {
-            const [sprite, space] = entity.getComponents(Sprite, Space);
+            const [drawable, space] = entity.getComponents(Drawable, Space);
+            const { programData } = drawable;
 
-            sprite.programData.stageUniformAtIndex(
+            programData.stageUniformAtIndex(
                 $.U_TRANSFORM,
                 1,
                 space.matrix
             );
+
+            if (programData.programId === $.PROG_POLYGON)
+            {
+                const [
+                    uvMinX, uvMaxY,
+                    uvMaxX, ,
+                    , uvMinY
+                ] = Model.getUv(drawable.modelId);
+
+                const width = uvMaxX - uvMinX;
+                const height = uvMaxY - uvMinY;
+
+                programData.stageUniform($.U_UVOFFSET, [uvMinX, uvMinY]);
+                programData.stageUniform($.U_UVSIZE, [width, height]);
+            }
         }
     }
 
@@ -167,7 +184,7 @@ export class Scene
         }
 
         this.cached.clear();
-        this.newSpriteEntities.clear();
+        this.newDrawables.clear();
 
         this.unloadEntities(this.root);
 
@@ -189,9 +206,9 @@ export class Scene
     {
         this.dt = dt;
 
-        if (this.newSpriteEntities.size)
+        if (this.newDrawables.size)
         {
-            this.initNewSpriteUniforms();
+            this.initNewDrawables();
         }
 
         if (this.hasDirty)

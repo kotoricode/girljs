@@ -4,7 +4,7 @@ import { SafeMap } from "./utility";
 import { Space }  from "./components/space";
 import { Motion } from "./components/motion";
 import { Player } from "./components/player";
-import { Sprite } from "./components/sprite";
+import { Drawable } from "./components/drawable";
 import { Ground } from "./components/ground";
 import { Anim }   from "./components/anim";
 
@@ -20,7 +20,7 @@ export const blueprint = new SafeMap([
                     new Space(),
                     new Motion(3),
                     new Player(),
-                    new Sprite($.PROG_SPRITE, $.MODEL_BRAID_00),
+                    new Drawable($.PROG_SPRITE, $.MODEL_BRAID_00),
                     new Anim(new SafeMap([
                         [$.ANIM_IDLE, [$.MODEL_BRAID_00]],
                         [$.ANIM_MOVE, [
@@ -63,7 +63,7 @@ export const blueprint = new SafeMap([
                 components: [
                     new Space(),
                     new Ground(-2, 2, -2, 2),
-                    new Sprite(
+                    new Drawable(
                         $.PROG_POLYGON,
                         $.MODEL_GROUND,
                         {
@@ -77,7 +77,7 @@ export const blueprint = new SafeMap([
             [$.ENTITY_GIRL, {
                 components: [
                     new Space(0.75, -0.2, 0),
-                    new Sprite(
+                    new Drawable(
                         $.PROG_SCREEN2,
                         $.MODEL_GIRL
                     )

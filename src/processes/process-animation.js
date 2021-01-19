@@ -1,11 +1,11 @@
 import * as $ from "../const";
 import { Motion } from "../components/motion";
-import { Sprite } from "../components/sprite";
+import { Drawable } from "../components/drawable";
 import { Anim } from "../components/anim";
 
 export const processAnimation = (scene) =>
 {
-    for (const [sprite, anim, motion] of scene.all(Sprite, Anim, Motion))
+    for (const [drawable, anim, motion] of scene.all(Drawable, Anim, Motion))
     {
         if (motion.hasTarget())
         {
@@ -13,18 +13,18 @@ export const processAnimation = (scene) =>
             {
                 anim.setState($.ANIM_MOVE);
                 const model = anim.getModel();
-                sprite.setModel(model);
+                drawable.setModel(model);
             }
         }
         else if (anim.isState($.ANIM_MOVE))
         {
             anim.setState($.ANIM_IDLE);
             const model = anim.getModel();
-            sprite.setModel(model);
+            drawable.setModel(model);
         }
     }
 
-    for (const [sprite, anim] of scene.all(Sprite, Anim))
+    for (const [drawable, anim] of scene.all(Drawable, Anim))
     {
         anim.delay -= scene.dt;
 
@@ -41,7 +41,7 @@ export const processAnimation = (scene) =>
 
             anim.frameIdx %= models.length;
             const model = anim.getModel();
-            sprite.setModel(model);
+            drawable.setModel(model);
         }
     }
 };

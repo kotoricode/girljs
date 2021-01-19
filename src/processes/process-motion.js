@@ -21,7 +21,7 @@ export const processMotion = (scene) =>
             direction.from(distance);
             direction.normalize();
 
-            // Flip sprite X according to direction
+            // Flip drawable X according to direction
             if (direction.x)
             {
                 space.local.scale.x = Math.sign(direction.x);

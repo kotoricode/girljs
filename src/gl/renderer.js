@@ -1,6 +1,6 @@
 import * as $ from "../const";
 import { gl } from "../dom";
-import { Sprite } from "../components/sprite";
+import { Drawable } from "../components/drawable";
 import { getDebugProgramData } from "./debug";
 import { drawArraysVao, setProgram } from "./gl-helper";
 import { BufferArray } from "./buffer";
@@ -17,12 +17,12 @@ export const render = (scene) =>
     /*--------------------------------------------------------------------------
         Queue up drawables
     --------------------------------------------------------------------------*/
-    for (const [sprite] of scene.all(Sprite))
+    for (const [drawable] of scene.all(Drawable))
     {
-        if (sprite.isVisible)
+        if (drawable.isVisible)
         {
-            const queue = queues.get(sprite.programData.programId);
-            queue.add(sprite);
+            const queue = queues.get(drawable.programData.programId);
+            queue.add(drawable);
         }
     }
 
@@ -47,46 +47,43 @@ export const render = (scene) =>
         fbTexture = Framebuffer.getTexture();
     }
 
-    /*--------------------------------------------------------------------------
-        Draw world
-    --------------------------------------------------------------------------*/
     gl.clear($.COLOR_BUFFER_BIT | $.DEPTH_BUFFER_BIT);
     gl.clearColor(0.8, 0.8, 0.8, 1.0);
+
+    renderWorld();
+
+    Renderbuffer.unbind();
+    Framebuffer.unbind();
+
+    renderToCanvas(fbTexture);
+
+    renderQueue($.PROG_SCREEN2);
+    renderText();
+
+    renderDebug();
+
+    for (const queue of queues.values())
+    {
+        queue.clear();
+    }
+};
+
+const renderWorld = () =>
+{
     gl.enable($.DEPTH_TEST);
 
     renderQueue($.PROG_POLYGON);
     renderQueue($.PROG_SPRITE);
 
-    Renderbuffer.unbind();
-    Framebuffer.unbind();
     gl.disable($.DEPTH_TEST);
+};
 
-    /*--------------------------------------------------------------------------
-        Transfer to canvas
-    --------------------------------------------------------------------------*/
+const renderToCanvas = (fbTexture) =>
+{
     setProgram(viewProgramData);
     Texture.bind(fbTexture);
     drawArraysVao($.TRIANGLES, 0, 6, viewProgramData.vao);
     Texture.unbind();
-
-    /*--------------------------------------------------------------------------
-        Draw UI
-    --------------------------------------------------------------------------*/
-    renderQueue($.PROG_SCREEN2);
-    renderText();
-
-    /*--------------------------------------------------------------------------
-        Debug
-    --------------------------------------------------------------------------*/
-    renderDebug();
-
-    /*--------------------------------------------------------------------------
-        Cleanup
-    --------------------------------------------------------------------------*/
-    for (const queue of queues.values())
-    {
-        queue.clear();
-    }
 };
 
 const renderDebug = () =>
