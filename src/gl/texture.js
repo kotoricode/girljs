@@ -1,6 +1,7 @@
 import * as $ from "../const";
-import { gl, LISTENER_ONCE } from "../dom";
+import { gl } from "../dom";
 import { SafeMap } from "../utils/better-builtins";
+import { LISTENER_ONCE } from "../utils/helper";
 
 export const Texture = {
     bind(texture)

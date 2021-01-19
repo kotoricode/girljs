@@ -1,25 +1,10 @@
 import * as $ from "./const";
-import { clamp } from "./math/math-helper";
+import { clamp } from "./utils/helper";
 import { Prefs } from "./save";
 import { SafeMap } from "./utils/better-builtins";
+import { LISTENER_ONCE } from "./utils/helper";
 
 export const AudioPlayer = {
-    init()
-    {
-        context = new AudioContext();
-        const master = getGain($.PREF_MASTER, context.destination);
-
-        for (const [audioId, audioObj] of audio)
-        {
-            const gain = getGain(audioObj.gainId, master);
-            context.createMediaElementSource(audioObj.element).connect(gain);
-
-            if (audioObj.fileName)
-            {
-                play(audioId);
-            }
-        }
-    },
     setFile(soundId, fileName)
     {
         const audioObj = audio.get(soundId);
@@ -102,3 +87,20 @@ for (const audioObj of audio.values())
 const gains = new SafeMap();
 
 let context;
+
+window.addEventListener("mousedown", () =>
+{
+    context = new AudioContext();
+    const master = getGain($.PREF_MASTER, context.destination);
+
+    for (const [audioId, audioObj] of audio)
+    {
+        const gain = getGain(audioObj.gainId, master);
+        context.createMediaElementSource(audioObj.element).connect(gain);
+
+        if (audioObj.fileName)
+        {
+            play(audioId);
+        }
+    }
+}, LISTENER_ONCE);
