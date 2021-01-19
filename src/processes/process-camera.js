@@ -5,6 +5,7 @@ import { Space } from "../components/space";
 import { getInvViewProjection, setCameraPosition } from "../camera";
 import { Ground } from "../components/ground";
 import { Ray } from "../math/ray";
+import { Dialogue } from "../gl/dialogue";
 
 export const processCamera = (scene) =>
 {
@@ -13,6 +14,10 @@ export const processCamera = (scene) =>
 
     if (Mouse.isWorldClick)
     {
+        Dialogue.setText(
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+        );
+
         const [ground] = scene.one($.ENTITY_GROUND, Ground);
         const ivp = getInvViewProjection();
 

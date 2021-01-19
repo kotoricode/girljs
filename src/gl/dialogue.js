@@ -53,8 +53,11 @@ export const Dialogue = {
     }
 };
 
+// TODO: this needs to be optimized
 const drawSplitString = (str, yPos) =>
 {
+    console.log(str);
+
     if (ctx.measureText(str).width < width)
     {
         ctx.fillText(str, x, yPos);
@@ -76,7 +79,7 @@ const drawSplitString = (str, yPos) =>
             {
                 if (!fits)
                 {
-                    console.warn(`String too long: ${maybeFits}`);
+                    console.warn(`Word too long: ${maybeFits}`);
 
                     ctx.fillText(maybeFits, x, yPos);
                     i++;
@@ -86,11 +89,11 @@ const drawSplitString = (str, yPos) =>
                     ctx.fillText(fits, x, yPos);
                 }
 
-                const remaining = words.slice(i,).join("").trim();
+                const rest = words.slice(i,words.length).join("");
 
-                if (remaining)
+                if (rest)
                 {
-                    drawSplitString(remaining, yPos + fontSize);
+                    drawSplitString(rest.trim(), yPos + fontSize);
                 }
 
                 break;
