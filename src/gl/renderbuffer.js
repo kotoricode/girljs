@@ -1,7 +1,7 @@
 import * as $ from "../const";
 import { gl } from "../dom";
 
-export const Rbo = {
+export const Renderbuffer = {
     bindDepth()
     {
         if (isBound) throw Error;

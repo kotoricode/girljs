@@ -2,7 +2,7 @@ import * as $ from "../const";
 import { gl } from "../dom";
 import { Texture } from "./texture";
 
-export const Fbo = {
+export const Framebuffer = {
     attachDepth(rbo)
     {
         assertIsBound();

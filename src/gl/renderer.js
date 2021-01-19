@@ -7,13 +7,16 @@ import { BufferArray } from "./buffer";
 import { Texture } from "./texture";
 import { ProgramData } from "./program-data";
 import { SafeMap, Publisher, SafeSet } from "../utility";
-import { Rbo } from "./rbo";
-import { Fbo } from "./fbo";
+import { Renderbuffer } from "./renderbuffer";
+import { Framebuffer } from "./framebuffer";
 import { Model } from "./model";
 import { Dialogue } from "../dialogue";
 
 export const render = (scene) =>
 {
+    /*--------------------------------------------------------------------------
+        Queue up drawables
+    --------------------------------------------------------------------------*/
     for (const [sprite] of scene.all(Sprite))
     {
         if (sprite.isVisible)
@@ -23,25 +26,30 @@ export const render = (scene) =>
         }
     }
 
-    Fbo.bind();
-    Rbo.bindDepth();
+    /*--------------------------------------------------------------------------
+        Prepare framebuffer
+    --------------------------------------------------------------------------*/
+    Framebuffer.bind();
+    Renderbuffer.bindDepth();
 
     let fbTexture;
 
     if (isCanvasResized)
     {
-        fbTexture = Fbo.createTexture();
-        const rboDepth = Rbo.createDepth();
-        Fbo.attachDepth(rboDepth);
+        fbTexture = Framebuffer.createTexture();
+        const rboDepth = Renderbuffer.createDepth();
+        Framebuffer.attachDepth(rboDepth);
 
         isCanvasResized = false;
     }
     else
     {
-        fbTexture = Fbo.getTexture();
+        fbTexture = Framebuffer.getTexture();
     }
 
-    // Draw world
+    /*--------------------------------------------------------------------------
+        Draw world
+    --------------------------------------------------------------------------*/
     gl.clear($.COLOR_BUFFER_BIT | $.DEPTH_BUFFER_BIT);
     gl.clearColor(0.8, 0.8, 0.8, 1.0);
     gl.enable($.DEPTH_TEST);
@@ -49,26 +57,32 @@ export const render = (scene) =>
     renderQueue($.PROG_POLYGON);
     renderQueue($.PROG_SPRITE);
 
-    Rbo.unbind();
-    Fbo.unbind();
+    Renderbuffer.unbind();
+    Framebuffer.unbind();
     gl.disable($.DEPTH_TEST);
 
-    // Transfer to canvas
+    /*--------------------------------------------------------------------------
+        Transfer to canvas
+    --------------------------------------------------------------------------*/
     setProgram(viewProgramData);
     Texture.bind(fbTexture);
     drawArraysVao($.TRIANGLES, 0, 6, viewProgramData.vao);
     Texture.unbind();
 
-    // UI
+    /*--------------------------------------------------------------------------
+        Draw UI
+    --------------------------------------------------------------------------*/
     renderQueue($.PROG_SCREEN2);
-
-    // Debug
-    renderDebug();
-
-    // Text
     renderText();
 
-    // Clean queues
+    /*--------------------------------------------------------------------------
+        Debug
+    --------------------------------------------------------------------------*/
+    renderDebug();
+
+    /*--------------------------------------------------------------------------
+        Cleanup
+    --------------------------------------------------------------------------*/
     for (const queue of queues.values())
     {
         queue.clear();
