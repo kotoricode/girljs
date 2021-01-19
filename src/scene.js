@@ -102,6 +102,7 @@ export class Scene
         return this.entities.get(entityId);
     }
 
+    // TODO: we really need an advanced, uniform-by-uniform init handler
     initNewDrawables()
     {
         for (const entity of this.newDrawables)
@@ -209,6 +210,7 @@ export class Scene
         if (this.newDrawables.size)
         {
             this.initNewDrawables();
+            this.newDrawables.clear();
         }
 
         if (this.hasDirty)
