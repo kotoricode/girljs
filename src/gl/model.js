@@ -19,7 +19,7 @@ export const Model = {
     },
     getUv(modelId)
     {
-        return modelUvCoords.get(modelId);
+        return modelUvs.get(modelId);
     }
 };
 
@@ -74,7 +74,7 @@ const uvOffsets = new SafeMap();
 const uvs = new SafeMap();
 const models = new SafeMap();
 const modelTextures = new SafeMap();
-const modelUvCoords = new SafeMap();
+const modelUvs = new SafeMap();
 const modelBuffers = new SafeMap();
 
 for (let i = 0; i < modelData.length;)
@@ -87,15 +87,16 @@ for (let i = 0; i < modelData.length;)
     {
         const coords = getMesh(meshId);
         const xyzOffset = pushData(spriteBufferData, coords);
+
         xyzOffsets.set(meshId, xyzOffset);
     }
 
     if (!uvOffsets.has(subTexId))
     {
-        const coords = Texture.getUvFromSubTexture(subTexId);
-        uvs.set(subTexId, coords);
+        const uv = Texture.getUvFromSubTexture(subTexId);
+        const uvOffset = pushData(spriteBufferData, uv);
 
-        const uvOffset = pushData(spriteBufferData, coords);
+        uvs.set(subTexId, uv);
         uvOffsets.set(subTexId, uvOffset);
     }
 
@@ -104,9 +105,9 @@ for (let i = 0; i < modelData.length;)
         [$.A_UV, uvOffsets.get(subTexId)]
     ]));
 
-    const tex = Texture.getSubTextureData(subTexId).baseData.texture;
-    modelTextures.set(modelId, tex);
-    modelUvCoords.set(modelId, uvs.get(subTexId));
+    const texture = Texture.getSubTextureData(subTexId).base.texture;
+    modelTextures.set(modelId, texture);
+    modelUvs.set(modelId, uvs.get(subTexId));
     modelBuffers.set(modelId, $.BUF_ARR_SPRITE);
 }
 

@@ -19,15 +19,7 @@ export const Texture = {
     {
         const texture = Texture.create();
         Texture.bind(texture);
-
-        gl.texStorage2D(
-            $.TEXTURE_2D,
-            1,
-            $.RGB8,
-            width,
-            height
-        );
-
+        gl.texStorage2D($.TEXTURE_2D, 1, $.RGB8, width, height);
         Texture.unbind();
 
         return texture;
@@ -39,13 +31,13 @@ export const Texture = {
     getUvFromSubTexture(subTexId)
     {
         const {
-            x, y, width, height, baseData
+            x, y, width, height, base
         } = Texture.getSubTextureData(subTexId);
 
-        const minX = x / baseData.width;
-        const maxX = (x + width) / baseData.width;
-        const minY = y / baseData.height;
-        const maxY = (y + height) / baseData.height;
+        const minX = x / base.width;
+        const maxX = (x + width) / base.width;
+        const minY = y / base.height;
+        const maxY = (y + height) / base.height;
 
         return [
             minX, maxY,
@@ -53,6 +45,10 @@ export const Texture = {
             minX, minY,
             maxX, minY,
         ];
+    },
+    setFromSource(src)
+    {
+        gl.texImage2D($.TEXTURE_2D, 0, $.RGBA, $.RGBA, $.UNSIGNED_BYTE, src);
     },
     setParami(key, value)
     {
@@ -77,11 +73,10 @@ image.addEventListener("load", () =>
     const texture = textures.get(src);
 
     Texture.bind(texture);
-    gl.texImage2D($.TEXTURE_2D, 0, $.RGBA, $.RGBA, $.UNSIGNED_BYTE, image);
-
+    Texture.setFromSource(image);
     Texture.setParami($.TEXTURE_MIN_FILTER, $.LINEAR);
-
     Texture.unbind();
+
     textures.delete(src);
 
     if (toFetch.length)
@@ -144,7 +139,7 @@ for (let i = 0; i < textureData.length;)
     const src = textureData[i++];
     const texture = Texture.create();
 
-    const baseData = {
+    const base = {
         width: textureData[i++],
         height: textureData[i++],
         texture
@@ -161,7 +156,7 @@ for (let i = 0; i < textureData.length;)
             y: subTextures[j++],
             width: subTextures[j++],
             height: subTextures[j++],
-            baseData: baseData
+            base
         });
     }
 }
