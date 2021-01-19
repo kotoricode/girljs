@@ -122,7 +122,7 @@ BufferArray.data(
 ------------------------------------------------------------------------------*/
 const polygonData = [];
 
-models.set($.MODEL_IMAGE, new SafeMap([
+models.set($.MODEL_SCREEN, new SafeMap([
     [$.A_XYZ, pushData(polygonData,
         [
             -1, 1, 0,
@@ -138,28 +138,7 @@ models.set($.MODEL_IMAGE, new SafeMap([
     ])]
 ]));
 
-modelBuffers.set($.MODEL_IMAGE, $.BUF_ARR_POLYGON);
-
-/*------------------------------------------------------------------------------
-    Dialogue
-------------------------------------------------------------------------------*/
-models.set($.MODEL_DIALOGUE, new SafeMap([
-    [$.A_XYZ, pushData(polygonData,
-        [
-            -1, 1, 0,
-            -1, -1, 0,
-            1, -1, 0,
-            1, -1, 0,
-            1, 1, 0,
-            -1, 1, 0
-        ]
-    )],
-    [$.A_UV, pushData(polygonData, [
-        0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1
-    ])]
-]));
-
-modelBuffers.set($.MODEL_DIALOGUE, $.BUF_ARR_POLYGON);
+modelBuffers.set($.MODEL_SCREEN, $.BUF_ARR_POLYGON);
 
 BufferArray.data(
     $.BUF_ARR_POLYGON,

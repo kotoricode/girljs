@@ -39,7 +39,7 @@ export const setUiText = (str, str2, str3) =>
 const fontSize = 64;
 
 const program = new ProgramData($.PROG_SCREEN);
-program.setAttributes($.MODEL_DIALOGUE);
+program.setAttributes($.MODEL_SCREEN);
 
 const canvas = window.document.createElement("canvas");
 canvas.width = $.SCREEN_WIDTH;

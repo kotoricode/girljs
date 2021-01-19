@@ -111,7 +111,7 @@ gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
 const viewProgramData = new ProgramData($.PROG_VIEW);
-viewProgramData.setAttributes($.MODEL_IMAGE);
+viewProgramData.setAttributes($.MODEL_SCREEN);
 let isCanvasResized = true;
 
 // Queues are ordered
