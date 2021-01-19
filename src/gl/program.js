@@ -2,12 +2,12 @@ import * as $ from "../const";
 import { gl } from "../dom";
 import { SafeMap } from "../utility";
 
-import vsScreen   from "./shaders/vert/screen.vert";
-import vsStandard from "./shaders/vert/standard.vert";
-import vsUi       from "./shaders/vert/ui.vert";
-import vsColor    from "./shaders/vert/color.vert";
+import vsScreen from "./shaders/vert/screen.vert";
+import vsWorld  from "./shaders/vert/world.vert";
+import vsUi     from "./shaders/vert/ui.vert";
+import vsColor  from "./shaders/vert/color.vert";
 
-import fsGray    from "./shaders/frag/gray.frag";
+import fsImageFx from "./shaders/frag/image-fx.frag";
 import fsScreen  from "./shaders/frag/screen.frag";
 import fsSprite  from "./shaders/frag/sprite.frag";
 import fsPolygon from "./shaders/frag/polygon.frag";
@@ -77,8 +77,8 @@ const vertDef = {
             uniformMatrix4fv: new SafeMap([uniTransform])
         }
     },
-    standard: {
-        src: vsStandard,
+    world: {
+        src: vsWorld,
         blocks: ubCamera,
         attributes: attrMapPosUv,
         uniforms: {
@@ -95,8 +95,8 @@ const fragDef = {
     color: {
         src: fsColor
     },
-    gray: {
-        src: fsGray
+    imageFx: {
+        src: fsImageFx
     },
     screen: {
         src: fsScreen
@@ -120,12 +120,12 @@ const fragDef = {
     Program definitions
 ------------------------------------------------------------------------------*/
 const programDef = [
-    $.PROG_SCREEN,   vertDef.screen,   fragDef.screen,
-    $.PROG_UI,       vertDef.ui,       fragDef.screen,
-    $.PROG_IMAGE_FX, vertDef.screen,   fragDef.gray,
-    $.PROG_SPRITE,   vertDef.standard, fragDef.sprite,
-    $.PROG_POLYGON,  vertDef.standard, fragDef.polygon,
-    $.PROG_DEBUG,    vertDef.color,    fragDef.color
+    $.PROG_SCREEN,   vertDef.screen, fragDef.screen,
+    $.PROG_UI,       vertDef.ui,     fragDef.screen,
+    $.PROG_IMAGE_FX, vertDef.screen, fragDef.imageFx,
+    $.PROG_SPRITE,   vertDef.world,  fragDef.sprite,
+    $.PROG_POLYGON,  vertDef.world,  fragDef.polygon,
+    $.PROG_DEBUG,    vertDef.color,  fragDef.color
 ];
 
 /*------------------------------------------------------------------------------
