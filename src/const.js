@@ -32,6 +32,13 @@ export const
     PROG_POLYGON = i++;
 
 export const
+    PROG_DATA_PROGRAM = i++,
+    PROG_DATA_ATTRIBUTES = i++,
+    PROG_DATA_UNI_BLOCKS = i++,
+    PROG_DATA_UNI_DEFAULTS = i++,
+    PROG_DATA_UNI_SETTERS = i++;
+
+export const
     BUF_ARR_SPRITE = i++,
     BUF_ARR_POLYGON = i++,
     BUF_ARR_DEBUG = i++,

@@ -191,11 +191,11 @@ for (let i = 0; i < programDef.length;)
         }
     }
 
-    preparedPrograms.set(programId, Object.freeze({
-        program,
-        attributes,
-        uniDefaults,
-        uniSetters,
-        uniBlocks
-    }));
+    preparedPrograms.set(programId, new SafeMap([
+        [$.PROG_DATA_PROGRAM, program],
+        [$.PROG_DATA_ATTRIBUTES, attributes],
+        [$.PROG_DATA_UNI_BLOCKS, uniBlocks],
+        [$.PROG_DATA_UNI_DEFAULTS, uniDefaults],
+        [$.PROG_DATA_UNI_SETTERS, uniSetters]
+    ]));
 }

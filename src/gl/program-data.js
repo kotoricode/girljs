@@ -13,17 +13,19 @@ export class ProgramData
         const prepared = Program.getPrepared(programId);
 
         this.programId = programId;
-        this.program = prepared.program;
-        this.uniSetters = prepared.uniSetters;
-        this.attributes = prepared.attributes;
-        this.uniBlocks = prepared.uniBlocks;
+        this.program = prepared.get($.PROG_DATA_PROGRAM);
+        this.uniSetters = prepared.get($.PROG_DATA_UNI_SETTERS);
+        this.attributes = prepared.get($.PROG_DATA_ATTRIBUTES);
+        this.uniBlocks = prepared.get($.PROG_DATA_UNI_BLOCKS);
 
         this.uniStaging = new SafeMap();
         this.vao = gl.createVertexArray();
 
-        for (const [name, defaults] of prepared.uniDefaults)
+        const defaults = prepared.get($.PROG_DATA_UNI_DEFAULTS);
+
+        for (const [name, values] of defaults)
         {
-            this.uniStaging.set(name, defaults.slice());
+            this.uniStaging.set(name, values.slice());
         }
     }
 
