@@ -5,6 +5,7 @@ import { Entity } from "./entity";
 import { render } from "./gl/renderer";
 import { blueprint } from "./blueprint";
 import { SafeMap, SafeSet } from "./utility";
+import { UiSprite } from "./components/ui-sprite";
 
 export class Scene
 {
@@ -107,6 +108,15 @@ export class Scene
         {
             const [sprite, space] = entity.getComponents(Sprite, Space);
 
+            sprite.programData.stageUniformAtIndex(
+                $.U_TRANSFORM,
+                1,
+                space.matrix
+            );
+        }
+
+        for (const [sprite, space] of this.all(UiSprite, Space))
+        {
             sprite.programData.stageUniformAtIndex(
                 $.U_TRANSFORM,
                 1,

@@ -77,9 +77,9 @@ export const blueprint = new SafeMap([
             }],
             [$.ENTITY_GIRL, {
                 components: [
-                    new Space(),
+                    new Space(-200, 0, 0),
                     new UiSprite(
-                        $.PROG_SCREEN,
+                        $.PROG_SCREEN2,
                         $.MODEL_GIRL
                     )
                 ],

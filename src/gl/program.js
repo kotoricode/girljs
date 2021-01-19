@@ -4,6 +4,7 @@ import { SafeMap } from "../utility";
 
 import vsStandard from "./shaders/vert/standard.vert";
 import vsScreen   from "./shaders/vert/screen.vert";
+import vsScreen2  from "./shaders/vert/screen2.vert";
 import vsColor    from "./shaders/vert/color.vert";
 
 import fsView    from "./shaders/frag/view.frag";
@@ -47,13 +48,13 @@ const ubCamera = [$.UB_CAMERA];
 const attribPos = [$.A_XYZ, 3];
 const attribUv = [$.A_UV, 2];
 
-const uniTransVp = [$.U_TRANSFORM, uniArrZeroZero];
+const uniTransform = [$.U_TRANSFORM, uniArrZeroZero];
 const uniColor = [$.U_COLOR, [1, 1, 1, 1]];
 const uniUvRepeat = [$.U_UVREPEAT, [1, 1]];
 const uniUvOffset = [$.U_UVOFFSET, uniArrZeroZero];
 const uniUvSize = [$.U_UVSIZE, uniArrZeroZero];
 
-const uniMapPosUv = new SafeMap([attribPos, attribUv]);
+const attrMapPosUv = new SafeMap([attribPos, attribUv]);
 const uniMapColor = new SafeMap([uniColor]);
 
 /*------------------------------------------------------------------------------
@@ -67,14 +68,21 @@ const vertDef = {
     },
     screen: {
         src: vsScreen,
-        attributes: uniMapPosUv
+        attributes: attrMapPosUv
+    },
+    screen2: {
+        src: vsScreen,
+        attributes: attrMapPosUv,
+        uniforms: {
+            uniformMatrix4fv: new SafeMap([uniTransform])
+        }
     },
     standard: {
         src: vsStandard,
         blocks: ubCamera,
-        attributes: uniMapPosUv,
+        attributes: attrMapPosUv,
         uniforms: {
-            uniformMatrix4fv: new SafeMap([uniTransVp]),
+            uniformMatrix4fv: new SafeMap([uniTransform]),
             uniform2f: new SafeMap([uniUvRepeat])
         }
     }
@@ -113,6 +121,7 @@ const fragDef = {
 ------------------------------------------------------------------------------*/
 const programDef = [
     $.PROG_SCREEN,  vertDef.screen,   fragDef.screen,
+    $.PROG_SCREEN2, vertDef.screen2,  fragDef.screen,
     $.PROG_VIEW,    vertDef.screen,   fragDef.view,
     $.PROG_SPRITE,  vertDef.standard, fragDef.sprite,
     $.PROG_POLYGON, vertDef.standard, fragDef.polygon,
