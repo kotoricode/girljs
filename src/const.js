@@ -6,6 +6,7 @@ export const
 let i = 0;
 
 export const
+    ENTITY_GIRL = i++,
     ENTITY_GROUND = i++,
     ENTITY_PLAYER = i++,
     ENTITY_ROOT = i++;
@@ -45,6 +46,7 @@ export const
     BUF_UNI_CAMERA = i++;
 
 export const
+    MODEL_GIRL = i++,
     MODEL_DEBUG = i++,
     MODEL_GROUND = i++,
     MODEL_SCREEN = i++,
@@ -78,8 +80,8 @@ export const
     MODEL_BRAID_26 = i++;
 
 export const
+    SUBTEX_GIRL_00 = i++,
     SUBTEX_GROUND = i++,
-    SUBTEX_IMAGE = i++,
     SUBTEX_BRAID_00 = i++,
     SUBTEX_BRAID_01 = i++,
     SUBTEX_BRAID_02 = i++,
@@ -111,7 +113,8 @@ export const
 export const
     MESH_GROUND = i++,
     MESH_IMAGE = i++,
-    MESH_PLAYER = i++;
+    MESH_PLAYER = i++,
+    MESH_GIRL = i++;
 
 export const
     ANIM_IDLE = i++,
@@ -155,7 +158,8 @@ export const
 export const
     FILE_OMOIDE = "omoide_loft.ogg",
     FILE_POLY = "texture.png",
-    FILE_BRAID = "braid.png";
+    FILE_BRAID = "braid.png",
+    FILE_GIRL = "girl.png";
 
 /*------------------------------------------------------------------------------
     GL enums

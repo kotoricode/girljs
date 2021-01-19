@@ -11,6 +11,7 @@ import { Anim }   from "./components/anim";
 import { processMotion }    from "./processes/process-motion";
 import { processCamera }    from "./processes/process-camera";
 import { processAnimation } from "./processes/process-animation";
+import { UiSprite } from "./components/ui-sprite";
 
 export const blueprint = new SafeMap([
     [$.SCENE_TEST, () => ({
@@ -70,6 +71,16 @@ export const blueprint = new SafeMap([
                             [$.U_UVREPEAT]: [4, 4],
                             [$.U_COLOR]: [1, 1, 1, 1]
                         }
+                    )
+                ],
+                children: null
+            }],
+            [$.ENTITY_GIRL, {
+                components: [
+                    new Space(),
+                    new UiSprite(
+                        $.PROG_SCREEN,
+                        $.MODEL_GIRL
                     )
                 ],
                 children: null

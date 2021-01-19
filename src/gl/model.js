@@ -35,6 +35,7 @@ const pushData = (buffer, data) =>
     Data
 ------------------------------------------------------------------------------*/
 const modelData = [
+    $.MODEL_GIRL,     $.MESH_GIRL,   $.SUBTEX_GIRL_00,
     $.MODEL_GROUND,   $.MESH_GROUND, $.SUBTEX_GROUND,
     $.MODEL_BRAID_00, $.MESH_PLAYER, $.SUBTEX_BRAID_00,
     $.MODEL_BRAID_01, $.MESH_PLAYER, $.SUBTEX_BRAID_01,

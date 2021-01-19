@@ -11,6 +11,7 @@ import { Rbo } from "./rbo";
 import { Fbo } from "./fbo";
 import { Model } from "./model";
 import { Dialogue } from "../dialogue";
+import { UiSprite } from "../components/ui-sprite";
 
 export const render = (scene) =>
 {
@@ -21,6 +22,11 @@ export const render = (scene) =>
             const queue = queues.get(sprite.programData.programId);
             queue.push(sprite);
         }
+    }
+
+    for (const [uiElement] of scene.all(UiSprite))
+    {
+        uiQueue.push(uiElement);
     }
 
     Fbo.bind();
@@ -58,9 +64,12 @@ export const render = (scene) =>
     // Transfer to canvas
     setProgram(viewProgramData);
     Texture.bind(fbTexture);
-    //Texture.bind(textTexture);
     drawArraysVao($.TRIANGLES, 0, 6, viewProgramData.vao);
     Texture.unbind();
+
+    // UI
+    renderQueue(uiQueue);
+    uiQueue.length = 0;
 
     // Debug
     renderDebug();
@@ -116,5 +125,7 @@ let isCanvasResized = true;
 // Queues are ordered
 const queues = new SafeMap([
     [$.PROG_POLYGON, []],
-    [$.PROG_SPRITE, []],
+    [$.PROG_SPRITE, []]
 ]);
+
+const uiQueue = [];

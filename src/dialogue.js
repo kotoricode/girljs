@@ -51,23 +51,15 @@ const drawBackground = () =>
 {
     Dialogue.setBackgroundSettings();
 
-    const x0 = x - margin;
-    const x2 = x + width;
-    const x3 = x2 + margin;
-
-    const y0 = y - margin;
-    const y2 = y + height;
-    const y3 = y2 + margin;
-
     ctx.beginPath();
-    ctx.moveTo(x2, y0);
-    ctx.quadraticCurveTo(x3, y0, x3, y);
-    ctx.lineTo(x3, y2);
-    ctx.quadraticCurveTo(x3, y3, x2, y3);
-    ctx.lineTo(x, y3);
-    ctx.quadraticCurveTo(x0, y3, x0, y2);
-    ctx.lineTo(x0, y);
-    ctx.quadraticCurveTo(x0, y0, x, y0);
+    ctx.moveTo(xEnd, bgTop);
+    ctx.quadraticCurveTo(bgRight, bgTop, bgRight, y);
+    ctx.lineTo(bgRight, yEnd);
+    ctx.quadraticCurveTo(bgRight, bgBottom, xEnd, bgBottom);
+    ctx.lineTo(x, bgBottom);
+    ctx.quadraticCurveTo(bgLeft, bgBottom, bgLeft, yEnd);
+    ctx.lineTo(bgLeft, y);
+    ctx.quadraticCurveTo(bgLeft, bgTop, x, bgTop);
     ctx.closePath();
     ctx.fill();
 };
@@ -141,10 +133,18 @@ const width = canvas.width - 2*x;
 const height = fontSize*3;
 const y = canvas.height - height - margin - bottomMargin;
 
-const clearMargin = 8;
-
 ctx.textAlign = "left";
 ctx.textBaseline = "top";
 ctx.font = `${fontSize}px Arial`;
+
+/*------------------------------------------------------------------------------
+    Background
+------------------------------------------------------------------------------*/
+const bgLeft = x - margin;
+const xEnd = x + width;
+const bgRight = xEnd + margin;
+const bgTop = y - margin;
+const yEnd = y + height;
+const bgBottom = yEnd + margin;
 
 Dialogue.setText("yksi kaksi kolme neljä viisi kuusi seitsemän kahdeksan yhdeksän kymmenen yksitoista kaksitoista kolmetoista");

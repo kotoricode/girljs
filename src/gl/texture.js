@@ -97,6 +97,9 @@ let oldTexture;
 
 // id/url, width, height, parami[], subtextures[ id, x, y, width, height ]
 const textureData = [
+    $.FILE_GIRL, 186, 600, [
+        $.SUBTEX_GIRL_00, 0, 0, 186, 600
+    ],
     $.FILE_BRAID, 1024, 1024, [
         $.SUBTEX_BRAID_00, 0,   10,  136, 136,
         $.SUBTEX_BRAID_01, 128, 10,  136, 136,
