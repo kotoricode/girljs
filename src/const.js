@@ -27,9 +27,9 @@ export const
 ------------------------------------------------------------------------------*/
 export const
     PROG_SCREEN = i++,
-    PROG_SCREEN2 = i++,
+    PROG_UI = i++,
     PROG_DEBUG = i++,
-    PROG_VIEW = i++,
+    PROG_IMAGE_FX = i++,
     PROG_SPRITE = i++,
     PROG_POLYGON = i++;
 

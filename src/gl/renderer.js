@@ -57,7 +57,7 @@ export const render = (scene) =>
 
     renderToCanvas(fbTexture);
 
-    renderQueue($.PROG_SCREEN2);
+    renderQueue($.PROG_UI);
     renderText();
 
     renderDebug();
@@ -126,12 +126,12 @@ Publisher.subscribe($.EVENT_RESIZED, () => isCanvasResized = true);
 gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
-const viewProgramData = new ProgramData($.PROG_VIEW);
+const viewProgramData = new ProgramData($.PROG_IMAGE_FX);
 viewProgramData.setAttributes($.MODEL_SCREEN);
 let isCanvasResized = true;
 
 const queues = new SafeMap([
     [$.PROG_POLYGON, new SafeSet()],
     [$.PROG_SPRITE, new SafeSet()],
-    [$.PROG_SCREEN2, new SafeSet()]
+    [$.PROG_UI, new SafeSet()]
 ]);

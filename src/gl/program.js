@@ -2,12 +2,12 @@ import * as $ from "../const";
 import { gl } from "../dom";
 import { SafeMap } from "../utility";
 
-import vsStandard from "./shaders/vert/standard.vert";
 import vsScreen   from "./shaders/vert/screen.vert";
-import vsScreen2  from "./shaders/vert/screen2.vert";
+import vsStandard from "./shaders/vert/standard.vert";
+import vsUi       from "./shaders/vert/ui.vert";
 import vsColor    from "./shaders/vert/color.vert";
 
-import fsView    from "./shaders/frag/view.frag";
+import fsGray    from "./shaders/frag/gray.frag";
 import fsScreen  from "./shaders/frag/screen.frag";
 import fsSprite  from "./shaders/frag/sprite.frag";
 import fsPolygon from "./shaders/frag/polygon.frag";
@@ -70,8 +70,8 @@ const vertDef = {
         src: vsScreen,
         attributes: attrMapPosUv
     },
-    screen2: {
-        src: vsScreen2,
+    ui: {
+        src: vsUi,
         attributes: attrMapPosUv,
         uniforms: {
             uniformMatrix4fv: new SafeMap([uniTransform])
@@ -95,8 +95,8 @@ const fragDef = {
     color: {
         src: fsColor
     },
-    view: {
-        src: fsView
+    gray: {
+        src: fsGray
     },
     screen: {
         src: fsScreen
@@ -120,12 +120,12 @@ const fragDef = {
     Program definitions
 ------------------------------------------------------------------------------*/
 const programDef = [
-    $.PROG_SCREEN,  vertDef.screen,   fragDef.screen,
-    $.PROG_SCREEN2, vertDef.screen2,  fragDef.screen,
-    $.PROG_VIEW,    vertDef.screen,   fragDef.view,
-    $.PROG_SPRITE,  vertDef.standard, fragDef.sprite,
-    $.PROG_POLYGON, vertDef.standard, fragDef.polygon,
-    $.PROG_DEBUG,   vertDef.color,    fragDef.color
+    $.PROG_SCREEN,   vertDef.screen,   fragDef.screen,
+    $.PROG_UI,       vertDef.ui,       fragDef.screen,
+    $.PROG_IMAGE_FX, vertDef.screen,   fragDef.gray,
+    $.PROG_SPRITE,   vertDef.standard, fragDef.sprite,
+    $.PROG_POLYGON,  vertDef.standard, fragDef.polygon,
+    $.PROG_DEBUG,    vertDef.color,    fragDef.color
 ];
 
 /*------------------------------------------------------------------------------

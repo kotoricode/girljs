@@ -78,7 +78,7 @@ export const blueprint = new SafeMap([
                 components: [
                     new Space(0.75, -0.2, 0),
                     new Drawable(
-                        $.PROG_SCREEN2,
+                        $.PROG_UI,
                         $.MODEL_GIRL
                     )
                 ],
