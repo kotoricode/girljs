@@ -11,7 +11,7 @@ export const Model = {
     },
     getBufferId(modelId)
     {
-        return modelBuffers.get(modelId);
+        return modelBufferIds.get(modelId);
     },
     getTexture(modelId)
     {
@@ -75,7 +75,7 @@ const uvs = new SafeMap();
 const models = new SafeMap();
 const modelTextures = new SafeMap();
 const modelUvs = new SafeMap();
-const modelBuffers = new SafeMap();
+const modelBufferIds = new SafeMap();
 
 for (let i = 0; i < modelData.length;)
 {
@@ -108,7 +108,7 @@ for (let i = 0; i < modelData.length;)
     const texture = Texture.getSubTextureData(subTexId).base.texture;
     modelTextures.set(modelId, texture);
     modelUvs.set(modelId, uvs.get(subTexId));
-    modelBuffers.set(modelId, $.BUF_ARR_SPRITE);
+    modelBufferIds.set(modelId, $.BUF_ARR_SPRITE);
 }
 
 BufferArray.data(
@@ -138,7 +138,7 @@ models.set($.MODEL_SCREEN, new SafeMap([
     ])]
 ]));
 
-modelBuffers.set($.MODEL_SCREEN, $.BUF_ARR_POLYGON);
+modelBufferIds.set($.MODEL_SCREEN, $.BUF_ARR_POLYGON);
 
 BufferArray.data(
     $.BUF_ARR_POLYGON,
@@ -168,7 +168,7 @@ models.set($.MODEL_DEBUG, new SafeMap([
     [$.A_XYZ, lineXyzOffset]
 ]));
 
-modelBuffers.set($.MODEL_DEBUG, $.BUF_ARR_DEBUG);
+modelBufferIds.set($.MODEL_DEBUG, $.BUF_ARR_DEBUG);
 
 BufferArray.data(
     $.BUF_ARR_DEBUG,
