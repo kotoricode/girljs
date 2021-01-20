@@ -23,7 +23,7 @@ const createAttachShader = (program, shaderId, vertFrag) =>
     return shader;
 };
 
-const createUniSetter = (type, loc) => (values) => gl[type](loc, ...values);
+const createSetter = (type, loc) => (values) => gl[type](loc, ...values);
 
 const detachDeleteShader = (program, shader) =>
 {
@@ -158,27 +158,27 @@ for (let i = 0; i < programDef.length;)
     /*--------------------------------------------------------------------------
         Uniform blocks
     --------------------------------------------------------------------------*/
-    let uniBlocks = null;
+    let blocks = null;
 
     if (vsBlocks)
     {
-        uniBlocks = [...vsBlocks];
+        blocks = [...vsBlocks];
 
         if (fsBlocks)
         {
-            uniBlocks.push(...fsBlocks);
+            blocks.push(...fsBlocks);
         }
     }
     else if (fsBlocks)
     {
-        uniBlocks = [...fsBlocks];
+        blocks = [...fsBlocks];
     }
 
     /*--------------------------------------------------------------------------
         Uniforms
     --------------------------------------------------------------------------*/
-    const uniSetters = new SafeMap();
-    const uniDefaults = new SafeMap();
+    const setters = new SafeMap();
+    const defaults = new SafeMap();
 
     for (const shader of [vert, frag])
     {
@@ -186,12 +186,12 @@ for (let i = 0; i < programDef.length;)
         {
             for (const [type, map] of Object.entries(shader.uniforms))
             {
-                for (const [name, defaultValues] of map)
+                for (const [name, values] of map)
                 {
                     const pos = gl.getUniformLocation(program, name);
-                    const uniSetter = createUniSetter(type, pos);
-                    uniSetters.set(name, uniSetter);
-                    uniDefaults.set(name, defaultValues);
+                    const setter = createSetter(type, pos);
+                    setters.set(name, setter);
+                    defaults.set(name, values);
                 }
             }
         }
@@ -200,8 +200,8 @@ for (let i = 0; i < programDef.length;)
     preparedPrograms.set(programId, new SafeMap([
         [$.PROG_DATA_PROGRAM, program],
         [$.PROG_DATA_ATTRIBUTES, attributes],
-        [$.PROG_DATA_UNI_BLOCKS, uniBlocks],
-        [$.PROG_DATA_UNI_DEFAULTS, uniDefaults],
-        [$.PROG_DATA_UNI_SETTERS, uniSetters]
+        [$.PROG_DATA_BLOCKS, blocks],
+        [$.PROG_DATA_DEFAULTS, defaults],
+        [$.PROG_DATA_SETTERS, setters]
     ]));
 }

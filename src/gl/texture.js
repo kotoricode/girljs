@@ -5,10 +5,10 @@ import { SafeMap, LISTENER_ONCE } from "../utility";
 export const Texture = {
     bind(texture)
     {
-        if (texture !== oldTexture)
+        if (texture !== activeTexture)
         {
             gl.bindTexture($.TEXTURE_2D, texture);
-            oldTexture = texture;
+            activeTexture = texture;
         }
     },
     create()
@@ -23,6 +23,14 @@ export const Texture = {
         Texture.unbind();
 
         return texture;
+    },
+    flip(state)
+    {
+        gl.pixelStorei($.UNPACK_FLIP_Y_WEBGL, state);
+    },
+    from(src)
+    {
+        gl.texImage2D($.TEXTURE_2D, 0, $.RGBA, $.RGBA, $.UNSIGNED_BYTE, src);
     },
     getSubTextureData(modelId)
     {
@@ -45,10 +53,6 @@ export const Texture = {
             minX, minY,
             maxX, minY,
         ];
-    },
-    from(src)
-    {
-        gl.texImage2D($.TEXTURE_2D, 0, $.RGBA, $.RGBA, $.UNSIGNED_BYTE, src);
     },
     parami(key, value)
     {
@@ -93,7 +97,7 @@ image.addEventListener("error", (e) =>
 /*------------------------------------------------------------------------------
     Textures
 ------------------------------------------------------------------------------*/
-let oldTexture;
+let activeTexture;
 
 // id/url, width, height, parami[], subtextures[ id, x, y, width, height ]
 const textureData = [

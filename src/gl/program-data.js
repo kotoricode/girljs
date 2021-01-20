@@ -12,20 +12,23 @@ export class ProgramData
     {
         const prepared = Program.getPrepared(programId);
 
-        this.programId = programId;
+        // Program
         this.program = prepared.get($.PROG_DATA_PROGRAM);
-        this.uniSetters = prepared.get($.PROG_DATA_UNI_SETTERS);
-        this.attributes = prepared.get($.PROG_DATA_ATTRIBUTES);
-        this.uniBlocks = prepared.get($.PROG_DATA_UNI_BLOCKS);
+        this.programId = programId;
 
-        this.uniStaging = new SafeMap();
+        // Attributes
+        this.attributes = prepared.get($.PROG_DATA_ATTRIBUTES);
         this.vao = gl.createVertexArray();
 
-        const defaults = prepared.get($.PROG_DATA_UNI_DEFAULTS);
+        // Uniforms
+        this.setters = prepared.get($.PROG_DATA_SETTERS);
+        this.blocks = prepared.get($.PROG_DATA_BLOCKS);
+        this.staging = new SafeMap();
+        const defaults = prepared.get($.PROG_DATA_DEFAULTS);
 
         for (const [name, values] of defaults)
         {
-            this.uniStaging.set(name, values.slice());
+            this.staging.set(name, values.slice());
         }
     }
 
@@ -62,9 +65,9 @@ export class ProgramData
 
     setUniforms()
     {
-        for (const [key, value] of this.uniStaging)
+        for (const [key, value] of this.staging)
         {
-            this.uniSetters.get(key)(value);
+            this.setters.get(key)(value);
         }
     }
 
@@ -72,12 +75,12 @@ export class ProgramData
     {
         if (!Array.isArray(value)) throw Error;
 
-        this.uniStaging.update(key, value);
+        this.staging.update(key, value);
     }
 
     stageUniformAtIndex(key, idx, value)
     {
-        const staged = this.uniStaging.get(key);
+        const staged = this.staging.get(key);
 
         if (!Array.isArray(staged) || staged.length <= idx) throw Error;
 

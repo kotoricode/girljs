@@ -102,21 +102,24 @@ export class Scene
         return this.entities.get(entityId);
     }
 
-    // TODO: we really need an advanced, uniform-by-uniform init handler
     initNewDrawables()
     {
         for (const entity of this.newDrawables)
         {
             const [drawable, space] = entity.getComponents(Drawable, Space);
             const { programData } = drawable;
+            const { staging } = programData;
 
-            programData.stageUniformAtIndex(
-                $.U_TRANSFORM,
-                1,
-                space.matrix
-            );
+            if (staging.has($.U_TRANSFORM))
+            {
+                programData.stageUniformAtIndex(
+                    $.U_TRANSFORM,
+                    1,
+                    space.matrix
+                );
+            }
 
-            if (programData.programId === $.PROG_POLYGON)
+            if (staging.has($.U_UVOFFSET) && staging.has($.U_UVREPEAT))
             {
                 const [
                     uvMinX, uvMaxY,

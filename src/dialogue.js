@@ -21,14 +21,12 @@ export const Dialogue = {
         Dialogue.setFontSettings();
         drawSplitString(str, y);
 
-        gl.pixelStorei($.UNPACK_FLIP_Y_WEBGL, true);
-
+        Texture.flip(true);
         Texture.bind(texture);
         Texture.from(canvas);
         Texture.parami($.TEXTURE_MIN_FILTER, $.LINEAR);
         Texture.unbind();
-
-        gl.pixelStorei($.UNPACK_FLIP_Y_WEBGL, false);
+        Texture.flip(false);
     },
     setBackgroundSettings()
     {

@@ -36,9 +36,9 @@ export const
 export const
     PROG_DATA_PROGRAM = i++,
     PROG_DATA_ATTRIBUTES = i++,
-    PROG_DATA_UNI_BLOCKS = i++,
-    PROG_DATA_UNI_DEFAULTS = i++,
-    PROG_DATA_UNI_SETTERS = i++;
+    PROG_DATA_BLOCKS = i++,
+    PROG_DATA_DEFAULTS = i++,
+    PROG_DATA_SETTERS = i++;
 
 export const
     BUF_ARR_SPRITE = i++,
