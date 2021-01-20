@@ -8,6 +8,8 @@ export const DEG_TO_RAD = Math.PI / 180;
 
 export const getElement = (elemId) => window.document.getElementById(elemId);
 
+export const isString = (value) => typeof value === "string";
+
 export class BufferData extends Float32Array
 {
     constructor(...params)
