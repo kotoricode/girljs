@@ -35,16 +35,14 @@ const drawBackground = () =>
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 0;
 
-    ctx.beginPath();
-    ctx.moveTo(xEnd, bgTop);
-    ctx.quadraticCurveTo(bgRight, bgTop, bgRight, y);
-    ctx.lineTo(bgRight, yEnd);
-    ctx.quadraticCurveTo(bgRight, bgBottom, xEnd, bgBottom);
-    ctx.lineTo(x, bgBottom);
-    ctx.quadraticCurveTo(bgLeft, bgBottom, bgLeft, yEnd);
-    ctx.lineTo(bgLeft, y);
-    ctx.quadraticCurveTo(bgLeft, bgTop, x, bgTop);
-    ctx.closePath();
+    const p1 = { x: 321, y: 471 };
+    const p2 = { x: 999, y: 557 };
+    const p3 = { x: 503, y: 710 };
+
+    ctx.moveTo(p1.x, p1.y);
+    ctx.bezierCurveTo(383, 357, 990, 447, p2.x, p2.y);
+    ctx.bezierCurveTo(1005, 614, 758, 717, p3.x, p3.y);
+    ctx.bezierCurveTo(382, 706, 278, 548, p1.x, p1.y);
     ctx.fill();
 };
 
@@ -83,7 +81,7 @@ const drawSplitString = (str, yPos) =>
 
             drawText(fits, yPos);
             fits = null;
-            yPos += fontSize;
+            yPos += fontSize + fontPad;
         }
     }
 
@@ -111,11 +109,12 @@ canvas.height = $.SCREEN_HEIGHT;
     Draw area
 ------------------------------------------------------------------------------*/
 const padding = 24;
-const fontSize = 42;
-const bottomMargin = padding / 2;
+const fontSize = 32;
+const fontPad = 8;
+const bottomMargin = 100;
 
-const x = canvas.width / 5;
-const width = canvas.width - 2*x;
+const x = 376;
+const width = 515;
 
 const height = fontSize*3;
 const y = canvas.height - height - padding - bottomMargin;
@@ -125,18 +124,6 @@ ctx.textBaseline = "top";
 ctx.font = `${fontSize}px Arial`;
 ctx.shadowColor = "#000";
 
-/*------------------------------------------------------------------------------
-    Background
-------------------------------------------------------------------------------*/
-const bgLeft = x - padding;
-const xEnd = x + width;
-const bgRight = xEnd + padding;
-const bgTop = y - padding;
-const yEnd = y + height;
-const bgBottom = yEnd + padding;
-
 Dialogue.setText(`
-yksi kaksi kolme neljä viisi
-kuusi seitsemän kahdeksan yhdeksän
-kymmenen yksitoista kaksitoista
+Yume nante kanaru wake nai shi yaritakunai koto yamazumi de utsu ni naru mo 
 `);
