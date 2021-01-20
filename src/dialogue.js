@@ -88,7 +88,7 @@ const drawSplitString = (str, yPos) =>
 
             drawText(fits, yPos);
             fits = null;
-            maybeFits = curWord.trim();
+            maybeFits = curWord.trimStart();
             yPos += fontSize;
         }
     }
