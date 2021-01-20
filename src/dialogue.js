@@ -65,12 +65,11 @@ const drawSplitString = (str, yPos) =>
 {
     const words = str.split(/(?=\s)/);
     let fits;
-    let maybeFits = "";
+    let maybeFits;
 
-    for (let i = 0; i < words.length; i++)
+    for (const word of words)
     {
-        let curWord = words[i];
-        maybeFits += curWord;
+        maybeFits = maybeFits ? maybeFits+word : word.trimStart();
 
         if (ctx.measureText(maybeFits).width < width)
         {
@@ -83,12 +82,15 @@ const drawSplitString = (str, yPos) =>
                 console.warn(`Word too long: ${maybeFits}`);
 
                 fits = maybeFits;
-                curWord = "";
+                maybeFits = null;
+            }
+            else
+            {
+                maybeFits = word.trimStart();
             }
 
             drawText(fits, yPos);
             fits = null;
-            maybeFits = curWord.trimStart();
             yPos += fontSize;
         }
     }
@@ -140,4 +142,4 @@ const bgTop = y - padding;
 const yEnd = y + height;
 const bgBottom = yEnd + padding;
 
-Dialogue.setText("yksi kaksi kolme neljä viisi kuusi seitsemän kahdeksan yhdeksän kymmenen yksitoista kaksitoista kolmetoista");
+Dialogue.setText("yksiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa kaksiaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa kolme neljä viisi kuusi seitsemän kahdeksan yhdeksän kymmenen yksitoista kaksitoista kolmetoista");
