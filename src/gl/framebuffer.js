@@ -45,10 +45,6 @@ export const Framebuffer = {
 
         return texture;
     },
-    getTexture()
-    {
-        return texture;
-    },
     unbind()
     {
         assertIsBound();

@@ -32,21 +32,6 @@ export const render = (scene) =>
     Framebuffer.bind();
     Renderbuffer.bindDepth();
 
-    let fbTexture;
-
-    if (isCanvasResized)
-    {
-        fbTexture = Framebuffer.createTexture();
-        const rboDepth = Renderbuffer.createDepth();
-        Framebuffer.attachDepth(rboDepth);
-
-        isCanvasResized = false;
-    }
-    else
-    {
-        fbTexture = Framebuffer.getTexture();
-    }
-
     gl.clear($.COLOR_BUFFER_BIT | $.DEPTH_BUFFER_BIT);
     gl.clearColor(0.8, 0.8, 0.8, 1.0);
 
@@ -120,15 +105,23 @@ const renderQueue = (programId) =>
     }
 };
 
-Publisher.subscribe($.EVENT_RESIZED, () => isCanvasResized = true);
-
 // Blending
 gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
 const viewProgramData = new ProgramData($.PROG_IMAGE_FX);
 viewProgramData.setAttributes($.MODEL_SCREEN);
-let isCanvasResized = true;
+
+// Prepare framebuffer
+Framebuffer.bind();
+Renderbuffer.bindDepth();
+
+const fbTexture = Framebuffer.createTexture();
+const rboDepth = Renderbuffer.createDepth();
+Framebuffer.attachDepth(rboDepth);
+
+Renderbuffer.unbind();
+Framebuffer.unbind();
 
 const queues = new SafeMap([
     [$.PROG_POLYGON, new SafeSet()],

@@ -108,16 +108,12 @@ canvas.height = $.SCREEN_HEIGHT;
 /*------------------------------------------------------------------------------
     Draw area
 ------------------------------------------------------------------------------*/
-const padding = 24;
 const fontSize = 32;
-const fontPad = 8;
-const bottomMargin = 100;
+const fontPad = 10;
 
 const x = 376;
 const width = 515;
-
-const height = fontSize*3;
-const y = canvas.height - height - padding - bottomMargin;
+const y = 494;
 
 ctx.textAlign = "left";
 ctx.textBaseline = "top";
@@ -125,5 +121,5 @@ ctx.font = `${fontSize}px Arial`;
 ctx.shadowColor = "#000";
 
 Dialogue.setText(`
-Yume nante kanaru wake nai shi yaritakunai koto yamazumi de utsu ni naru mo 
+Yume nante kanaru wake nai shi yaritakunai koto yamazumi de utsu ni naru hi mo ookute iya ni naru na
 `);

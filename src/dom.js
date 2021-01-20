@@ -29,17 +29,17 @@ const onResize = () =>
         $.SCREEN_WIDTH
     );
 
-    if (width !== canvas.width)
+    if (width !== canvasWidth)
     {
         const height = width / $.SCREEN_ASPECT;
 
-        if (height !== canvas.height)
+        if (height !== canvasHeight)
         {
-            canvas.width = width;
-            canvas.height = height;
+            canvasWidth = width;
+            canvasHeight = height;
 
-            gl.viewport(0, 0, width, height);
-            Publisher.publish($.EVENT_RESIZED);
+            canvas.style.width = width + "px";
+            canvas.style.height = height + "px";
         }
     }
 
@@ -58,3 +58,10 @@ let canvasRect = canvas.getBoundingClientRect();
 canvas.addEventListener("click", (e) => Mouse.onClick(e));
 
 export const gl = canvas.getContext("webgl2", { alpha: false });
+
+let canvasWidth = $.SCREEN_WIDTH;
+let canvasHeight = $.SCREEN_HEIGHT;
+
+canvas.width = canvasWidth;
+canvas.height = canvasHeight;
+gl.viewport(0, 0, canvasWidth, canvasHeight);
