@@ -32,15 +32,15 @@ export const Texture = {
     {
         gl.texImage2D($.TEXTURE_2D, 0, $.RGBA, $.RGBA, $.UNSIGNED_BYTE, src);
     },
-    getSubTextureData(modelId)
+    getSubTexData(modelId)
     {
         return subTextureData.get(modelId);
     },
-    getUvFromSubTexture(subTexId)
+    getUv(subTexId)
     {
         const {
             x, y, width, height, base
-        } = Texture.getSubTextureData(subTexId);
+        } = Texture.getSubTexData(subTexId);
 
         const minX = x / base.width;
         const maxX = (x + width) / base.width;

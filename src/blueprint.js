@@ -53,10 +53,10 @@ export const blueprint = new SafeMap([
                     new Drawable(
                         $.PROG_POLYGON,
                         $.MODEL_GROUND,
-                        {
-                            [$.U_UVREPEAT]: [4, 4],
-                            [$.U_COLOR]: [1, 1, 1, 1]
-                        }
+                        new SafeMap([
+                            [$.U_UVREPEAT, [4, 4]],
+                            [$.U_COLOR, [1, 1, 1, 1]]
+                        ])
                     )
                 ],
                 children: null

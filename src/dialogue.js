@@ -116,15 +116,15 @@ canvas.height = $.SCREEN_HEIGHT;
 /*------------------------------------------------------------------------------
     Draw area
 ------------------------------------------------------------------------------*/
-const margin = 24;
+const padding = 24;
 const fontSize = 42;
-const bottomMargin = margin / 2;
+const bottomMargin = padding / 2;
 
 const x = canvas.width / 6;
 const width = canvas.width - 2*x;
 
 const height = fontSize*3;
-const y = canvas.height - height - margin - bottomMargin;
+const y = canvas.height - height - padding - bottomMargin;
 
 ctx.textAlign = "left";
 ctx.textBaseline = "top";
@@ -133,11 +133,11 @@ ctx.font = `${fontSize}px Arial`;
 /*------------------------------------------------------------------------------
     Background
 ------------------------------------------------------------------------------*/
-const bgLeft = x - margin;
+const bgLeft = x - padding;
 const xEnd = x + width;
-const bgRight = xEnd + margin;
-const bgTop = y - margin;
+const bgRight = xEnd + padding;
+const bgTop = y - padding;
 const yEnd = y + height;
-const bgBottom = yEnd + margin;
+const bgBottom = yEnd + padding;
 
 Dialogue.setText("yksi kaksi kolme neljä viisi kuusi seitsemän kahdeksan yhdeksän kymmenen yksitoista kaksitoista kolmetoista");

@@ -81,7 +81,7 @@ for (let i = 0; i < modelData.length;)
 
     if (!uvOffsets.has(subTexId))
     {
-        const uv = Texture.getUvFromSubTexture(subTexId);
+        const uv = Texture.getUv(subTexId);
         const uvOffset = pushData(spriteBufferData, uv);
 
         uvs.set(subTexId, uv);
@@ -93,7 +93,7 @@ for (let i = 0; i < modelData.length;)
         [$.A_UV, uvOffsets.get(subTexId)]
     ]));
 
-    const texture = Texture.getSubTextureData(subTexId).base.texture;
+    const texture = Texture.getSubTexData(subTexId).base.texture;
     modelTextures.set(modelId, texture);
     modelUvs.set(modelId, uvs.get(subTexId));
     modelBufferIds.set(modelId, $.BUF_ARR_SPRITE);

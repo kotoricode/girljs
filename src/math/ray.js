@@ -17,7 +17,7 @@ export class Ray
     setDirection()
     {
         this.direction.from(this.end);
-        this.direction.sub(this.start);
+        this.direction.subtract(this.start);
         this.direction.normalize();
     }
 

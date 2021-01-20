@@ -15,7 +15,7 @@ export const processMotion = (scene) =>
             // Distance to target
             const target = motion.getTarget();
             distance.from(target);
-            distance.sub(space.world.translation);
+            distance.subtract(space.world.translation);
 
             // Direction
             direction.from(distance);

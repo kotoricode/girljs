@@ -13,7 +13,10 @@ export class Drawable extends Component
 
         if (uniforms)
         {
-            this.setProgramUniforms(uniforms);
+            for (const [key, value] of uniforms)
+            {
+                this.programData.stageUniform(key, value);
+            }
         }
     }
 
@@ -21,13 +24,5 @@ export class Drawable extends Component
     {
         this.programData.setAttributes(modelId);
         this.modelId = modelId;
-    }
-
-    setProgramUniforms(uniforms)
-    {
-        for (const [key, value] of Object.entries(uniforms))
-        {
-            this.programData.stageUniform(key, value);
-        }
     }
 }

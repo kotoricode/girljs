@@ -65,14 +65,14 @@ export class Vector extends SettableArray
         return this.x*vec.x + this.y*vec.y + this.z*vec.z;
     }
 
-    mulScalar(scalar)
+    multiplyScalar(scalar)
     {
         this.x *= scalar;
         this.y *= scalar;
         this.z *= scalar;
     }
 
-    mul(vec)
+    multiply(vec)
     {
         this.x *= vec.x;
         this.y *= vec.y;
@@ -90,7 +90,7 @@ export class Vector extends SettableArray
 
         if (!magnitude) throw Error;
 
-        this.mulScalar(toMagnitude / magnitude);
+        this.multiplyScalar(toMagnitude / magnitude);
     }
 
     sqrDistance(vec)
@@ -103,7 +103,7 @@ export class Vector extends SettableArray
         return this.dot(this);
     }
 
-    sub(vec)
+    subtract(vec)
     {
         this.x -= vec.x;
         this.y -= vec.y;
