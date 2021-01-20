@@ -1,5 +1,4 @@
 import * as $ from "./const";
-import { gl } from "./dom";
 import { ProgramData } from "./gl/program-data";
 import { Texture } from "./gl/texture";
 
@@ -62,51 +61,47 @@ const drawBackground = () =>
     ctx.fill();
 };
 
-// TODO: this needs to be optimized
 const drawSplitString = (str, yPos) =>
 {
-    if (ctx.measureText(str).width < width)
-    {
-        ctx.fillText(str, x, yPos);
-    }
-    else
-    {
-        const words = str.split(/(?=\s)/);
-        let fits;
+    const words = str.split(/(?=\s)/);
+    let fits;
+    let maybeFits = "";
 
-        for (let i = 0; i < words.length; i++)
+    for (let i = 0; i < words.length; i++)
+    {
+        let curWord = words[i];
+        maybeFits += curWord;
+
+        if (ctx.measureText(maybeFits).width < width)
         {
-            const maybeFits = words.slice(0, i+1).join("");
-
-            if (ctx.measureText(maybeFits).width < width)
+            fits = maybeFits;
+        }
+        else
+        {
+            if (!fits)
             {
+                console.warn(`Word too long: ${maybeFits}`);
+
                 fits = maybeFits;
+                curWord = "";
             }
-            else
-            {
-                if (!fits)
-                {
-                    console.warn(`Word too long: ${maybeFits}`);
 
-                    ctx.fillText(maybeFits, x, yPos);
-                    i++;
-                }
-                else
-                {
-                    ctx.fillText(fits, x, yPos);
-                }
-
-                const rest = words.slice(i,words.length).join("");
-
-                if (rest)
-                {
-                    drawSplitString(rest.trim(), yPos + fontSize);
-                }
-
-                break;
-            }
+            drawText(fits, yPos);
+            fits = null;
+            maybeFits = curWord.trim();
+            yPos += fontSize;
         }
     }
+
+    if (fits)
+    {
+        drawText(fits, yPos);
+    }
+};
+
+const drawText = (str, yPos) =>
+{
+    ctx.fillText(str, x, yPos);
 };
 
 const program = new ProgramData($.PROG_SCREEN);
