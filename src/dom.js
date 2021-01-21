@@ -1,6 +1,6 @@
 import * as $ from "./const";
 import { Vector } from "./math/vector";
-import { Publisher, getElement, LISTENER_ONCE } from "./utility";
+import { getElement, LISTENER_ONCE } from "./utility";
 
 export const Mouse = {
     clip: new Vector(),
@@ -61,7 +61,6 @@ export const gl = canvas.getContext("webgl2", { alpha: false });
 
 let canvasWidth = $.SCREEN_WIDTH;
 let canvasHeight = $.SCREEN_HEIGHT;
-
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
 gl.viewport(0, 0, canvasWidth, canvasHeight);

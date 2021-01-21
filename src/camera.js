@@ -1,6 +1,6 @@
 import * as $ from "./const";
 import { BufferUniform } from "./gl/buffer";
-import { DEG_TO_RAD, BufferData } from "./utility";
+import { BufferData } from "./utility";
 import { Matrix } from "./math/matrix";
 import { Transform } from "./math/transform";
 
@@ -29,7 +29,7 @@ export const setCameraPosition = (vec) =>
 
 const far = 600;
 const near = 1;
-const fov = Math.tan(DEG_TO_RAD * 30 / 2);
+const fov = 30;
 
 const transform = new Transform(0, 2.7, 8);
 const viewProjection = new Matrix();

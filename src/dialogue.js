@@ -16,6 +16,7 @@ export const Dialogue = {
     setText(str)
     {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
+        console.log("clear");
 
         drawDebug();
         drawBackground();
@@ -46,15 +47,25 @@ const drawBackground = () =>
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 0;
 
-    const p2 = { x: 999, y: 557 };
-    const p3 = { x: 503, y: 710 };
+    let start = beziars[0];
 
-    const b1 = new Beziar(321, 471, 130, 89, 1.05);
+    ctx.beginPath();
+    ctx.moveTo(start.x, start.y);
 
-    ctx.moveTo(b1.x, b1.y);
-    ctx.bezierCurveTo(b1.cp1x, b1.cp1y, 990, 447, p2.x, p2.y);
-    ctx.bezierCurveTo(1005, 614, 758, 717, p3.x, p3.y);
-    ctx.bezierCurveTo(382, 706, b1.cp2x, b1.cp2y, b1.x, b1.y);
+    for (let i = 0; i < beziars.length; i++)
+    {
+        const end = beziars[(i + 1) % beziars.length];
+
+        ctx.bezierCurveTo(
+            start.cp2x, start.cp2y,
+            end.cp1x, end.cp1y,
+            end.x, end.y
+        );
+
+        start = end;
+    }
+
+    ctx.closePath();
     ctx.fill();
 };
 
@@ -123,14 +134,20 @@ canvas.height = $.SCREEN_HEIGHT;
 const fontSize = 32;
 const fontPad = 10;
 
-const x = 376;
-const width = 528;
-const y = 494;
+const x = 0.3 * $.SCREEN_WIDTH;
+const width = $.SCREEN_WIDTH - 2*x;
+const y = 0.69 * $.SCREEN_HEIGHT;
 
 ctx.textAlign = "left";
 ctx.textBaseline = "top";
 ctx.font = `${fontSize}px Arial`;
 ctx.shadowColor = "#000";
+
+const beziars = [
+    new Beziar(0.25, 0.65, 89, 130, 240),
+    new Beziar(0.78, 0.77, 110, 60, 82),
+    new Beziar(0.393, 0.98, 256, 122, -4)
+];
 
 Dialogue.setText(`
 Yume nante kanaru wake nai shi yaritakunai koto yamazumi de utsu ni naru hi mo ookute iya ni naru na

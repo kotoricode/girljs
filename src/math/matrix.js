@@ -1,6 +1,6 @@
 // https://ncalculators.com/matrix/4x4-matrix-multiplication-calculator.htm
 import * as $ from "../const";
-import { SettableArray } from "../utility";
+import { DEG_TO_RAD, SettableArray } from "../utility";
 
 export class Matrix extends SettableArray
 {
@@ -206,10 +206,11 @@ export class Matrix extends SettableArray
 
     multiplyPerspective(fov, near, far)
     {
+        const tan = Math.tan(DEG_TO_RAD * fov / 2);
         const dist = far - near;
 
-        const L0 = 1 / ($.SCREEN_ASPECT * fov);
-        const L5 = 1 / fov;
+        const L0 = 1 / ($.SCREEN_ASPECT * tan);
+        const L5 = 1 / tan;
         const LA = -(far + near) / dist;
         const LE = -2*far*near / dist;
 
