@@ -1,9 +1,11 @@
 import * as $ from "../const";
 import { SafeMap } from "../utility";
 
-export const getMesh = (meshId) =>
-{
-    return meshData.get(meshId);
+export const Mesh = {
+    get(meshId)
+    {
+        return meshes.get(meshId);
+    }
 };
 
 const getXy = (minX, maxX, minY, maxY) =>
@@ -34,8 +36,9 @@ const getXz = (minX, maxX, minZ, maxZ) =>
     ];
 };
 
-const meshData = new SafeMap([
+const meshes = new SafeMap([
     [$.MESH_GROUND, getXz(-2, 2, -2, 2)],
     [$.MESH_PLAYER, getXy(-0.4, 0.4, 0, 1.5)],
-    [$.MESH_GIRL,   getXyDim(187, 600)]
+    [$.MESH_GIRL,   getXyDim(187, 600)],
+    [$.MESH_SCREEN, [-1,1,0, -1,-1,0, 1,-1,0, 1,-1,0, 1,1,0, -1,1,0]]
 ]);

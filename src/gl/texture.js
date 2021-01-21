@@ -32,15 +32,13 @@ export const Texture = {
     {
         gl.texImage2D($.TEXTURE_2D, 0, $.RGBA, $.RGBA, $.UNSIGNED_BYTE, src);
     },
-    getSubTexData(modelId)
+    getUvData(modelId)
     {
-        return subTextureData.get(modelId);
+        return uvs.get(modelId);
     },
-    getUv(subTexId)
+    getUv(uvId)
     {
-        const {
-            x, y, width, height, base
-        } = Texture.getSubTexData(subTexId);
+        const { x, y, width, height, base } = Texture.getUvData(uvId);
 
         const minX = x / base.width;
         const maxX = (x + width) / base.width;
@@ -99,59 +97,58 @@ image.addEventListener("error", (e) =>
 ------------------------------------------------------------------------------*/
 let activeTexture;
 
-// id/url, width, height, parami[], subtextures[ id, x, y, width, height ]
-const textureData = [
-    $.FILE_GIRL, 186, 600, [
-        $.SUBTEX_GIRL_00, 0, 0, 186, 600
+// id/url, width, height, parami[], uvs[ id, x, y, width, height ]
+const textureDef = [
+    $.URL_TEX_GIRL, 186, 600, [
+        $.UV_GIRL_00, 0, 0, 186, 600
     ],
-    $.FILE_BRAID, 1024, 1024, [
-        $.SUBTEX_BRAID_00, 0,   10,  136, 136,
-        $.SUBTEX_BRAID_02, 256, 10,  136, 136,
-        $.SUBTEX_BRAID_04, 512, 10,  136, 136,
-        $.SUBTEX_BRAID_06, 768, 10,  136, 136,
-        $.SUBTEX_BRAID_08, 128, 158, 136, 136,
-        $.SUBTEX_BRAID_10, 384, 158, 136, 136,
-        $.SUBTEX_BRAID_12, 640, 158, 136, 136,
-        $.SUBTEX_BRAID_14, 0,   309, 136, 136,
-        $.SUBTEX_BRAID_16, 256, 309, 136, 136,
-        $.SUBTEX_BRAID_18, 512, 309, 136, 136,
-        $.SUBTEX_BRAID_20, 768, 309, 136, 136,
-        $.SUBTEX_BRAID_22, 128, 461, 136, 136,
-        $.SUBTEX_BRAID_24, 384, 461, 136, 136,
-        $.SUBTEX_BRAID_26, 640, 461, 136, 136,
+    $.URL_TEX_BRAID, 1024, 1024, [
+        $.UV_BRAID_00, 0,   10,  136, 136,
+        $.UV_BRAID_02, 256, 10,  136, 136,
+        $.UV_BRAID_04, 512, 10,  136, 136,
+        $.UV_BRAID_06, 768, 10,  136, 136,
+        $.UV_BRAID_08, 128, 158, 136, 136,
+        $.UV_BRAID_10, 384, 158, 136, 136,
+        $.UV_BRAID_12, 640, 158, 136, 136,
+        $.UV_BRAID_14, 0,   309, 136, 136,
+        $.UV_BRAID_16, 256, 309, 136, 136,
+        $.UV_BRAID_18, 512, 309, 136, 136,
+        $.UV_BRAID_20, 768, 309, 136, 136,
+        $.UV_BRAID_22, 128, 461, 136, 136,
+        $.UV_BRAID_24, 384, 461, 136, 136,
+        $.UV_BRAID_26, 640, 461, 136, 136,
     ],
-    $.FILE_POLY, 512, 512, [
-        $.SUBTEX_GROUND, 94, 97, 256, 256
+    $.URL_TEX_POLY, 512, 512, [
+        $.UV_GROUND, 94, 97, 256, 256
     ]
 ];
 
 const textures = new SafeMap();
-const subTextureData = new SafeMap();
+const uvs = new SafeMap();
 
-for (let i = 0; i < textureData.length;)
+for (let i = 0; i < textureDef.length;)
 {
-    const src = textureData[i++];
+    const src = textureDef[i++];
     const texture = Texture.create();
 
     const base = {
-        width: textureData[i++],
-        height: textureData[i++],
+        width: textureDef[i++],
+        height: textureDef[i++],
         texture
     };
 
     textures.set(src, texture);
+    const textureUvs = textureDef[i++];
 
-    const subTextures = textureData[i++];
-
-    for (let j = 0; j < subTextures.length;)
+    for (let j = 0; j < textureUvs.length;)
     {
-        subTextureData.set(subTextures[j++], {
-            x: subTextures[j++],
-            y: subTextures[j++],
-            width: subTextures[j++],
-            height: subTextures[j++],
-            base
-        });
+        const uvId = textureUvs[j++];
+        const x = textureUvs[j++];
+        const y = textureUvs[j++];
+        const width = textureUvs[j++];
+        const height = textureUvs[j++];
+
+        uvs.set(uvId, { x, y, width, height, base });
     }
 }
 

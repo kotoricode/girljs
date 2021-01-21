@@ -56,7 +56,7 @@ const getGain = (gainId, parent) =>
 const audio = new SafeMap([
     [$.AUDIO_MUSIC, {
         element: null,
-        fileId: $.FILE_OMOIDE,
+        fileId: $.URL_AUD_OMOIDE,
         gainId: $.PREF_MUSIC,
         isLoop: true,
     }],

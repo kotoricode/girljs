@@ -67,26 +67,26 @@ export const
     MODEL_BRAID_26 = i++;
 
 export const
-    SUBTEX_GIRL_00 = i++,
-    SUBTEX_GROUND = i++,
-    SUBTEX_BRAID_00 = i++,
-    SUBTEX_BRAID_02 = i++,
-    SUBTEX_BRAID_04 = i++,
-    SUBTEX_BRAID_06 = i++,
-    SUBTEX_BRAID_08 = i++,
-    SUBTEX_BRAID_10 = i++,
-    SUBTEX_BRAID_12 = i++,
-    SUBTEX_BRAID_14 = i++,
-    SUBTEX_BRAID_16 = i++,
-    SUBTEX_BRAID_18 = i++,
-    SUBTEX_BRAID_20 = i++,
-    SUBTEX_BRAID_22 = i++,
-    SUBTEX_BRAID_24 = i++,
-    SUBTEX_BRAID_26 = i++;
+    UV_GIRL_00 = i++,
+    UV_GROUND = i++,
+    UV_BRAID_00 = i++,
+    UV_BRAID_02 = i++,
+    UV_BRAID_04 = i++,
+    UV_BRAID_06 = i++,
+    UV_BRAID_08 = i++,
+    UV_BRAID_10 = i++,
+    UV_BRAID_12 = i++,
+    UV_BRAID_14 = i++,
+    UV_BRAID_16 = i++,
+    UV_BRAID_18 = i++,
+    UV_BRAID_20 = i++,
+    UV_BRAID_22 = i++,
+    UV_BRAID_24 = i++,
+    UV_BRAID_26 = i++;
 
 export const
     MESH_GROUND = i++,
-    MESH_IMAGE = i++,
+    MESH_SCREEN = i++,
     MESH_PLAYER = i++,
     MESH_GIRL = i++;
 
@@ -130,10 +130,10 @@ export const
     PATH_SND = "./snd/";
 
 export const
-    FILE_OMOIDE = "omoide_loft.ogg",
-    FILE_POLY = "texture.png",
-    FILE_BRAID = "braid.png",
-    FILE_GIRL = "girl.png";
+    URL_AUD_OMOIDE = "omoide_loft.ogg",
+    URL_TEX_POLY = "texture.png",
+    URL_TEX_BRAID = "braid.png",
+    URL_TEX_GIRL = "girl.png";
 
 /*------------------------------------------------------------------------------
     GL enums
