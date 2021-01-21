@@ -1,5 +1,5 @@
 import * as $ from "./const";
-import { SafeMap } from "./utility";
+import { SafeMap, SafeSet } from "./utility";
 
 import { Space }  from "./components/space";
 import { Motion } from "./components/motion";
@@ -13,10 +13,10 @@ import { processCamera }    from "./processes/process-camera";
 import { processAnimation } from "./processes/process-animation";
 
 export const blueprint = new SafeMap([
-    [$.SCENE_TEST, () => ({
-        entities: new SafeMap([
+    [$.SCENE_TEST, () => new SafeMap([
+        [$.BP_ENTITIES, new SafeMap([
             [$.ENTITY_PLAYER, {
-                components: [
+                components: new SafeSet([
                     new Space(),
                     new Motion(3),
                     new Player(),
@@ -43,11 +43,11 @@ export const blueprint = new SafeMap([
                         [$.ANIM_IDLE, [Infinity]],
                         [$.ANIM_MOVE, [0.07]],
                     ]))
-                ],
+                ]),
                 children: null
             }],
             [$.ENTITY_GROUND, {
-                components: [
+                components: new SafeSet([
                     new Space(),
                     new Ground(-2, 2, -2, 2),
                     new Drawable(
@@ -58,24 +58,22 @@ export const blueprint = new SafeMap([
                             [$.U_COLOR, [1, 1, 1, 1]]
                         ])
                     )
-                ],
+                ]),
                 children: null
             }],
             [$.ENTITY_GIRL, {
-                components: [
+                components: new SafeSet([
                     new Space(0.75, -0.2, 0),
                     new Drawable(
                         $.PROG_UI,
                         $.MODEL_GIRL
                     )
-                ],
+                ]),
                 children: null
             }]
-        ]),
-        processes: [
-            processMotion,
-            processAnimation,
-            processCamera
-        ]
-    })]
+        ])],
+        [$.BP_PROCESSES, new SafeSet([
+            processMotion, processAnimation, processCamera
+        ])]
+    ])]
 ]);

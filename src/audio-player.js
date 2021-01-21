@@ -3,16 +3,16 @@ import { Prefs } from "./save";
 import { clamp, SafeMap, LISTENER_ONCE } from "./utility";
 
 export const AudioPlayer = {
-    play(audioId, fileId)
+    play(audioId, url)
     {
-        if (!fileId) throw Error;
+        if (!url) throw Error;
 
         const audioObj = audio.get(audioId);
-        audioObj.fileId = fileId;
+        audioObj.url = url;
 
         if (ctx)
         {
-            audioObj.element.src = $.PATH_SND + fileId;
+            audioObj.element.src = $.PATH_SND + url;
         }
     },
     setGain(gainId, value, isSetPref=true)
@@ -56,19 +56,19 @@ const getGain = (gainId, parent) =>
 const audio = new SafeMap([
     [$.AUDIO_MUSIC, {
         element: null,
-        fileId: $.URL_AUD_OMOIDE,
+        url: $.URL_AUD_OMOIDE,
         gainId: $.PREF_MUSIC,
         isLoop: true,
     }],
     [$.AUDIO_SOUND, {
         element: null,
-        fileId: null,
+        url: null,
         gainId: $.PREF_SOUND,
         isLoop: false,
     }],
     [$.AUDIO_SOUND_LOOP, {
         element: null,
-        fileId: null,
+        url: null,
         gainId: $.PREF_SOUND,
         isLoop: true,
     }]
@@ -92,9 +92,9 @@ window.addEventListener("mousedown", () =>
         const gain = getGain(audioObj.gainId, master);
         ctx.createMediaElementSource(audioObj.element).connect(gain);
 
-        if (audioObj.fileId)
+        if (audioObj.url)
         {
-            AudioPlayer.play(audioId, audioObj.fileId);
+            AudioPlayer.play(audioId, audioObj.url);
         }
     }
 }, LISTENER_ONCE);

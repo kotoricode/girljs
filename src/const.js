@@ -15,6 +15,12 @@ export const
     SCENE_TEST = i++;
 
 export const
+    BP_ENTITIES = i++,
+    BP_PROCESSES = i++,
+    BP_CHILDREN = i++,
+    BP_COMPONENTS = i++;
+
+export const
     EVENT_RESIZED = i++;
 
 export const
