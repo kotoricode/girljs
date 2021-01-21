@@ -1,7 +1,7 @@
 import * as $ from "../const";
 import { gl } from "../dom";
 import { Drawable } from "../components/drawable";
-import { getDebugProgramData } from "./debug";
+import { Debug } from "./debug";
 import { drawArraysVao, setProgram } from "./gl-helper";
 import { BufferArray } from "./buffer";
 import { Texture } from "./texture";
@@ -73,7 +73,7 @@ const renderToCanvas = (fbTexture) =>
 
 const renderDebug = () =>
 {
-    const programData = getDebugProgramData();
+    const programData = Debug.getProgramData();
     setProgram(programData);
     const bufferSize = BufferArray.getSize($.BUF_ARR_DEBUG);
     drawArraysVao($.LINES, 0, bufferSize / 3, programData);
@@ -86,6 +86,7 @@ const renderText = () =>
 
     setProgram(programData);
     Texture.bind(texture);
+    programData.setUniforms();
     drawArraysVao($.TRIANGLES, 0, 6, programData);
     Texture.unbind();
 };

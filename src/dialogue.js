@@ -110,6 +110,7 @@ const drawText = (str, yPos) =>
 
 const program = new ProgramData($.PROG_SCREEN);
 program.setAttributes($.MODEL_SCREEN);
+console.log(program);
 const texture = Texture.create();
 
 const canvas = window.document.createElement("canvas");

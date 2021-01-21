@@ -8,7 +8,6 @@ import vsUi     from "./shaders/vert/ui.vert";
 import vsColor  from "./shaders/vert/color.vert";
 
 import fsImageFx from "./shaders/frag/image-fx.frag";
-import fsScreen  from "./shaders/frag/screen.frag";
 import fsSprite  from "./shaders/frag/sprite.frag";
 import fsPolygon from "./shaders/frag/polygon.frag";
 import fsColor   from "./shaders/frag/color.frag";
@@ -98,9 +97,6 @@ const fragDef = {
     imageFx: {
         src: fsImageFx
     },
-    screen: {
-        src: fsScreen
-    },
     sprite: {
         src: fsSprite,
         uniforms: {
@@ -120,8 +116,8 @@ const fragDef = {
     Program definitions
 ------------------------------------------------------------------------------*/
 const programDef = [
-    $.PROG_SCREEN,   vertDef.screen, fragDef.screen,
-    $.PROG_UI,       vertDef.ui,     fragDef.screen,
+    $.PROG_SCREEN,   vertDef.screen, fragDef.sprite,
+    $.PROG_UI,       vertDef.ui,     fragDef.sprite,
     $.PROG_IMAGE_FX, vertDef.screen, fragDef.imageFx,
     $.PROG_SPRITE,   vertDef.world,  fragDef.sprite,
     $.PROG_POLYGON,  vertDef.world,  fragDef.polygon,

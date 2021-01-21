@@ -1,9 +1,11 @@
 import * as $ from "../const";
 import { ProgramData } from "./program-data";
 
-export const getDebugProgramData = () =>
-{
-    return program;
+export const Debug = {
+    getProgramData()
+    {
+        return program;
+    }
 };
 
 const program = new ProgramData($.PROG_DEBUG);

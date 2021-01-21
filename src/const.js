@@ -102,6 +102,7 @@ export const
 ------------------------------------------------------------------------------*/
 export const
     A_XYZ = "a_xyz",
+    A_XY = "a_xy",
     A_UV = "a_uv";
 
 export const
