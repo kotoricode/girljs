@@ -40,11 +40,6 @@ export class SafeMap extends Map
         super(...params);
     }
 
-    assertHas(key)
-    {
-        if (!this.has(key)) throw Error;
-    }
-
     delete(key)
     {
         if (!super.delete(key)) throw Error;
@@ -52,7 +47,7 @@ export class SafeMap extends Map
 
     get(key)
     {
-        this.assertHas(key);
+        if (!this.has(key)) throw Error;
 
         return super.get(key);
     }
@@ -67,7 +62,7 @@ export class SafeMap extends Map
 
     update(key, value)
     {
-        this.assertHas(key);
+        if (!this.has(key)) throw Error;
 
         return super.set(key, value);
     }

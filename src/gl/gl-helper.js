@@ -2,9 +2,9 @@ import { gl } from "../dom";
 import { BufferUniform } from "./buffer";
 import { Vao } from "./vao";
 
-export const drawArraysVao = (mode, offset, length, vao) =>
+export const drawArraysVao = (mode, offset, length, programData) =>
 {
-    Vao.bind(vao);
+    Vao.bind(programData.vao);
     gl.drawArrays(mode, offset, length);
     Vao.unbind();
 };

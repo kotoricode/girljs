@@ -6,7 +6,7 @@ import { drawArraysVao, setProgram } from "./gl-helper";
 import { BufferArray } from "./buffer";
 import { Texture } from "./texture";
 import { ProgramData } from "./program-data";
-import { SafeMap, Publisher, SafeSet } from "../utility";
+import { SafeMap, SafeSet } from "../utility";
 import { Renderbuffer } from "./renderbuffer";
 import { Framebuffer } from "./framebuffer";
 import { Model } from "./model";
@@ -65,9 +65,9 @@ const renderWorld = () =>
 
 const renderToCanvas = (fbTexture) =>
 {
-    setProgram(viewProgramData);
+    setProgram(imageProgramData);
     Texture.bind(fbTexture);
-    drawArraysVao($.TRIANGLES, 0, 6, viewProgramData.vao);
+    drawArraysVao($.TRIANGLES, 0, 6, imageProgramData);
     Texture.unbind();
 };
 
@@ -76,7 +76,7 @@ const renderDebug = () =>
     const programData = getDebugProgramData();
     setProgram(programData);
     const bufferSize = BufferArray.getSize($.BUF_ARR_DEBUG);
-    drawArraysVao($.LINES, 0, bufferSize / 3, programData.vao);
+    drawArraysVao($.LINES, 0, bufferSize / 3, programData);
 };
 
 const renderText = () =>
@@ -86,7 +86,7 @@ const renderText = () =>
 
     setProgram(programData);
     Texture.bind(texture);
-    drawArraysVao($.TRIANGLES, 0, 6, programData.vao);
+    drawArraysVao($.TRIANGLES, 0, 6, programData);
     Texture.unbind();
 };
 
@@ -101,7 +101,7 @@ const renderQueue = (programId) =>
         setProgram(programData);
         Texture.bind(texture);
         programData.setUniforms();
-        drawArraysVao($.TRIANGLE_STRIP, 0, 4, programData.vao);
+        drawArraysVao($.TRIANGLE_STRIP, 0, 4, programData);
     }
 };
 
@@ -109,8 +109,8 @@ const renderQueue = (programId) =>
 gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
-const viewProgramData = new ProgramData($.PROG_IMAGE_FX);
-viewProgramData.setAttributes($.MODEL_SCREEN);
+const imageProgramData = new ProgramData($.PROG_IMAGE_FX);
+imageProgramData.setAttributes($.MODEL_SCREEN);
 
 // Prepare framebuffer
 Framebuffer.bind();

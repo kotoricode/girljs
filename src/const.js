@@ -21,12 +21,13 @@ export const
     BP_COMPONENTS = i++;
 
 export const
-    EVENT_RESIZED = i++;
-
-export const
     AUDIO_MUSIC = i++,
     AUDIO_SOUND = i++,
     AUDIO_SOUND_LOOP = i++;
+
+export const
+    ANIM_IDLE = i++,
+    ANIM_MOVE = i++;
 
 /*------------------------------------------------------------------------------
     GL
@@ -95,10 +96,6 @@ export const
     MESH_SCREEN = i++,
     MESH_PLAYER = i++,
     MESH_GIRL = i++;
-
-export const
-    ANIM_IDLE = i++,
-    ANIM_MOVE = i++;
 
 /*------------------------------------------------------------------------------
     Shaders
