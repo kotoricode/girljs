@@ -1,7 +1,7 @@
 import * as $ from "../const";
 import { DEG_TO_RAD } from "../utility";
 
-export class Beziar
+export class Bezier
 {
     constructor(x, y, cp1dist, cp2dist, angle)
     {
@@ -26,7 +26,7 @@ export class Beziar
 
         this.cp1x = this.x + this.cp1dist * cos;
         this.cp1y = this.y - this.cp1dist * sin;
-        this.cp2x = this.x + this.cp2dist * -cos;
-        this.cp2y = this.y - this.cp2dist * -sin;
+        this.cp2x = this.x - this.cp2dist * cos;
+        this.cp2y = this.y + this.cp2dist * sin;
     }
 }

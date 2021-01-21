@@ -1,7 +1,7 @@
 import * as $ from "./const";
 import { ProgramData } from "./gl/program-data";
 import { Texture } from "./gl/texture";
-import { Beziar } from "./math/beziar";
+import { Bezier } from "./math/bezier";
 import { isString } from "./utility";
 
 export const Dialogue = {
@@ -47,9 +47,8 @@ const drawBackground = () =>
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 0;
 
-    let start = beziars[0];
-
     ctx.beginPath();
+    let start = beziars[0];
     ctx.moveTo(start.x, start.y);
 
     for (let i = 0; i < beziars.length; i++)
@@ -144,9 +143,9 @@ ctx.font = `${fontSize}px Arial`;
 ctx.shadowColor = "#000";
 
 const beziars = [
-    new Beziar(0.25, 0.65, 89, 130, 240),
-    new Beziar(0.78, 0.77, 110, 60, 82),
-    new Beziar(0.393, 0.98, 256, 122, -4)
+    new Bezier(0.25, 0.65, 89, 130, 240),
+    new Bezier(0.78, 0.77, 110, 60, 82),
+    new Bezier(0.393, 0.98, 256, 122, -4)
 ];
 
 Dialogue.setText(`

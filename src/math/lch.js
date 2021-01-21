@@ -1,5 +1,3 @@
-// http://colormine.org/convert/rgb-to-lch
-// (different constants/precision so results don't match 100%)
 import { SettableArray } from "./settable-array";
 import { clamp, DEG_TO_RAD } from "./math-helper";
 
@@ -23,9 +21,9 @@ export class Lch
               c = this.lch[1],
               hRad = this.lch[2] * DEG_TO_RAD;
 
-        const x = invFunc(fy + Math.cos(hRad) * c / 500) * d65xn,
+        const x = invFunc(fy + Math.cos(hRad) * c / 500) * d65xNorm,
               y = (this.l > 8) ? fy**3 : invKappa*this.l,
-              z = invFunc(fy - Math.sin(hRad) * c / 200) * d65zx;
+              z = invFunc(fy - Math.sin(hRad) * c / 200) * d65zNorm;
 
         this.rgb.setValues(
             lin2rgb(3.2406255*x - 1.537208*y - 0.4986286*z),
@@ -54,8 +52,6 @@ const cbEpsilon = 6 / 29;
 const invKappa = (cbEpsilon * 0.5) ** 3;
 const gammaExp = 1 / 2.4;
 
-const d65x = 0.3127;
 const d65y = 0.329;
-const d65z = 0.3583;
-const d65xn = d65x / d65y;
-const d65zx = d65z / d65y;
+const d65xNorm = 0.3127 / d65y;
+const d65zNorm = 0.3583 / d65y;

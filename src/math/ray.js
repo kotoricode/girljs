@@ -76,8 +76,8 @@ export class Ray
     {
         if (this.numHits === this.hit.length)
         {
-            const vec = new Vector();
-            this.hit.push(vec);
+            const newVec = new Vector();
+            this.hit.push(newVec);
         }
 
         const vec = this.hit[this.numHits++];

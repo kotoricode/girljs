@@ -67,9 +67,12 @@ export const BufferUniform = {
     }
 };
 
-const bufferCreator = (array, bufferId) => (array.push(
-    [bufferId, gl.createBuffer()]
-), array);
+const bufferCreator = (array, bufferId) =>
+{
+    array.push([bufferId, gl.createBuffer()]);
+
+    return array;
+};
 
 const buffers = new SafeMap([
     [$.ARRAY_BUFFER, new SafeMap(
