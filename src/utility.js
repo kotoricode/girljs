@@ -54,14 +54,17 @@ export class SafeMap extends Map
 
     set(key, value)
     {
-        if (this.has(key)) throw Error;
         if (key === undefined || key === null) throw Error;
+        if (value === undefined || value === null) throw Error;
+        if (this.has(key)) throw Error;
 
         return super.set(key, value);
     }
 
     update(key, value)
     {
+        if (key === undefined || key === null) throw Error;
+        if (value === undefined || value === null) throw Error;
         if (!this.has(key)) throw Error;
 
         return super.set(key, value);

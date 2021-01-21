@@ -41,7 +41,7 @@ const createPlayer = () => [$.ENTITY_PLAYER, new SafeMap([
             [$.ANIM_MOVE, [0.07]],
         ]))
     ])],
-    [$.BP_CHILDREN, null]
+    [$.BP_CHILDREN, new SafeSet()]
 ])];
 
 const createTachie = () => [$.ENTITY_GIRL, new SafeMap([
@@ -49,7 +49,7 @@ const createTachie = () => [$.ENTITY_GIRL, new SafeMap([
         new Space(0.75, -0.2, 0),
         new Drawable($.PROG_UI, $.MODEL_GIRL)
     ])],
-    [$.BP_CHILDREN, null]
+    [$.BP_CHILDREN, new SafeSet()]
 ])];
 
 const createGround = () => [$.ENTITY_GROUND, new SafeMap([
@@ -65,7 +65,7 @@ const createGround = () => [$.ENTITY_GROUND, new SafeMap([
             ])
         )
     ])],
-    [$.BP_CHILDREN, null]
+    [$.BP_CHILDREN, new SafeSet()]
 ])];
 
 export const blueprint = new SafeMap([

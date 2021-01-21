@@ -156,20 +156,16 @@ for (let i = 0; i < programDef.length;)
     /*--------------------------------------------------------------------------
         Uniform blocks
     --------------------------------------------------------------------------*/
-    let blocks = null;
+    const blocks = [];
 
     if (vsBlocks)
     {
-        blocks = [...vsBlocks];
-
-        if (fsBlocks)
-        {
-            blocks.push(...fsBlocks);
-        }
+        blocks.push(...vsBlocks);
     }
-    else if (fsBlocks)
+
+    if (fsBlocks)
     {
-        blocks = [...fsBlocks];
+        blocks.push(...fsBlocks);
     }
 
     /*--------------------------------------------------------------------------
