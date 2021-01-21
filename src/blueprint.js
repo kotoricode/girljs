@@ -12,65 +12,68 @@ import { processMotion }    from "./processes/process-motion";
 import { processCamera }    from "./processes/process-camera";
 import { processAnimation } from "./processes/process-animation";
 
+const createPlayer = () => [$.ENTITY_PLAYER, new SafeMap([
+    [$.BP_COMPONENTS, new SafeSet([
+        new Space(),
+        new Motion(3),
+        new Player(),
+        new Drawable($.PROG_SPRITE, $.MODEL_BRAID_00),
+        new Anim(new SafeMap([
+            [$.ANIM_IDLE, [$.MODEL_BRAID_00]],
+            [$.ANIM_MOVE, [
+                $.MODEL_BRAID_00,
+                $.MODEL_BRAID_02,
+                $.MODEL_BRAID_04,
+                $.MODEL_BRAID_06,
+                $.MODEL_BRAID_08,
+                $.MODEL_BRAID_10,
+                $.MODEL_BRAID_12,
+                $.MODEL_BRAID_14,
+                $.MODEL_BRAID_16,
+                $.MODEL_BRAID_18,
+                $.MODEL_BRAID_20,
+                $.MODEL_BRAID_22,
+                $.MODEL_BRAID_24,
+                $.MODEL_BRAID_26,
+            ]],
+        ]), new SafeMap([
+            [$.ANIM_IDLE, [Infinity]],
+            [$.ANIM_MOVE, [0.07]],
+        ]))
+    ])],
+    [$.BP_CHILDREN, null]
+])];
+
+const createTachie = () => [$.ENTITY_GIRL, new SafeMap([
+    [$.BP_COMPONENTS, new SafeSet([
+        new Space(0.75, -0.2, 0),
+        new Drawable($.PROG_UI, $.MODEL_GIRL)
+    ])],
+    [$.BP_CHILDREN, null]
+])];
+
+const createGround = () => [$.ENTITY_GROUND, new SafeMap([
+    [$.BP_COMPONENTS, new SafeSet([
+        new Space(),
+        new Ground(-2, 2, -2, 2),
+        new Drawable(
+            $.PROG_POLYGON,
+            $.MODEL_GROUND,
+            new SafeMap([
+                [$.U_UVREPEAT, [4, 4]],
+                [$.U_COLOR, [1, 1, 1, 1]]
+            ])
+        )
+    ])],
+    [$.BP_CHILDREN, null]
+])];
+
 export const blueprint = new SafeMap([
     [$.SCENE_TEST, () => new SafeMap([
         [$.BP_ENTITIES, new SafeMap([
-            [$.ENTITY_PLAYER, {
-                components: new SafeSet([
-                    new Space(),
-                    new Motion(3),
-                    new Player(),
-                    new Drawable($.PROG_SPRITE, $.MODEL_BRAID_00),
-                    new Anim(new SafeMap([
-                        [$.ANIM_IDLE, [$.MODEL_BRAID_00]],
-                        [$.ANIM_MOVE, [
-                            $.MODEL_BRAID_00,
-                            $.MODEL_BRAID_02,
-                            $.MODEL_BRAID_04,
-                            $.MODEL_BRAID_06,
-                            $.MODEL_BRAID_08,
-                            $.MODEL_BRAID_10,
-                            $.MODEL_BRAID_12,
-                            $.MODEL_BRAID_14,
-                            $.MODEL_BRAID_16,
-                            $.MODEL_BRAID_18,
-                            $.MODEL_BRAID_20,
-                            $.MODEL_BRAID_22,
-                            $.MODEL_BRAID_24,
-                            $.MODEL_BRAID_26,
-                        ]],
-                    ]), new SafeMap([
-                        [$.ANIM_IDLE, [Infinity]],
-                        [$.ANIM_MOVE, [0.07]],
-                    ]))
-                ]),
-                children: null
-            }],
-            [$.ENTITY_GROUND, {
-                components: new SafeSet([
-                    new Space(),
-                    new Ground(-2, 2, -2, 2),
-                    new Drawable(
-                        $.PROG_POLYGON,
-                        $.MODEL_GROUND,
-                        new SafeMap([
-                            [$.U_UVREPEAT, [4, 4]],
-                            [$.U_COLOR, [1, 1, 1, 1]]
-                        ])
-                    )
-                ]),
-                children: null
-            }],
-            [$.ENTITY_GIRL, {
-                components: new SafeSet([
-                    new Space(0.75, -0.2, 0),
-                    new Drawable(
-                        $.PROG_UI,
-                        $.MODEL_GIRL
-                    )
-                ]),
-                children: null
-            }]
+            createPlayer(),
+            createGround(),
+            createTachie()
         ])],
         [$.BP_PROCESSES, new SafeSet([
             processMotion, processAnimation, processCamera

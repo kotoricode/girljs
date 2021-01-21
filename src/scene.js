@@ -142,20 +142,27 @@ export class Scene
         this.hasDirty = false;
 
         const bp = blueprint.get(this.sceneId)();
-        this.processes = bp.processes;
-        this.loadEntities(bp.entities);
+        this.processes = bp.get($.BP_PROCESSES);
+        const entities = bp.get($.BP_ENTITIES);
+        this.loadEntities(entities);
     }
 
     loadEntities(entities, parentId)
     {
-        for (const [entityId, entityObj] of entities)
+        for (const [entityId, entityBp] of entities)
         {
-            const entity = new Entity(entityId, ...entityObj.components);
+            const components = entityBp.get($.BP_COMPONENTS);
+            const entity = new Entity(entityId, ...components);
             this.addEntity(entity, parentId);
 
-            if (entity.children)
+            if (entityBp.has($.BP_CHILDREN))
             {
-                this.loadEntities(entity.children, entityId);
+                const children = entityBp.get($.BP_CHILDREN);
+
+                if (children)
+                {
+                    this.loadEntities(children, entityId);
+                }
             }
         }
     }
