@@ -63,7 +63,7 @@ const renderWorld = () =>
     gl.disable($.DEPTH_TEST);
 };
 
-const renderToCanvas = (fbTexture) =>
+const renderToCanvas = () =>
 {
     setProgram(imageProgramData);
     Texture.bind(fbTexture);

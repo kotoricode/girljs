@@ -130,25 +130,25 @@ export class Path
         return idx2;
     }
 
-    start(start, end)
-    {
-        const startPos = this.startNode.position;
-        const endPos = this.endNode.position;
-        startPos.from(start);
-        endPos.from(end);
+    // start(start, end)
+    // {
+    //     const startPos = this.startNode.position;
+    //     const endPos = this.endNode.position;
+    //     startPos.from(start);
+    //     endPos.from(end);
 
-        // first check if we can go directly from start to end
-        // otherwise launch a*
+    //     // first check if we can go directly from start to end
+    //     // otherwise launch a*
 
-        for (const node of this.nodes)
-        {
-            // if connected to start
-            // const dist = this.startNode.sqrDistance(node);
-            // this.startAdjacent.set(node, dist);
+    //     for (const node of this.nodes)
+    //     {
+    //         // if connected to start
+    //         // const dist = this.startNode.sqrDistance(node);
+    //         // this.startAdjacent.set(node, dist);
 
-            // if connected to end
-            // const dist = this.endNode.sqrDistance(node);
-            // this.endAdjacent.set(node, dist);
-        }
-    }
+    //         // if connected to end
+    //         // const dist = this.endNode.sqrDistance(node);
+    //         // this.endAdjacent.set(node, dist);
+    //     }
+    // }
 }
