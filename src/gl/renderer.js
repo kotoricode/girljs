@@ -40,7 +40,7 @@ export const render = (scene) =>
     Renderbuffer.unbind();
     Framebuffer.unbind();
 
-    renderToCanvas(fbTexture);
+    renderToCanvas();
 
     renderQueue($.PROG_UI);
     renderText();
