@@ -1,6 +1,7 @@
 import * as $ from "./const";
 import { ProgramData } from "./gl/program-data";
 import { Texture } from "./gl/texture";
+import { Beziar } from "./math/beziar";
 import { isString } from "./utility";
 
 export const Dialogue = {
@@ -16,6 +17,7 @@ export const Dialogue = {
     {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
 
+        drawDebug();
         drawBackground();
         drawSplitString(str, y);
 
@@ -28,6 +30,15 @@ export const Dialogue = {
     }
 };
 
+const drawDebug = () =>
+{
+    ctx.fillStyle = "black";
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    ctx.fillRect(x, y, width, (fontSize + fontPad) * 3);
+};
+
 const drawBackground = () =>
 {
     ctx.fillStyle = "#0000009f";
@@ -35,14 +46,15 @@ const drawBackground = () =>
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 0;
 
-    const p1 = { x: 321, y: 471 };
     const p2 = { x: 999, y: 557 };
     const p3 = { x: 503, y: 710 };
 
-    ctx.moveTo(p1.x, p1.y);
-    ctx.bezierCurveTo(383, 357, 990, 447, p2.x, p2.y);
+    const b1 = new Beziar(321, 471, 130, 89, 1.05);
+
+    ctx.moveTo(b1.x, b1.y);
+    ctx.bezierCurveTo(b1.cp1x, b1.cp1y, 990, 447, p2.x, p2.y);
     ctx.bezierCurveTo(1005, 614, 758, 717, p3.x, p3.y);
-    ctx.bezierCurveTo(382, 706, 278, 548, p1.x, p1.y);
+    ctx.bezierCurveTo(382, 706, b1.cp2x, b1.cp2y, b1.x, b1.y);
     ctx.fill();
 };
 
@@ -112,7 +124,7 @@ const fontSize = 32;
 const fontPad = 10;
 
 const x = 376;
-const width = 515;
+const width = 528;
 const y = 494;
 
 ctx.textAlign = "left";

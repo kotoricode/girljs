@@ -41,8 +41,7 @@ export const
     PROG_DATA_SETTERS = i++;
 
 export const
-    BUF_ARR_SPRITE = i++,
-    BUF_ARR_POLYGON = i++,
+    BUF_ARR_MODEL = i++,
     BUF_ARR_DEBUG = i++,
     BUF_UNI_CAMERA = i++;
 

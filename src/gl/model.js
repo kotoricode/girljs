@@ -34,7 +34,7 @@ const pushData = (buffer, data) =>
 /*------------------------------------------------------------------------------
     Data
 ------------------------------------------------------------------------------*/
-const modelData = [
+const modelDef = [
     $.MODEL_GIRL,     $.MESH_GIRL,   $.SUBTEX_GIRL_00,
     $.MODEL_GROUND,   $.MESH_GROUND, $.SUBTEX_GROUND,
     $.MODEL_BRAID_00, $.MESH_PLAYER, $.SUBTEX_BRAID_00,
@@ -56,7 +56,7 @@ const modelData = [
 /*------------------------------------------------------------------------------
     Sprite
 ------------------------------------------------------------------------------*/
-const spriteBufferData = [];
+const modelData = [];
 const xyzOffsets = new SafeMap();
 const uvOffsets = new SafeMap();
 const uvs = new SafeMap();
@@ -65,16 +65,16 @@ const modelTextures = new SafeMap();
 const modelUvs = new SafeMap();
 const modelBufferIds = new SafeMap();
 
-for (let i = 0; i < modelData.length;)
+for (let i = 0; i < modelDef.length;)
 {
-    const modelId = modelData[i++];
-    const meshId = modelData[i++];
-    const subTexId = modelData[i++];
+    const modelId = modelDef[i++];
+    const meshId = modelDef[i++];
+    const subTexId = modelDef[i++];
 
     if (!xyzOffsets.has(meshId))
     {
         const coords = getMesh(meshId);
-        const xyzOffset = pushData(spriteBufferData, coords);
+        const xyzOffset = pushData(modelData, coords);
 
         xyzOffsets.set(meshId, xyzOffset);
     }
@@ -82,7 +82,7 @@ for (let i = 0; i < modelData.length;)
     if (!uvOffsets.has(subTexId))
     {
         const uv = Texture.getUv(subTexId);
-        const uvOffset = pushData(spriteBufferData, uv);
+        const uvOffset = pushData(modelData, uv);
 
         uvs.set(subTexId, uv);
         uvOffsets.set(subTexId, uvOffset);
@@ -96,22 +96,15 @@ for (let i = 0; i < modelData.length;)
     const texture = Texture.getSubTexData(subTexId).base.texture;
     modelTextures.set(modelId, texture);
     modelUvs.set(modelId, uvs.get(subTexId));
-    modelBufferIds.set(modelId, $.BUF_ARR_SPRITE);
+    modelBufferIds.set(modelId, $.BUF_ARR_MODEL);
 }
 
-BufferArray.data(
-    $.BUF_ARR_SPRITE,
-    new BufferData(spriteBufferData),
-    $.STATIC_DRAW
-);
 
 /*------------------------------------------------------------------------------
     Polygon
 ------------------------------------------------------------------------------*/
-const polygonData = [];
-
 models.set($.MODEL_SCREEN, new SafeMap([
-    [$.A_XYZ, pushData(polygonData,
+    [$.A_XYZ, pushData(modelData,
         [
             -1, 1, 0,
             -1, -1, 0,
@@ -121,16 +114,16 @@ models.set($.MODEL_SCREEN, new SafeMap([
             -1, 1, 0
         ]
     )],
-    [$.A_UV, pushData(polygonData, [
+    [$.A_UV, pushData(modelData, [
         0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1
     ])]
 ]));
 
-modelBufferIds.set($.MODEL_SCREEN, $.BUF_ARR_POLYGON);
+modelBufferIds.set($.MODEL_SCREEN, $.BUF_ARR_MODEL);
 
 BufferArray.data(
-    $.BUF_ARR_POLYGON,
-    new BufferData(polygonData),
+    $.BUF_ARR_MODEL,
+    new BufferData(modelData),
     $.STATIC_DRAW
 );
 

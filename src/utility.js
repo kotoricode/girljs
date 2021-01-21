@@ -60,6 +60,7 @@ export class SafeMap extends Map
     set(key, value)
     {
         if (this.has(key)) throw Error;
+        if (key === undefined || key === null) throw Error;
 
         return super.set(key, value);
     }
@@ -82,6 +83,7 @@ export class SafeSet extends Set
     add(value)
     {
         if (this.has(value)) throw Error;
+        if (value === undefined || value === null) throw Error;
 
         return super.add(value);
     }

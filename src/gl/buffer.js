@@ -74,8 +74,7 @@ const bufferCreator = (array, bufferId) => (array.push(
 const buffers = new SafeMap([
     [$.ARRAY_BUFFER, new SafeMap(
         [
-            $.BUF_ARR_SPRITE,
-            $.BUF_ARR_POLYGON,
+            $.BUF_ARR_MODEL,
             $.BUF_ARR_DEBUG
         ].reduce(bufferCreator, [])
     )],
