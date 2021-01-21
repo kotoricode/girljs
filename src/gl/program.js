@@ -44,7 +44,8 @@ const uniArrZeroZero = [0, 0];
 
 const ubCamera = [$.UB_CAMERA];
 
-const attribPos = [$.A_XYZ, 3];
+const attribXyz = [$.A_XYZ, 3];
+const attribXy = [$.A_XY, 2];
 const attribUv = [$.A_UV, 2];
 
 const uniTransform = [$.U_TRANSFORM, uniArrZeroZero];
@@ -53,7 +54,8 @@ const uniUvRepeat = [$.U_UVREPEAT, [1, 1]];
 const uniUvOffset = [$.U_UVOFFSET, uniArrZeroZero];
 const uniUvSize = [$.U_UVSIZE, uniArrZeroZero];
 
-const attrMapPosUv = new SafeMap([attribPos, attribUv]);
+const attrMapXyzUv = new SafeMap([attribXyz, attribUv]);
+const attrMapXyUv = new SafeMap([attribXy, attribUv]);
 const uniMapColor = new SafeMap([uniColor]);
 
 /*------------------------------------------------------------------------------
@@ -63,15 +65,15 @@ const vertDef = {
     color: {
         src: vsColor,
         blocks: ubCamera,
-        attributes: new SafeMap([attribPos])
+        attributes: new SafeMap([attribXyz])
     },
     screen: {
         src: vsScreen,
-        attributes: attrMapPosUv
+        attributes: attrMapXyUv
     },
     ui: {
         src: vsUi,
-        attributes: attrMapPosUv,
+        attributes: attrMapXyUv,
         uniforms: {
             uniformMatrix4fv: new SafeMap([uniTransform])
         }
@@ -79,7 +81,7 @@ const vertDef = {
     world: {
         src: vsWorld,
         blocks: ubCamera,
-        attributes: attrMapPosUv,
+        attributes: attrMapXyzUv,
         uniforms: {
             uniformMatrix4fv: new SafeMap([uniTransform]),
             uniform2f: new SafeMap([uniUvRepeat])

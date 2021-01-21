@@ -37,7 +37,6 @@ const pushData = (buffer, data) =>
     Data/definitions
 ------------------------------------------------------------------------------*/
 const spriteDef = [
-    $.MODEL_GIRL,     $.MESH_GIRL,   $.UV_GIRL_00,
     $.MODEL_GROUND,   $.MESH_GROUND, $.UV_GROUND,
     $.MODEL_BRAID_00, $.MESH_PLAYER, $.UV_BRAID_00,
     $.MODEL_BRAID_02, $.MESH_PLAYER, $.UV_BRAID_02,
@@ -53,6 +52,10 @@ const spriteDef = [
     $.MODEL_BRAID_22, $.MESH_PLAYER, $.UV_BRAID_22,
     $.MODEL_BRAID_24, $.MESH_PLAYER, $.UV_BRAID_24,
     $.MODEL_BRAID_26, $.MESH_PLAYER, $.UV_BRAID_26,
+];
+
+const uiDef = [
+    $.MODEL_GIRL, $.MESH_GIRL, $.UV_GIRL_00,
 ];
 
 const polygonDef = [
@@ -112,6 +115,41 @@ for (let i = 0; i < spriteDef.length;)
     modelBufferIds.set(modelId, $.BUF_ARR_MODEL);
 }
 
+// UI
+for (let i = 0; i < uiDef.length;)
+{
+    const modelId = uiDef[i++];
+    const meshId = uiDef[i++];
+    const uvId = uiDef[i++];
+
+    if (!cacheXyzOffsets.has(meshId))
+    {
+        const coords = Mesh.get(meshId);
+        const xyzOffset = pushData(modelData, coords);
+
+        cacheXyzOffsets.set(meshId, xyzOffset);
+    }
+
+    if (!cacheUvOffsets.has(uvId))
+    {
+        const uv = Texture.getUv(uvId);
+        const uvOffset = pushData(modelData, uv);
+
+        cacheUvs.set(uvId, uv);
+        cacheUvOffsets.set(uvId, uvOffset);
+    }
+
+    models.set(modelId, new SafeMap([
+        [$.A_XY, cacheXyzOffsets.get(meshId)],
+        [$.A_UV, cacheUvOffsets.get(uvId)]
+    ]));
+
+    const texture = Texture.getUvData(uvId).base.texture;
+    modelTextures.set(modelId, texture);
+    modelUvs.set(modelId, cacheUvs.get(uvId));
+    modelBufferIds.set(modelId, $.BUF_ARR_MODEL);
+}
+
 /*------------------------------------------------------------------------------
     Polygon
 ------------------------------------------------------------------------------*/
@@ -122,7 +160,7 @@ for (let i = 0; i < polygonDef.length;)
     const uv = polygonDef[i++];
 
     models.set(modelId, new SafeMap([
-        [$.A_XYZ, pushData(modelData, Mesh.get(meshId))],
+        [$.A_XY, pushData(modelData, Mesh.get(meshId))],
         [$.A_UV, pushData(modelData, uv)]
     ]));
 }

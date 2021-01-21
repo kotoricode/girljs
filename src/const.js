@@ -53,10 +53,10 @@ export const
     BUF_UNI_CAMERA = i++;
 
 export const
-    MODEL_GIRL = i++,
-    MODEL_DEBUG = i++,
-    MODEL_GROUND = i++,
-    MODEL_SCREEN = i++,
+    MODEL_GIRL = "girl",
+    MODEL_DEBUG = "debug",
+    MODEL_GROUND = "ground",
+    MODEL_SCREEN = "screen",
     MODEL_PLAYER = i++,
     MODEL_BRAID_00 = i++,
     MODEL_BRAID_02 = i++,

@@ -8,7 +8,7 @@ export const Mesh = {
     }
 };
 
-const getXy = (minX, maxX, minY, maxY) =>
+const getXy3 = (minX, maxX, minY, maxY) =>
 {
     return [
         minX, minY, 0,
@@ -18,15 +18,20 @@ const getXy = (minX, maxX, minY, maxY) =>
     ];
 };
 
-const getXyDim = (width, height) =>
+const getXy2Dim = (width, height) =>
 {
     const x = width / $.SCREEN_WIDTH;
     const y = height / $.SCREEN_HEIGHT;
 
-    return getXy(-x, x, -y, y);
+    return [
+        -x, -y,
+        x, -y,
+        -x, y,
+        x, y,
+    ];
 };
 
-const getXz = (minX, maxX, minZ, maxZ) =>
+const getXz3 = (minX, maxX, minZ, maxZ) =>
 {
     return [
         minX, 0, maxZ,
@@ -37,8 +42,8 @@ const getXz = (minX, maxX, minZ, maxZ) =>
 };
 
 const meshes = new SafeMap([
-    [$.MESH_GROUND, getXz(-2, 2, -2, 2)],
-    [$.MESH_PLAYER, getXy(-0.4, 0.4, 0, 1.5)],
-    [$.MESH_GIRL,   getXyDim(187, 600)],
-    [$.MESH_SCREEN, [-1,1,0, -1,-1,0, 1,-1,0, 1,-1,0, 1,1,0, -1,1,0]]
+    [$.MESH_GROUND, getXz3(-2, 2, -2, 2)],
+    [$.MESH_PLAYER, getXy3(-0.4, 0.4, 0, 1.5)],
+    [$.MESH_GIRL,   getXy2Dim(187, 600)],
+    [$.MESH_SCREEN, [-1,1, -1,-1, 1,-1, 1,-1, 1,1, -1,1]]
 ]);
