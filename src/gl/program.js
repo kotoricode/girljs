@@ -1,6 +1,6 @@
 import * as $ from "../const";
 import { gl } from "../dom";
-import { SafeMap } from "../utility";
+import { SafeMap, SafeSet } from "../utility";
 
 import vsScreen from "./shaders/vert/screen.vert";
 import vsWorld  from "./shaders/vert/world.vert";
@@ -156,16 +156,22 @@ for (let i = 0; i < programDef.length;)
     /*--------------------------------------------------------------------------
         Uniform blocks
     --------------------------------------------------------------------------*/
-    const blocks = [];
+    const blocks = new SafeSet();
 
     if (vsBlocks)
     {
-        blocks.push(...vsBlocks);
+        for (const block of vsBlocks)
+        {
+            blocks.add(block);
+        }
     }
 
     if (fsBlocks)
     {
-        blocks.push(...fsBlocks);
+        for (const block of fsBlocks)
+        {
+            blocks.add(block);
+        }
     }
 
     /*--------------------------------------------------------------------------

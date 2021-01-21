@@ -42,11 +42,13 @@ export class SafeMap extends Map
 
     delete(key)
     {
+        if (key === undefined || key === null) throw Error;
         if (!super.delete(key)) throw Error;
     }
 
     get(key)
     {
+        if (key === undefined || key === null) throw Error;
         if (!this.has(key)) throw Error;
 
         return super.get(key);
@@ -80,14 +82,15 @@ export class SafeSet extends Set
 
     add(value)
     {
-        if (this.has(value)) throw Error;
         if (value === undefined || value === null) throw Error;
+        if (this.has(value)) throw Error;
 
         return super.add(value);
     }
 
     delete(value)
     {
+        if (value === undefined || value === null) throw Error;
         if (!super.delete(value)) throw Error;
     }
 }
