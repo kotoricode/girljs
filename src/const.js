@@ -74,6 +74,7 @@ export const
     MODEL_BRAID_26 = i++;
 
 export const
+    UV_SCREEN = i++,
     UV_GIRL_00 = i++,
     UV_GROUND = i++,
     UV_BRAID_00 = i++,

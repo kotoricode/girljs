@@ -32,12 +32,17 @@ export const Texture = {
     {
         gl.texImage2D($.TEXTURE_2D, 0, $.RGBA, $.RGBA, $.UNSIGNED_BYTE, src);
     },
-    getUvData(modelId)
+    getUvData(uvId)
     {
-        return uvs.get(modelId);
+        return uvData.get(uvId);
     },
     getUv(uvId)
     {
+        if (uvs.has(uvId))
+        {
+            return uvs.get(uvId);
+        }
+
         const { x, y, width, height, base } = Texture.getUvData(uvId);
 
         const minX = x / base.width;
@@ -45,12 +50,16 @@ export const Texture = {
         const minY = y / base.height;
         const maxY = (y + height) / base.height;
 
-        return [
+        const uv = [
             minX, maxY,
             maxX, maxY,
             minX, minY,
             maxX, minY,
         ];
+
+        uvs.set(uvId, uv);
+
+        return uv;
     },
     parami(key, value)
     {
@@ -124,6 +133,7 @@ const textureDef = [
 ];
 
 const textures = new SafeMap();
+const uvData = new SafeMap();
 const uvs = new SafeMap();
 
 for (let i = 0; i < textureDef.length;)
@@ -148,9 +158,16 @@ for (let i = 0; i < textureDef.length;)
         const width = textureUvs[j++];
         const height = textureUvs[j++];
 
-        uvs.set(uvId, { x, y, width, height, base });
+        uvData.set(uvId, { x, y, width, height, base });
     }
 }
+
+uvs.set($.UV_SCREEN, [
+    0, 0,
+    1, 0,
+    0, 1,
+    1, 1,
+]);
 
 const toFetch = [...textures.keys()];
 fetchNextImage();

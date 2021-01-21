@@ -36,7 +36,7 @@ const pushData = (buffer, data) =>
 /*------------------------------------------------------------------------------
     Data/definitions
 ------------------------------------------------------------------------------*/
-const spriteDef = [
+const spriteXyzDef = [
     $.MODEL_GROUND,   $.MESH_GROUND, $.UV_GROUND,
     $.MODEL_BRAID_00, $.MESH_PLAYER, $.UV_BRAID_00,
     $.MODEL_BRAID_02, $.MESH_PLAYER, $.UV_BRAID_02,
@@ -54,13 +54,13 @@ const spriteDef = [
     $.MODEL_BRAID_26, $.MESH_PLAYER, $.UV_BRAID_26,
 ];
 
-const uiDef = [
+const spriteXyDef = [
     $.MODEL_GIRL, $.MESH_GIRL, $.UV_GIRL_00,
 ];
 
 const polygonDef = [
     // eslint-disable-next-line max-len
-    $.MODEL_SCREEN, $.MESH_SCREEN, [0, 1, 0, 0, 1, 0, 1, 0, 1, 1, 0, 1]
+    $.MODEL_SCREEN, $.MESH_SCREEN, $.UV_SCREEN
 ];
 
 /*------------------------------------------------------------------------------
@@ -81,11 +81,11 @@ const cacheXyzOffsets = new SafeMap();
 const cacheUvs = new SafeMap();
 const cacheUvOffsets = new SafeMap();
 
-for (let i = 0; i < spriteDef.length;)
+for (let i = 0; i < spriteXyzDef.length;)
 {
-    const modelId = spriteDef[i++];
-    const meshId = spriteDef[i++];
-    const uvId = spriteDef[i++];
+    const modelId = spriteXyzDef[i++];
+    const meshId = spriteXyzDef[i++];
+    const uvId = spriteXyzDef[i++];
 
     if (!cacheXyzOffsets.has(meshId))
     {
@@ -116,11 +116,11 @@ for (let i = 0; i < spriteDef.length;)
 }
 
 // UI
-for (let i = 0; i < uiDef.length;)
+for (let i = 0; i < spriteXyDef.length;)
 {
-    const modelId = uiDef[i++];
-    const meshId = uiDef[i++];
-    const uvId = uiDef[i++];
+    const modelId = spriteXyDef[i++];
+    const meshId = spriteXyDef[i++];
+    const uvId = spriteXyDef[i++];
 
     if (!cacheXyzOffsets.has(meshId))
     {
@@ -157,11 +157,11 @@ for (let i = 0; i < polygonDef.length;)
 {
     const modelId = polygonDef[i++];
     const meshId = polygonDef[i++];
-    const uv = polygonDef[i++];
+    const uvId = polygonDef[i++];
 
     models.set(modelId, new SafeMap([
         [$.A_XY, pushData(modelData, Mesh.get(meshId))],
-        [$.A_UV, pushData(modelData, uv)]
+        [$.A_UV, pushData(modelData, Texture.getUv(uvId))]
     ]));
 }
 

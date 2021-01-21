@@ -67,7 +67,7 @@ const renderToCanvas = (fbTexture) =>
 {
     setProgram(imageProgramData);
     Texture.bind(fbTexture);
-    drawArraysVao($.TRIANGLES, 0, 6, imageProgramData);
+    drawArraysVao($.TRIANGLE_STRIP, 0, 4, imageProgramData);
     Texture.unbind();
 };
 
@@ -87,7 +87,7 @@ const renderText = () =>
     setProgram(programData);
     Texture.bind(texture);
     programData.setUniforms();
-    drawArraysVao($.TRIANGLES, 0, 6, programData);
+    drawArraysVao($.TRIANGLE_STRIP, 0, 4, programData);
     Texture.unbind();
 };
 

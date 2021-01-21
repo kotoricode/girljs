@@ -45,5 +45,5 @@ const meshes = new SafeMap([
     [$.MESH_GROUND, getXz3(-2, 2, -2, 2)],
     [$.MESH_PLAYER, getXy3(-0.4, 0.4, 0, 1.5)],
     [$.MESH_GIRL,   getXy2Dim(187, 600)],
-    [$.MESH_SCREEN, [-1,1, -1,-1, 1,-1, 1,-1, 1,1, -1,1]]
+    [$.MESH_SCREEN, getXy2Dim($.SCREEN_WIDTH, $.SCREEN_HEIGHT)]
 ]);
