@@ -13,6 +13,10 @@ export const Model = {
     {
         return modelBufferIds.get(modelId);
     },
+    getDrawSize(modelId)
+    {
+        return modelDrawSizes.get(modelId);
+    },
     getTexture(modelId)
     {
         return modelTextures.get(modelId);
@@ -33,7 +37,7 @@ const pushData = (buffer, data) =>
     return offset;
 };
 
-const buildModelData = (data, posAttrId) =>
+const buildModelData = (data, posAttrId, posAttrSize) =>
 {
     for (let i = 0; i < data.length;)
     {
@@ -44,9 +48,10 @@ const buildModelData = (data, posAttrId) =>
         if (!cachePosOffsets.has(meshId))
         {
             const coords = Mesh.get(meshId);
-            const xyzOffset = pushData(modelData, coords);
+            const coordsOffset = pushData(modelData, coords);
 
-            cachePosOffsets.set(meshId, xyzOffset);
+            cachePosOffsets.set(meshId, coordsOffset);
+            cacheMeshDrawSizes.set(meshId, coords.length / posAttrSize);
         }
 
         if (!cacheUvOffsets.has(uvId))
@@ -64,9 +69,11 @@ const buildModelData = (data, posAttrId) =>
         ]));
 
         const texture = Texture.getUvData(uvId).base.texture;
+
         modelTextures.set(modelId, texture);
         modelUvs.set(modelId, cacheUvs.get(uvId));
         modelBufferIds.set(modelId, $.BUF_ARR_MODEL);
+        modelDrawSizes.set(modelId, cacheMeshDrawSizes.get(meshId));
     }
 };
 
@@ -106,19 +113,18 @@ const polygonDef = [
 const modelData = [];
 const models = new SafeMap();
 
-/*------------------------------------------------------------------------------
-    Sprite
-------------------------------------------------------------------------------*/
 const modelTextures = new SafeMap();
 const modelUvs = new SafeMap();
 const modelBufferIds = new SafeMap();
+const modelDrawSizes = new SafeMap();
 
 const cachePosOffsets = new SafeMap();
 const cacheUvs = new SafeMap();
 const cacheUvOffsets = new SafeMap();
+const cacheMeshDrawSizes = new SafeMap();
 
-buildModelData(spriteXyzDef, $.A_XYZ);
-buildModelData(spriteXyDef, $.A_XY);
+buildModelData(spriteXyzDef, $.A_XYZ, 3);
+buildModelData(spriteXyDef, $.A_XY, 2);
 
 /*------------------------------------------------------------------------------
     Polygon

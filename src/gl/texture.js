@@ -136,7 +136,16 @@ const textureDef = [
 
 const textures = new SafeMap();
 const uvData = new SafeMap();
-const uvs = new SafeMap();
+const uvs = new SafeMap([
+    [$.UV_SCREEN, [
+        0, 0,
+        1, 0,
+        0, 1,
+        0, 1,
+        1, 0,
+        1, 1,
+    ]]
+]);
 
 for (let i = 0; i < textureDef.length;)
 {
@@ -163,15 +172,6 @@ for (let i = 0; i < textureDef.length;)
         uvData.set(uvId, { x, y, width, height, base });
     }
 }
-
-uvs.set($.UV_SCREEN, [
-    0, 0,
-    1, 0,
-    0, 1,
-    0, 1,
-    1, 0,
-    1, 1,
-]);
 
 const toFetch = [...textures.keys()];
 fetchNextImage();

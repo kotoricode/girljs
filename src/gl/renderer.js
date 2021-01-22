@@ -17,11 +17,12 @@ export const render = (scene) =>
     /*--------------------------------------------------------------------------
         Queue up drawables
     --------------------------------------------------------------------------*/
+    // TODO: need to queue up by z index for each program
     for (const [drawable] of scene.all(Drawable))
     {
         if (drawable.isVisible)
         {
-            const queue = queues.get(drawable.programData.programId);
+            const queue = programQueues.get(drawable.programData.programId);
             queue.add(drawable);
         }
     }
@@ -35,40 +36,25 @@ export const render = (scene) =>
     gl.clear($.COLOR_BUFFER_BIT | $.DEPTH_BUFFER_BIT);
     gl.clearColor(0.8, 0.8, 0.8, 1.0);
 
-    renderWorld();
+    gl.enable($.DEPTH_TEST);
+
+    renderProgramQueue($.PROG_POLYGON);
+    renderProgramQueue($.PROG_SPRITE);
+
+    gl.disable($.DEPTH_TEST);
 
     Renderbuffer.unbind();
     Framebuffer.unbind();
 
-    renderToCanvas();
-
-    renderTriangles($.PROG_UI);
+    renderTriangles(imageProgramData, fbTexture, 6);
+    renderProgramQueue($.PROG_UI);
     renderText();
-
     renderDebug();
 
-    for (const queue of queues.values())
+    for (const queue of programQueues.values())
     {
         queue.clear();
     }
-};
-
-const renderWorld = () =>
-{
-    gl.enable($.DEPTH_TEST);
-
-    renderTriangles($.PROG_POLYGON);
-    renderTriangles($.PROG_SPRITE);
-
-    gl.disable($.DEPTH_TEST);
-};
-
-const renderToCanvas = () =>
-{
-    setProgram(imageProgramData);
-    Texture.bind(fbTexture);
-    drawArraysVao($.TRIANGLES, 0, 6, imageProgramData);
-    Texture.unbind();
 };
 
 const renderDebug = () =>
@@ -84,30 +70,30 @@ const renderText = () =>
     const programData = Dialogue.getProgramData();
     const texture = Dialogue.getTexture();
 
-    enableProgram(programData, texture);
-    drawArraysVao($.TRIANGLES, 0, 6, programData);
+    renderTriangles(programData, texture, 6);
     Texture.unbind();
 };
 
-const renderTriangles = (programId) =>
+const renderProgramQueue = (programId) =>
 {
-    const queue = queues.get(programId);
+    const queue = programQueues.get(programId);
 
     for (const { programData, modelId } of queue)
     {
         const texture = Model.getTexture(modelId);
+        const drawSize = Model.getDrawSize(modelId);
 
-        enableProgram(programData, texture);
-        // TODO: change 6 to vertices size
-        drawArraysVao($.TRIANGLES, 0, 6, programData);
+        renderTriangles(programData, texture, drawSize);
     }
 };
 
-const enableProgram = (programData, texture) =>
+const renderTriangles = (programData, texture, drawSize) =>
 {
     setProgram(programData);
     Texture.bind(texture);
     programData.setUniforms();
+    // TODO: change 6 to vertices size for polygons
+    drawArraysVao($.TRIANGLES, 0, drawSize, programData);
 };
 
 // Blending
@@ -128,7 +114,7 @@ Framebuffer.attachDepth(rboDepth);
 Renderbuffer.unbind();
 Framebuffer.unbind();
 
-const queues = new SafeMap([
+const programQueues = new SafeMap([
     [$.PROG_POLYGON, new SafeSet()],
     [$.PROG_SPRITE, new SafeSet()],
     [$.PROG_UI, new SafeSet()]
