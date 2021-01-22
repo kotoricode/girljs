@@ -118,6 +118,7 @@ export class Scene
         if (isDirty)
         {
             const { matrix } = space;
+            space.local.rotation.fromEuler(0.1, 0.2, 0.3);
 
             matrix.composeFrom(space.local);
 
@@ -127,6 +128,9 @@ export class Scene
             }
 
             space.world.decomposeFrom(matrix);
+
+            console.log(space.local);
+            console.log(space.world);
 
             if (this.dirty.has(space))
             {
