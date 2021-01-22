@@ -54,6 +54,8 @@ export const Texture = {
             minX, maxY,
             maxX, maxY,
             minX, minY,
+            minX, minY,
+            maxX, maxY,
             maxX, minY,
         ];
 
@@ -166,6 +168,8 @@ uvs.set($.UV_SCREEN, [
     0, 0,
     1, 0,
     0, 1,
+    0, 1,
+    1, 0,
     1, 1,
 ]);
 

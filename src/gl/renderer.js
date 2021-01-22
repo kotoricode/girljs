@@ -42,7 +42,7 @@ export const render = (scene) =>
 
     renderToCanvas();
 
-    renderStrip($.PROG_UI);
+    renderTriangles($.PROG_UI);
     renderText();
 
     renderDebug();
@@ -57,8 +57,8 @@ const renderWorld = () =>
 {
     gl.enable($.DEPTH_TEST);
 
-    renderStrip($.PROG_POLYGON);
-    renderStrip($.PROG_SPRITE);
+    renderTriangles($.PROG_POLYGON);
+    renderTriangles($.PROG_SPRITE);
 
     gl.disable($.DEPTH_TEST);
 };
@@ -67,7 +67,7 @@ const renderToCanvas = () =>
 {
     setProgram(imageProgramData);
     Texture.bind(fbTexture);
-    drawArraysVao($.TRIANGLE_STRIP, 0, 4, imageProgramData);
+    drawArraysVao($.TRIANGLES, 0, 6, imageProgramData);
     Texture.unbind();
 };
 
@@ -85,21 +85,8 @@ const renderText = () =>
     const texture = Dialogue.getTexture();
 
     enableProgram(programData, texture);
-    drawArraysVao($.TRIANGLE_STRIP, 0, 4, programData);
+    drawArraysVao($.TRIANGLES, 0, 6, programData);
     Texture.unbind();
-};
-
-const renderStrip = (programId) =>
-{
-    const queue = queues.get(programId);
-
-    for (const { programData, modelId } of queue)
-    {
-        const texture = Model.getTexture(modelId);
-
-        enableProgram(programData, texture);
-        drawArraysVao($.TRIANGLE_STRIP, 0, 4, programData);
-    }
 };
 
 const renderTriangles = (programId) =>
