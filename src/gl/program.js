@@ -45,7 +45,6 @@ const uniArrZeroZero = [0, 0];
 const ubCamera = [$.UB_CAMERA];
 
 const attribXyz = [$.A_XYZ, 3];
-const attribXy = [$.A_XY, 2];
 const attribUv = [$.A_UV, 2];
 
 const uniTransform = [$.U_TRANSFORM, uniArrZeroZero];
@@ -55,7 +54,7 @@ const uniUvOffset = [$.U_UVOFFSET, uniArrZeroZero];
 const uniUvSize = [$.U_UVSIZE, uniArrZeroZero];
 
 const attrMapXyzUv = new SafeMap([attribXyz, attribUv]);
-const attrMapXyUv = new SafeMap([attribXy, attribUv]);
+const attrMapXyUv = new SafeMap([attribXyz, attribUv]);
 const uniMapColor = new SafeMap([uniColor]);
 
 /*------------------------------------------------------------------------------

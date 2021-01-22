@@ -37,50 +37,73 @@ const pushData = (buffer, data) =>
     return offset;
 };
 
-const buildModelData = (data, posAttrId, posAttrSize) =>
+const buildModelDataQuad = () =>
 {
-    for (let i = 0; i < data.length;)
+    const xyzOffsets = new SafeMap();
+    const uvs = new SafeMap();
+    const uvOffsets = new SafeMap();
+    const drawSizes = new SafeMap();
+
+    for (let i = 0; i < quadDef.length;)
     {
-        const modelId = data[i++];
-        const meshId = data[i++];
-        const uvId = data[i++];
+        const modelId = quadDef[i++];
+        const meshId = quadDef[i++];
+        const uvId = quadDef[i++];
 
-        if (!cachePosOffsets.has(meshId))
+        if (!xyzOffsets.has(meshId))
         {
-            const coords = Mesh.get(meshId);
-            const coordsOffset = pushData(modelData, coords);
+            const xyz = Mesh.get(meshId);
+            const xyzOffset = pushData(modelData, xyz);
 
-            cachePosOffsets.set(meshId, coordsOffset);
-            cacheMeshDrawSizes.set(meshId, coords.length / posAttrSize);
+            xyzOffsets.set(meshId, xyzOffset);
+            drawSizes.set(meshId, xyz.length / 3);
         }
 
-        if (!cacheUvOffsets.has(uvId))
+        if (!uvOffsets.has(uvId))
         {
             const uv = Texture.getUv(uvId);
             const uvOffset = pushData(modelData, uv);
 
-            cacheUvs.set(uvId, uv);
-            cacheUvOffsets.set(uvId, uvOffset);
+            uvs.set(uvId, uv);
+            uvOffsets.set(uvId, uvOffset);
         }
 
         models.set(modelId, new SafeMap([
-            [posAttrId, cachePosOffsets.get(meshId)],
-            [$.A_UV, cacheUvOffsets.get(uvId)]
+            [$.A_XYZ, xyzOffsets.get(meshId)],
+            [$.A_UV, uvOffsets.get(uvId)]
         ]));
 
         const texture = Texture.getUvData(uvId).base.texture;
 
         modelTextures.set(modelId, texture);
-        modelUvs.set(modelId, cacheUvs.get(uvId));
+        modelUvs.set(modelId, uvs.get(uvId));
         modelBufferIds.set(modelId, $.BUF_ARR_MODEL);
-        modelDrawSizes.set(modelId, cacheMeshDrawSizes.get(meshId));
+        modelDrawSizes.set(modelId, drawSizes.get(meshId));
     }
+};
+
+const buildModelDataPolygon = () =>
+{
+    for (let i = 0; i < polygonDef.length;)
+    {
+        const modelId = polygonDef[i++];
+        const meshId = polygonDef[i++];
+        const uvId = polygonDef[i++];
+
+        models.set(modelId, new SafeMap([
+            [$.A_XYZ, pushData(modelData, Mesh.get(meshId))],
+            [$.A_UV, pushData(modelData, Texture.getUv(uvId))]
+        ]));
+    }
+
+    modelBufferIds.set($.MODEL_SCREEN, $.BUF_ARR_MODEL);
 };
 
 /*------------------------------------------------------------------------------
     Data/definitions
 ------------------------------------------------------------------------------*/
-const spriteXyzDef = [
+const quadDef = [
+    $.MODEL_GIRL,     $.MESH_GIRL,   $.UV_GIRL_00,
     $.MODEL_GROUND,   $.MESH_GROUND, $.UV_GROUND,
     $.MODEL_BRAID_00, $.MESH_PLAYER, $.UV_BRAID_00,
     $.MODEL_BRAID_02, $.MESH_PLAYER, $.UV_BRAID_02,
@@ -98,9 +121,6 @@ const spriteXyzDef = [
     $.MODEL_BRAID_26, $.MESH_PLAYER, $.UV_BRAID_26,
 ];
 
-const spriteXyDef = [
-    $.MODEL_GIRL, $.MESH_GIRL, $.UV_GIRL_00,
-];
 
 const polygonDef = [
     // eslint-disable-next-line max-len
@@ -108,40 +128,18 @@ const polygonDef = [
 ];
 
 /*------------------------------------------------------------------------------
-    General
+    Model
 ------------------------------------------------------------------------------*/
 const modelData = [];
 const models = new SafeMap();
+const modelBufferIds = new SafeMap();
 
 const modelTextures = new SafeMap();
 const modelUvs = new SafeMap();
-const modelBufferIds = new SafeMap();
 const modelDrawSizes = new SafeMap();
 
-const cachePosOffsets = new SafeMap();
-const cacheUvs = new SafeMap();
-const cacheUvOffsets = new SafeMap();
-const cacheMeshDrawSizes = new SafeMap();
-
-buildModelData(spriteXyzDef, $.A_XYZ, 3);
-buildModelData(spriteXyDef, $.A_XY, 2);
-
-/*------------------------------------------------------------------------------
-    Polygon
-------------------------------------------------------------------------------*/
-for (let i = 0; i < polygonDef.length;)
-{
-    const modelId = polygonDef[i++];
-    const meshId = polygonDef[i++];
-    const uvId = polygonDef[i++];
-
-    models.set(modelId, new SafeMap([
-        [$.A_XY, pushData(modelData, Mesh.get(meshId))],
-        [$.A_UV, pushData(modelData, Texture.getUv(uvId))]
-    ]));
-}
-
-modelBufferIds.set($.MODEL_SCREEN, $.BUF_ARR_MODEL);
+buildModelDataQuad();
+buildModelDataPolygon();
 
 BufferArray.data(
     $.BUF_ARR_MODEL,

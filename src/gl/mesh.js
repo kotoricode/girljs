@@ -26,12 +26,12 @@ const xy2Dim = (width, height) =>
     const y = height / $.SCREEN_HEIGHT;
 
     return [
-        -x, -y,
-        x, -y,
-        -x, y,
-        -x, y,
-        x, -y,
-        x, y,
+        -x, -y, 0,
+        x, -y, 0,
+        -x, y, 0,
+        -x, y, 0,
+        x, -y, 0,
+        x, y, 0,
     ];
 };
 
