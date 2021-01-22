@@ -33,34 +33,36 @@ export class Matrix extends SettableArray
             0, 0, 0, 1
         );
 
-        const sqw = rw*rw;
-        const sqx = rx*rx;
-        const sqy = ry*ry;
-        const sqz = rz*rz;
+        // http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToMatrix/index.htm
+        const rx2 = rx ** 2;
+        const ry2 = ry ** 2;
+        const rz2 = rz ** 2;
+        const rw2 = rw ** 2;
 
-        const invs = 1 / (sqx + sqy + sqz + sqw);
-        const m00 = (sqx - sqy - sqz + sqw)*invs;
-        const m11 = (-sqx + sqy - sqz + sqw)*invs;
-        const m22 = (-sqx - sqy + sqz + sqw)*invs;
+        const invs = 1 / (rx2 + ry2 + rz2 + rw2);
 
-        let tmp1 = rx*ry;
-        let tmp2 = rz*rw;
-        const m10 = 2.0 * (tmp1 + tmp2)*invs;
-        const m01 = 2.0 * (tmp1 - tmp2)*invs;
+        const M0 = (rx2 - ry2 - rz2 + rw2) * invs;
+        const M5 = (-rx2 + ry2 - rz2 + rw2) * invs;
+        const MA = (-rx2 - ry2 + rz2 + rw2) * invs;
 
-        tmp1 = rx*rz;
-        tmp2 = ry*rw;
-        const m20 = 2.0 * (tmp1 - tmp2)*invs;
-        const m02 = 2.0 * (tmp1 + tmp2)*invs;
-        tmp1 = ry*rz;
-        tmp2 = rx*rw;
-        const m21 = 2.0 * (tmp1 + tmp2)*invs;
-        const m12 = 2.0 * (tmp1 - tmp2)*invs;
+        const rxy = rx * ry;
+        const rzw = rz * rw;
+        const rxz = rx * rz;
+        const ryw = ry * rw;
+        const ryz = ry * rz;
+        const rxw = rx * rw;
+
+        const M4 = 2 * (rxy + rzw) * invs;
+        const M1 = 2 * (rxy - rzw) * invs;
+        const M8 = 2 * (rxz - ryw) * invs;
+        const M2 = 2 * (rxz + ryw) * invs;
+        const M9 = 2 * (ryz + rxw) * invs;
+        const M6 = 2 * (ryz - rxw) * invs;
 
         this.multiply([
-            m00, m10, m20, 0,
-            m01, m11, m21, 0,
-            m02, m12, m22, 0,
+            M0, M4, M8, 0,
+            M1, M5, M9, 0,
+            M2, M6, MA, 0,
             0, 0, 0, 1
         ]);
 

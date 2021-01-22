@@ -24,7 +24,7 @@ export const processMotion = (scene) =>
             {
                 space.local.rotation.fromEuler(
                     0,
-                    Math.sign(direction.x) > 0 ? 0 : Math.PI,
+                    Math.sign(direction.x) > 0 ? 0 : 180,
                     0
                 );
             }
