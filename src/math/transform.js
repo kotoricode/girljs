@@ -53,34 +53,34 @@ export class Transform
         {
             const s = 0.5 / (trace + 1) ** 0.5;
 
-            x = (R9 - R6) * s;
-            y = (R2 - R8) * s;
-            z = (R4 - R1) * s;
+            x = (R6 - R9) * s;
+            y = (R8 - R2) * s;
+            z = (R1 - R4) * s;
             w = 0.25 / s;
         }
         else if (R0 > R5 && R0 > RA)
         {
             const s = 2 * (1 + R0 - R5 - RA) ** 0.5;
             x = 0.25 * s;
-            y = (R1 + R4) / s;
-            z = (R2 + R8) / s;
-            w = (R9 - R6) / s;
+            y = (R4 + R1) / s;
+            z = (R8 + R2) / s;
+            w = (R6 - R9) / s;
         }
         else if (R5 > RA)
         {
             const s = 2 * (1 + R5 - R0 - RA) ** 0.5;
-            x = (R1 + R4) / s;
+            x = (R4 + R1) / s;
             y = 0.25 * s;
-            z = (R6 + R9) / s;
-            w = (R2 - R8) / s;
+            z = (R9 + R6) / s;
+            w = (R8 - R2) / s;
         }
         else
         {
             const s = 2 * (1 + RA - R0 - R5) ** 0.5;
-            x = (R2 + R8) / s;
-            y = (R6 + R9) / s;
+            x = (R8 + R2) / s;
+            y = (R9 + R6) / s;
             z = 0.25 * s;
-            w = (R4 - R1) / s;
+            w = (R1 - R4) / s;
         }
 
         this.rotation.setValues(x, y, z, w);
