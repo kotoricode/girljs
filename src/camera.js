@@ -44,6 +44,6 @@ const projection = new Matrix(
     0, 0, -2*far*near / dist, 0
 );
 
-transform.rotation.fromEuler(0.2, 0, 0);
+transform.rotation.fromEuler(-11.5, 0, 0);
 
 const viewProjectionData = new BufferData(16);

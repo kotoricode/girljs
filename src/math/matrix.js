@@ -26,38 +26,50 @@ export class Matrix extends SettableArray
         const [rx, ry, rz, rw] = transform.rotation;
         const [tx, ty, tz] = transform.translation;
 
-        const rxx = rx * rx;
-        const ryy = ry * ry;
-        const rzz = rz * rz;
-        const rww = rw * rw;
-        const rxy = rx * ry;
-        const rxz = rx * rz;
-        const rxw = rx * rw;
-        const ryz = ry * rz;
-        const ryw = ry * rw;
-        const rzw = rz * rw;
-
         this.setValues(
-            sx * (rww + rxx - ryy - rzz),
-            sx * (rxy - rzw) * 2,
-            sx * (rxz + ryw) * 2,
-            0,
-
-            sy * (rxy + rzw) * 2,
-            sy * (rww - rxx + ryy - rzz),
-            sy * (ryz - rxw) * 2,
-            0,
-
-            sz * (rxz - ryw) * 2,
-            sz * (ryz + rxw) * 2,
-            sz * (rww - rxx - ryy + rzz),
-            0,
-
-            tx,
-            ty,
-            tz,
-            1
+            sx, 0, 0, 0,
+            0, sy, 0, 0,
+            0, 0, sz, 0,
+            0, 0, 0, 1
         );
+
+        const sqw = rw*rw;
+        const sqx = rx*rx;
+        const sqy = ry*ry;
+        const sqz = rz*rz;
+
+        const invs = 1 / (sqx + sqy + sqz + sqw);
+        const m00 = (sqx - sqy - sqz + sqw)*invs;
+        const m11 = (-sqx + sqy - sqz + sqw)*invs;
+        const m22 = (-sqx - sqy + sqz + sqw)*invs;
+
+        let tmp1 = rx*ry;
+        let tmp2 = rz*rw;
+        const m10 = 2.0 * (tmp1 + tmp2)*invs;
+        const m01 = 2.0 * (tmp1 - tmp2)*invs;
+
+        tmp1 = rx*rz;
+        tmp2 = ry*rw;
+        const m20 = 2.0 * (tmp1 - tmp2)*invs;
+        const m02 = 2.0 * (tmp1 + tmp2)*invs;
+        tmp1 = ry*rz;
+        tmp2 = rx*rw;
+        const m21 = 2.0 * (tmp1 + tmp2)*invs;
+        const m12 = 2.0 * (tmp1 - tmp2)*invs;
+
+        this.multiply([
+            m00, m10, m20, 0,
+            m01, m11, m21, 0,
+            m02, m12, m22, 0,
+            0, 0, 0, 1
+        ]);
+
+        this.multiply([
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            tx, ty, tz, 1
+        ]);
     }
 
     invert()

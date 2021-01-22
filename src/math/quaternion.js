@@ -1,4 +1,4 @@
-import { SettableArray } from "../utility";
+import { DEG_TO_RAD, SettableArray } from "../utility";
 
 export class Quaternion extends SettableArray
 {
@@ -10,11 +10,12 @@ export class Quaternion extends SettableArray
     // ZYX
     // https://www.andre-gaschler.com/rotationconverter/
     // http://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToQuaternion/index.htm
+    // https://quaternions.online/
     fromEuler(x, y, z)
     {
-        const hx = x / 2;
-        const hy = y / 2;
-        const hz = z / 2;
+        const hx = DEG_TO_RAD * x / 2;
+        const hy = DEG_TO_RAD * y / 2;
+        const hz = DEG_TO_RAD * z / 2;
 
         const sx = Math.sin(hx);
         const cx = Math.cos(hx);
