@@ -19,8 +19,7 @@ export class Scene
         /** @const {Map<number, Set>} */
         this.cached = new SafeMap();
 
-        // TODO: implement this
-        this.dirtyEntities = new SafeSet();
+        this.dirty = new SafeSet();
     }
 
     static * walkEntities(entity)
@@ -41,9 +40,11 @@ export class Scene
         }
     }
 
-    addEntity(entity, parent=this.root)
+    addEntity(entity, parentId=this.root.id)
     {
-        parent.addChild(entity);
+        const parent = this.getEntity(parentId);
+
+        parent.addChildId(entity.id);
         this.entities.set(entity.id, entity);
 
         for (const [flags, cache] of this.cached)
@@ -54,7 +55,11 @@ export class Scene
             }
         }
 
-        this.hasDirty = true;
+        if (entity.hasFlags(Space.flag))
+        {
+            const space = entity.getComponent(Space);
+            this.dirty.add(space);
+        }
 
         if (entity.hasFlags(Drawable.flag))
         {
@@ -67,6 +72,50 @@ export class Scene
         for (const entity of this.getEntitiesWith(components))
         {
             yield Scene.yieldComponents(entity, components);
+        }
+    }
+
+    cleanGraph()
+    {
+        for (const childId of this.root.childIds)
+        {
+            this.cleanSpaces(childId);
+        }
+    }
+
+    cleanSpaces(entityId, isAncestorDirty, parentMatrix)
+    {
+        const entity = this.getEntity(entityId);
+        const space = entity.getComponent(Space);
+        const isDirty = isAncestorDirty || this.dirty.has(space);
+
+        if (isDirty)
+        {
+            const { matrix } = space;
+
+            matrix.fromTransform(space.local);
+
+            if (parentMatrix)
+            {
+                matrix.multiplyTransformMatrix(parentMatrix);
+            }
+
+            // TODO: rotation, scale
+            space.world.translation.setValues(
+                matrix[12],
+                matrix[13],
+                matrix[14]
+            );
+
+            if (this.dirty.has(space))
+            {
+                this.dirty.delete(space);
+            }
+        }
+
+        for (const childId of entity.childIds)
+        {
+            this.cleanSpaces(childId, isDirty, parentMatrix);
         }
     }
 
@@ -139,12 +188,12 @@ export class Scene
     load()
     {
         this.root = new Entity($.ENTITY_ROOT);
-        this.hasDirty = false;
+        this.entities.set(this.root.id, this.root);
 
         const bp = blueprint.get(this.sceneId)();
         this.processes = bp.get($.BP_PROCESSES);
         const entities = bp.get($.BP_ENTITIES);
-        this.loadEntities(entities);
+        this.loadEntities(entities, this.root.id);
     }
 
     loadEntities(entities, parentId)
@@ -152,7 +201,7 @@ export class Scene
         for (const [entityId, entityBp] of entities)
         {
             const components = entityBp.get($.BP_COMPONENTS);
-            const entity = new Entity(entityId, ...components);
+            const entity = new Entity(entityId, parentId, ...components);
             this.addEntity(entity, parentId);
 
             if (entityBp.has($.BP_CHILDREN))
@@ -169,13 +218,7 @@ export class Scene
 
     markDirty(space)
     {
-        // TODO: put dirty spaces into list (instead of .isDirty)
-        // iterate list
-        // for each space, check if still dirty
-        // id dirty, go through ancestors to find topmost dirty
-        // for that ancestor, walk through descendants and clean
-        space.isDirty = true;
-        this.hasDirty = true;
+        this.dirty.add(space);
     }
 
     one(entityId, ...components)
@@ -187,6 +230,7 @@ export class Scene
 
     unload()
     {
+        this.dirty.clear();
         this.entities.clear();
 
         for (const cache of this.cached.values())
@@ -198,8 +242,6 @@ export class Scene
         this.newDrawables.clear();
 
         this.unloadEntities(this.root);
-
-        this.hasDirty = false;
     }
 
     unloadEntities(entity)
@@ -223,12 +265,12 @@ export class Scene
             this.newDrawables.clear();
         }
 
-        if (this.hasDirty)
+        if (this.dirty.size)
         {
             // Set new spaces' world transforms from scenegraph
             // TODO: needs to be thoroughly tested
             // TODO: no need to update the entire graph
-            this.updateGraph();
+            this.cleanGraph();
         }
 
         for (const process of this.processes)
@@ -241,53 +283,9 @@ export class Scene
         render(this);
     }
 
-    updateGraph()
-    {
-        if (!this.hasDirty) throw Error;
-
-        for (const child of this.root.children)
-        {
-            this.updateSpaces(child);
-        }
-
-        this.hasDirty = false;
-    }
-
-    updateSpaces(entity, isAncestorDirty, parentMatrix)
-    {
-        const space = entity.getComponent(Space);
-        const isDirty = isAncestorDirty || space.isDirty;
-
-        if (isDirty)
-        {
-            const { matrix } = space;
-
-            matrix.fromTransform(space.local);
-
-            if (parentMatrix)
-            {
-                matrix.multiplyTransformMatrix(parentMatrix);
-            }
-
-            // TODO: rotation, scale
-            space.world.translation.setValues(
-                matrix[12],
-                matrix[13],
-                matrix[14]
-            );
-
-            space.isDirty = false;
-        }
-
-        for (const child of entity.children)
-        {
-            this.updateSpaces(child, isDirty, parentMatrix);
-        }
-    }
-
     * yieldGraph()
     {
-        for (const child of this.root.children)
+        for (const child of this.root.childIds)
         {
             yield Scene.walkEntities(child);
         }
