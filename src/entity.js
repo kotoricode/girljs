@@ -42,6 +42,11 @@ export class Entity
         }
     }
 
+    hasComponent(cls)
+    {
+        return this.hasFlags(cls.flag);
+    }
+
     hasFlags(flags)
     {
         if (!Number.isInteger(flags)) throw Error;

@@ -14,7 +14,6 @@ export class Scene
         this.sceneId = sceneId;
         this.dt = 0;
         this.entities = new SafeMap();
-        this.newDrawables = new SafeSet();
 
         /** @const {Map<number, Set>} */
         this.cached = new SafeMap();
@@ -55,15 +54,42 @@ export class Scene
             }
         }
 
-        if (entity.hasFlags(Space.flag))
+        if (entity.hasComponent(Space))
         {
             const space = entity.getComponent(Space);
             this.dirty.add(space);
-        }
 
-        if (entity.hasFlags(Drawable.flag))
-        {
-            this.newDrawables.add(entity);
+            if (entity.hasComponent(Drawable))
+            {
+                const drawable = entity.getComponent(Drawable);
+
+                const { programData } = drawable;
+                const { staging } = programData;
+
+                if (staging.has($.U_TRANSFORM))
+                {
+                    programData.stageUniformAtIndex(
+                        $.U_TRANSFORM,
+                        1,
+                        space.matrix
+                    );
+                }
+
+                if (staging.has($.U_UVOFFSET) && staging.has($.U_UVREPEAT))
+                {
+                    const [
+                        uvMinX, uvMaxY,
+                        uvMaxX, ,
+                        , uvMinY
+                    ] = Model.getUv(drawable.modelId);
+
+                    const width = uvMaxX - uvMinX;
+                    const height = uvMaxY - uvMinY;
+
+                    programData.stageUniform($.U_UVOFFSET, [uvMinX, uvMinY]);
+                    programData.stageUniform($.U_UVSIZE, [width, height]);
+                }
+            }
         }
     }
 
@@ -151,40 +177,6 @@ export class Scene
         return this.entities.get(entityId);
     }
 
-    initNewDrawables()
-    {
-        for (const entity of this.newDrawables)
-        {
-            const [drawable, space] = entity.getComponents(Drawable, Space);
-            const { programData } = drawable;
-            const { staging } = programData;
-
-            if (staging.has($.U_TRANSFORM))
-            {
-                programData.stageUniformAtIndex(
-                    $.U_TRANSFORM,
-                    1,
-                    space.matrix
-                );
-            }
-
-            if (staging.has($.U_UVOFFSET) && staging.has($.U_UVREPEAT))
-            {
-                const [
-                    uvMinX, uvMaxY,
-                    uvMaxX, ,
-                    , uvMinY
-                ] = Model.getUv(drawable.modelId);
-
-                const width = uvMaxX - uvMinX;
-                const height = uvMaxY - uvMinY;
-
-                programData.stageUniform($.U_UVOFFSET, [uvMinX, uvMinY]);
-                programData.stageUniform($.U_UVSIZE, [width, height]);
-            }
-        }
-    }
-
     load()
     {
         this.root = new Entity($.ENTITY_ROOT);
@@ -239,7 +231,6 @@ export class Scene
         }
 
         this.cached.clear();
-        this.newDrawables.clear();
 
         this.unloadEntities(this.root);
     }
@@ -258,12 +249,6 @@ export class Scene
     update(dt)
     {
         this.dt = dt;
-
-        if (this.newDrawables.size)
-        {
-            this.initNewDrawables();
-            this.newDrawables.clear();
-        }
 
         if (this.dirty.size)
         {
