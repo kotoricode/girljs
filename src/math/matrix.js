@@ -26,13 +26,6 @@ export class Matrix extends SettableArray
         const [rx, ry, rz, rw] = transform.rotation;
         const [tx, ty, tz] = transform.translation;
 
-        this.setValues(
-            sx, 0, 0, 0,
-            0, sy, 0, 0,
-            0, 0, sz, 0,
-            0, 0, 0, 1
-        );
-
         // http://www.euclideanspace.com/maths/geometry/rotations/conversions/quaternionToMatrix/index.htm
         const rx2 = rx ** 2;
         const ry2 = ry ** 2;
@@ -52,26 +45,34 @@ export class Matrix extends SettableArray
         const ryz = ry * rz;
         const rxw = rx * rw;
 
-        const M4 = 2 * (rxy + rzw) * invs;
-        const M1 = 2 * (rxy - rzw) * invs;
-        const M8 = 2 * (rxz - ryw) * invs;
-        const M2 = 2 * (rxz + ryw) * invs;
-        const M9 = 2 * (ryz + rxw) * invs;
-        const M6 = 2 * (ryz - rxw) * invs;
+        const M1 = 2 * (rxy + rzw) * invs;
+        const M4 = 2 * (rxy - rzw) * invs;
+        const M2 = 2 * (rxz - ryw) * invs;
+        const M8 = 2 * (rxz + ryw) * invs;
+        const M6 = 2 * (ryz + rxw) * invs;
+        const M9 = 2 * (ryz - rxw) * invs;
 
-        this.multiply([
-            M0, M4, M8, 0,
-            M1, M5, M9, 0,
-            M2, M6, MA, 0,
-            0, 0, 0, 1
-        ]);
+        this.setValues(
+            M0*sx,
+            M1*sx,
+            M2*sx,
+            0,
 
-        this.multiply([
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            tx, ty, tz, 1
-        ]);
+            M4*sy,
+            M5*sy,
+            M6*sy,
+            0,
+
+            M8*sz,
+            M9*sz,
+            MA*sz,
+            0,
+
+            tx,
+            ty,
+            tz,
+            1
+        );
     }
 
     invert()
