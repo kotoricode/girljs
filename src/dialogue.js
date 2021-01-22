@@ -4,14 +4,26 @@ import { Texture } from "./gl/texture";
 import { Bezier } from "./math/bezier";
 import { isString } from "./utility";
 
+class UiCanvas
+{
+    constructor()
+    {
+
+    }
+}
+
 export const Dialogue = {
     getBubbleTexture()
     {
         return bubbleTexture;
     },
-    getProgramData()
+    getTextProgramData()
     {
-        return program;
+        return textProgData;
+    },
+    getBubbleProgramData()
+    {
+        return bubbleProgData;
     },
     getTextTexture()
     {
@@ -22,8 +34,6 @@ export const Dialogue = {
         textCtx.clearRect(0, 0, textCanvas.width, textCanvas.height);
         bubbleCtx.clearRect(0, 0, bubbleCanvas.width, bubbleCanvas.height);
 
-        //drawDebug();
-        //drawBackground();
         drawSplitString(str, y);
 
         Texture.flip(true);
@@ -55,7 +65,7 @@ const drawDebug = () =>
 
 const drawBubble = () =>
 {
-    bubbleCtx.fillStyle = "#0000009f";
+    bubbleCtx.fillStyle = "#fff";
     bubbleCtx.shadowBlur = 0;
     bubbleCtx.shadowOffsetX = 0;
     bubbleCtx.shadowOffsetY = 0;
@@ -131,8 +141,13 @@ const drawText = (str, yPos) =>
     textCtx.fillText(str, x, yPos);
 };
 
-const program = new ProgramData($.PROG_SCREEN);
-program.setAttributes($.MODEL_SCREEN);
+const textProgData = new ProgramData($.PROG_SCREEN);
+textProgData.setAttributes($.MODEL_SCREEN);
+textProgData.stageUniform($.U_COLOR, [1, 1, 1, 1]);
+
+const bubbleProgData = new ProgramData($.PROG_SCREEN);
+bubbleProgData.setAttributes($.MODEL_SCREEN);
+bubbleProgData.stageUniform($.U_COLOR, [0, 0, 0, 0.6]);
 
 const textCanvas = window.document.createElement("canvas");
 const bubbleCanvas = window.document.createElement("canvas");
