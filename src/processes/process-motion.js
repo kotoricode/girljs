@@ -22,7 +22,11 @@ export const processMotion = (scene) =>
             // Flip drawable X according to direction
             if (direction.x)
             {
-                space.local.scale.x = Math.sign(direction.x);
+                space.local.rotation.fromEuler(
+                    0,
+                    Math.sign(direction.x) > 0 ? 0 : Math.PI,
+                    0
+                );
             }
 
             const moveDistance = motion.speed * scene.dt;

@@ -117,9 +117,33 @@ export class Scene
 
         if (isDirty)
         {
-            space.local.rotation.fromEuler(0.3, 0.3, 0.4);
-
             const { matrix } = space;
+
+            space.local.translation.setValues(
+                Math.random(),
+                Math.random(),
+                Math.random()
+            );
+
+            space.local.scale.setValues(
+                Math.random(),
+                Math.random(),
+                Math.random(),
+            );
+
+            space.local.rotation.setValues(
+                Math.random(),
+                Math.random(),
+                Math.random(),
+                Math.random()
+            );
+
+            space.local.rotation.setValues(
+                space.local.rotation[0] / space.local.rotation[3],
+                space.local.rotation[1] / space.local.rotation[3],
+                space.local.rotation[2] / space.local.rotation[3],
+                1
+            );
 
             matrix.composeFrom(space.local);
 
@@ -132,7 +156,6 @@ export class Scene
 
             console.log(space.local);
             console.log(space.world);
-            console.log("-");
 
             if (this.dirty.has(space))
             {
