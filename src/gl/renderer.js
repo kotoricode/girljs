@@ -68,9 +68,13 @@ const renderDebug = () =>
 const renderText = () =>
 {
     const programData = Dialogue.getProgramData();
-    const texture = Dialogue.getTexture();
 
-    renderTriangles(programData, texture, 6);
+    const textTexture = Dialogue.getTextTexture();
+    const bubbleTexture = Dialogue.getBubbleTexture();
+
+    renderTriangles(programData, bubbleTexture, 6);
+    renderTriangles(programData, textTexture, 6);
+
     Texture.unbind();
 };
 
