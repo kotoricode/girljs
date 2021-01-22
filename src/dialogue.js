@@ -16,7 +16,6 @@ export const Dialogue = {
     setText(str)
     {
         ctx.clearRect(0, 0, canvas.width, canvas.height);
-        console.log("clear");
 
         drawDebug();
         drawBackground();
