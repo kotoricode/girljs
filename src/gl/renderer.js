@@ -42,7 +42,7 @@ export const render = (scene) =>
 
     renderToCanvas();
 
-    renderQueue($.PROG_UI);
+    renderStrip($.PROG_UI);
     renderText();
 
     renderDebug();
@@ -57,8 +57,8 @@ const renderWorld = () =>
 {
     gl.enable($.DEPTH_TEST);
 
-    renderQueue($.PROG_POLYGON);
-    renderQueue($.PROG_SPRITE);
+    renderStrip($.PROG_POLYGON);
+    renderStrip($.PROG_SPRITE);
 
     gl.disable($.DEPTH_TEST);
 };
@@ -84,14 +84,12 @@ const renderText = () =>
     const programData = Dialogue.getProgramData();
     const texture = Dialogue.getTexture();
 
-    setProgram(programData);
-    Texture.bind(texture);
-    programData.setUniforms();
+    enableProgram(programData, texture);
     drawArraysVao($.TRIANGLE_STRIP, 0, 4, programData);
     Texture.unbind();
 };
 
-const renderQueue = (programId) =>
+const renderStrip = (programId) =>
 {
     const queue = queues.get(programId);
 
@@ -99,11 +97,30 @@ const renderQueue = (programId) =>
     {
         const texture = Model.getTexture(modelId);
 
-        setProgram(programData);
-        Texture.bind(texture);
-        programData.setUniforms();
+        enableProgram(programData, texture);
         drawArraysVao($.TRIANGLE_STRIP, 0, 4, programData);
     }
+};
+
+const renderTriangles = (programId) =>
+{
+    const queue = queues.get(programId);
+
+    for (const { programData, modelId } of queue)
+    {
+        const texture = Model.getTexture(modelId);
+
+        enableProgram(programData, texture);
+        // TODO: change 6 to vertices size
+        drawArraysVao($.TRIANGLES, 0, 6, programData);
+    }
+};
+
+const enableProgram = (programData, texture) =>
+{
+    setProgram(programData);
+    Texture.bind(texture);
+    programData.setUniforms();
 };
 
 // Blending
