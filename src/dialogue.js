@@ -6,79 +6,90 @@ import { isString } from "./utility";
 
 class UiCanvas
 {
-    constructor()
+    constructor(color)
     {
+        this.programData = new ProgramData($.PROG_SCREEN);
+        this.programData.setAttributes($.MODEL_SCREEN);
+        this.programData.stageUniform($.U_COLOR, color);
 
+        this.canvas = window.document.createElement("canvas");
+        this.ctx = this.canvas.getContext("2d");
+        this.texture = Texture.create();
+
+        this.canvas.width = $.SCREEN_WIDTH;
+        this.canvas.height = $.SCREEN_HEIGHT;
+    }
+
+    clear()
+    {
+        this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
+    }
+
+    canvasToTexture()
+    {
+        Texture.flip(true);
+        Texture.bind(this.texture);
+        Texture.from(this.canvas);
+        Texture.parami($.TEXTURE_MIN_FILTER, $.LINEAR);
+        Texture.unbind();
+        Texture.flip(false);
     }
 }
 
 export const Dialogue = {
     getBubbleTexture()
     {
-        return bubbleTexture;
+        return bubble.texture;
     },
     getTextProgramData()
     {
-        return textProgData;
+        return text.programData;
     },
     getBubbleProgramData()
     {
-        return bubbleProgData;
+        return bubble.programData;
     },
     getTextTexture()
     {
-        return textTexture;
+        return text.texture;
     },
     setText(str)
     {
-        textCtx.clearRect(0, 0, textCanvas.width, textCanvas.height);
-        bubbleCtx.clearRect(0, 0, bubbleCanvas.width, bubbleCanvas.height);
-
+        text.clear();
         drawSplitString(str, y);
+        text.canvasToTexture();
 
-        Texture.flip(true);
-        Texture.bind(textTexture);
-        Texture.from(textCanvas);
-        Texture.parami($.TEXTURE_MIN_FILTER, $.LINEAR);
-        Texture.unbind();
-        Texture.flip(false);
-
+        bubble.clear();
         drawBubble();
-
-        Texture.flip(true);
-        Texture.bind(bubbleTexture);
-        Texture.from(bubbleCanvas);
-        Texture.parami($.TEXTURE_MIN_FILTER, $.LINEAR);
-        Texture.unbind();
-        Texture.flip(false);
+        bubble.canvasToTexture();
     }
 };
 
 const drawDebug = () =>
 {
-    textCtx.fillStyle = "black";
-    textCtx.shadowBlur = 0;
-    textCtx.shadowOffsetX = 0;
-    textCtx.shadowOffsetY = 0;
-    textCtx.fillRect(x, y, width, (fontSize + fontPad) * 3);
+    text.ctx.fillStyle = "black";
+    text.ctx.shadowBlur = 0;
+    text.ctx.shadowOffsetX = 0;
+    text.ctx.shadowOffsetY = 0;
+    text.ctx.fillRect(x, y, width, (fontSize + fontPad) * 3);
 };
 
 const drawBubble = () =>
 {
-    bubbleCtx.fillStyle = "#fff";
-    bubbleCtx.shadowBlur = 0;
-    bubbleCtx.shadowOffsetX = 0;
-    bubbleCtx.shadowOffsetY = 0;
+    bubble.ctx.fillStyle = "#fff";
+    bubble.ctx.shadowBlur = 0;
+    bubble.ctx.shadowOffsetX = 0;
+    bubble.ctx.shadowOffsetY = 0;
 
-    bubbleCtx.beginPath();
+    bubble.ctx.beginPath();
     let start = beziars[0];
-    bubbleCtx.moveTo(start.x, start.y);
+    bubble.ctx.moveTo(start.x, start.y);
 
     for (let i = 0; i < beziars.length; i++)
     {
         const end = beziars[(i + 1) % beziars.length];
 
-        bubbleCtx.bezierCurveTo(
+        bubble.ctx.bezierCurveTo(
             start.cp2x, start.cp2y,
             end.cp1x, end.cp1y,
             end.x, end.y
@@ -87,16 +98,16 @@ const drawBubble = () =>
         start = end;
     }
 
-    bubbleCtx.closePath();
-    bubbleCtx.fill();
+    bubble.ctx.closePath();
+    bubble.ctx.fill();
 };
 
 const drawSplitString = (str, yPos) =>
 {
-    textCtx.fillStyle = "#fff";
-    textCtx.shadowBlur = 5;
-    textCtx.shadowOffsetX = 3;
-    textCtx.shadowOffsetY = 3;
+    text.ctx.fillStyle = "#fff";
+    text.ctx.shadowBlur = 5;
+    text.ctx.shadowOffsetX = 3;
+    text.ctx.shadowOffsetY = 3;
 
     const words = str.split(/(?=\s)/);
     let fits;
@@ -106,7 +117,7 @@ const drawSplitString = (str, yPos) =>
     {
         maybeFits = isString(maybeFits) ? maybeFits + word : word.trimStart();
 
-        if (textCtx.measureText(maybeFits).width <= width)
+        if (text.ctx.measureText(maybeFits).width <= width)
         {
             fits = maybeFits;
         }
@@ -138,31 +149,11 @@ const drawSplitString = (str, yPos) =>
 
 const drawText = (str, yPos) =>
 {
-    textCtx.fillText(str, x, yPos);
+    text.ctx.fillText(str, x, yPos);
 };
 
-const textProgData = new ProgramData($.PROG_SCREEN);
-textProgData.setAttributes($.MODEL_SCREEN);
-textProgData.stageUniform($.U_COLOR, [1, 1, 1, 1]);
-
-const bubbleProgData = new ProgramData($.PROG_SCREEN);
-bubbleProgData.setAttributes($.MODEL_SCREEN);
-bubbleProgData.stageUniform($.U_COLOR, [0, 0, 0, 0.6]);
-
-const textCanvas = window.document.createElement("canvas");
-const bubbleCanvas = window.document.createElement("canvas");
-
-const textCtx = textCanvas.getContext("2d");
-const bubbleCtx = bubbleCanvas.getContext("2d");
-
-const textTexture = Texture.create();
-const bubbleTexture = Texture.create();
-
-textCanvas.width = $.SCREEN_WIDTH;
-textCanvas.height = $.SCREEN_HEIGHT;
-
-bubbleCanvas.width = $.SCREEN_WIDTH;
-bubbleCanvas.height = $.SCREEN_HEIGHT;
+const text = new UiCanvas([1, 1, 1, 1]);
+const bubble = new UiCanvas([0, 0, 0, 0.6]);
 
 /*------------------------------------------------------------------------------
     Draw area
@@ -174,10 +165,10 @@ const x = 0.3 * $.SCREEN_WIDTH;
 const width = $.SCREEN_WIDTH - 2*x;
 const y = 0.69 * $.SCREEN_HEIGHT;
 
-textCtx.textAlign = "left";
-textCtx.textBaseline = "top";
-textCtx.font = `${fontSize}px Arial`;
-textCtx.shadowColor = "#000";
+text.ctx.textAlign = "left";
+text.ctx.textBaseline = "top";
+text.ctx.font = `${fontSize}px Arial`;
+text.ctx.shadowColor = "#000";
 
 const beziars = [
     new Bezier(0.25, 0.65, 89, 130, 240),
