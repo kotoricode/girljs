@@ -16,15 +16,25 @@ export class Transform
             M0, M1, M2, ,
             M4, M5, M6, ,
             M8, M9, MA, ,
-            MC, MD, ME
+            MC, MD, ME,
         ] = matrix;
 
+        /*----------------------------------------------------------------------
+            Translation
+        ----------------------------------------------------------------------*/
         this.translation.setValues(MC, MD, ME);
 
+        /*----------------------------------------------------------------------
+            Scale
+        ----------------------------------------------------------------------*/
         const sx = Math.sqrt(M0**2 + M1**2 + M2**2);
         const sy = Math.sqrt(M4**2 + M5**2 + M6**2);
         const sz = Math.sqrt(M8**2 + M9**2 + MA**2);
+        this.scale.setValues(sx, sy, sz);
 
+        /*----------------------------------------------------------------------
+            Rotation
+        ----------------------------------------------------------------------*/
         const R0 = M0 / sx;
         const R1 = M1 / sx;
         const R2 = M2 / sx;
@@ -73,20 +83,6 @@ export class Transform
             w = (R4 - R1) / s;
         }
 
-        // Normalize
-        const scaleW = 1 / w**2;
-
-        this.scale.setValues(
-            sx / scaleW,
-            sy / scaleW,
-            sz / scaleW,
-        );
-
-        this.rotation.setValues(
-            x / w,
-            y / w,
-            z / w,
-            1
-        );
+        this.rotation.setValues(x, y, z, w);
     }
 }

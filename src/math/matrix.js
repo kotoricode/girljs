@@ -1,17 +1,23 @@
 // https://ncalculators.com/matrix/4x4-matrix-multiplication-calculator.htm
-import * as $ from "../const";
-import { DEG_TO_RAD, SettableArray } from "../utility";
+import { SettableArray } from "../utility";
 
 export class Matrix extends SettableArray
 {
-    constructor()
+    constructor(...params)
     {
-        super(
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            0, 0, 0, 1
-        );
+        if (params.length)
+        {
+            super(...params);
+        }
+        else
+        {
+            super(
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            );
+        }
     }
 
     composeFrom(transform)
@@ -162,85 +168,6 @@ export class Matrix extends SettableArray
             L1*RC + L5*RD + L9*RE + LD*RF,
             L2*RC + L6*RD + LA*RE + LE*RF,
             L3*RC + L7*RD + LB*RE + LF*RF
-        );
-    }
-
-    multiplyTransform(matrix)
-    {
-        const [
-            L0, L1, L2, ,
-            L4, L5, L6, ,
-            L8, L9, LA, ,
-            LC, LD, LE
-        ] = matrix;
-
-        const [
-            R0, R1, R2, ,
-            R4, R5, R6, ,
-            R8, R9, RA, ,
-            RC, RD, RE
-        ] = this;
-
-        this.setValues(
-            L0*R0 + L4*R1 + L8*R2,
-            L1*R0 + L5*R1 + L9*R2,
-            L2*R0 + L6*R1 + LA*R2,
-            0,
-
-            L0*R4 + L4*R5 + L8*R6,
-            L1*R4 + L5*R5 + L9*R6,
-            L2*R4 + L6*R5 + LA*R6,
-            0,
-
-            L0*R8 + L4*R9 + L8*RA,
-            L1*R8 + L5*R9 + L9*RA,
-            L2*R8 + L6*R9 + LA*RA,
-            0,
-
-            L0*RC + L4*RD + L8*RE + LC,
-            L1*RC + L5*RD + L9*RE + LD,
-            L2*RC + L6*RD + LA*RE + LE,
-            1
-        );
-    }
-
-    multiplyPerspective(fov, near, far)
-    {
-        const tan = Math.tan(DEG_TO_RAD * fov / 2);
-        const dist = far - near;
-
-        const L0 = 1 / ($.SCREEN_ASPECT * tan);
-        const L5 = 1 / tan;
-        const LA = -(far + near) / dist;
-        const LE = -2*far*near / dist;
-
-        const [
-            R0, R1, R2, R3,
-            R4, R5, R6, R7,
-            R8, R9, RA, RB,
-            RC, RD, RE, RF
-        ] = this;
-
-        this.setValues(
-            L0*R0,
-            L5*R1,
-            LA*R2 + LE*R3,
-            -R2,
-
-            L0*R4,
-            L5*R5,
-            LA*R6 + LE*R7,
-            -R6,
-
-            L0*R8,
-            L5*R9,
-            LA*RA + LE*RB,
-            -RA,
-
-            L0*RC,
-            L5*RD,
-            LA*RE + LE*RF,
-            -RE
         );
     }
 }

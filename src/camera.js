@@ -1,6 +1,6 @@
 import * as $ from "./const";
 import { BufferUniform } from "./gl/buffer";
-import { BufferData } from "./utility";
+import { BufferData, DEG_TO_RAD } from "./utility";
 import { Matrix } from "./math/matrix";
 import { Transform } from "./math/transform";
 
@@ -17,7 +17,7 @@ export const setCameraPosition = (vec) =>
     --------------------------------------------------------------------------*/
     viewProjection.composeFrom(transform);
     viewProjection.invert();
-    viewProjection.multiplyPerspective(fov, near, far);
+    viewProjection.multiply(projection);
     invViewProjection.invertFrom(viewProjection);
 
     /*--------------------------------------------------------------------------
@@ -34,6 +34,15 @@ const fov = 30;
 const transform = new Transform(0, 2.7, 8);
 const viewProjection = new Matrix();
 const invViewProjection = new Matrix();
+
+const tan = Math.tan(DEG_TO_RAD * fov / 2);
+const dist = far - near;
+const projection = new Matrix(
+    1/($.SCREEN_ASPECT * tan), 0, 0, 0,
+    0, 1/tan, 0, 0,
+    0, 0, -(far+near) / dist, -1,
+    0, 0, -2*far*near / dist, 0
+);
 
 transform.rotation.fromEuler(0.2, 0, 0);
 

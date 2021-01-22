@@ -119,43 +119,14 @@ export class Scene
         {
             const { matrix } = space;
 
-            space.local.translation.setValues(
-                Math.random() - 0.5,
-                Math.random() - 0.5,
-                Math.random() - 0.5
-            );
-
-            space.local.scale.setValues(
-                Math.random(),
-                Math.random(),
-                Math.random(),
-            );
-
-            space.local.rotation.setValues(
-                Math.random() - 0.5,
-                Math.random() - 0.5,
-                Math.random() - 0.5,
-                Math.random() - 0.5
-            );
-
-            space.local.rotation.setValues(
-                space.local.rotation[0] / space.local.rotation[3],
-                space.local.rotation[1] / space.local.rotation[3],
-                space.local.rotation[2] / space.local.rotation[3],
-                1
-            );
-
             matrix.composeFrom(space.local);
 
             if (parentMatrix)
             {
-                matrix.multiplyTransformMatrix(parentMatrix);
+                matrix.multiply(parentMatrix);
             }
 
             space.world.decomposeFrom(matrix);
-
-            console.log(space.local.rotation);
-            console.log(space.world.rotation);
 
             if (this.dirty.has(space))
             {
