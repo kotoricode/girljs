@@ -25,34 +25,68 @@ export class Transform
         const sy = Math.sqrt(M4**2 + M5**2 + M6**2);
         const sz = Math.sqrt(M8**2 + M9**2 + MA**2);
 
-        this.scale.setValues(sx, sy, sz);
+        const R0 = M0 / sx;
+        const R1 = M1 / sx;
+        const R2 = M2 / sx;
+        const R4 = M4 / sy;
+        const R5 = M5 / sy;
+        const R6 = M6 / sy;
+        const R8 = M8 / sz;
+        const R9 = M9 / sz;
+        const RA = MA / sz;
 
-        this.rotation.fromMatrix(
-            M0 / sx,
-            M1 / sx,
-            M2 / sx,
+        const trace = R0 + R5 + RA;
 
-            M4 / sy,
-            M5 / sy,
-            M6 / sy,
+        let x, y, z, w;
 
-            M8 / sz,
-            M9 / sz,
-            MA / sz,
-        );
+        if (trace > 0)
+        {
+            const s = 0.5 / Math.sqrt(trace + 1);
 
-        // NORMALIZE
+            x = (R9 - R6) * s;
+            y = (R2 - R8) * s;
+            z = (R4 - R1) * s;
+            w = 0.25 / s;
+        }
+        else if (R0 > R5 && R0 > RA)
+        {
+            const s = 2 * Math.sqrt(1 + R0 - R5 - RA);
+            x = 0.25 * s;
+            y = (R1 + R4) / s;
+            z = (R2 + R8) / s;
+            w = (R9 - R6) / s;
+        }
+        else if (R5 > RA)
+        {
+            const s = 2 * Math.sqrt(1 + R5 - R0 - RA);
+            x = (R1 + R4) / s;
+            y = 0.25 * s;
+            z = (R6 + R9) / s;
+            w = (R2 - R8) / s;
+        }
+        else
+        {
+            const s = 2 * Math.sqrt(1 + RA - R0 - R5);
+            x = (R2 + R8) / s;
+            y = (R6 + R9) / s;
+            z = 0.25 * s;
+            w = (R4 - R1) / s;
+        }
+
+        // Normalize
+        const scaleW = 1 / w**2;
+
         this.scale.setValues(
-            sx / (1 / this.rotation[3] ** 2),
-            sy / (1 / this.rotation[3] ** 2),
-            sz / (1 / this.rotation[3] ** 2),
+            sx / scaleW,
+            sy / scaleW,
+            sz / scaleW,
         );
 
         this.rotation.setValues(
-            this.rotation[0] / this.rotation[3],
-            this.rotation[1] / this.rotation[3],
-            this.rotation[2] / this.rotation[3],
-            this.rotation[3] / this.rotation[3]
+            x / w,
+            y / w,
+            z / w,
+            1
         );
     }
 }

@@ -120,9 +120,9 @@ export class Scene
             const { matrix } = space;
 
             space.local.translation.setValues(
-                Math.random(),
-                Math.random(),
-                Math.random()
+                Math.random() - 0.5,
+                Math.random() - 0.5,
+                Math.random() - 0.5
             );
 
             space.local.scale.setValues(
@@ -132,10 +132,10 @@ export class Scene
             );
 
             space.local.rotation.setValues(
-                Math.random(),
-                Math.random(),
-                Math.random(),
-                Math.random()
+                Math.random() - 0.5,
+                Math.random() - 0.5,
+                Math.random() - 0.5,
+                Math.random() - 0.5
             );
 
             space.local.rotation.setValues(
@@ -154,8 +154,8 @@ export class Scene
 
             space.world.decomposeFrom(matrix);
 
-            console.log(space.local);
-            console.log(space.world);
+            console.log(space.local.rotation);
+            console.log(space.world.rotation);
 
             if (this.dirty.has(space))
             {
