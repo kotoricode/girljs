@@ -1,34 +1,32 @@
-import { SafeSet } from "../utils/better-builtins";
+import { Vector } from "../math/vector";
 import { Component } from "./component";
 
 export class Collider extends Component
 {
-    constructor(...meshes)
+    constructor(x, y, width, height, anchorX=0, anchorY=0)
     {
         super();
+        this.position = new Vector(x, y);
+        this.bottomRight = new Vector(x + width, y + height);
 
-        // TODO: order meshes so that cheapest ones are checked first
-        this.meshes = new SafeSet(meshes);
+        this.width = width;
+        this.height = height;
+
+        this.anchor = new Vector(anchorX, anchorY);
     }
 
     hasPoint(vec)
     {
-        for (const collider of this.meshes)
-        {
-            if (collider.hasPoint(vec))
-            {
-                return true;
-            }
-        }
-
-        return false;
+        return this.position.x <= vec.x && vec.x <= this.bottomRight.x &&
+               this.position.y <= vec.y && vec.y <= this.bottomRight.y;
     }
 
     setPosition(vec)
     {
-        for (const collider of this.meshes)
-        {
-            collider.setPosition(vec);
-        }
+        const posX = vec.x - this.anchor.x*this.width;
+        const posY = vec.y - this.anchor.y*this.height;
+
+        this.position.setValues(posX, posY);
+        this.bottomRight.setValues(posX + this.width, posY + this.height);
     }
 }

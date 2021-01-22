@@ -1,12 +1,12 @@
 import { gl } from "../dom";
 import { BufferUniform } from "./buffer";
-import { Vao } from "./vao";
+import { VertexArray } from "./vertex-array";
 
 export const drawArraysVao = (mode, offset, length, programData) =>
 {
-    Vao.bind(programData.vao);
+    VertexArray.bind(programData.vao);
     gl.drawArrays(mode, offset, length);
-    Vao.unbind();
+    VertexArray.unbind();
 };
 
 export const setProgram = (programData) =>

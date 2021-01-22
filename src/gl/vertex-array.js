@@ -1,12 +1,12 @@
 import { gl } from "../dom";
 
-export const Vao = {
+export const VertexArray = {
     bind(vao)
     {
         gl.bindVertexArray(vao);
     },
     unbind()
     {
-        Vao.bind(null);
+        VertexArray.bind(null);
     }
 };

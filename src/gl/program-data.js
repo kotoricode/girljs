@@ -2,7 +2,7 @@ import * as $ from "../const";
 import { gl } from "../dom";
 import { Program } from "./program";
 import { BufferArray } from "./buffer";
-import { Vao } from "./vao";
+import { VertexArray } from "./vertex-array";
 import { SafeMap } from "../utility";
 import { Model } from "./model";
 
@@ -42,7 +42,7 @@ export class ProgramData
         const model = Model.get(modelId);
         const bufferId = Model.getBufferId(modelId);
 
-        Vao.bind(this.vao);
+        VertexArray.bind(this.vao);
         BufferArray.bind(bufferId);
 
         for (const [name, attribSize] of this.attributes)
@@ -60,7 +60,7 @@ export class ProgramData
         }
 
         BufferArray.unbind();
-        Vao.unbind();
+        VertexArray.unbind();
     }
 
     setUniforms()
