@@ -27,9 +27,9 @@ export class Transform
         /*----------------------------------------------------------------------
             Scale
         ----------------------------------------------------------------------*/
-        const sx = Math.sqrt(M0**2 + M1**2 + M2**2);
-        const sy = Math.sqrt(M4**2 + M5**2 + M6**2);
-        const sz = Math.sqrt(M8**2 + M9**2 + MA**2);
+        const sx = (M0**2 + M1**2 + M2**2) ** 0.5;
+        const sy = (M4**2 + M5**2 + M6**2) ** 0.5;
+        const sz = (M8**2 + M9**2 + MA**2) ** 0.5;
         this.scale.setValues(sx, sy, sz);
 
         /*----------------------------------------------------------------------
@@ -51,7 +51,7 @@ export class Transform
 
         if (trace > 0)
         {
-            const s = 0.5 / Math.sqrt(trace + 1);
+            const s = 0.5 / (trace + 1) ** 0.5;
 
             x = (R9 - R6) * s;
             y = (R2 - R8) * s;
@@ -60,7 +60,7 @@ export class Transform
         }
         else if (R0 > R5 && R0 > RA)
         {
-            const s = 2 * Math.sqrt(1 + R0 - R5 - RA);
+            const s = 2 * (1 + R0 - R5 - RA) ** 0.5;
             x = 0.25 * s;
             y = (R1 + R4) / s;
             z = (R2 + R8) / s;
@@ -68,7 +68,7 @@ export class Transform
         }
         else if (R5 > RA)
         {
-            const s = 2 * Math.sqrt(1 + R5 - R0 - RA);
+            const s = 2 * (1 + R5 - R0 - RA) ** 0.5;
             x = (R1 + R4) / s;
             y = 0.25 * s;
             z = (R6 + R9) / s;
@@ -76,7 +76,7 @@ export class Transform
         }
         else
         {
-            const s = 2 * Math.sqrt(1 + RA - R0 - R5);
+            const s = 2 * (1 + RA - R0 - R5) ** 0.5;
             x = (R2 + R8) / s;
             y = (R6 + R9) / s;
             z = 0.25 * s;
