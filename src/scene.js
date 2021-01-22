@@ -40,7 +40,7 @@ export class Scene
         }
     }
 
-    addEntity(entity, parentId=this.root.id)
+    addEntity(entity, parentId)
     {
         const parent = this.getEntity(parentId);
 
