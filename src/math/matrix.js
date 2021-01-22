@@ -14,7 +14,7 @@ export class Matrix extends SettableArray
         );
     }
 
-    fromTransform(transform)
+    composeFrom(transform)
     {
         const [sx, sy, sz] = transform.scale;
         const [rx, ry, rz, rw] = transform.rotation;

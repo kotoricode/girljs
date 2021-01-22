@@ -7,6 +7,8 @@ export class Quaternion extends SettableArray
         super(0, 0, 0, 1);
     }
 
+    // ZYX https://www.andre-gaschler.com/rotationconverter/
+    // http://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToQuaternion/index.htm
     fromEuler(x, y, z)
     {
         const hx = x / 2;

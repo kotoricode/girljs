@@ -15,7 +15,7 @@ export const setCameraPosition = (vec) =>
     /*--------------------------------------------------------------------------
         ViewProjection & Inverted ViewProjection
     --------------------------------------------------------------------------*/
-    viewProjection.fromTransform(transform);
+    viewProjection.composeFrom(transform);
     viewProjection.invert();
     viewProjection.multiplyPerspective(fov, near, far);
     invViewProjection.invertFrom(viewProjection);

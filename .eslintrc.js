@@ -27,7 +27,7 @@ module.exports = {
             "ignoredNodes": ["ConditionalExpression"]
         }],
         "linebreak-style": [2, "windows"],
-        "max-len": [2, {
+        "max-len": [0, {
             "code": 80
         }],
         "newline-before-return": 2,

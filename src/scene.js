@@ -117,21 +117,22 @@ export class Scene
 
         if (isDirty)
         {
+            space.local.rotation.fromEuler(0.3, 0.3, 0.4);
+
             const { matrix } = space;
 
-            matrix.fromTransform(space.local);
+            matrix.composeFrom(space.local);
 
             if (parentMatrix)
             {
                 matrix.multiplyTransformMatrix(parentMatrix);
             }
 
-            // TODO: rotation, scale
-            space.world.translation.setValues(
-                matrix[12],
-                matrix[13],
-                matrix[14]
-            );
+            space.world.decomposeFrom(matrix);
+
+            console.log(space.local);
+            console.log(space.world);
+            console.log("-");
 
             if (this.dirty.has(space))
             {
@@ -220,6 +221,7 @@ export class Scene
         return Scene.yieldComponents(entity, components);
     }
 
+    // TODO: is there anything gc can't handle for us?
     unload()
     {
         this.dirty.clear();
@@ -232,18 +234,12 @@ export class Scene
 
         this.cached.clear();
 
-        this.unloadEntities(this.root);
-    }
-
-    unloadEntities(entity)
-    {
-        for (const child of entity.children)
+        for (const entity of this.entities.values())
         {
-            this.unloadEntities(child);
+            entity.childIds.clear();
+            entity.parent = null;
+            entity.components.clear();
         }
-
-        entity.children.clear();
-        entity.components.clear();
     }
 
     update(dt)
