@@ -36,15 +36,9 @@ export const
     PROG_SCREEN = i++,
     PROG_UI = i++,
     PROG_DEBUG = i++,
-    PROG_IMAGE_FX = i++,
+    PROG_IMAGE = i++,
     PROG_SPRITE = i++,
     PROG_POLYGON = i++;
-
-export const
-    PROG_DEF_SRC = i++,
-    PROG_DEF_A_LAYOUT = i++,
-    PROG_DEF_U = i++,
-    PROG_DEF_U_BLOCKS = i++;
 
 export const
     PROG_DATA_PROGRAM = i++,
@@ -52,16 +46,6 @@ export const
     PROG_DATA_U_BLOCKS = i++,
     PROG_DATA_U_DEFAULTS = i++,
     PROG_DATA_U_SETTERS = i++;
-
-export const
-    VS_COLOR = i++,
-    VS_SCREEN = i++,
-    VS_UI = i++,
-    VS_WORLD = i++,
-    FS_COLOR = i++,
-    FS_IMAGE = i++,
-    FS_POLYGON = i++,
-    FS_SPRITE = i++;
 
 export const
     BUF_ARR_MODEL = i++,
@@ -118,11 +102,6 @@ export const
     Program --- DO NOT MODIFY
 ------------------------------------------------------------------------------*/
 export const
-    U_TYPE_2F = "uniform2f",
-    U_TYPE_4F = "uniform4f",
-    U_TYPE_M4FV = "uniformMatrix4fv";
-
-export const
     A_XYZ = "a_xyz",
     A_UV = "a_uv";
 
@@ -151,14 +130,7 @@ export const
     File System --- DO NOT MODIFY
 ------------------------------------------------------------------------------*/
 export const
-    PATH_IMG = "./img/",
-    PATH_SND = "./snd/";
-
-export const
-    URL_AUD_OMOIDE = "omoide_loft.ogg",
-    URL_TEX_POLY = "texture.png",
-    URL_TEX_BRAID = "braid.png",
-    URL_TEX_GIRL = "girl.png";
+    URL_AUD_OMOIDE = "omoide_loft.ogg";
 
 /*------------------------------------------------------------------------------
     GL enums --- DO NOT MODIFY

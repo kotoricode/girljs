@@ -76,7 +76,7 @@ export const Texture = {
 /*------------------------------------------------------------------------------
     Image
 ------------------------------------------------------------------------------*/
-const fetchNextImage = () => image.src = `${$.PATH_IMG}${toFetch[0]}`;
+const fetchNextImage = () => image.src = "./img/" + toFetch[0];
 
 const image = new Image();
 
@@ -110,10 +110,10 @@ let activeTexture;
 
 // id/url, width, height, parami[], uvs[ id, x, y, width, height ]
 const textureDef = [
-    $.URL_TEX_GIRL, 186, 600, [
+    "girl.png", 186, 600, [
         $.UV_GIRL_00, 0, 0, 186, 600
     ],
-    $.URL_TEX_BRAID, 1024, 1024, [
+    "braid.png", 1024, 1024, [
         $.UV_BRAID_00, 0,   10,  136, 136,
         $.UV_BRAID_02, 256, 10,  136, 136,
         $.UV_BRAID_04, 512, 10,  136, 136,
@@ -129,7 +129,7 @@ const textureDef = [
         $.UV_BRAID_24, 384, 461, 136, 136,
         $.UV_BRAID_26, 640, 461, 136, 136,
     ],
-    $.URL_TEX_POLY, 512, 512, [
+    "texture.png", 512, 512, [
         $.UV_GROUND, 94, 97, 256, 256
     ]
 ];

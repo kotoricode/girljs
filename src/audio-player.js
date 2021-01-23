@@ -12,7 +12,7 @@ export const AudioPlayer = {
 
         if (ctx)
         {
-            audioObj.element.src = $.PATH_SND + url;
+            audioObj.element.src = PATH + url;
         }
     },
     setGain(gainId, value, isSetPref=true)
@@ -52,6 +52,8 @@ const getGain = (gainId, parent) =>
 
     return gain;
 };
+
+const PATH = "./snd/";
 
 const audio = new SafeMap([
     [$.AUDIO_MUSIC, {

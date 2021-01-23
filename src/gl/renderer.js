@@ -105,7 +105,7 @@ const renderTriangles = (programData, texture, drawSize) =>
 gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
-const imageProgramData = new ProgramData($.PROG_IMAGE_FX);
+const imageProgramData = new ProgramData($.PROG_IMAGE);
 imageProgramData.setAttributes($.MODEL_SCREEN);
 
 // Prepare framebuffer
