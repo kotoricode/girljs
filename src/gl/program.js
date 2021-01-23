@@ -12,10 +12,10 @@ import fsSprite  from "./shaders/frag/sprite.frag";
 import fsPolygon from "./shaders/frag/polygon.frag";
 import fsColor   from "./shaders/frag/color.frag";
 
-const createAttachShader = (program, shaderId, vertFrag) =>
+const createAttachShader = (program, shaderId, shaderDef) =>
 {
     const shader = gl.createShader(shaderId);
-    gl.shaderSource(shader, vertFrag.src);
+    gl.shaderSource(shader, shaderDef.get($.PROG_DEF_SRC));
     gl.compileShader(shader);
     gl.attachShader(program, shader);
 
@@ -61,56 +61,67 @@ const uniMapColor = new SafeMap([uniColor]);
     Vertex shader definitions
 ------------------------------------------------------------------------------*/
 const vertDef = {
-    color: {
-        src: vsColor,
-        blocks: ubCamera,
-        attributes: new SafeMap([attribXyz])
-    },
-    screen: {
-        src: vsScreen,
-        attributes: attrMapXyUv
-    },
-    ui: {
-        src: vsUi,
-        attributes: attrMapXyUv,
-        uniforms: {
-            uniformMatrix4fv: new SafeMap([uniTransform])
-        }
-    },
-    world: {
-        src: vsWorld,
-        blocks: ubCamera,
-        attributes: attrMapXyzUv,
-        uniforms: {
-            uniformMatrix4fv: new SafeMap([uniTransform]),
-            uniform2f: new SafeMap([uniUvRepeat])
-        }
-    }
+
+    color: new SafeMap([
+        [$.PROG_DEF_SRC, vsColor],
+        [$.PROG_DEF_A_LAYOUT, new SafeMap([attribXyz])],
+        [$.PROG_DEF_U_BLOCKS, ubCamera],
+    ]),
+
+    screen: new SafeMap([
+        [$.PROG_DEF_SRC, vsScreen],
+        [$.PROG_DEF_A_LAYOUT, attrMapXyUv]
+    ]),
+
+
+    ui: new SafeMap([
+        [$.PROG_DEF_SRC, vsUi],
+        [$.PROG_DEF_A_LAYOUT, attrMapXyUv],
+        [$.PROG_DEF_U, new SafeMap([
+            [$.U_TYPE_M4FV, new SafeMap([uniTransform])]
+        ])]
+    ]),
+
+    world: new SafeMap([
+        [$.PROG_DEF_SRC, vsWorld],
+        [$.PROG_DEF_A_LAYOUT, attrMapXyzUv],
+        [$.PROG_DEF_U_BLOCKS, ubCamera],
+        [$.PROG_DEF_U, new SafeMap([
+            [$.U_TYPE_M4FV, new SafeMap([uniTransform])],
+            [$.U_TYPE_2F, new SafeMap([uniUvRepeat])]
+        ])]
+    ])
+
 };
 
 /*------------------------------------------------------------------------------
     Fragment shader definitions
 ------------------------------------------------------------------------------*/
 const fragDef = {
-    color: {
-        src: fsColor
-    },
-    imageFx: {
-        src: fsImageFx
-    },
-    sprite: {
-        src: fsSprite,
-        uniforms: {
-            uniform4f: uniMapColor
-        }
-    },
-    polygon: {
-        src: fsPolygon,
-        uniforms: {
-            uniform2f: new SafeMap([uniUvOffset, uniUvSize]),
-            uniform4f: uniMapColor
-        }
-    }
+
+    color: new SafeMap([
+        [$.PROG_DEF_SRC, fsColor]
+    ]),
+
+    imageFx: new SafeMap([
+        [$.PROG_DEF_SRC, fsImageFx]
+    ]),
+
+    sprite: new SafeMap([
+        [$.PROG_DEF_SRC, fsSprite],
+        [$.PROG_DEF_U, new SafeMap([
+            [$.U_TYPE_4F, uniMapColor]
+        ])]
+    ]),
+
+    polygon: new SafeMap([
+        [$.PROG_DEF_SRC, fsPolygon],
+        [$.PROG_DEF_U, new SafeMap([
+            [$.U_TYPE_2F, new SafeMap([uniUvOffset, uniUvSize])],
+            [$.U_TYPE_4F, uniMapColor]
+        ])]
+    ]),
+
 };
 
 /*------------------------------------------------------------------------------
@@ -136,8 +147,7 @@ for (let i = 0; i < programDef.length;)
     const vert = programDef[i++];
     const frag = programDef[i++];
 
-    const { attributes, blocks: vsBlocks } = vert;
-    const fsBlocks = frag.blocks;
+    const aLayout = vert.get($.PROG_DEF_A_LAYOUT);
 
     /*--------------------------------------------------------------------------
         Program
@@ -155,42 +165,42 @@ for (let i = 0; i < programDef.length;)
     /*--------------------------------------------------------------------------
         Uniform blocks
     --------------------------------------------------------------------------*/
-    const blocks = new SafeSet();
+    const uBlocks = new SafeSet();
 
-    if (vsBlocks)
+    if (vert.has($.PROG_DEF_U_BLOCKS))
     {
-        for (const block of vsBlocks)
+        for (const block of vert.get($.PROG_DEF_U_BLOCKS))
         {
-            blocks.add(block);
+            uBlocks.add(block);
         }
     }
 
-    if (fsBlocks)
+    if (frag.has($.PROG_DEF_U_BLOCKS))
     {
-        for (const block of fsBlocks)
+        for (const block of frag.has($.PROG_DEF_U_BLOCKS))
         {
-            blocks.add(block);
+            uBlocks.add(block);
         }
     }
 
     /*--------------------------------------------------------------------------
         Uniforms
     --------------------------------------------------------------------------*/
-    const setters = new SafeMap();
-    const defaults = new SafeMap();
+    const uSetters = new SafeMap();
+    const uDefaults = new SafeMap();
 
     for (const shader of [vert, frag])
     {
-        if (shader.uniforms)
+        if (shader.has($.PROG_DEF_U))
         {
-            for (const [type, map] of Object.entries(shader.uniforms))
+            for (const [type, map] of shader.get($.PROG_DEF_U))
             {
                 for (const [name, values] of map)
                 {
                     const pos = gl.getUniformLocation(program, name);
                     const setter = createSetter(type, pos);
-                    setters.set(name, setter);
-                    defaults.set(name, values);
+                    uSetters.set(name, setter);
+                    uDefaults.set(name, values);
                 }
             }
         }
@@ -198,9 +208,9 @@ for (let i = 0; i < programDef.length;)
 
     preparedPrograms.set(programId, new SafeMap([
         [$.PROG_DATA_PROGRAM, program],
-        [$.PROG_DATA_ATTRIBUTES, attributes],
-        [$.PROG_DATA_BLOCKS, blocks],
-        [$.PROG_DATA_DEFAULTS, defaults],
-        [$.PROG_DATA_SETTERS, setters]
+        [$.PROG_DATA_A_LAYOUT, aLayout],
+        [$.PROG_DATA_U_BLOCKS, uBlocks],
+        [$.PROG_DATA_U_DEFAULTS, uDefaults],
+        [$.PROG_DATA_U_SETTERS, uSetters]
     ]));
 }

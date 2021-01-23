@@ -17,24 +17,29 @@ export class ProgramData
         this.programId = programId;
 
         // Attributes
-        this.attributes = prepared.get($.PROG_DATA_ATTRIBUTES);
+        this.aLayout = prepared.get($.PROG_DATA_A_LAYOUT);
         this.vao = gl.createVertexArray();
 
         // Uniforms
-        this.setters = prepared.get($.PROG_DATA_SETTERS);
-        this.blocks = prepared.get($.PROG_DATA_BLOCKS);
-        this.staging = new SafeMap();
-        const defaults = prepared.get($.PROG_DATA_DEFAULTS);
+        this.uSetters = prepared.get($.PROG_DATA_U_SETTERS);
+        this.uBlocks = prepared.get($.PROG_DATA_U_BLOCKS);
+        this.uStaging = new SafeMap();
+        const defaults = prepared.get($.PROG_DATA_U_DEFAULTS);
 
         for (const [name, values] of defaults)
         {
-            this.staging.set(name, values.slice());
+            this.uStaging.set(name, values.slice());
         }
     }
 
     delete()
     {
         gl.deleteVertexArray(this.vao);
+    }
+
+    hasStaging(uId)
+    {
+        return this.uStaging.has(uId);
     }
 
     setAttributes(modelId)
@@ -45,7 +50,7 @@ export class ProgramData
         VertexArray.bind(this.vao);
         BufferArray.bind(bufferId);
 
-        for (const [name, attribSize] of this.attributes)
+        for (const [name, attribSize] of this.aLayout)
         {
             const pos = gl.getAttribLocation(this.program, name);
             gl.enableVertexAttribArray(pos);
@@ -65,9 +70,9 @@ export class ProgramData
 
     setUniforms()
     {
-        for (const [key, value] of this.staging)
+        for (const [key, value] of this.uStaging)
         {
-            this.setters.get(key)(value);
+            this.uSetters.get(key)(value);
         }
     }
 
@@ -75,12 +80,12 @@ export class ProgramData
     {
         if (!Array.isArray(value)) throw Error;
 
-        this.staging.update(key, value);
+        this.uStaging.update(key, value);
     }
 
     stageUniformAtIndex(key, idx, value)
     {
-        const staged = this.staging.get(key);
+        const staged = this.uStaging.get(key);
 
         if (!Array.isArray(staged) || staged.length <= idx) throw Error;
 

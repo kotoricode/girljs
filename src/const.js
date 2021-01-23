@@ -41,11 +41,17 @@ export const
     PROG_POLYGON = i++;
 
 export const
+    PROG_DEF_SRC = "src",
+    PROG_DEF_A_LAYOUT = "aLayout",
+    PROG_DEF_U = "u",
+    PROG_DEF_U_BLOCKS = "uBlocks";
+
+export const
     PROG_DATA_PROGRAM = i++,
-    PROG_DATA_ATTRIBUTES = i++,
-    PROG_DATA_BLOCKS = i++,
-    PROG_DATA_DEFAULTS = i++,
-    PROG_DATA_SETTERS = i++;
+    PROG_DATA_A_LAYOUT = i++,
+    PROG_DATA_U_BLOCKS = i++,
+    PROG_DATA_U_DEFAULTS = i++,
+    PROG_DATA_U_SETTERS = i++;
 
 export const
     BUF_ARR_MODEL = i++,
@@ -101,6 +107,11 @@ export const
 /*------------------------------------------------------------------------------
     Shaders
 ------------------------------------------------------------------------------*/
+export const
+    U_TYPE_2F = "uniform2f",
+    U_TYPE_4F = "uniform4f",
+    U_TYPE_M4FV = "uniformMatrix4fv";
+
 export const
     A_XYZ = "a_xyz",
     A_UV = "a_uv";

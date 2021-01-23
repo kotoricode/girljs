@@ -64,9 +64,8 @@ export class Scene
                 const drawable = entity.getComponent(Drawable);
 
                 const { programData } = drawable;
-                const { staging } = programData;
 
-                if (staging.has($.U_TRANSFORM))
+                if (programData.hasStaging($.U_TRANSFORM))
                 {
                     programData.stageUniformAtIndex(
                         $.U_TRANSFORM,
@@ -75,7 +74,8 @@ export class Scene
                     );
                 }
 
-                if (staging.has($.U_UVOFFSET) && staging.has($.U_UVREPEAT))
+                if (programData.hasStaging($.U_UVOFFSET) &&
+                    programData.hasStaging($.U_UVREPEAT))
                 {
                     const [
                         uvMinX, uvMaxY,
@@ -119,21 +119,21 @@ export class Scene
         {
             const { matrix } = space;
 
-            space.local.translation.setValues(
-                Math.random(),
-                Math.random(),
-                Math.random(),
-            );
+            // space.local.translation.setValues(
+            //     Math.random(),
+            //     Math.random(),
+            //     Math.random(),
+            // );
 
-            space.local.rotation.setValues(
-                0.1281319, 0.2562637, 0.3843956, 0.8775826
-            );
+            // space.local.rotation.setValues(
+            //     0.1281319, 0.2562637, 0.3843956, 0.8775826
+            // );
 
-            space.local.scale.setValues(
-                Math.random(),
-                Math.random(),
-                Math.random(),
-            );
+            // space.local.scale.setValues(
+            //     Math.random(),
+            //     Math.random(),
+            //     Math.random(),
+            // );
 
             matrix.composeFrom(space.local);
 
@@ -144,8 +144,8 @@ export class Scene
 
             space.world.decomposeFrom(matrix);
 
-            console.log(space.local);
-            console.log(space.world);
+            // console.log(space.local);
+            // console.log(space.world);
 
             if (this.dirty.has(space))
             {
