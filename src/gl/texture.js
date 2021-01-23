@@ -32,36 +32,34 @@ export const Texture = {
     {
         gl.texImage2D($.TEXTURE_2D, 0, $.RGBA, $.RGBA, $.UNSIGNED_BYTE, src);
     },
-    getUvData(uvId)
+    get(uvId)
     {
-        return uvData.get(uvId);
+        return uvData.get(uvId).base.texture;
     },
     getUv(uvId)
     {
-        if (uvs.has(uvId))
+        if (!uvs.has(uvId))
         {
-            return uvs.get(uvId);
+            const { x, y, width, height, base } = uvData.get(uvId);
+
+            const minX = x / base.width;
+            const maxX = (x + width) / base.width;
+            const minY = y / base.height;
+            const maxY = (y + height) / base.height;
+
+            const uv = [
+                minX, maxY,
+                maxX, maxY,
+                minX, minY,
+                minX, minY,
+                maxX, maxY,
+                maxX, minY,
+            ];
+
+            uvs.set(uvId, uv);
         }
 
-        const { x, y, width, height, base } = Texture.getUvData(uvId);
-
-        const minX = x / base.width;
-        const maxX = (x + width) / base.width;
-        const minY = y / base.height;
-        const maxY = (y + height) / base.height;
-
-        const uv = [
-            minX, maxY,
-            maxX, maxY,
-            minX, minY,
-            minX, minY,
-            maxX, maxY,
-            maxX, minY,
-        ];
-
-        uvs.set(uvId, uv);
-
-        return uv;
+        return uvs.get(uvId);
     },
     parami(key, value)
     {

@@ -73,7 +73,7 @@ const buildModelDataQuad = () =>
             [$.A_UV, uvOffsets.get(uvId)]
         ]));
 
-        const texture = Texture.getUvData(uvId).base.texture;
+        const texture = Texture.get(uvId);
 
         modelTextures.set(modelId, texture);
         modelUvs.set(modelId, uvs.get(uvId));
