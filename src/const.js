@@ -41,10 +41,10 @@ export const
     PROG_POLYGON = i++;
 
 export const
-    PROG_DEF_SRC = "src",
-    PROG_DEF_A_LAYOUT = "aLayout",
-    PROG_DEF_U = "u",
-    PROG_DEF_U_BLOCKS = "uBlocks";
+    PROG_DEF_SRC = i++,
+    PROG_DEF_A_LAYOUT = i++,
+    PROG_DEF_U = i++,
+    PROG_DEF_U_BLOCKS = i++;
 
 export const
     PROG_DATA_PROGRAM = i++,
@@ -54,15 +54,25 @@ export const
     PROG_DATA_U_SETTERS = i++;
 
 export const
+    VS_COLOR = i++,
+    VS_SCREEN = i++,
+    VS_UI = i++,
+    VS_WORLD = i++,
+    FS_COLOR = i++,
+    FS_IMAGE = i++,
+    FS_POLYGON = i++,
+    FS_SPRITE = i++;
+
+export const
     BUF_ARR_MODEL = i++,
     BUF_ARR_DEBUG = i++,
     BUF_UNI_CAMERA = i++;
 
 export const
-    MODEL_GIRL = "girl",
-    MODEL_DEBUG = "debug",
-    MODEL_GROUND = "ground",
-    MODEL_SCREEN = "screen",
+    MODEL_GIRL = i++,
+    MODEL_DEBUG = i++,
+    MODEL_GROUND = i++,
+    MODEL_SCREEN = i++,
     MODEL_PLAYER = i++,
     MODEL_BRAID_00 = i++,
     MODEL_BRAID_02 = i++,
@@ -105,7 +115,7 @@ export const
     MESH_GIRL = i++;
 
 /*------------------------------------------------------------------------------
-    Shaders
+    Program --- DO NOT MODIFY
 ------------------------------------------------------------------------------*/
 export const
     U_TYPE_2F = "uniform2f",
@@ -127,7 +137,7 @@ export const
     UB_CAMERA = "camera";
 
 /*------------------------------------------------------------------------------
-    Storage
+    Storage --- DO NOT MODIFY
 ------------------------------------------------------------------------------*/
 export const
     PREF_MASTER = "master",
@@ -138,7 +148,7 @@ export const
     STATE_MONEY = "money";
 
 /*------------------------------------------------------------------------------
-    File System
+    File System --- DO NOT MODIFY
 ------------------------------------------------------------------------------*/
 export const
     PATH_IMG = "./img/",
@@ -151,7 +161,7 @@ export const
     URL_TEX_GIRL = "girl.png";
 
 /*------------------------------------------------------------------------------
-    GL enums
+    GL enums --- DO NOT MODIFY
 ------------------------------------------------------------------------------*/
 export const
     /*--------------------------------------------------------------------------

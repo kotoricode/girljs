@@ -22,6 +22,8 @@ const createAttachShader = (program, shaderId, shaderDef) =>
     return shader;
 };
 
+// TODO: setters for each type so we don't have to look it up all the time
+// TODO: verify that values correspond to the setter's expected datatype
 const createSetter = (type, loc) => (values) => gl[type](loc, ...values);
 
 const detachDeleteShader = (program, shader) =>
@@ -35,6 +37,49 @@ export const Program = {
     {
         return preparedPrograms.get(programId);
     }
+};
+
+/*------------------------------------------------------------------------------
+    Shader definition creation
+------------------------------------------------------------------------------*/
+const setUniformData = (map, uData) =>
+{
+    if (uData)
+    {
+        const uMap = new SafeMap();
+
+        for (let i = 0; i < uData.length;)
+        {
+            uMap.set(uData[i++], uData[i++]);
+        }
+
+        map.set($.PROG_DEF_U, uMap);
+    }
+};
+
+const createVertDef = (id, src, layout, uBlocks, ...uData) =>
+{
+    const map = new SafeMap([
+        [$.PROG_DEF_SRC, src],
+        [$.PROG_DEF_A_LAYOUT, layout]
+    ]);
+
+    if (uBlocks)
+    {
+        map.set($.PROG_DEF_U_BLOCKS, uBlocks);
+    }
+
+    setUniformData(map, uData);
+
+    return [id, map];
+};
+
+const createFragDef = (id, src, ...uData) =>
+{
+    const map = new SafeMap([[$.PROG_DEF_SRC, src]]);
+    setUniformData(map, uData);
+
+    return [id, map];
 };
 
 /*------------------------------------------------------------------------------
@@ -54,86 +99,48 @@ const uniUvOffset = [$.U_UVOFFSET, uniArrZeroZero];
 const uniUvSize = [$.U_UVSIZE, uniArrZeroZero];
 
 const attrMapXyzUv = new SafeMap([attribXyz, attribUv]);
-const attrMapXyUv = new SafeMap([attribXyz, attribUv]);
 const uniMapColor = new SafeMap([uniColor]);
 
 /*------------------------------------------------------------------------------
     Vertex shader definitions
 ------------------------------------------------------------------------------*/
-const vertDef = {
-
-    color: new SafeMap([
-        [$.PROG_DEF_SRC, vsColor],
-        [$.PROG_DEF_A_LAYOUT, new SafeMap([attribXyz])],
-        [$.PROG_DEF_U_BLOCKS, ubCamera],
-    ]),
-
-    screen: new SafeMap([
-        [$.PROG_DEF_SRC, vsScreen],
-        [$.PROG_DEF_A_LAYOUT, attrMapXyUv]
-    ]),
-
-
-    ui: new SafeMap([
-        [$.PROG_DEF_SRC, vsUi],
-        [$.PROG_DEF_A_LAYOUT, attrMapXyUv],
-        [$.PROG_DEF_U, new SafeMap([
-            [$.U_TYPE_M4FV, new SafeMap([uniTransform])]
-        ])]
-    ]),
-
-    world: new SafeMap([
-        [$.PROG_DEF_SRC, vsWorld],
-        [$.PROG_DEF_A_LAYOUT, attrMapXyzUv],
-        [$.PROG_DEF_U_BLOCKS, ubCamera],
-        [$.PROG_DEF_U, new SafeMap([
-            [$.U_TYPE_M4FV, new SafeMap([uniTransform])],
-            [$.U_TYPE_2F, new SafeMap([uniUvRepeat])]
-        ])]
-    ])
-
-};
+const vertDef = new SafeMap([
+    createVertDef($.VS_COLOR, vsColor, new SafeMap([attribXyz]), ubCamera),
+    createVertDef($.VS_SCREEN, vsScreen, attrMapXyzUv),
+    createVertDef($.VS_UI, vsUi, attrMapXyzUv, null,
+        $.U_TYPE_M4FV, new SafeMap([uniTransform])
+    ),
+    createVertDef($.VS_WORLD, vsWorld, attrMapXyzUv, ubCamera,
+        $.U_TYPE_M4FV, new SafeMap([uniTransform]),
+        $.U_TYPE_2F, new SafeMap([uniUvRepeat])
+    )
+]);
 
 /*------------------------------------------------------------------------------
     Fragment shader definitions
 ------------------------------------------------------------------------------*/
-const fragDef = {
-
-    color: new SafeMap([
-        [$.PROG_DEF_SRC, fsColor]
-    ]),
-
-    imageFx: new SafeMap([
-        [$.PROG_DEF_SRC, fsImageFx]
-    ]),
-
-    sprite: new SafeMap([
-        [$.PROG_DEF_SRC, fsSprite],
-        [$.PROG_DEF_U, new SafeMap([
-            [$.U_TYPE_4F, uniMapColor]
-        ])]
-    ]),
-
-    polygon: new SafeMap([
-        [$.PROG_DEF_SRC, fsPolygon],
-        [$.PROG_DEF_U, new SafeMap([
-            [$.U_TYPE_2F, new SafeMap([uniUvOffset, uniUvSize])],
-            [$.U_TYPE_4F, uniMapColor]
-        ])]
-    ]),
-
-};
+const fragDef = new SafeMap([
+    createFragDef($.FS_COLOR, fsColor),
+    createFragDef($.FS_IMAGE, fsImageFx),
+    createFragDef($.FS_SPRITE, fsSprite,
+        $.U_TYPE_4F, uniMapColor
+    ),
+    createFragDef($.FS_POLYGON, fsPolygon,
+        $.U_TYPE_2F, new SafeMap([uniUvOffset, uniUvSize]),
+        $.U_TYPE_4F, uniMapColor
+    )
+]);
 
 /*------------------------------------------------------------------------------
     Program definitions
 ------------------------------------------------------------------------------*/
 const programDef = [
-    $.PROG_SCREEN,   vertDef.screen, fragDef.sprite,
-    $.PROG_UI,       vertDef.ui,     fragDef.sprite,
-    $.PROG_IMAGE_FX, vertDef.screen, fragDef.imageFx,
-    $.PROG_SPRITE,   vertDef.world,  fragDef.sprite,
-    $.PROG_POLYGON,  vertDef.world,  fragDef.polygon,
-    $.PROG_DEBUG,    vertDef.color,  fragDef.color
+    $.PROG_SCREEN,   $.VS_SCREEN, $.FS_SPRITE,
+    $.PROG_UI,       $.VS_UI,     $.FS_SPRITE,
+    $.PROG_IMAGE_FX, $.VS_SCREEN, $.FS_IMAGE,
+    $.PROG_SPRITE,   $.VS_WORLD,  $.FS_SPRITE,
+    $.PROG_POLYGON,  $.VS_WORLD,  $.FS_POLYGON,
+    $.PROG_DEBUG,    $.VS_COLOR,  $.FS_COLOR
 ];
 
 /*------------------------------------------------------------------------------
@@ -144,8 +151,8 @@ const preparedPrograms = new SafeMap();
 for (let i = 0; i < programDef.length;)
 {
     const programId = programDef[i++];
-    const vert = programDef[i++];
-    const frag = programDef[i++];
+    const vert = vertDef.get(programDef[i++]);
+    const frag = fragDef.get(programDef[i++]);
 
     const aLayout = vert.get($.PROG_DEF_A_LAYOUT);
 

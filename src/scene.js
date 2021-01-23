@@ -119,18 +119,6 @@ export class Scene
         {
             const { matrix } = space;
 
-            space.local.rotation.fromEuler(
-                Math.random() * 360,
-                Math.random() * 360,
-                Math.random() * 360,
-            );
-
-            space.local.scale.setValues(
-                Math.random(),
-                Math.random(),
-                Math.random(),
-            );
-
             matrix.composeFrom(space.local);
 
             if (parentMatrix)
@@ -139,9 +127,6 @@ export class Scene
             }
 
             space.world.decomposeFrom(matrix);
-
-            console.log(space.local);
-            console.log(space.world);
 
             if (this.dirty.has(space))
             {
