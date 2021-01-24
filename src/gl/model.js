@@ -103,7 +103,7 @@ const buildModelDataPolygon = () =>
     Data/definitions
 ------------------------------------------------------------------------------*/
 const quadDef = [
-    $.MODEL_GIRL,     $.MESH_GIRL,   $.UV_GIRL_00,
+    $.MODEL_GIRL,     $.MESH_AVATAR_PLAYER,   $.UV_GIRL_00,
     $.MODEL_GROUND,   $.MESH_GROUND, $.UV_GROUND,
     $.MODEL_BRAID_00, $.MESH_PLAYER, $.UV_BRAID_00,
     $.MODEL_BRAID_02, $.MESH_PLAYER, $.UV_BRAID_02,

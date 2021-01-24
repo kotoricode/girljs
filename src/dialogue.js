@@ -53,13 +53,15 @@ export const Dialogue = {
     {
         return text.texture;
     },
-    setText(str)
+    setText(text, speaker)
     {
         clear();
 
-        drawSplitString(str, yPix);
         drawBubble(bezierSpeech);
         drawArrow();
+
+        drawSpeakerText(speaker);
+        drawDialogueText(text);
 
         canvasToTexture();
     }
@@ -81,7 +83,6 @@ const drawBubble = (beziers) =>
 {
     const { ctx } = bubble;
 
-    ctx.fillStyle = "#fff";
     ctx.shadowBlur = 0;
     ctx.shadowOffsetX = 0;
     ctx.shadowOffsetY = 0;
@@ -136,11 +137,15 @@ const drawArrow = () =>
     ctx.fill();
 };
 
-const drawSplitString = (str, yPos) =>
+const drawSpeakerText = (str) =>
+{
+    console.log(str);
+};
+
+const drawDialogueText = (str) =>
 {
     const { ctx } = text;
 
-    ctx.fillStyle = "#fff";
     ctx.shadowBlur = 5;
     ctx.shadowOffsetX = 3;
     ctx.shadowOffsetY = 3;
@@ -148,6 +153,7 @@ const drawSplitString = (str, yPos) =>
     const words = str.split(/(?=\s)/);
     let fits;
     let maybeFits;
+    let yPos = yPix;
 
     for (let i = 0; i < words.length; i++)
     {
@@ -160,7 +166,7 @@ const drawSplitString = (str, yPos) =>
         {
             if (isLastWord)
             {
-                drawText(maybeFits, yPos);
+                fillText(maybeFits, yPos);
             }
             else
             {
@@ -181,19 +187,19 @@ const drawSplitString = (str, yPos) =>
                 maybeFits = word.trimStart();
             }
 
-            drawText(fits, yPos);
+            fillText(fits, yPos);
             fits = null;
             yPos += fontSize + fontPad;
 
             if (isLastWord && maybeFits)
             {
-                drawText(maybeFits, yPos);
+                fillText(maybeFits, yPos);
             }
         }
     }
 };
 
-const drawText = (str, yPos) =>
+const fillText = (str, yPos) =>
 {
     if (yPos === undefined) throw Error;
 
@@ -220,6 +226,9 @@ const width = $.SCREEN_WIDTH - 2*xPix;
 text.ctx.textAlign = "left";
 text.ctx.textBaseline = "top";
 text.ctx.font = `${fontSize}px Arial`;
+
+// These are tints for the shaders, not the actual colors
+text.ctx.fillStyle = bubble.ctx.fillStyle = "#fff";
 text.ctx.shadowColor = "#000";
 
 const midLineY = 0.7 + (1.5 * fontSize + fontPad) / $.SCREEN_HEIGHT;
@@ -230,4 +239,4 @@ const bezierSpeech = [
 ];
 
 canvasToTexture();
-Dialogue.setText("wwwwwwwwwwwwwwwwwwwwiiiiiii wwwwwwwwwwwwwwwwwwwwiiiiiii");
+Dialogue.setText($.TXT_HELLO, $.NAME_PLAYER);

@@ -15,10 +15,10 @@ export const
     SCENE_TEST = i++;
 
 export const
-    BP_ENTITIES = i++,
-    BP_PROCESSES = i++,
     BP_CHILDREN = i++,
-    BP_COMPONENTS = i++;
+    BP_COMPONENTS = i++,
+    BP_ENTITIES = i++,
+    BP_PROCESSES = i++;
 
 export const
     AUDIO_MUSIC = i++,
@@ -33,24 +33,24 @@ export const
     GL
 ------------------------------------------------------------------------------*/
 export const
-    PROG_SCREEN = i++,
-    PROG_UI = i++,
     PROG_DEBUG = i++,
     PROG_IMAGE = i++,
+    PROG_POLYGON = i++,
+    PROG_SCREEN = i++,
     PROG_SPRITE = i++,
-    PROG_POLYGON = i++;
+    PROG_UI = i++;
 
 export const
-    PROG_DATA_PROGRAM = i++,
     PROG_DATA_A_LAYOUT = i++,
+    PROG_DATA_PROGRAM = i++,
     PROG_DATA_U_BLOCKS = i++,
     PROG_DATA_U_DEFAULTS = i++,
     PROG_DATA_U_SETTERS = i++;
 
 export const
-    BUF_ARR_MODEL = i++,
+    BUF_UNI_CAMERA = i++,
     BUF_ARR_DEBUG = i++,
-    BUF_UNI_CAMERA = i++;
+    BUF_ARR_MODEL = i++;
 
 export const
     MODEL_GIRL = i++,
@@ -96,7 +96,7 @@ export const
     MESH_GROUND = i++,
     MESH_SCREEN = i++,
     MESH_PLAYER = i++,
-    MESH_GIRL = i++;
+    MESH_AVATAR_PLAYER = i++;
 
 /*------------------------------------------------------------------------------
     Program --- DO NOT MODIFY
@@ -133,13 +133,24 @@ export const
     URL_AUD_OMOIDE = "omoide_loft.ogg";
 
 /*------------------------------------------------------------------------------
-    GL enums --- DO NOT MODIFY
+    Dialogue speaker tags --- DO NOT MODIFY
 ------------------------------------------------------------------------------*/
 export const
-    /*--------------------------------------------------------------------------
-        WebGLRenderingContextBase
-        https://www.khronos.org/registry/webgl/specs/latest/1.0/
-    --------------------------------------------------------------------------*/
+    NAME_PLAYER = "Player",
+    NAME_CHAD = "Chad";
+
+/*------------------------------------------------------------------------------
+    Dialogue --- DO NOT MODIFY
+------------------------------------------------------------------------------*/
+export const
+    TXT_HELLO = "Hello world!";
+
+/*------------------------------------------------------------------------------
+    GL enums --- DO NOT MODIFY
+    https://www.khronos.org/registry/webgl/specs/latest/1.0/
+    https://www.khronos.org/registry/webgl/specs/latest/2.0/
+------------------------------------------------------------------------------*/
+export const
     DEPTH_BUFFER_BIT = 0x00000100,
     STENCIL_BUFFER_BIT = 0x00000400,
     COLOR_BUFFER_BIT = 0x00004000,
@@ -436,11 +447,6 @@ export const
     CONTEXT_LOST_WEBGL = 0x9242,
     UNPACK_COLORSPACE_CONVERSION_WEBGL = 0x9243,
     BROWSER_DEFAULT_WEBGL = 0x9244,
-
-    /*--------------------------------------------------------------------------
-        WebGL2RenderingContextBase
-        https://www.khronos.org/registry/webgl/specs/latest/2.0/
-    --------------------------------------------------------------------------*/
     READ_BUFFER = 0x0C02,
     UNPACK_ROW_LENGTH = 0x0CF2,
     UNPACK_SKIP_ROWS = 0x0CF3,

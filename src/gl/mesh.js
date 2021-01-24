@@ -50,6 +50,6 @@ const xz3 = (minX, maxX, minZ, maxZ) =>
 const meshes = new SafeMap([
     [$.MESH_GROUND, xz3(-2, 2, -2, 2)],
     [$.MESH_PLAYER, xy3(-0.4, 0.4, 0, 1.5)],
-    [$.MESH_GIRL,   xy2Dim(187, 600)],
+    [$.MESH_AVATAR_PLAYER,   xy2Dim(187, 600)],
     [$.MESH_SCREEN, xy2Dim($.SCREEN_WIDTH, $.SCREEN_HEIGHT)]
 ]);

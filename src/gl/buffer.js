@@ -23,6 +23,13 @@ export const Buffer = {
     {
         return buffers.get(bufferId).size;
     },
+    prepareBlock(program, blockId)
+    {
+        const bufferId = blockBuffers.get(blockId);
+        const bindingPoint = uniformBufferBindingPoint.get(bufferId);
+        const blockIdx = gl.getUniformBlockIndex(program, blockId);
+        gl.uniformBlockBinding(program, blockIdx, bindingPoint);
+    },
     setData(bufferId, data)
     {
         const bufferData = buffers.get(bufferId);
@@ -33,13 +40,6 @@ export const Buffer = {
         gl.bindBuffer(type, null);
 
         bufferData.size = data.length;
-    },
-    prepareBlock(program, blockId)
-    {
-        const bufferId = blockBuffers.get(blockId);
-        const bindingPoint = uniformBufferBindingPoint.get(bufferId);
-        const blockIdx = gl.getUniformBlockIndex(program, blockId);
-        gl.uniformBlockBinding(program, blockIdx, bindingPoint);
     },
     unbind(bufferId)
     {
