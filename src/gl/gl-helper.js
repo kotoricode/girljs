@@ -1,5 +1,5 @@
 import { gl } from "../dom";
-import { BufferUniform } from "./buffer";
+import { Buffer } from "./buffer";
 import { VertexArray } from "./vertex-array";
 
 export const drawArraysVao = (mode, offset, length, programData) =>
@@ -22,7 +22,7 @@ export const setProgram = (programData) =>
         {
             for (const blockId of blocks)
             {
-                BufferUniform.prepareBlock(program, blockId);
+                Buffer.prepareBlock(program, blockId);
             }
         }
     }

@@ -2,7 +2,7 @@ import * as $ from "../const";
 import { gl } from "../dom";
 import { SafeMap } from "../utility";
 
-const Buffer = {
+export const Buffer = {
     bind(bufferType, bufferId)
     {
         const buffer = Buffer.getBuffer(bufferType, bufferId);
@@ -14,11 +14,25 @@ const Buffer = {
 
         return typeBuffers.get(bufferId);
     },
+    getSize(bufferId)
+    {
+        return arrayBufferSizes.get(bufferId);
+    },
     data(bufferType, bufferId, data, usage)
     {
         Buffer.bind(bufferType, bufferId);
         gl.bufferData(bufferType, data, usage);
         Buffer.unbind(bufferType);
+    },
+    prepareBlock(program, blockId)
+    {
+        const bufferId = blockBuffers.get(blockId);
+        const bindingPoint = uniformBuffers.indexOf(bufferId);
+
+        if (bindingPoint === -1) throw Error;
+
+        const blockIdx = gl.getUniformBlockIndex(program, blockId);
+        gl.uniformBlockBinding(program, blockIdx, bindingPoint);
     },
     unbind(bufferType)
     {
@@ -31,10 +45,6 @@ export const BufferArray = {
     {
         Buffer.bind($.ARRAY_BUFFER, bufferId);
     },
-    getSize(bufferId)
-    {
-        return arrayBufferSizes.get(bufferId);
-    },
     data(bufferId, data, usage)
     {
         Buffer.data($.ARRAY_BUFFER, bufferId, data, usage);
@@ -43,27 +53,6 @@ export const BufferArray = {
     unbind()
     {
         Buffer.unbind($.ARRAY_BUFFER);
-    }
-};
-
-export const BufferUniform = {
-    getBuffer(bufferId)
-    {
-        return Buffer.getBuffer($.UNIFORM_BUFFER, bufferId);
-    },
-    data(bufferId, data)
-    {
-        Buffer.data($.UNIFORM_BUFFER, bufferId, data, $.DYNAMIC_DRAW);
-    },
-    prepareBlock(program, blockId)
-    {
-        const bufferId = blockBuffers.get(blockId);
-        const bindingPoint = uniformBuffers.indexOf(bufferId);
-
-        if (bindingPoint === -1) throw Error;
-
-        const blockIdx = gl.getUniformBlockIndex(program, blockId);
-        gl.uniformBlockBinding(program, blockIdx, bindingPoint);
     }
 };
 
@@ -99,6 +88,6 @@ const uniformBuffers = [$.BUF_UNI_CAMERA];
 for (let i = 0; i < uniformBuffers.length; i++)
 {
     const bufferId = uniformBuffers[i];
-    const buffer = BufferUniform.getBuffer(bufferId);
+    const buffer = Buffer.getBuffer($.UNIFORM_BUFFER, bufferId);
     gl.bindBufferBase($.UNIFORM_BUFFER, i, buffer);
 }

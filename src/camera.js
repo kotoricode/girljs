@@ -1,5 +1,5 @@
 import * as $ from "./const";
-import { BufferUniform } from "./gl/buffer";
+import { Buffer } from "./gl/buffer";
 import { BufferData, DEG_TO_RAD } from "./utility";
 import { Matrix } from "./math/matrix";
 import { Transform } from "./math/transform";
@@ -35,7 +35,7 @@ const updateViewProjection = () =>
     invViewProjection.invertFrom(viewProjection);
 
     viewProjectionData.from(viewProjection);
-    BufferUniform.data($.BUF_UNI_CAMERA, viewProjectionData);
+    Buffer.data($.UNIFORM_BUFFER, $.BUF_UNI_CAMERA, viewProjectionData, $.DYNAMIC_DRAW);
 };
 
 let focus;
