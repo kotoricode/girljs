@@ -16,8 +16,8 @@ class BufferData
 export const Buffer = {
     bind(bufferId)
     {
-        const bufferData = buffers.get(bufferId);
-        gl.bindBuffer(bufferData.type, bufferData.buffer);
+        const { type, buffer } = buffers.get(bufferId);
+        gl.bindBuffer(type, buffer);
     },
     getSize(bufferId)
     {
@@ -26,10 +26,11 @@ export const Buffer = {
     setData(bufferId, data)
     {
         const bufferData = buffers.get(bufferId);
+        const { type, buffer, usage } = bufferData;
 
-        Buffer.bind(bufferId);
-        gl.bufferData(bufferData.type, data, bufferData.usage);
-        Buffer.unbind(bufferId);
+        gl.bindBuffer(type, buffer);
+        gl.bufferData(type, data, usage);
+        gl.bindBuffer(type, null);
 
         bufferData.size = data.length;
     },
@@ -42,8 +43,8 @@ export const Buffer = {
     },
     unbind(bufferId)
     {
-        const bufferData = buffers.get(bufferId);
-        gl.bindBuffer(bufferData.type, null);
+        const { type } = buffers.get(bufferId);
+        gl.bindBuffer(type, null);
     }
 };
 
