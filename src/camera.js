@@ -4,28 +4,41 @@ import { BufferData, DEG_TO_RAD } from "./utility";
 import { Matrix } from "./math/matrix";
 import { Transform } from "./math/transform";
 
-export const getInvViewProjection = () => invViewProjection;
+export const Camera = {
+    getFocusEntityId()
+    {
+        return focus;
+    },
+    getInvViewProjection()
+    {
+        return invViewProjection;
+    },
+    setFocusEntityId(entityId)
+    {
+        focus = entityId;
+    },
+    setPosition(vec)
+    {
+        if (transform.translation.x !== vec.x)
+        {
+            transform.translation.x = vec.x;
+            updateViewProjection();
+        }
+    }
+};
 
-export const getViewProjection = () => viewProjection;
-
-export const setCameraPosition = (vec) =>
+const updateViewProjection = () =>
 {
-    transform.translation.x = vec.x;
-
-    /*--------------------------------------------------------------------------
-        ViewProjection & Inverted ViewProjection
-    --------------------------------------------------------------------------*/
     viewProjection.composeFrom(transform);
     viewProjection.invert();
     viewProjection.multiply(projection);
     invViewProjection.invertFrom(viewProjection);
 
-    /*--------------------------------------------------------------------------
-        Update UBO
-    --------------------------------------------------------------------------*/
     viewProjectionData.from(viewProjection);
     BufferUniform.data($.BUF_UNI_CAMERA, viewProjectionData);
 };
+
+let focus;
 
 const far = 600;
 const near = 1;
@@ -47,3 +60,6 @@ const projection = new Matrix(
 transform.rotation.fromEuler(-11.5, 0, 0);
 
 const viewProjectionData = new BufferData(16);
+
+Camera.setFocusEntityId($.ENTITY_PLAYER);
+updateViewProjection();

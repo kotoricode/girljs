@@ -11,6 +11,7 @@ import { Anim }   from "./components/anim";
 import { processMotion }    from "./processes/process-motion";
 import { processCamera }    from "./processes/process-camera";
 import { processAnimation } from "./processes/process-animation";
+import { processPlayer }    from "./processes/process-player";
 
 const createPlayer = () => [$.ENTITY_PLAYER, new SafeMap([
     [$.BP_COMPONENTS, new SafeSet([
@@ -47,7 +48,13 @@ const createPlayer = () => [$.ENTITY_PLAYER, new SafeMap([
 const createTachie = () => [$.ENTITY_GIRL, new SafeMap([
     [$.BP_COMPONENTS, new SafeSet([
         new Space(0.75, -0.2, 0),
-        new Drawable($.PROG_UI, $.MODEL_GIRL)
+        new Drawable(
+            $.PROG_UI,
+            $.MODEL_GIRL,
+            new SafeMap([
+                [$.U_COLOR, [1, 0.871, 0.855, 1]]
+            ])
+        )
     ])],
     [$.BP_CHILDREN, new SafeSet()]
 ])];
@@ -76,7 +83,10 @@ export const blueprint = new SafeMap([
             createTachie()
         ])],
         [$.BP_PROCESSES, new SafeSet([
-            processMotion, processAnimation, processCamera
+            processMotion,
+            processAnimation,
+            processCamera,
+            processPlayer
         ])]
     ])]
 ]);

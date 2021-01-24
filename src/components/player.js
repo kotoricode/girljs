@@ -6,5 +6,6 @@ export class Player extends Component
     {
         super();
         this.money = 0;
+        this.skin = [1, 0.871, 0.855, 1];
     }
 }

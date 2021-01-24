@@ -1,37 +1,15 @@
-import * as $ from "../const";
-import { Mouse } from "../dom";
-import { Motion } from "../components/motion";
 import { Space } from "../components/space";
-import { getInvViewProjection, setCameraPosition } from "../camera";
-import { Ground } from "../components/ground";
-import { Ray } from "../math/ray";
-import { Dialogue } from "../dialogue";
+import { Camera } from "../camera";
 
 export const processCamera = (scene) =>
 {
-    const [plMotion, plSpace] = scene.one($.ENTITY_PLAYER, Motion, Space);
-    setCameraPosition(plSpace.world.translation);
+    const focus = Camera.getFocusEntityId();
 
-    if (Mouse.isWorldClick)
+    if (focus)
     {
-        Dialogue.setText(
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-        );
+        const entity = scene.getEntity(focus);
+        const space = entity.getComponent(Space);
 
-        const [ground] = scene.one($.ENTITY_GROUND, Ground);
-        const ivp = getInvViewProjection();
-
-        ray.numHits = 0;
-        ray.fromMouse(ivp, Mouse.clip);
-        ray.collideGround(ground);
-
-        // Update player, marker paths
-        if (ray.numHits)
-        {
-            const hit = ray.hit[0];
-            plMotion.setMainTarget(hit);
-        }
+        Camera.setPosition(space.world.translation);
     }
 };
-
-const ray = new Ray(0, 0, 0, 0, 0, 1);
