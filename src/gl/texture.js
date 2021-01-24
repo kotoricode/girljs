@@ -86,6 +86,8 @@ image.addEventListener("load", () =>
     Texture.bind(texture);
     Texture.from(image);
     Texture.parami($.TEXTURE_MIN_FILTER, $.LINEAR);
+    Texture.parami($.TEXTURE_WRAP_S, $.CLAMP_TO_EDGE);
+    Texture.parami($.TEXTURE_WRAP_T, $.CLAMP_TO_EDGE);
     Texture.unbind();
 
     textures.delete(src);
@@ -108,8 +110,8 @@ let activeTexture;
 
 // id/url, width, height, parami[], uvs[ id, x, y, width, height ]
 const textureDef = [
-    "girl.png", 186, 600, [
-        $.UV_GIRL_00, 0, 0, 186, 600
+    "girl.png", 356, 1170, [
+        $.UV_GIRL_00, 0, 0, 356, 1170
     ],
     "braid.png", 1024, 1024, [
         $.UV_BRAID_00, 0,   10,  136, 136,
