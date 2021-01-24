@@ -34,37 +34,11 @@ export const Texture = {
     },
     get(uvId)
     {
-        if (uvId === $.UV_TEST)
-        {
-            return uvData.get($.UV_GIRL_00).base.texture;
-        }
-
-        return uvData.get(uvId).base.texture;
+        return uvTexture.get(uvId);
     },
     getUv(uvId)
     {
-        if (!uvs.has(uvId))
-        {
-            const { x, y, width, height, base } = uvData.get(uvId);
-
-            const minX = x / base.width;
-            const maxX = (x + width) / base.width;
-            const minY = y / base.height;
-            const maxY = (y + height) / base.height;
-
-            const uv = [
-                minX, maxY,
-                maxX, maxY,
-                minX, minY,
-                minX, minY,
-                maxX, maxY,
-                maxX, minY,
-            ];
-
-            uvs.set(uvId, uv);
-        }
-
-        return uvs.get(uvId);
+        return newUv.get(uvId);
     },
     parami(key, value)
     {
@@ -108,54 +82,82 @@ image.addEventListener("error", (e) =>
     throw Error(e);
 }, LISTENER_ONCE);
 
+const imageRect = (x, y, width, height, baseWidth, baseHeight) =>
+{
+    const minX = x / baseWidth;
+    const maxX = (x + width) / baseWidth;
+    const minY = y / baseHeight;
+    const maxY = (y + height) / baseHeight;
+
+    return [
+        minX, maxY,
+        maxX, maxY,
+        minX, minY,
+        minX, minY,
+        maxX, maxY,
+        maxX, minY,
+    ];
+};
+
 /*------------------------------------------------------------------------------
     Textures
 ------------------------------------------------------------------------------*/
 let activeTexture;
 
-// id/url, width, height, parami[], uvs[ id, x, y, width, height ]
+const newUv = new SafeMap([
+    [$.UV_GIRL_00, imageRect(0, 0, 356, 1170, 356, 1170)],
+    [$.UV_BRAID_00, imageRect(0, 10, 136, 136, 1024, 1024)],
+    [$.UV_BRAID_02, imageRect(256, 10, 136, 136, 1024, 1024)],
+    [$.UV_BRAID_04, imageRect(512, 10, 136, 136, 1024, 1024)],
+    [$.UV_BRAID_06, imageRect(768, 10, 136, 136, 1024, 1024)],
+    [$.UV_BRAID_08, imageRect(128, 158, 136, 136, 1024, 1024)],
+    [$.UV_BRAID_10, imageRect(384, 158, 136, 136, 1024, 1024)],
+    [$.UV_BRAID_12, imageRect(640, 158, 136, 136, 1024, 1024)],
+    [$.UV_BRAID_14, imageRect(0, 309, 136, 136, 1024, 1024)],
+    [$.UV_BRAID_16, imageRect(256, 309, 136, 136, 1024, 1024)],
+    [$.UV_BRAID_18, imageRect(512, 309, 136, 136, 1024, 1024)],
+    [$.UV_BRAID_20, imageRect(768, 309, 136, 136, 1024, 1024)],
+    [$.UV_BRAID_22, imageRect(128, 461, 136, 136, 1024, 1024)],
+    [$.UV_BRAID_24, imageRect(384, 461, 136, 136, 1024, 1024)],
+    [$.UV_BRAID_26, imageRect(640, 461, 136, 136, 1024, 1024)],
+    [$.UV_GROUND, imageRect(94, 97, 256, 256, 512, 512)],
+    [$.UV_SCREEN, [0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1,]],
+    [$.UV_TEST, [0.875000, 0.500000, 0.625000, 0.750000, 0.625000, 0.500000, 0.625000, 0.750000, 0.375000, 1.000000, 0.375000, 0.750000, 0.625000, 0.000000, 0.375000, 0.250000, 0.375000, 0.000000, 0.375000, 0.500000, 0.125000, 0.750000, 0.125000, 0.500000, 0.625000, 0.500000, 0.375000, 0.750000, 0.375000, 0.500000, 0.625000, 0.250000, 0.375000, 0.500000, 0.375000, 0.250000, 0.875000, 0.500000, 0.875000, 0.750000, 0.625000, 0.750000, 0.625000, 0.750000, 0.625000, 1.000000, 0.375000, 1.000000, 0.625000, 0.000000, 0.625000, 0.250000, 0.375000, 0.250000, 0.375000, 0.500000, 0.375000, 0.750000, 0.125000, 0.750000, 0.625000, 0.500000, 0.625000, 0.750000, 0.375000, 0.750000, 0.625000, 0.250000, 0.625000, 0.500000, 0.375000, 0.500000, ]]
+]);
+
 const imageTextureDef = [
-    "girl.png", 356, 1170, [
-        $.UV_GIRL_00, 0, 0, 356, 1170
+    "girl.png", [
+        $.UV_GIRL_00,
     ],
-    "braid.png", 1024, 1024, [
-        $.UV_BRAID_00, 0,   10,  136, 136,
-        $.UV_BRAID_02, 256, 10,  136, 136,
-        $.UV_BRAID_04, 512, 10,  136, 136,
-        $.UV_BRAID_06, 768, 10,  136, 136,
-        $.UV_BRAID_08, 128, 158, 136, 136,
-        $.UV_BRAID_10, 384, 158, 136, 136,
-        $.UV_BRAID_12, 640, 158, 136, 136,
-        $.UV_BRAID_14, 0,   309, 136, 136,
-        $.UV_BRAID_16, 256, 309, 136, 136,
-        $.UV_BRAID_18, 512, 309, 136, 136,
-        $.UV_BRAID_20, 768, 309, 136, 136,
-        $.UV_BRAID_22, 128, 461, 136, 136,
-        $.UV_BRAID_24, 384, 461, 136, 136,
-        $.UV_BRAID_26, 640, 461, 136, 136,
+    "braid.png", [
+        $.UV_BRAID_00,
+        $.UV_BRAID_02,
+        $.UV_BRAID_04,
+        $.UV_BRAID_06,
+        $.UV_BRAID_08,
+        $.UV_BRAID_10,
+        $.UV_BRAID_12,
+        $.UV_BRAID_14,
+        $.UV_BRAID_16,
+        $.UV_BRAID_18,
+        $.UV_BRAID_20,
+        $.UV_BRAID_22,
+        $.UV_BRAID_24,
+        $.UV_BRAID_26,
     ],
-    "texture.png", 512, 512, [
-        $.UV_GROUND, 94, 97, 256, 256
+    "texture.png", [
+        $.UV_GROUND,
+        $.UV_TEST
     ]
 ];
 
 const textures = new SafeMap();
-const uvData = new SafeMap();
-const uvs = new SafeMap([
-    [$.UV_SCREEN, [0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1,]],
-    [$.UV_TEST, [0.875000, 0.500000, 0.625000, 0.750000, 0.625000, 0.500000, 0.625000, 0.750000, 0.375000, 1.000000, 0.375000, 0.750000, 0.625000, 0.000000, 0.375000, 0.250000, 0.375000, 0.000000, 0.375000, 0.500000, 0.125000, 0.750000, 0.125000, 0.500000, 0.625000, 0.500000, 0.375000, 0.750000, 0.375000, 0.500000, 0.625000, 0.250000, 0.375000, 0.500000, 0.375000, 0.250000, 0.875000, 0.500000, 0.875000, 0.750000, 0.625000, 0.750000, 0.625000, 0.750000, 0.625000, 1.000000, 0.375000, 1.000000, 0.625000, 0.000000, 0.625000, 0.250000, 0.375000, 0.250000, 0.375000, 0.500000, 0.375000, 0.750000, 0.125000, 0.750000, 0.625000, 0.500000, 0.625000, 0.750000, 0.375000, 0.750000, 0.625000, 0.250000, 0.625000, 0.500000, 0.375000, 0.500000, ]]
-]);
+const uvTexture = new SafeMap();
 
 for (let i = 0; i < imageTextureDef.length;)
 {
     const src = imageTextureDef[i++];
     const texture = Texture.create();
-
-    const base = {
-        width: imageTextureDef[i++],
-        height: imageTextureDef[i++],
-        texture
-    };
 
     textures.set(src, texture);
     const textureUvs = imageTextureDef[i++];
@@ -163,12 +165,7 @@ for (let i = 0; i < imageTextureDef.length;)
     for (let j = 0; j < textureUvs.length;)
     {
         const uvId = textureUvs[j++];
-        const x = textureUvs[j++];
-        const y = textureUvs[j++];
-        const width = textureUvs[j++];
-        const height = textureUvs[j++];
-
-        uvData.set(uvId, { x, y, width, height, base });
+        uvTexture.set(uvId, texture);
     }
 }
 
