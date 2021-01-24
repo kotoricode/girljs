@@ -114,7 +114,7 @@ image.addEventListener("error", (e) =>
 let activeTexture;
 
 // id/url, width, height, parami[], uvs[ id, x, y, width, height ]
-const quadTextureDef = [
+const imageTextureDef = [
     "girl.png", 356, 1170, [
         $.UV_GIRL_00, 0, 0, 356, 1170
     ],
@@ -146,19 +146,19 @@ const uvs = new SafeMap([
     [$.UV_TEST, [0.875000, 0.500000, 0.625000, 0.750000, 0.625000, 0.500000, 0.625000, 0.750000, 0.375000, 1.000000, 0.375000, 0.750000, 0.625000, 0.000000, 0.375000, 0.250000, 0.375000, 0.000000, 0.375000, 0.500000, 0.125000, 0.750000, 0.125000, 0.500000, 0.625000, 0.500000, 0.375000, 0.750000, 0.375000, 0.500000, 0.625000, 0.250000, 0.375000, 0.500000, 0.375000, 0.250000, 0.875000, 0.500000, 0.875000, 0.750000, 0.625000, 0.750000, 0.625000, 0.750000, 0.625000, 1.000000, 0.375000, 1.000000, 0.625000, 0.000000, 0.625000, 0.250000, 0.375000, 0.250000, 0.375000, 0.500000, 0.375000, 0.750000, 0.125000, 0.750000, 0.625000, 0.500000, 0.625000, 0.750000, 0.375000, 0.750000, 0.625000, 0.250000, 0.625000, 0.500000, 0.375000, 0.500000, ]]
 ]);
 
-for (let i = 0; i < quadTextureDef.length;)
+for (let i = 0; i < imageTextureDef.length;)
 {
-    const src = quadTextureDef[i++];
+    const src = imageTextureDef[i++];
     const texture = Texture.create();
 
     const base = {
-        width: quadTextureDef[i++],
-        height: quadTextureDef[i++],
+        width: imageTextureDef[i++],
+        height: imageTextureDef[i++],
         texture
     };
 
     textures.set(src, texture);
-    const textureUvs = quadTextureDef[i++];
+    const textureUvs = imageTextureDef[i++];
 
     for (let j = 0; j < textureUvs.length;)
     {
