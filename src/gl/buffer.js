@@ -2,92 +2,69 @@ import * as $ from "../const";
 import { gl } from "../dom";
 import { SafeMap } from "../utility";
 
-export const Buffer = {
-    bind(bufferType, bufferId)
+class BufferData
+{
+    constructor(type, usage)
     {
-        const buffer = Buffer.getBuffer(bufferType, bufferId);
-        gl.bindBuffer(bufferType, buffer);
-    },
-    getBuffer(bufferType, bufferId)
-    {
-        const typeBuffers = buffers.get(bufferType);
+        this.buffer = gl.createBuffer();
+        this.type = type;
+        this.usage = usage;
+        this.size = null;
+    }
+}
 
-        return typeBuffers.get(bufferId);
+export const Buffer = {
+    bind(bufferId)
+    {
+        const bufferData = buffers.get(bufferId);
+        gl.bindBuffer(bufferData.type, bufferData.buffer);
     },
     getSize(bufferId)
     {
-        return arrayBufferSizes.get(bufferId);
+        return buffers.get(bufferId).size;
     },
-    data(bufferType, bufferId, data, usage)
+    setData(bufferId, data)
     {
-        Buffer.bind(bufferType, bufferId);
-        gl.bufferData(bufferType, data, usage);
-        Buffer.unbind(bufferType);
+        const bufferData = buffers.get(bufferId);
+
+        Buffer.bind(bufferId);
+        gl.bufferData(bufferData.type, data, bufferData.usage);
+        Buffer.unbind(bufferId);
+
+        bufferData.size = data.length;
     },
     prepareBlock(program, blockId)
     {
         const bufferId = blockBuffers.get(blockId);
-        const bindingPoint = uniformBuffers.indexOf(bufferId);
-
-        if (bindingPoint === -1) throw Error;
-
+        const bindingPoint = uniformBufferBindingPoint.get(bufferId);
         const blockIdx = gl.getUniformBlockIndex(program, blockId);
         gl.uniformBlockBinding(program, blockIdx, bindingPoint);
     },
-    unbind(bufferType)
+    unbind(bufferId)
     {
-        gl.bindBuffer(bufferType, null);
+        const bufferData = buffers.get(bufferId);
+        gl.bindBuffer(bufferData.type, null);
     }
-};
-
-export const BufferArray = {
-    bind(bufferId)
-    {
-        Buffer.bind($.ARRAY_BUFFER, bufferId);
-    },
-    data(bufferId, data, usage)
-    {
-        Buffer.data($.ARRAY_BUFFER, bufferId, data, usage);
-        arrayBufferSizes.set(bufferId, data.length);
-    },
-    unbind()
-    {
-        Buffer.unbind($.ARRAY_BUFFER);
-    }
-};
-
-const bufferCreator = (array, bufferId) =>
-{
-    array.push([bufferId, gl.createBuffer()]);
-
-    return array;
 };
 
 const buffers = new SafeMap([
-    [$.ARRAY_BUFFER, new SafeMap(
-        [
-            $.BUF_ARR_MODEL,
-            $.BUF_ARR_DEBUG
-        ].reduce(bufferCreator, [])
-    )],
-    [$.UNIFORM_BUFFER, new SafeMap(
-        [
-            $.BUF_UNI_CAMERA
-        ].reduce(bufferCreator, [])
-    )]
+    [$.BUF_ARR_MODEL, new BufferData($.ARRAY_BUFFER, $.STATIC_DRAW)],
+    [$.BUF_ARR_DEBUG, new BufferData($.ARRAY_BUFFER, $.STATIC_DRAW)],
+    [$.BUF_UNI_CAMERA, new BufferData($.UNIFORM_BUFFER, $.DYNAMIC_DRAW)]
 ]);
-
-const arrayBufferSizes = new SafeMap();
 
 const blockBuffers = new SafeMap([
     [$.UB_CAMERA, $.BUF_UNI_CAMERA]
 ]);
 
-const uniformBuffers = [$.BUF_UNI_CAMERA];
+const uniformBufferBindingPoint = new SafeMap();
 
-for (let i = 0; i < uniformBuffers.length; i++)
+for (const [bufferId, bufferData] of buffers)
 {
-    const bufferId = uniformBuffers[i];
-    const buffer = Buffer.getBuffer($.UNIFORM_BUFFER, bufferId);
-    gl.bindBufferBase($.UNIFORM_BUFFER, i, buffer);
+    if (bufferData.type === $.UNIFORM_BUFFER)
+    {
+        const bindingPoint = uniformBufferBindingPoint.size;
+        gl.bindBufferBase($.UNIFORM_BUFFER, bindingPoint, bufferData.buffer);
+        uniformBufferBindingPoint.set(bufferId, bindingPoint);
+    }
 }

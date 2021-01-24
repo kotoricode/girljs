@@ -1,6 +1,6 @@
 import * as $ from "../const";
-import { SafeMap, BufferData } from "../utility";
-import { BufferArray } from "./buffer";
+import { SafeMap, SettableFloat32Array } from "../utility";
+import { Buffer } from "./buffer";
 import { Texture } from "./texture";
 import { Mesh } from "./mesh";
 
@@ -141,10 +141,9 @@ const modelDrawSizes = new SafeMap();
 buildModelDataQuad();
 buildModelDataPolygon();
 
-BufferArray.data(
+Buffer.setData(
     $.BUF_ARR_MODEL,
-    new BufferData(modelData),
-    $.STATIC_DRAW
+    new SettableFloat32Array(modelData)
 );
 
 /*------------------------------------------------------------------------------
@@ -169,8 +168,7 @@ models.set($.MODEL_DEBUG, new SafeMap([
 
 modelBufferIds.set($.MODEL_DEBUG, $.BUF_ARR_DEBUG);
 
-BufferArray.data(
+Buffer.setData(
     $.BUF_ARR_DEBUG,
-    new BufferData(debugData),
-    $.DYNAMIC_DRAW
+    new SettableFloat32Array(debugData)
 );

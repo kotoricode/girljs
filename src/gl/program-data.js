@@ -1,7 +1,7 @@
 import * as $ from "../const";
 import { gl } from "../dom";
 import { Program } from "./program";
-import { BufferArray } from "./buffer";
+import { Buffer } from "./buffer";
 import { VertexArray } from "./vertex-array";
 import { SafeMap } from "../utility";
 import { Model } from "./model";
@@ -48,7 +48,7 @@ export class ProgramData
         const bufferId = Model.getBufferId(modelId);
 
         VertexArray.bind(this.vao);
-        BufferArray.bind(bufferId);
+        Buffer.bind(bufferId);
 
         for (const [name, attribSize] of this.aLayout)
         {
@@ -64,7 +64,7 @@ export class ProgramData
             );
         }
 
-        BufferArray.unbind();
+        Buffer.unbind(bufferId);
         VertexArray.unbind();
     }
 

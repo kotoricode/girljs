@@ -10,7 +10,7 @@ export const getElement = (elemId) => window.document.getElementById(elemId);
 
 export const isString = (value) => typeof value === "string";
 
-export class BufferData extends Float32Array
+export class SettableFloat32Array extends Float32Array
 {
     constructor(...params)
     {
