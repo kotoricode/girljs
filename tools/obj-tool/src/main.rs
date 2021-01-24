@@ -11,10 +11,11 @@ fn main() -> Result<()>
     {
         let mut vertices = Vec::new();
         let mut out = Vec::new();
-        out.push("[");
 
         let contents = fs::read_to_string(in_file?.path())?;
         let lines = contents.lines();
+
+        out.push("[");
 
         for line in lines
         {

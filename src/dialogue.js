@@ -55,41 +55,46 @@ export const Dialogue = {
     },
     setText(str)
     {
-        text.clear();
-        drawSplitString(str, y);
-        text.canvasToTexture();
+        clear();
 
-        bubble.clear();
-        drawBubble();
-        bubble.canvasToTexture();
+        drawSplitString(str, yPix);
+        drawBubble(bezierSpeech);
+        drawArrow();
+
+        canvasToTexture();
     }
 };
 
-const drawDebug = () =>
+const clear = () =>
 {
-    text.ctx.fillStyle = "black";
-    text.ctx.shadowBlur = 0;
-    text.ctx.shadowOffsetX = 0;
-    text.ctx.shadowOffsetY = 0;
-    text.ctx.fillRect(x, y, width, (fontSize + fontPad) * 3);
+    text.clear();
+    bubble.clear();
 };
 
-const drawBubble = () =>
+const canvasToTexture = () =>
 {
-    bubble.ctx.fillStyle = "#fff";
-    bubble.ctx.shadowBlur = 0;
-    bubble.ctx.shadowOffsetX = 0;
-    bubble.ctx.shadowOffsetY = 0;
+    text.canvasToTexture();
+    bubble.canvasToTexture();
+};
 
-    bubble.ctx.beginPath();
-    let start = beziars[0];
-    bubble.ctx.moveTo(start.x, start.y);
+const drawBubble = (beziers) =>
+{
+    const { ctx } = bubble;
 
-    for (let i = 0; i < beziars.length; i++)
+    ctx.fillStyle = "#fff";
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+
+    ctx.beginPath();
+    let start = beziers[0];
+    ctx.moveTo(start.x, start.y);
+
+    for (let i = 0; i < beziers.length; i++)
     {
-        const end = beziars[(i + 1) % beziars.length];
+        const end = beziers[(i + 1) % beziers.length];
 
-        bubble.ctx.bezierCurveTo(
+        ctx.bezierCurveTo(
             start.cp2x, start.cp2y,
             end.cp1x, end.cp1y,
             end.x, end.y
@@ -98,28 +103,69 @@ const drawBubble = () =>
         start = end;
     }
 
-    bubble.ctx.closePath();
-    bubble.ctx.fill();
+    ctx.closePath();
+    ctx.fill();
+};
+
+const drawArrow = () =>
+{
+    const { ctx } = bubble;
+
+    ctx.beginPath();
+
+    ctx.moveTo(
+        $.SCREEN_WIDTH * 0.6859375,
+        $.SCREEN_HEIGHT * 0.6375
+    );
+
+    ctx.quadraticCurveTo(
+        $.SCREEN_WIDTH * 0.734,
+        $.SCREEN_HEIGHT * 0.63,
+        $.SCREEN_WIDTH * 0.775,
+        $.SCREEN_HEIGHT * 0.565
+    );
+
+    ctx.quadraticCurveTo(
+        $.SCREEN_WIDTH * 0.765,
+        $.SCREEN_HEIGHT * 0.63,
+        $.SCREEN_WIDTH * 0.742,
+        $.SCREEN_HEIGHT * 0.674
+    );
+
+    ctx.closePath();
+    ctx.fill();
 };
 
 const drawSplitString = (str, yPos) =>
 {
-    text.ctx.fillStyle = "#fff";
-    text.ctx.shadowBlur = 5;
-    text.ctx.shadowOffsetX = 3;
-    text.ctx.shadowOffsetY = 3;
+    const { ctx } = text;
+
+    ctx.fillStyle = "#fff";
+    ctx.shadowBlur = 5;
+    ctx.shadowOffsetX = 3;
+    ctx.shadowOffsetY = 3;
 
     const words = str.split(/(?=\s)/);
     let fits;
     let maybeFits;
 
-    for (const word of words)
+    for (let i = 0; i < words.length; i++)
     {
+        const isLastWord = (i === words.length - 1);
+        const word = words[i];
+
         maybeFits = isString(maybeFits) ? maybeFits + word : word.trimStart();
 
         if (text.ctx.measureText(maybeFits).width <= width)
         {
-            fits = maybeFits;
+            if (isLastWord)
+            {
+                drawText(maybeFits, yPos);
+            }
+            else
+            {
+                fits = maybeFits;
+            }
         }
         else
         {
@@ -138,22 +184,24 @@ const drawSplitString = (str, yPos) =>
             drawText(fits, yPos);
             fits = null;
             yPos += fontSize + fontPad;
-        }
-    }
 
-    if (fits)
-    {
-        drawText(fits, yPos);
+            if (isLastWord && maybeFits)
+            {
+                drawText(maybeFits, yPos);
+            }
+        }
     }
 };
 
 const drawText = (str, yPos) =>
 {
-    text.ctx.fillText(str, x, yPos);
+    if (yPos === undefined) throw Error;
+
+    text.ctx.fillText(str, xPix, yPos);
 };
 
 const text = new UiCanvas([1, 1, 1, 1]);
-const bubble = new UiCanvas([0, 0, 0, 0.6]);
+const bubble = new UiCanvas([0, 0, 0, 0.7]);
 
 /*------------------------------------------------------------------------------
     Draw area
@@ -161,21 +209,25 @@ const bubble = new UiCanvas([0, 0, 0, 0.6]);
 const fontSize = 32;
 const fontPad = 10;
 
-const x = 0.3 * $.SCREEN_WIDTH;
-const width = $.SCREEN_WIDTH - 2*x;
-const y = 0.69 * $.SCREEN_HEIGHT;
+const x = 0.3;
+const y = 0.7;
+
+const xPix = x * $.SCREEN_WIDTH;
+const yPix = y * $.SCREEN_HEIGHT;
+
+const width = $.SCREEN_WIDTH - 2*xPix;
 
 text.ctx.textAlign = "left";
 text.ctx.textBaseline = "top";
 text.ctx.font = `${fontSize}px Arial`;
 text.ctx.shadowColor = "#000";
 
-const beziars = [
-    new Bezier(0.25, 0.65, 89, 130, 240),
-    new Bezier(0.78, 0.77, 110, 60, 82),
-    new Bezier(0.393, 0.98, 256, 122, -4)
+const midLineY = 0.7 + (1.5 * fontSize + fontPad) / $.SCREEN_HEIGHT;
+
+const bezierSpeech = [
+    new Bezier(0.2, midLineY, 180, 180, 90),
+    new Bezier(0.8, midLineY, 180, 180, -90),
 ];
 
-Dialogue.setText(`
-Yume nante kanaru wake nai shi yaritakunai koto yamazumi de utsu ni naru hi mo ookute iya ni naru na
-`);
+canvasToTexture();
+Dialogue.setText("wwwwwwwwwwwwwwwwwwwwiiiiiii wwwwwwwwwwwwwwwwwwwwiiiiiii");
