@@ -38,6 +38,7 @@ export const render = (scene) =>
 
     gl.enable($.DEPTH_TEST);
 
+    renderProgramQueue($.PROG_DEBUG);
     renderProgramQueue($.PROG_POLYGON);
     renderProgramQueue($.PROG_SPRITE);
 
@@ -120,6 +121,7 @@ Renderbuffer.unbind();
 Framebuffer.unbind();
 
 const programQueues = new SafeMap([
+    [$.PROG_DEBUG, new SafeSet()],
     [$.PROG_POLYGON, new SafeSet()],
     [$.PROG_SPRITE, new SafeSet()],
     [$.PROG_UI, new SafeSet()]

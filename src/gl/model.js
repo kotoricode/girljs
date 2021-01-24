@@ -44,11 +44,11 @@ const buildModelDataQuad = () =>
     const uvOffsets = new SafeMap();
     const drawSizes = new SafeMap();
 
-    for (let i = 0; i < quadDef.length;)
+    for (let i = 0; i < modelDef.length;)
     {
-        const modelId = quadDef[i++];
-        const meshId = quadDef[i++];
-        const uvId = quadDef[i++];
+        const modelId = modelDef[i++];
+        const meshId = modelDef[i++];
+        const uvId = modelDef[i++];
 
         if (!xyzOffsets.has(meshId))
         {
@@ -82,49 +82,27 @@ const buildModelDataQuad = () =>
     }
 };
 
-const buildModelDataPolygon = () =>
-{
-    for (let i = 0; i < polygonDef.length;)
-    {
-        const modelId = polygonDef[i++];
-        const meshId = polygonDef[i++];
-        const uvId = polygonDef[i++];
-
-        models.set(modelId, new SafeMap([
-            [$.A_XYZ, pushData(modelData, Mesh.get(meshId))],
-            [$.A_UV, pushData(modelData, Texture.getUv(uvId))]
-        ]));
-    }
-
-    modelBufferIds.set($.MODEL_SCREEN, $.BUF_ARR_MODEL);
-};
-
 /*------------------------------------------------------------------------------
     Data/definitions
 ------------------------------------------------------------------------------*/
-const quadDef = [
-    $.MODEL_GIRL,     $.MESH_AVATAR_PLAYER,   $.UV_GIRL_00,
-    $.MODEL_GROUND,   $.MESH_GROUND, $.UV_GROUND,
-    $.MODEL_BRAID_00, $.MESH_PLAYER, $.UV_BRAID_00,
-    $.MODEL_BRAID_02, $.MESH_PLAYER, $.UV_BRAID_02,
-    $.MODEL_BRAID_04, $.MESH_PLAYER, $.UV_BRAID_04,
-    $.MODEL_BRAID_06, $.MESH_PLAYER, $.UV_BRAID_06,
-    $.MODEL_BRAID_08, $.MESH_PLAYER, $.UV_BRAID_08,
-    $.MODEL_BRAID_10, $.MESH_PLAYER, $.UV_BRAID_10,
-    $.MODEL_BRAID_12, $.MESH_PLAYER, $.UV_BRAID_12,
-    $.MODEL_BRAID_14, $.MESH_PLAYER, $.UV_BRAID_14,
-    $.MODEL_BRAID_16, $.MESH_PLAYER, $.UV_BRAID_16,
-    $.MODEL_BRAID_18, $.MESH_PLAYER, $.UV_BRAID_18,
-    $.MODEL_BRAID_20, $.MESH_PLAYER, $.UV_BRAID_20,
-    $.MODEL_BRAID_22, $.MESH_PLAYER, $.UV_BRAID_22,
-    $.MODEL_BRAID_24, $.MESH_PLAYER, $.UV_BRAID_24,
-    $.MODEL_BRAID_26, $.MESH_PLAYER, $.UV_BRAID_26,
-];
-
-
-const polygonDef = [
-    // eslint-disable-next-line max-len
-    $.MODEL_SCREEN, $.MESH_SCREEN, $.UV_SCREEN
+const modelDef = [
+    $.MODEL_GIRL,     $.MESH_AVATAR_PLAYER, $.UV_GIRL_00,
+    $.MODEL_GROUND,   $.MESH_GROUND,        $.UV_GROUND,
+    $.MODEL_BRAID_00, $.MESH_PLAYER,        $.UV_BRAID_00,
+    $.MODEL_BRAID_02, $.MESH_PLAYER,        $.UV_BRAID_02,
+    $.MODEL_BRAID_04, $.MESH_PLAYER,        $.UV_BRAID_04,
+    $.MODEL_BRAID_06, $.MESH_PLAYER,        $.UV_BRAID_06,
+    $.MODEL_BRAID_08, $.MESH_PLAYER,        $.UV_BRAID_08,
+    $.MODEL_BRAID_10, $.MESH_PLAYER,        $.UV_BRAID_10,
+    $.MODEL_BRAID_12, $.MESH_PLAYER,        $.UV_BRAID_12,
+    $.MODEL_BRAID_14, $.MESH_PLAYER,        $.UV_BRAID_14,
+    $.MODEL_BRAID_16, $.MESH_PLAYER,        $.UV_BRAID_16,
+    $.MODEL_BRAID_18, $.MESH_PLAYER,        $.UV_BRAID_18,
+    $.MODEL_BRAID_20, $.MESH_PLAYER,        $.UV_BRAID_20,
+    $.MODEL_BRAID_22, $.MESH_PLAYER,        $.UV_BRAID_22,
+    $.MODEL_BRAID_24, $.MESH_PLAYER,        $.UV_BRAID_24,
+    $.MODEL_BRAID_26, $.MESH_PLAYER,        $.UV_BRAID_26,
+    $.MODEL_TEST,     $.MESH_TEST,          $.UV_TEST
 ];
 
 /*------------------------------------------------------------------------------
@@ -139,8 +117,20 @@ const modelUvs = new SafeMap();
 const modelDrawSizes = new SafeMap();
 
 buildModelDataQuad();
-buildModelDataPolygon();
 
+/*------------------------------------------------------------------------------
+    Screen
+------------------------------------------------------------------------------*/
+models.set($.MODEL_SCREEN, new SafeMap([
+    [$.A_XYZ, pushData(modelData, Mesh.get($.MESH_SCREEN))],
+    [$.A_UV, pushData(modelData, Texture.getUv($.UV_SCREEN))]
+]));
+
+modelBufferIds.set($.MODEL_SCREEN, $.BUF_ARR_MODEL);
+
+/*------------------------------------------------------------------------------
+    Data to array buffer
+------------------------------------------------------------------------------*/
 Buffer.setData(
     $.BUF_ARR_MODEL,
     new SettableFloat32Array(modelData)

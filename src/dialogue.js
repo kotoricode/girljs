@@ -37,6 +37,11 @@ class UiCanvas
 }
 
 export const Dialogue = {
+    clear()
+    {
+        text.clear();
+        bubble.clear();
+    },
     getBubbleTexture()
     {
         return bubble.texture;
@@ -53,24 +58,26 @@ export const Dialogue = {
     {
         return text.texture;
     },
-    setText(text, speaker)
+    setText(dialogue, speaker)
     {
-        clear();
+        Dialogue.clear();
 
+        // Bubble
+        text.ctx.shadowBlur = 0;
+        text.ctx.shadowOffsetX = 0;
+        text.ctx.shadowOffsetY = 0;
         drawBubble(bezierSpeech);
         drawArrow();
 
+        // Text
+        text.ctx.shadowBlur = 5;
+        text.ctx.shadowOffsetX = 3;
+        text.ctx.shadowOffsetY = 3;
         drawSpeakerText(speaker);
-        drawDialogueText(text);
+        drawDialogueText(dialogue);
 
         canvasToTexture();
     }
-};
-
-const clear = () =>
-{
-    text.clear();
-    bubble.clear();
 };
 
 const canvasToTexture = () =>
@@ -82,10 +89,6 @@ const canvasToTexture = () =>
 const drawBubble = (beziers) =>
 {
     const { ctx } = bubble;
-
-    ctx.shadowBlur = 0;
-    ctx.shadowOffsetX = 0;
-    ctx.shadowOffsetY = 0;
 
     ctx.beginPath();
     let start = beziers[0];
@@ -139,17 +142,10 @@ const drawArrow = () =>
 
 const drawSpeakerText = (str) =>
 {
-    console.log(str);
 };
 
 const drawDialogueText = (str) =>
 {
-    const { ctx } = text;
-
-    ctx.shadowBlur = 5;
-    ctx.shadowOffsetX = 3;
-    ctx.shadowOffsetY = 3;
-
     const words = str.split(/(?=\s)/);
     let fits;
     let maybeFits;
@@ -239,4 +235,3 @@ const bezierSpeech = [
 ];
 
 canvasToTexture();
-Dialogue.setText($.TXT_HELLO, $.NAME_PLAYER);

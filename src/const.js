@@ -6,6 +6,7 @@ export const
 let i = 0;
 
 export const
+    ENTITY_TEST =i++,
     ENTITY_GIRL = i++,
     ENTITY_GROUND = i++,
     ENTITY_PLAYER = i++,
@@ -33,6 +34,7 @@ export const
     GL
 ------------------------------------------------------------------------------*/
 export const
+    PROG_TEST = i++,
     PROG_DEBUG = i++,
     PROG_IMAGE = i++,
     PROG_POLYGON = i++,
@@ -53,11 +55,12 @@ export const
     BUF_ARR_MODEL = i++;
 
 export const
-    MODEL_GIRL = i++,
-    MODEL_DEBUG = i++,
-    MODEL_GROUND = i++,
-    MODEL_SCREEN = i++,
-    MODEL_PLAYER = i++,
+    MODEL_TEST = "test",
+    MODEL_GIRL = "girl",
+    MODEL_DEBUG = "debug",
+    MODEL_GROUND = "ground",
+    MODEL_SCREEN = "screen",
+    MODEL_PLAYER = "player",
     MODEL_BRAID_00 = i++,
     MODEL_BRAID_02 = i++,
     MODEL_BRAID_04 = i++,
@@ -74,9 +77,10 @@ export const
     MODEL_BRAID_26 = i++;
 
 export const
-    UV_SCREEN = i++,
-    UV_GIRL_00 = i++,
-    UV_GROUND = i++,
+    UV_TEST = 0,
+    UV_SCREEN = 1,
+    UV_GIRL_00 = 2,
+    UV_GROUND = 3,
     UV_BRAID_00 = i++,
     UV_BRAID_02 = i++,
     UV_BRAID_04 = i++,
@@ -96,7 +100,8 @@ export const
     MESH_GROUND = i++,
     MESH_SCREEN = i++,
     MESH_PLAYER = i++,
-    MESH_AVATAR_PLAYER = i++;
+    MESH_AVATAR_PLAYER = i++,
+    MESH_TEST = i++;
 
 /*------------------------------------------------------------------------------
     Program --- DO NOT MODIFY

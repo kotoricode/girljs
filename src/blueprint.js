@@ -75,12 +75,24 @@ const createGround = () => [$.ENTITY_GROUND, new SafeMap([
     [$.BP_CHILDREN, new SafeSet()]
 ])];
 
+const createTest = () => [$.ENTITY_TEST, new SafeMap([
+    [$.BP_COMPONENTS, new SafeSet([
+        new Space(),
+        new Drawable(
+            $.PROG_SPRITE,
+            $.MODEL_TEST
+        )
+    ])],
+    [$.BP_CHILDREN, new SafeSet()]
+])];
+
 export const blueprint = new SafeMap([
     [$.SCENE_TEST, () => new SafeMap([
         [$.BP_ENTITIES, new SafeMap([
             createPlayer(),
             createGround(),
-            createTachie()
+            createTachie(),
+            createTest()
         ])],
         [$.BP_PROCESSES, new SafeSet([
             processMotion,

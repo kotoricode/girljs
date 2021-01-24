@@ -34,6 +34,11 @@ export const Texture = {
     },
     get(uvId)
     {
+        if (uvId === $.UV_TEST)
+        {
+            return uvData.get($.UV_GIRL_00).base.texture;
+        }
+
         return uvData.get(uvId).base.texture;
     },
     getUv(uvId)
@@ -109,7 +114,7 @@ image.addEventListener("error", (e) =>
 let activeTexture;
 
 // id/url, width, height, parami[], uvs[ id, x, y, width, height ]
-const textureDef = [
+const quadTextureDef = [
     "girl.png", 356, 1170, [
         $.UV_GIRL_00, 0, 0, 356, 1170
     ],
@@ -137,29 +142,23 @@ const textureDef = [
 const textures = new SafeMap();
 const uvData = new SafeMap();
 const uvs = new SafeMap([
-    [$.UV_SCREEN, [
-        0, 0,
-        1, 0,
-        0, 1,
-        0, 1,
-        1, 0,
-        1, 1,
-    ]]
+    [$.UV_SCREEN, [0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1,]],
+    [$.UV_TEST, [0.875000, 0.500000, 0.625000, 0.750000, 0.625000, 0.500000, 0.625000, 0.750000, 0.375000, 1.000000, 0.375000, 0.750000, 0.625000, 0.000000, 0.375000, 0.250000, 0.375000, 0.000000, 0.375000, 0.500000, 0.125000, 0.750000, 0.125000, 0.500000, 0.625000, 0.500000, 0.375000, 0.750000, 0.375000, 0.500000, 0.625000, 0.250000, 0.375000, 0.500000, 0.375000, 0.250000, 0.875000, 0.500000, 0.875000, 0.750000, 0.625000, 0.750000, 0.625000, 0.750000, 0.625000, 1.000000, 0.375000, 1.000000, 0.625000, 0.000000, 0.625000, 0.250000, 0.375000, 0.250000, 0.375000, 0.500000, 0.375000, 0.750000, 0.125000, 0.750000, 0.625000, 0.500000, 0.625000, 0.750000, 0.375000, 0.750000, 0.625000, 0.250000, 0.625000, 0.500000, 0.375000, 0.500000, ]]
 ]);
 
-for (let i = 0; i < textureDef.length;)
+for (let i = 0; i < quadTextureDef.length;)
 {
-    const src = textureDef[i++];
+    const src = quadTextureDef[i++];
     const texture = Texture.create();
 
     const base = {
-        width: textureDef[i++],
-        height: textureDef[i++],
+        width: quadTextureDef[i++],
+        height: quadTextureDef[i++],
         texture
     };
 
     textures.set(src, texture);
-    const textureUvs = textureDef[i++];
+    const textureUvs = quadTextureDef[i++];
 
     for (let j = 0; j < textureUvs.length;)
     {
