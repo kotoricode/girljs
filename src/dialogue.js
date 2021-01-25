@@ -14,8 +14,6 @@ class UiCanvas
 
         this.canvas = window.document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d");
-        this.texture = Texture.get(textureId);
-
         this.canvas.width = $.SCREEN_WIDTH;
         this.canvas.height = $.SCREEN_HEIGHT;
     }
@@ -27,8 +25,11 @@ class UiCanvas
 
     canvasToTexture()
     {
+        const uvId = Model.getUvId(this.programData.modelId);
+        const texture = Texture.getByUv(uvId);
+
         Texture.flip(true);
-        Texture.bind(this.texture);
+        Texture.bind(texture);
         Texture.from(this.canvas);
         Texture.parami($.TEXTURE_MIN_FILTER, $.LINEAR);
         Texture.unbind();
