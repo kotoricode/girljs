@@ -43,7 +43,7 @@ export const render = () =>
     Renderbuffer.unbind();
     Framebuffer.unbind();
 
-    renderTriangles(imageProgramData, fbTexture, 6);
+    draw(imageProgramData, fbTexture);
     renderText();
     renderDebug();
 
@@ -70,8 +70,8 @@ const renderText = () =>
     const textTexture = Dialogue.getTextTexture();
     const bubbleTexture = Dialogue.getBubbleTexture();
 
-    renderTriangles(bubbleProgramData, bubbleTexture, 6);
-    renderTriangles(textProgramData, textTexture, 6);
+    draw(bubbleProgramData, bubbleTexture);
+    draw(textProgramData, textTexture);
 
     Texture.unbind();
 };
@@ -85,14 +85,14 @@ const renderQueue = (queueId) =>
         const uvId = Model.getUvId(programData.modelId);
         const texture = Texture.getTextureByUv(uvId);
 
-        const drawSize = Model.getDrawSize(programData.modelId);
-
-        renderTriangles(programData, texture, drawSize);
+        draw(programData, texture);
     }
 };
 
-const renderTriangles = (programData, texture, drawSize) =>
+const draw = (programData, texture) =>
 {
+    const drawSize = Model.getDrawSize(programData.modelId);
+
     setProgram(programData);
     Texture.bind(texture);
     programData.setUniforms();
@@ -108,19 +108,16 @@ gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 const imageProgramData = new ProgramData($.PROG_IMAGE, $.MODEL_SCREEN);
 
 // Prepare framebuffer
-
 Framebuffer.bind();
 Renderbuffer.bindDepth();
-
 const fbTexture = Framebuffer.createTexture();
 const rboDepth = Renderbuffer.createDepth();
 Framebuffer.attachDepth(rboDepth);
-
 Renderbuffer.unbind();
 Framebuffer.unbind();
 
 const queues = new SafeMap([
-    [$.RENDER_QUEUE_BACKGROUND, new SafeSet],
+    [$.RENDER_QUEUE_BACKGROUND, new SafeSet()],
     [$.RENDER_QUEUE_SPRITE, new SafeSet()],
     [$.RENDER_QUEUE_UI, new SafeSet()]
 ]);

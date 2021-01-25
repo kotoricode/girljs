@@ -6,13 +6,18 @@ import { Model } from "./gl/model";
 
 const mainLoop = (timestamp) =>
 {
-    const dt = (timestamp - oldTimestamp) * 1e-3;
-    Scene.update(dt);
+    if (isReady)
+    {
+        const dt = (timestamp - oldTimestamp) * 1e-3;
+        Scene.update(dt);
+        Mouse.isWorldClick = false;
+    }
 
-    Mouse.isWorldClick = false;
     oldTimestamp = timestamp;
     window.requestAnimationFrame(mainLoop);
 };
+
+let isReady = false;
 
 let oldTimestamp = 0;
 Scene.load($.SCENE_TEST);
@@ -20,5 +25,7 @@ Scene.load($.SCENE_TEST);
 Model.load().then(() =>
 {
     Dom.hideLoading();
-    mainLoop(0);
+    isReady = true;
 });
+
+mainLoop(0);

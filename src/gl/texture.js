@@ -11,15 +11,6 @@ export const Texture = {
             activeTexture = texture;
         }
     },
-    getFbTexture(width, height)
-    {
-        const texture = textures.get($.TEX_FRAMEBUFFER);
-        Texture.bind(texture);
-        gl.texStorage2D($.TEXTURE_2D, 1, $.RGB8, width, height);
-        Texture.unbind();
-
-        return texture;
-    },
     flip(state)
     {
         gl.pixelStorei($.UNPACK_FLIP_Y_WEBGL, state);
@@ -88,6 +79,16 @@ const createImageTexture = (src) =>
     return texture;
 };
 
+const createFbTexture = () =>
+{
+    const texture = createTexture();
+    Texture.bind(texture);
+    gl.texStorage2D($.TEXTURE_2D, 1, $.RGB8, $.SCREEN_WIDTH, $.SCREEN_HEIGHT);
+    Texture.unbind();
+
+    return texture;
+};
+
 /*------------------------------------------------------------------------------
     Textures
 ------------------------------------------------------------------------------*/
@@ -120,7 +121,9 @@ const textureDef = [
         $.UV_GROUND,
         $.UV_TEST
     ],
-    $.TEX_FRAMEBUFFER, createTexture(), null,
+    $.TEX_FRAMEBUFFER, createFbTexture(), [
+        $.UV_SCREEN
+    ],
     $.TEX_UI_TEXT, createTexture(), null,
     $.TEX_UI_BUBBLE, createTexture(), null
 ];
