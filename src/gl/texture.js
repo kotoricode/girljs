@@ -61,8 +61,8 @@ image.addEventListener("load", () =>
     Texture.bind(texture);
     Texture.from(image);
     Texture.parami($.TEXTURE_MIN_FILTER, $.LINEAR);
-    Texture.parami($.TEXTURE_WRAP_S, $.REPEAT);
-    Texture.parami($.TEXTURE_WRAP_T, $.REPEAT);
+    Texture.parami($.TEXTURE_WRAP_S, $.CLAMP_TO_EDGE);
+    Texture.parami($.TEXTURE_WRAP_T, $.CLAMP_TO_EDGE);
     Texture.unbind();
 
     imageTextures.delete(src);
