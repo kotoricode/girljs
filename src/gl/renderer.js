@@ -83,8 +83,7 @@ const renderQueue = (queueId) =>
 
 const draw = (programData) =>
 {
-    const uvId = Model.getUvId(programData.modelId);
-    const texture = Texture.getByUv(uvId);
+    const texture = Model.getTexture(programData.modelId);
     const drawSize = Model.getDrawSize(programData.modelId);
 
     setProgram(programData);
@@ -99,7 +98,7 @@ gl.disable($.CULL_FACE);
 gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
-const imageProgramData = new ProgramData($.PROG_IMAGE, $.MODEL_SCREEN);
+const imageProgramData = new ProgramData($.PROG_IMAGE, $.MODEL_FB);
 
 // Prepare framebuffer
 Framebuffer.bind();

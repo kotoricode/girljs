@@ -66,7 +66,7 @@ export const
     MODEL_GIRL = "MODEL_GIRL",
     MODEL_DEBUG = "MODEL_DEBUG",
     MODEL_GROUND = "MODEL_GROUND",
-    MODEL_SCREEN = "MODEL_SCREEN",
+    MODEL_FB = "MODEL_SCREEN",
     MODEL_PLAYER = "MODEL_PLAYER",
     MODEL_BRAID_00 = i++,
     MODEL_BRAID_02 = i++,
@@ -109,7 +109,7 @@ export const
     MESH_GROUND = i++,
     MESH_SCREEN = i++,
     MESH_PLAYER = i++,
-    MESH_AVATAR_PLAYER = i++,
+    MESH_AV_PLAYER = i++,
     MESH_TEST = i++,
     MESH_DEBUG = i++;
 
@@ -117,7 +117,7 @@ export const
     TEX_BRAID = i++,
     TEX_GIRL = i++,
     TEX_TEXTURE = i++,
-    TEX_FRAMEBUFFER = i++,
+    TEX_FB = i++,
     TEX_UI_TEXT = i++,
     TEX_UI_BUBBLE = i++;
 

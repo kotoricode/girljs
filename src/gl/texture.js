@@ -23,10 +23,6 @@ export const Texture = {
     {
         return textures.get(textureId);
     },
-    getByUv(uvId)
-    {
-        return uvTexture.get(uvId);
-    },
     parami(key, value)
     {
         gl.texParameteri($.TEXTURE_2D, key, value);
@@ -94,61 +90,15 @@ const createFbTexture = () =>
 ------------------------------------------------------------------------------*/
 let activeTexture;
 const imageTextures = new SafeMap();
-const textures = new SafeMap();
-const uvTexture = new SafeMap();
 
-const textureDef = [
-    $.TEX_GIRL, createImageTexture("girl.png"), [
-        $.UV_GIRL_00,
-    ],
-    $.TEX_BRAID, createImageTexture("braid.png"), [
-        $.UV_BRAID_00,
-        $.UV_BRAID_02,
-        $.UV_BRAID_04,
-        $.UV_BRAID_06,
-        $.UV_BRAID_08,
-        $.UV_BRAID_10,
-        $.UV_BRAID_12,
-        $.UV_BRAID_14,
-        $.UV_BRAID_16,
-        $.UV_BRAID_18,
-        $.UV_BRAID_20,
-        $.UV_BRAID_22,
-        $.UV_BRAID_24,
-        $.UV_BRAID_26,
-    ],
-    $.TEX_TEXTURE, createImageTexture("texture.png"), [
-        $.UV_GROUND,
-        $.UV_TEST
-    ],
-    $.TEX_FRAMEBUFFER, createFbTexture(), [
-        $.UV_SCREEN
-    ],
-    $.TEX_UI_TEXT, createTexture(), [
-        $.UV_TEXT
-    ],
-    $.TEX_UI_BUBBLE, createTexture(), [
-        $.UV_BUBBLE
-    ]
-];
-
-for (let i = 0; i < textureDef.length;)
-{
-    const textureId = textureDef[i++];
-    const texture = textureDef[i++];
-    const textureUvs = textureDef[i++];
-
-    textures.set(textureId, texture);
-
-    if (textureUvs)
-    {
-        for (let j = 0; j < textureUvs.length;)
-        {
-            const uvId = textureUvs[j++];
-            uvTexture.set(uvId, texture);
-        }
-    }
-}
+const textures = new SafeMap([
+    [$.TEX_GIRL, createImageTexture("girl.png")],
+    [$.TEX_BRAID, createImageTexture("braid.png")],
+    [$.TEX_TEXTURE, createImageTexture("texture.png")],
+    [$.TEX_FB, createFbTexture()],
+    [$.TEX_UI_TEXT, createTexture()],
+    [$.TEX_UI_BUBBLE, createTexture()]
+]);
 
 const toFetch = [...imageTextures.keys()];
 fetchNextImage();

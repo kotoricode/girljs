@@ -25,8 +25,7 @@ class UiCanvas
 
     canvasToTexture()
     {
-        const uvId = Model.getUvId(this.programData.modelId);
-        const texture = Texture.getByUv(uvId);
+        const texture = Model.getTexture(this.programData.modelId);
 
         Texture.flip(true);
         Texture.bind(texture);
