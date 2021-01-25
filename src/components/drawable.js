@@ -3,11 +3,12 @@ import { ProgramData } from "../gl/program-data";
 
 export class Drawable extends Component
 {
-    constructor(programId, modelId, uniforms)
+    constructor(programId, priority, modelId, uniforms)
     {
         super();
 
         this.programData = new ProgramData(programId);
+        this.priority = priority;
         this.isVisible = true;
         this.setModel(modelId);
 

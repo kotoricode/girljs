@@ -7,10 +7,10 @@ import vsWorldSrc  from "./shaders/vert/world.vert";
 import vsUiSrc     from "./shaders/vert/ui.vert";
 import vsColorSrc  from "./shaders/vert/color.vert";
 
-import fsImageSrc   from "./shaders/frag/image-fx.frag";
-import fsSpriteSrc  from "./shaders/frag/sprite.frag";
-import fsPolygonSrc from "./shaders/frag/polygon.frag";
-import fsColorSrc   from "./shaders/frag/color.frag";
+import fsImageSrc    from "./shaders/frag/image.frag";
+import fsTexSrc       from "./shaders/frag/tex.frag";
+import fsTexRectRepeatSrc from "./shaders/frag/tex-rect-repeat.frag";
+import fsColorSrc    from "./shaders/frag/color.frag";
 
 const createAttachShader = (program, shaderId, shaderDef) =>
 {
@@ -97,8 +97,8 @@ const VS_WORLD = 3;
 
 const FS_COLOR = 0;
 const FS_IMAGE = 1;
-const FS_POLYGON = 2;
-const FS_SPRITE = 3;
+const FS_TEX_RECT_REPEAT = 2;
+const FS_TEX = 3;
 
 const U_TYPE_2F = "uniform2f";
 const U_TYPE_4F = "uniform4f";
@@ -144,11 +144,11 @@ const vertDef = new SafeMap([
 const fragDef = new SafeMap([
     createFragDef(FS_COLOR, fsColorSrc),
     createFragDef(FS_IMAGE, fsImageSrc),
-    createFragDef(FS_POLYGON, fsPolygonSrc,
+    createFragDef(FS_TEX_RECT_REPEAT, fsTexRectRepeatSrc,
         U_TYPE_2F, new SafeMap([uniUvOffset, uniUvSize]),
         U_TYPE_4F, uniMapColor
     ),
-    createFragDef(FS_SPRITE, fsSpriteSrc,
+    createFragDef(FS_TEX, fsTexSrc,
         U_TYPE_4F, uniMapColor
     )
 ]);
@@ -157,12 +157,12 @@ const fragDef = new SafeMap([
     Program definitions
 ------------------------------------------------------------------------------*/
 const programDef = [
-    $.PROG_DEBUG,   VS_COLOR,  FS_COLOR,
+    $.PROG_COLOR,   VS_COLOR,  FS_COLOR,
     $.PROG_IMAGE,   VS_SCREEN, FS_IMAGE,
-    $.PROG_POLYGON, VS_WORLD,  FS_POLYGON,
-    $.PROG_SCREEN,  VS_SCREEN, FS_SPRITE,
-    $.PROG_SPRITE,  VS_WORLD,  FS_SPRITE,
-    $.PROG_UI,      VS_UI,     FS_SPRITE,
+    $.PROG_REPEAT,  VS_WORLD,  FS_TEX_RECT_REPEAT,
+    $.PROG_SCREEN,  VS_SCREEN, FS_TEX,
+    $.PROG_SPRITE,  VS_WORLD,  FS_TEX,
+    $.PROG_UI,      VS_UI,     FS_TEX,
 ];
 
 /*------------------------------------------------------------------------------

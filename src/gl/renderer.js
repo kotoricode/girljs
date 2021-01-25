@@ -17,13 +17,11 @@ export const render = (scene) =>
     /*--------------------------------------------------------------------------
         Queue up drawables
     --------------------------------------------------------------------------*/
-    // TODO: need to queue up by z index for each program
     for (const [drawable] of scene.all(Drawable))
     {
         if (drawable.isVisible)
         {
-            const queue = programQueues.get(drawable.programData.programId);
-            queue.add(drawable);
+            queues.get(drawable.priority).add(drawable);
         }
     }
 
@@ -37,22 +35,19 @@ export const render = (scene) =>
     gl.clearColor(0.8, 0.8, 0.8, 1.0);
 
     gl.enable($.DEPTH_TEST);
-
-    renderProgramQueue($.PROG_DEBUG);
-    renderProgramQueue($.PROG_POLYGON);
-    renderProgramQueue($.PROG_SPRITE);
-
+    renderQueue($.RENDER_QUEUE_BACKGROUND);
     gl.disable($.DEPTH_TEST);
+    renderQueue($.RENDER_QUEUE_SPRITE);
+    renderQueue($.RENDER_QUEUE_UI);
 
     Renderbuffer.unbind();
     Framebuffer.unbind();
 
     renderTriangles(imageProgramData, fbTexture, 6);
-    renderProgramQueue($.PROG_UI);
     renderText();
     renderDebug();
 
-    for (const queue of programQueues.values())
+    for (const queue of queues.values())
     {
         queue.clear();
     }
@@ -63,7 +58,7 @@ const renderDebug = () =>
     const programData = Debug.getProgramData();
     setProgram(programData);
     const bufferSize = Buffer.getSize($.BUF_ARR_DEBUG);
-    drawArraysVao($.LINES, 0, bufferSize / 3, programData);
+    drawArraysVao($.LINES, bufferSize / 3, programData);
 };
 
 const renderText = () =>
@@ -80,9 +75,9 @@ const renderText = () =>
     Texture.unbind();
 };
 
-const renderProgramQueue = (programId) =>
+const renderQueue = (queueId) =>
 {
-    const queue = programQueues.get(programId);
+    const queue = queues.get(queueId);
 
     for (const { programData, modelId } of queue)
     {
@@ -99,7 +94,7 @@ const renderTriangles = (programData, texture, drawSize) =>
     Texture.bind(texture);
     programData.setUniforms();
     // TODO: change 6 to vertices size for polygons
-    drawArraysVao($.TRIANGLES, 0, drawSize, programData);
+    drawArraysVao($.TRIANGLES, drawSize, programData);
 };
 
 // Blending
@@ -120,9 +115,8 @@ Framebuffer.attachDepth(rboDepth);
 Renderbuffer.unbind();
 Framebuffer.unbind();
 
-const programQueues = new SafeMap([
-    [$.PROG_DEBUG, new SafeSet()],
-    [$.PROG_POLYGON, new SafeSet()],
-    [$.PROG_SPRITE, new SafeSet()],
-    [$.PROG_UI, new SafeSet()]
+const queues = new SafeMap([
+    [$.RENDER_QUEUE_BACKGROUND, new SafeSet],
+    [$.RENDER_QUEUE_SPRITE, new SafeSet()],
+    [$.RENDER_QUEUE_UI, new SafeSet()]
 ]);

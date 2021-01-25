@@ -35,9 +35,9 @@ export const
 ------------------------------------------------------------------------------*/
 export const
     PROG_TEST = i++,
-    PROG_DEBUG = i++,
+    PROG_COLOR = i++,
     PROG_IMAGE = i++,
-    PROG_POLYGON = i++,
+    PROG_REPEAT = i++,
     PROG_SCREEN = i++,
     PROG_SPRITE = i++,
     PROG_UI = i++;
@@ -104,6 +104,14 @@ export const
     MESH_TEST = i++;
 
 /*------------------------------------------------------------------------------
+    Render queue priorities --- DO NOT MODIFY
+------------------------------------------------------------------------------*/
+export const
+    RENDER_QUEUE_BACKGROUND = 0,
+    RENDER_QUEUE_SPRITE = 1,
+    RENDER_QUEUE_UI = 2;
+
+/*------------------------------------------------------------------------------
     Program --- DO NOT MODIFY
 ------------------------------------------------------------------------------*/
 export const
@@ -142,7 +150,9 @@ export const
 ------------------------------------------------------------------------------*/
 export const
     NAME_PLAYER = "Player",
-    NAME_CHAD = "Chad";
+    NAME_UNKNOWN = "???",
+    NAME_CHAD = "Chad",
+    NAME_BOAR = "Boar";
 
 /*------------------------------------------------------------------------------
     Dialogue --- DO NOT MODIFY

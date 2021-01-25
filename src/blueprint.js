@@ -18,7 +18,11 @@ const createPlayer = () => [$.ENTITY_PLAYER, new SafeMap([
         new Space(),
         new Motion(3),
         new Player(),
-        new Drawable($.PROG_SPRITE, $.MODEL_BRAID_00),
+        new Drawable(
+            $.PROG_SPRITE,
+            $.RENDER_QUEUE_SPRITE,
+            $.MODEL_BRAID_00
+        ),
         new Anim(new SafeMap([
             [$.ANIM_IDLE, [$.MODEL_BRAID_00]],
             [$.ANIM_MOVE, [
@@ -50,6 +54,7 @@ const createTachie = () => [$.ENTITY_GIRL, new SafeMap([
         new Space(0.75, -0.2, 0),
         new Drawable(
             $.PROG_UI,
+            $.RENDER_QUEUE_UI,
             $.MODEL_GIRL,
             new SafeMap([
                 [$.U_COLOR, [1, 0.871, 0.855, 1]]
@@ -64,7 +69,8 @@ const createGround = () => [$.ENTITY_GROUND, new SafeMap([
         new Space(),
         new Ground(-2, 2, -2, 2),
         new Drawable(
-            $.PROG_POLYGON,
+            $.PROG_REPEAT,
+            $.RENDER_QUEUE_BACKGROUND,
             $.MODEL_GROUND,
             new SafeMap([
                 [$.U_UVREPEAT, [4, 4]],
@@ -80,6 +86,7 @@ const createTest = () => [$.ENTITY_TEST, new SafeMap([
         new Space(),
         new Drawable(
             $.PROG_SPRITE,
+            $.RENDER_QUEUE_BACKGROUND,
             $.MODEL_TEST
         )
     ])],

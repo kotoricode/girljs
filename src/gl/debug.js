@@ -8,5 +8,5 @@ export const Debug = {
     }
 };
 
-const program = new ProgramData($.PROG_DEBUG);
+const program = new ProgramData($.PROG_COLOR);
 program.setAttributes($.MODEL_DEBUG);
