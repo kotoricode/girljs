@@ -10,7 +10,7 @@ export class Drawable extends Component
         this.programData = new ProgramData(programId);
         this.priority = priority;
         this.isVisible = true;
-        this.setModel(modelId);
+        this.programData.setModel(modelId);
 
         if (uniforms)
         {
@@ -19,11 +19,5 @@ export class Drawable extends Component
                 this.programData.stageUniform(key, value);
             }
         }
-    }
-
-    setModel(modelId)
-    {
-        this.programData.setAttributes(modelId);
-        this.modelId = modelId;
     }
 }

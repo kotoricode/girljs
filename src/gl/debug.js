@@ -9,4 +9,4 @@ export const Debug = {
 };
 
 const program = new ProgramData($.PROG_COLOR);
-program.setAttributes($.MODEL_DEBUG);
+program.setModel($.MODEL_DEBUG);

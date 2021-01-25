@@ -11,6 +11,7 @@ export class ProgramData
     constructor(programId)
     {
         const prepared = Program.getPrepared(programId);
+        this.modelId = null;
 
         // Program
         this.program = prepared.get($.PROG_DATA_PROGRAM);
@@ -42,8 +43,9 @@ export class ProgramData
         return this.uStaging.has(uId);
     }
 
-    setAttributes(modelId)
+    setModel(modelId)
     {
+        this.modelId = modelId;
         const model = Model.get(modelId);
         const bufferId = Model.getBufferId(modelId);
 

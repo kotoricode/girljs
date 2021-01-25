@@ -79,10 +79,10 @@ const renderQueue = (queueId) =>
 {
     const queue = queues.get(queueId);
 
-    for (const { programData, modelId } of queue)
+    for (const { programData } of queue)
     {
-        const texture = Model.getTexture(modelId);
-        const drawSize = Model.getDrawSize(modelId);
+        const texture = Model.getTexture(programData.modelId);
+        const drawSize = Model.getDrawSize(programData.modelId);
 
         renderTriangles(programData, texture, drawSize);
     }
@@ -102,7 +102,7 @@ gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
 const imageProgramData = new ProgramData($.PROG_IMAGE);
-imageProgramData.setAttributes($.MODEL_SCREEN);
+imageProgramData.setModel($.MODEL_SCREEN);
 
 // Prepare framebuffer
 Framebuffer.bind();

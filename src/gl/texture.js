@@ -11,7 +11,7 @@ export const Texture = {
             activeTexture = texture;
         }
     },
-    createFramebufferTexture(width, height)
+    getFbTexture(width, height)
     {
         const texture = textures.get($.TEX_FRAMEBUFFER);
         Texture.bind(texture);
@@ -32,7 +32,7 @@ export const Texture = {
     {
         return textures.get(textureId);
     },
-    get(uvId)
+    getTextureByUv(uvId)
     {
         return uvTexture.get(uvId);
     },

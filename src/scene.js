@@ -81,7 +81,7 @@ export class Scene
                         uvMinX, uvMaxY,
                         uvMaxX, ,
                         , uvMinY
-                    ] = Model.getUv(drawable.modelId);
+                    ] = Model.getUv(drawable.programData.modelId);
 
                     const width = uvMaxX - uvMinX;
                     const height = uvMaxY - uvMinY;

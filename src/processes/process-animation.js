@@ -13,14 +13,14 @@ export const processAnimation = (scene) =>
             {
                 anim.setState($.ANIM_MOVE);
                 const model = anim.getModel();
-                drawable.setModel(model);
+                drawable.programData.setModel(model);
             }
         }
         else if (anim.isState($.ANIM_MOVE))
         {
             anim.setState($.ANIM_IDLE);
             const model = anim.getModel();
-            drawable.setModel(model);
+            drawable.programData.setModel(model);
         }
     }
 
@@ -41,7 +41,7 @@ export const processAnimation = (scene) =>
 
             anim.frameIdx %= models.length;
             const model = anim.getModel();
-            drawable.setModel(model);
+            drawable.programData.setModel(model);
         }
     }
 };

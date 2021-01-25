@@ -25,15 +25,7 @@ export const Framebuffer = {
     {
         assertIsBound();
 
-        if (texture)
-        {
-            gl.deleteTexture(texture);
-        }
-
-        texture = Texture.createFramebufferTexture(
-            gl.canvas.width,
-            gl.canvas.height
-        );
+        texture = Texture.getFbTexture(gl.canvas.width, gl.canvas.height);
 
         gl.framebufferTexture2D(
             $.FRAMEBUFFER,
