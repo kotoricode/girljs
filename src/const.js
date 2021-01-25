@@ -6,11 +6,11 @@ export const
 let i = 0;
 
 export const
-    ENTITY_TEST =i++,
-    ENTITY_GIRL = i++,
-    ENTITY_GROUND = i++,
-    ENTITY_PLAYER = i++,
-    ENTITY_ROOT = i++;
+    ENTITY_TEST = "ENTITY_TEST",
+    ENTITY_GIRL = "ENTITY_GIRL",
+    ENTITY_GROUND = "ENTITY_GROUND",
+    ENTITY_PLAYER = "ENTITY_PLAYER",
+    ENTITY_ROOT = "ENTITY_ROOT";
 
 export const
     SCENE_TEST = i++;

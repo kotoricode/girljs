@@ -1,10 +1,11 @@
 import { Motion } from "../components/motion";
 import { Space } from "../components/space";
 import { Vector } from "../math/vector";
+import { Scene } from "../scene";
 
-export const processMotion = (scene) =>
+export const processMotion = (dt) =>
 {
-    for (const [motion, space] of scene.all(Motion, Space))
+    for (const [motion, space] of Scene.all(Motion, Space))
     {
         if (motion.hasTarget())
         {
@@ -29,7 +30,7 @@ export const processMotion = (scene) =>
                 );
             }
 
-            const moveDistance = motion.speed * scene.dt;
+            const moveDistance = motion.speed * dt;
 
             if (moveDistance < distance.magnitude())
             {
@@ -51,13 +52,8 @@ export const processMotion = (scene) =>
 
             // Step to or towards target
             space.local.translation.add(distance);
-            scene.markDirty(space);
+            Scene.markDirty(space);
         }
-    }
-
-    if (scene.isDirty)
-    {
-        scene.updateGraph();
     }
 };
 

@@ -2,10 +2,11 @@ import * as $ from "../const";
 import { Motion } from "../components/motion";
 import { Drawable } from "../components/drawable";
 import { Anim } from "../components/anim";
+import { Scene } from "../scene";
 
-export const processAnimation = (scene) =>
+export const processAnimation = (dt) =>
 {
-    for (const [drawable, anim, motion] of scene.all(Drawable, Anim, Motion))
+    for (const [drawable, anim, motion] of Scene.all(Drawable, Anim, Motion))
     {
         if (motion.hasTarget())
         {
@@ -24,9 +25,9 @@ export const processAnimation = (scene) =>
         }
     }
 
-    for (const [drawable, anim] of scene.all(Drawable, Anim))
+    for (const [drawable, anim] of Scene.all(Drawable, Anim))
     {
-        anim.delay -= scene.dt;
+        anim.delay -= dt;
 
         if (anim.delay <= 0)
         {

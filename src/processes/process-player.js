@@ -5,8 +5,9 @@ import { Ground } from "../components/ground";
 import { Ray } from "../math/ray";
 import { Dialogue } from "../dialogue";
 import { Motion } from "../components/motion";
+import { Scene } from "../scene";
 
-export const processPlayer = (scene) =>
+export const processPlayer = () =>
 {
     if (Mouse.isWorldClick)
     {
@@ -14,7 +15,7 @@ export const processPlayer = (scene) =>
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
         );
 
-        const [ground] = scene.one($.ENTITY_GROUND, Ground);
+        const [ground] = Scene.one($.ENTITY_GROUND, Ground);
         const ivp = Camera.getInvViewProjection();
 
         ray.numHits = 0;
@@ -24,7 +25,7 @@ export const processPlayer = (scene) =>
         // Update player, marker paths
         if (ray.numHits)
         {
-            const [plMotion] = scene.one($.ENTITY_PLAYER, Motion);
+            const [plMotion] = Scene.one($.ENTITY_PLAYER, Motion);
 
             const hit = ray.hit[0];
             plMotion.setMainTarget(hit);

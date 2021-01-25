@@ -41,10 +41,24 @@ export const Model = {
     {
         return new Promise((resolve) =>
         {
+            // window.fetch("/data/test.blob").then((res) =>
+            // {
+            //     res.blob().then((data) =>
+            //     {
+            //         console.log(data);
+
+            //         data.arrayBuffer().then((arr) =>
+            //         {
+            //             const c = new Float32Array(arr);
+            //             console.log(c);
+            //         });
+            //     });
+            // });
+
             window.setTimeout(() =>
             {
                 resolve();
-            }, 3000);
+            }, 400);
         });
     }
 };
