@@ -3,7 +3,6 @@ import { gl } from "../dom";
 import { Drawable } from "../components/drawable";
 import { Debug } from "./debug";
 import { drawArraysVao, setProgram } from "./gl-helper";
-import { Buffer } from "./buffer";
 import { Texture } from "./texture";
 import { ProgramData } from "./program-data";
 import { SafeMap, SafeSet } from "../utility";
