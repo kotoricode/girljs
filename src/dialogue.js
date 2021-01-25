@@ -6,7 +6,7 @@ import { isString } from "./utility";
 
 class UiCanvas
 {
-    constructor(color)
+    constructor(textureId, color)
     {
         this.programData = new ProgramData($.PROG_SCREEN);
         this.programData.setAttributes($.MODEL_SCREEN);
@@ -14,7 +14,7 @@ class UiCanvas
 
         this.canvas = window.document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d");
-        this.texture = Texture.create();
+        this.texture = Texture.getTexture(textureId);
 
         this.canvas.width = $.SCREEN_WIDTH;
         this.canvas.height = $.SCREEN_HEIGHT;
@@ -202,8 +202,8 @@ const fillText = (str, yPos) =>
     text.ctx.fillText(str, xPix, yPos);
 };
 
-const text = new UiCanvas([1, 1, 1, 1]);
-const bubble = new UiCanvas([0, 0, 0, 0.7]);
+const text = new UiCanvas($.TEX_UI_TEXT, [1, 1, 1, 1]);
+const bubble = new UiCanvas($.TEX_UI_BUBBLE, [0, 0, 0, 0.7]);
 
 /*------------------------------------------------------------------------------
     Draw area

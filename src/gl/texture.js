@@ -11,13 +11,9 @@ export const Texture = {
             activeTexture = texture;
         }
     },
-    create()
-    {
-        return gl.createTexture();
-    },
     createFramebufferTexture(width, height)
     {
-        const texture = Texture.create();
+        const texture = textures.get($.TEX_FRAMEBUFFER);
         Texture.bind(texture);
         gl.texStorage2D($.TEXTURE_2D, 1, $.RGB8, width, height);
         Texture.unbind();
@@ -31,6 +27,10 @@ export const Texture = {
     from(src)
     {
         gl.texImage2D($.TEXTURE_2D, 0, $.RGBA, $.RGBA, $.UNSIGNED_BYTE, src);
+    },
+    getTexture(textureId)
+    {
+        return textures.get(textureId);
     },
     get(uvId)
     {
@@ -60,7 +60,7 @@ const image = new Image();
 image.addEventListener("load", () =>
 {
     const src = toFetch.shift();
-    const texture = textures.get(src);
+    const texture = imageTextures.get(src);
 
     Texture.bind(texture);
     Texture.from(image);
@@ -69,7 +69,7 @@ image.addEventListener("load", () =>
     Texture.parami($.TEXTURE_WRAP_T, $.CLAMP_TO_EDGE);
     Texture.unbind();
 
-    textures.delete(src);
+    imageTextures.delete(src);
 
     if (toFetch.length)
     {
@@ -104,10 +104,23 @@ const imageRect = (x, y, width, height, baseWidth, baseHeight) =>
     ];
 };
 
+const createTexture = () => gl.createTexture();
+
+const createImageTexture = (src) =>
+{
+    const texture = createTexture();
+    imageTextures.set(src, texture);
+
+    return texture;
+};
+
 /*------------------------------------------------------------------------------
     Textures
 ------------------------------------------------------------------------------*/
 let activeTexture;
+const imageTextures = new SafeMap();
+const textures = new SafeMap();
+const uvTexture = new SafeMap();
 
 const uvs = new SafeMap([
     [$.UV_GIRL_00, imageRect(0, 0, 356, 1170, 356, 1170)],
@@ -130,11 +143,11 @@ const uvs = new SafeMap([
     [$.UV_TEST, [0.875000, 0.500000, 0.625000, 0.750000, 0.625000, 0.500000, 0.625000, 0.750000, 0.375000, 1.000000, 0.375000, 0.750000, 0.625000, 0.000000, 0.375000, 0.250000, 0.375000, 0.000000, 0.375000, 0.500000, 0.125000, 0.750000, 0.125000, 0.500000, 0.625000, 0.500000, 0.375000, 0.750000, 0.375000, 0.500000, 0.625000, 0.250000, 0.375000, 0.500000, 0.375000, 0.250000, 0.875000, 0.500000, 0.875000, 0.750000, 0.625000, 0.750000, 0.625000, 0.750000, 0.625000, 1.000000, 0.375000, 1.000000, 0.625000, 0.000000, 0.625000, 0.250000, 0.375000, 0.250000, 0.375000, 0.500000, 0.375000, 0.750000, 0.125000, 0.750000, 0.625000, 0.500000, 0.625000, 0.750000, 0.375000, 0.750000, 0.625000, 0.250000, 0.625000, 0.500000, 0.375000, 0.500000, ]]
 ]);
 
-const imageTextureDef = [
-    "girl.png", [
+const textureDef = [
+    $.TEX_GIRL, createImageTexture("girl.png"), [
         $.UV_GIRL_00,
     ],
-    "braid.png", [
+    $.TEX_BRAID, createImageTexture("braid.png"), [
         $.UV_BRAID_00,
         $.UV_BRAID_02,
         $.UV_BRAID_04,
@@ -150,29 +163,32 @@ const imageTextureDef = [
         $.UV_BRAID_24,
         $.UV_BRAID_26,
     ],
-    "texture.png", [
+    $.TEX_TEXTURE, createImageTexture("texture.png"), [
         $.UV_GROUND,
         $.UV_TEST
-    ]
+    ],
+    $.TEX_FRAMEBUFFER, createTexture(), null,
+    $.TEX_UI_TEXT, createTexture(), null,
+    $.TEX_UI_BUBBLE, createTexture(), null
 ];
 
-const textures = new SafeMap();
-const uvTexture = new SafeMap();
-
-for (let i = 0; i < imageTextureDef.length;)
+for (let i = 0; i < textureDef.length;)
 {
-    const src = imageTextureDef[i++];
-    const texture = Texture.create();
+    const textureId = textureDef[i++];
+    const texture = textureDef[i++];
+    const textureUvs = textureDef[i++];
 
-    textures.set(src, texture);
-    const textureUvs = imageTextureDef[i++];
+    textures.set(textureId, texture);
 
-    for (let j = 0; j < textureUvs.length;)
+    if (textureUvs)
     {
-        const uvId = textureUvs[j++];
-        uvTexture.set(uvId, texture);
+        for (let j = 0; j < textureUvs.length;)
+        {
+            const uvId = textureUvs[j++];
+            uvTexture.set(uvId, texture);
+        }
     }
 }
 
-const toFetch = [...textures.keys()];
+const toFetch = [...imageTextures.keys()];
 fetchNextImage();

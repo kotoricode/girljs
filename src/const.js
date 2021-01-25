@@ -43,6 +43,11 @@ export const
     PROG_UI = i++;
 
 export const
+    RENDER_QUEUE_BACKGROUND = i++,
+    RENDER_QUEUE_SPRITE = i++,
+    RENDER_QUEUE_UI = i++;
+
+export const
     PROG_DATA_A_LAYOUT = i++,
     PROG_DATA_PROGRAM = i++,
     PROG_DATA_U_BLOCKS = i++,
@@ -55,12 +60,12 @@ export const
     BUF_ARR_MODEL = i++;
 
 export const
-    MODEL_TEST = "test",
-    MODEL_GIRL = "girl",
-    MODEL_DEBUG = "debug",
-    MODEL_GROUND = "ground",
-    MODEL_SCREEN = "screen",
-    MODEL_PLAYER = "player",
+    MODEL_TEST = "MODEL_TEST",
+    MODEL_GIRL = "MODEL_GIRL",
+    MODEL_DEBUG = "MODEL_DEBUG",
+    MODEL_GROUND = "MODEL_GROUND",
+    MODEL_SCREEN = "MODEL_SCREEN",
+    MODEL_PLAYER = "MODEL_PLAYER",
     MODEL_BRAID_00 = i++,
     MODEL_BRAID_02 = i++,
     MODEL_BRAID_04 = i++,
@@ -77,10 +82,10 @@ export const
     MODEL_BRAID_26 = i++;
 
 export const
-    UV_TEST = 0,
-    UV_SCREEN = 1,
-    UV_GIRL_00 = 2,
-    UV_GROUND = 3,
+    UV_TEST = "UV_TEST",
+    UV_SCREEN = "UV_SCREEN",
+    UV_GIRL_00 = "UV_GIRL_00",
+    UV_GROUND = "UV_GROUND",
     UV_BRAID_00 = i++,
     UV_BRAID_02 = i++,
     UV_BRAID_04 = i++,
@@ -103,13 +108,13 @@ export const
     MESH_AVATAR_PLAYER = i++,
     MESH_TEST = i++;
 
-/*------------------------------------------------------------------------------
-    Render queue priorities --- DO NOT MODIFY
-------------------------------------------------------------------------------*/
 export const
-    RENDER_QUEUE_BACKGROUND = 0,
-    RENDER_QUEUE_SPRITE = 1,
-    RENDER_QUEUE_UI = 2;
+    TEX_BRAID = i++,
+    TEX_GIRL = i++,
+    TEX_TEXTURE = i++,
+    TEX_FRAMEBUFFER = i++,
+    TEX_UI_TEXT = i++,
+    TEX_UI_BUBBLE = i++;
 
 /*------------------------------------------------------------------------------
     Program --- DO NOT MODIFY
