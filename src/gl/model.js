@@ -1,7 +1,6 @@
 import * as $ from "../const";
 import { SafeMap, SettableFloat32Array } from "../utility";
 import { Buffer } from "./buffer";
-import { Texture } from "./texture";
 import { Mesh } from "./mesh";
 
 class ModelData
@@ -32,7 +31,7 @@ export const Model = {
     {
         const uvId = Model.getUvId(modelId);
 
-        return Texture.getUv(uvId);
+        return Mesh.getUv(uvId);
     },
     getUvId(modelId)
     {
@@ -75,7 +74,7 @@ const buildModelData = () =>
 
         if (!uvOffsets.has(uvId))
         {
-            const uv = Texture.getUv(uvId);
+            const uv = Mesh.getUv(uvId);
             const uvOffset = pushData(modelData, uv);
 
             uvOffsets.set(uvId, uvOffset);

@@ -15,9 +15,6 @@ fn main() -> Result<()>
         let mut out_verts = Vec::new();
         let mut out_uvs = Vec::new();
 
-        out_verts.push("[");
-        out_uvs.push("[");
-
         let contents = fs::read_to_string(in_file?.path())?;
         let lines = contents.lines();
 
@@ -52,33 +49,40 @@ fn main() -> Result<()>
 
                     for j in 0..3
                     {
-                        out_verts.push(vert[j]);
-                        out_verts.push(", ");
+                        let f: f32 = vert[j].parse().unwrap();
+
+                        out_verts.push(f);
                     }
 
                     for j in 0..2
                     {
-                        out_uvs.push(uv[j]);
-                        out_uvs.push(", ");
+                        let f: f32 = uv[j].parse().unwrap();
+
+                        out_uvs.push(f);
                     }
                 }
             }
         }
 
-        out_verts.push("]\n\n");
-        out_uvs.push("]");
+        let mut out_file = fs::File::create("test.blob")?;
 
-        let mut out_file = fs::File::create("test.txt")?;
+        let v_bytes = unsafe {
+            std::slice::from_raw_parts(
+                out_verts.as_ptr() as *const u8,
+                out_verts.len() * 4,
+            )
+        };
 
-        for s in &out_verts
-        {
-            out_file.write(s.as_bytes())?;
-        }
-        
-        for s in &out_uvs
-        {
-            out_file.write(s.as_bytes())?;
-        }
+        out_file.write(v_bytes)?;
+
+        let v2_bytes = unsafe {
+            std::slice::from_raw_parts(
+                out_uvs.as_ptr() as *const u8,
+                out_uvs.len() * 4,
+            )
+        };
+
+        out_file.write(v2_bytes)?;
     }
 
     Ok(())
