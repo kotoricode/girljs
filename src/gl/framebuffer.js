@@ -25,7 +25,7 @@ export const Framebuffer = {
     {
         assertIsBound();
 
-        texture = Texture.getTexture($.TEX_FRAMEBUFFER);
+        texture = Texture.get($.TEX_FRAMEBUFFER);
 
         gl.framebufferTexture2D(
             $.FRAMEBUFFER,

@@ -43,7 +43,7 @@ export const render = () =>
     Renderbuffer.unbind();
     Framebuffer.unbind();
 
-    draw(imageProgramData, fbTexture);
+    draw2(imageProgramData);
     renderText();
     renderDebug();
 
@@ -82,15 +82,24 @@ const renderQueue = (queueId) =>
 
     for (const { programData } of queue)
     {
-        const uvId = Model.getUvId(programData.modelId);
-        const texture = Texture.getTextureByUv(uvId);
-
-        draw(programData, texture);
+        draw2(programData);
     }
 };
 
 const draw = (programData, texture) =>
 {
+    const drawSize = Model.getDrawSize(programData.modelId);
+
+    setProgram(programData);
+    Texture.bind(texture);
+    programData.setUniforms();
+    drawArraysVao($.TRIANGLES, drawSize, programData);
+};
+
+const draw2 = (programData) =>
+{
+    const uvId = Model.getUvId(programData.modelId);
+    const texture = Texture.getByUv(uvId);
     const drawSize = Model.getDrawSize(programData.modelId);
 
     setProgram(programData);

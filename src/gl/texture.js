@@ -19,11 +19,11 @@ export const Texture = {
     {
         gl.texImage2D($.TEXTURE_2D, 0, $.RGBA, $.RGBA, $.UNSIGNED_BYTE, src);
     },
-    getTexture(textureId)
+    get(textureId)
     {
         return textures.get(textureId);
     },
-    getTextureByUv(uvId)
+    getByUv(uvId)
     {
         return uvTexture.get(uvId);
     },

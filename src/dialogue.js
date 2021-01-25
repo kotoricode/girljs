@@ -13,7 +13,7 @@ class UiCanvas
 
         this.canvas = window.document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d");
-        this.texture = Texture.getTexture(textureId);
+        this.texture = Texture.get(textureId);
 
         this.canvas.width = $.SCREEN_WIDTH;
         this.canvas.height = $.SCREEN_HEIGHT;
