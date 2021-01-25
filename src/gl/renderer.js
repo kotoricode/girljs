@@ -10,13 +10,14 @@ import { Renderbuffer } from "./renderbuffer";
 import { Framebuffer } from "./framebuffer";
 import { Model } from "./model";
 import { Dialogue } from "../dialogue";
+import { Scene } from "../scene";
 
-export const render = (scene) =>
+export const render = () =>
 {
     /*--------------------------------------------------------------------------
         Queue up drawables
     --------------------------------------------------------------------------*/
-    for (const [drawable] of scene.all(Drawable))
+    for (const [drawable] of Scene.all(Drawable))
     {
         if (drawable.isVisible)
         {

@@ -89,7 +89,7 @@ export const Scene = {
 
         // TODO: check for lost context
         // https://www.khronos.org/webgl/wiki/HandlingContextLost
-        render(Scene);
+        render();
     }
 };
 
@@ -241,7 +241,6 @@ function* yieldComponents(entity, components)
     }
 }
 
-const sceneId = sceneId;
 const cached = new SafeMap();
 const dirty = new SafeSet();
 
