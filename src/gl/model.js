@@ -6,18 +6,17 @@ import { Mesh } from "./mesh";
 
 class ModelData
 {
-    constructor(attributes, bufferId, uv, uvId, drawSize)
+    constructor(attributes, bufferId, uvId, drawSize)
     {
         this.attributes = attributes;
         this.bufferId = bufferId;
-        this.uv = uv;
         this.uvId = uvId;
         this.drawSize = drawSize;
     }
 }
 
 export const Model = {
-    get(modelId)
+    getAttributes(modelId)
     {
         return models.get(modelId).attributes;
     },
@@ -31,7 +30,9 @@ export const Model = {
     },
     getUv(modelId)
     {
-        return models.get(modelId).uv;
+        const uvId = Model.getUvId(modelId);
+
+        return Texture.getUv(uvId);
     },
     getUvId(modelId)
     {
@@ -54,7 +55,6 @@ const buildModelData = () =>
     const modelData = [];
 
     const xyzOffsets = new SafeMap();
-    const uvs = new SafeMap();
     const uvOffsets = new SafeMap();
     const drawSizes = new SafeMap();
 
@@ -78,7 +78,6 @@ const buildModelData = () =>
             const uv = Texture.getUv(uvId);
             const uvOffset = pushData(modelData, uv);
 
-            uvs.set(uvId, uv);
             uvOffsets.set(uvId, uvOffset);
         }
 
@@ -88,7 +87,6 @@ const buildModelData = () =>
                 [$.A_UV, uvOffsets.get(uvId)]
             ]),
             $.BUF_ARR_MODEL,
-            uvs.get(uvId),
             uvId,
             drawSizes.get(meshId),
         ));
@@ -139,7 +137,6 @@ models.set($.MODEL_DEBUG, new ModelData(
         [$.A_XYZ, pushData(debugData, mesh)]
     ]),
     $.BUF_ARR_DEBUG,
-    [],
     "",
     mesh.length / 3
 ));

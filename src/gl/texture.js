@@ -1,6 +1,7 @@
 import * as $ from "../const";
 import { gl } from "../dom";
 import { SafeMap, LISTENER_ONCE } from "../utility";
+import { b } from "../data/test.uv";
 
 export const Texture = {
     bind(texture)
@@ -65,8 +66,8 @@ image.addEventListener("load", () =>
     Texture.bind(texture);
     Texture.from(image);
     Texture.parami($.TEXTURE_MIN_FILTER, $.LINEAR);
-    Texture.parami($.TEXTURE_WRAP_S, $.CLAMP_TO_EDGE);
-    Texture.parami($.TEXTURE_WRAP_T, $.CLAMP_TO_EDGE);
+    Texture.parami($.TEXTURE_WRAP_S, $.REPEAT);
+    Texture.parami($.TEXTURE_WRAP_T, $.REPEAT);
     Texture.unbind();
 
     imageTextures.delete(src);
@@ -140,7 +141,7 @@ const uvs = new SafeMap([
     [$.UV_BRAID_26, rect1024(640, 461, 136, 136)],
     [$.UV_GROUND, imageRect(94, 97, 256, 256, 512, 512)],
     [$.UV_SCREEN, [0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1,]],
-    [$.UV_TEST, [0.875000, 0.500000, 0.625000, 0.750000, 0.625000, 0.500000, 0.625000, 0.750000, 0.375000, 1.000000, 0.375000, 0.750000, 0.625000, 0.000000, 0.375000, 0.250000, 0.375000, 0.000000, 0.375000, 0.500000, 0.125000, 0.750000, 0.125000, 0.500000, 0.625000, 0.500000, 0.375000, 0.750000, 0.375000, 0.500000, 0.625000, 0.250000, 0.375000, 0.500000, 0.375000, 0.250000, 0.875000, 0.500000, 0.875000, 0.750000, 0.625000, 0.750000, 0.625000, 0.750000, 0.625000, 1.000000, 0.375000, 1.000000, 0.625000, 0.000000, 0.625000, 0.250000, 0.375000, 0.250000, 0.375000, 0.500000, 0.375000, 0.750000, 0.125000, 0.750000, 0.625000, 0.500000, 0.625000, 0.750000, 0.375000, 0.750000, 0.625000, 0.250000, 0.625000, 0.500000, 0.375000, 0.500000, ]]
+    [$.UV_TEST, b]
 ]);
 
 const textureDef = [

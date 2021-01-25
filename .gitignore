@@ -8,3 +8,5 @@ package-lock.json
 tools/obj-tool/target/*
 tools/obj-tool/obj/*
 tools/obj-tool/*
+
+src/data/*

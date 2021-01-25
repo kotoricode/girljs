@@ -98,6 +98,8 @@ const renderTriangles = (programData, texture, drawSize) =>
     drawArraysVao($.TRIANGLES, drawSize, programData);
 };
 
+gl.disable($.CULL_FACE);
+
 // Blending
 gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
@@ -105,6 +107,7 @@ gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 const imageProgramData = new ProgramData($.PROG_IMAGE, $.MODEL_SCREEN);
 
 // Prepare framebuffer
+
 Framebuffer.bind();
 Renderbuffer.bindDepth();
 

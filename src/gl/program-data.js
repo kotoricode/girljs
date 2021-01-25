@@ -14,7 +14,6 @@ export class ProgramData
 
         // Program
         this.program = prepared.get($.PROG_DATA_PROGRAM);
-        this.programId = programId;
 
         // Attributes
         this.aLayout = prepared.get($.PROG_DATA_A_LAYOUT);
@@ -46,7 +45,7 @@ export class ProgramData
     setModel(modelId)
     {
         this.modelId = modelId;
-        const model = Model.get(modelId);
+        const attributes = Model.getAttributes(modelId);
         const bufferId = Model.getBufferId(modelId);
 
         VertexArray.bind(this.vao);
@@ -62,7 +61,7 @@ export class ProgramData
                 $.FLOAT,
                 false,
                 0,
-                model.get(name)
+                attributes.get(name)
             );
         }
 
