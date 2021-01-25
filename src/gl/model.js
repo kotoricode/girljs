@@ -4,26 +4,38 @@ import { Buffer } from "./buffer";
 import { Texture } from "./texture";
 import { Mesh } from "./mesh";
 
+class ModelData
+{
+    constructor(attributes, bufferId, uv, uvId, drawSize)
+    {
+        this.attributes = attributes;
+        this.bufferId = bufferId;
+        this.uv = uv;
+        this.uvId = uvId;
+        this.drawSize = drawSize;
+    }
+}
+
 export const Model = {
     get(modelId)
     {
-        return models.get(modelId);
+        return models.get(modelId).attributes;
     },
     getBufferId(modelId)
     {
-        return modelBufferIds.get(modelId);
+        return models.get(modelId).bufferId;
     },
     getDrawSize(modelId)
     {
-        return modelDrawSizes.get(modelId);
-    },
-    getTexture(modelId)
-    {
-        return modelTextures.get(modelId);
+        return models.get(modelId).drawSize;
     },
     getUv(modelId)
     {
-        return modelUvs.get(modelId);
+        return models.get(modelId).uv;
+    },
+    getUvId(modelId)
+    {
+        return models.get(modelId).uvId;
     }
 };
 
@@ -37,8 +49,10 @@ const pushData = (buffer, data) =>
     return offset;
 };
 
-const buildModelDataQuad = () =>
+const buildModelData = () =>
 {
+    const modelData = [];
+
     const xyzOffsets = new SafeMap();
     const uvs = new SafeMap();
     const uvOffsets = new SafeMap();
@@ -68,18 +82,22 @@ const buildModelDataQuad = () =>
             uvOffsets.set(uvId, uvOffset);
         }
 
-        models.set(modelId, new SafeMap([
-            [$.A_XYZ, xyzOffsets.get(meshId)],
-            [$.A_UV, uvOffsets.get(uvId)]
-        ]));
-
-        const texture = Texture.getTextureByUv(uvId);
-
-        modelTextures.set(modelId, texture);
-        modelUvs.set(modelId, uvs.get(uvId));
-        modelBufferIds.set(modelId, $.BUF_ARR_MODEL);
-        modelDrawSizes.set(modelId, drawSizes.get(meshId));
+        models.set(modelId, new ModelData(
+            new SafeMap([
+                [$.A_XYZ, xyzOffsets.get(meshId)],
+                [$.A_UV, uvOffsets.get(uvId)]
+            ]),
+            $.BUF_ARR_MODEL,
+            uvs.get(uvId),
+            uvId,
+            drawSizes.get(meshId),
+        ));
     }
+
+    Buffer.setData(
+        $.BUF_ARR_MODEL,
+        new SettableFloat32Array(modelData)
+    );
 };
 
 /*------------------------------------------------------------------------------
@@ -102,61 +120,29 @@ const modelDef = [
     $.MODEL_BRAID_22, $.MESH_PLAYER,        $.UV_BRAID_22,
     $.MODEL_BRAID_24, $.MESH_PLAYER,        $.UV_BRAID_24,
     $.MODEL_BRAID_26, $.MESH_PLAYER,        $.UV_BRAID_26,
-    $.MODEL_TEST,     $.MESH_TEST,          $.UV_TEST
+    $.MODEL_TEST,     $.MESH_TEST,          $.UV_TEST,
+    $.MODEL_SCREEN,   $.MESH_SCREEN,        $.UV_SCREEN
 ];
 
-/*------------------------------------------------------------------------------
-    Model
-------------------------------------------------------------------------------*/
-const modelData = [];
 const models = new SafeMap();
-const modelBufferIds = new SafeMap();
 
-const modelTextures = new SafeMap();
-const modelUvs = new SafeMap();
-const modelDrawSizes = new SafeMap();
-
-buildModelDataQuad();
-
-/*------------------------------------------------------------------------------
-    Screen
-------------------------------------------------------------------------------*/
-models.set($.MODEL_SCREEN, new SafeMap([
-    [$.A_XYZ, pushData(modelData, Mesh.get($.MESH_SCREEN))],
-    [$.A_UV, pushData(modelData, Texture.getUv($.UV_SCREEN))]
-]));
-
-modelBufferIds.set($.MODEL_SCREEN, $.BUF_ARR_MODEL);
-
-/*------------------------------------------------------------------------------
-    Data to array buffer
-------------------------------------------------------------------------------*/
-Buffer.setData(
-    $.BUF_ARR_MODEL,
-    new SettableFloat32Array(modelData)
-);
+buildModelData();
 
 /*------------------------------------------------------------------------------
     Debug
 ------------------------------------------------------------------------------*/
 const debugData = [];
+const mesh = Mesh.get($.MESH_DEBUG);
 
-const lines = [
-    0, 0, 0,
-    2, 2, 2,
-    0, 0, 0,
-    -2, 2, 2,
-    0, 0, 0,
-    2, -2, 2,
-    0, 0, 0,
-    -2, 2, -2
-];
-
-models.set($.MODEL_DEBUG, new SafeMap([
-    [$.A_XYZ, pushData(debugData, lines)]
-]));
-
-modelBufferIds.set($.MODEL_DEBUG, $.BUF_ARR_DEBUG);
+models.set($.MODEL_DEBUG, new ModelData(
+    new SafeMap([
+        [$.A_XYZ, pushData(debugData, mesh)]
+    ]),
+    $.BUF_ARR_DEBUG,
+    [],
+    "",
+    mesh.length / 3
+));
 
 Buffer.setData(
     $.BUF_ARR_DEBUG,

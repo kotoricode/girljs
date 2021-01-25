@@ -9,7 +9,6 @@ class BufferData
         this.buffer = gl.createBuffer();
         this.type = type;
         this.usage = usage;
-        this.size = null;
     }
 }
 
@@ -18,10 +17,6 @@ export const Buffer = {
     {
         const { type, buffer } = buffers.get(bufferId);
         gl.bindBuffer(type, buffer);
-    },
-    getSize(bufferId)
-    {
-        return buffers.get(bufferId).size;
     },
     prepareBlock(program, blockId)
     {
@@ -38,8 +33,6 @@ export const Buffer = {
         gl.bindBuffer(type, buffer);
         gl.bufferData(type, data, usage);
         gl.bindBuffer(type, null);
-
-        bufferData.size = data.length;
     },
     unbind(bufferId)
     {

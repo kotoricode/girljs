@@ -57,8 +57,9 @@ const renderDebug = () =>
 {
     const programData = Debug.getProgramData();
     setProgram(programData);
-    const bufferSize = Buffer.getSize($.BUF_ARR_DEBUG);
-    drawArraysVao($.LINES, bufferSize / 3, programData);
+    const drawSize = Model.getDrawSize(programData.modelId);
+
+    drawArraysVao($.LINES, drawSize, programData);
 };
 
 const renderText = () =>
@@ -81,7 +82,9 @@ const renderQueue = (queueId) =>
 
     for (const { programData } of queue)
     {
-        const texture = Model.getTexture(programData.modelId);
+        const uvId = Model.getUvId(programData.modelId);
+        const texture = Texture.getTextureByUv(uvId);
+
         const drawSize = Model.getDrawSize(programData.modelId);
 
         renderTriangles(programData, texture, drawSize);
@@ -93,7 +96,6 @@ const renderTriangles = (programData, texture, drawSize) =>
     setProgram(programData);
     Texture.bind(texture);
     programData.setUniforms();
-    // TODO: change 6 to vertices size for polygons
     drawArraysVao($.TRIANGLES, drawSize, programData);
 };
 
@@ -101,8 +103,7 @@ const renderTriangles = (programData, texture, drawSize) =>
 gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
-const imageProgramData = new ProgramData($.PROG_IMAGE);
-imageProgramData.setModel($.MODEL_SCREEN);
+const imageProgramData = new ProgramData($.PROG_IMAGE, $.MODEL_SCREEN);
 
 // Prepare framebuffer
 Framebuffer.bind();

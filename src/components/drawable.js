@@ -7,10 +7,9 @@ export class Drawable extends Component
     {
         super();
 
-        this.programData = new ProgramData(programId);
+        this.programData = new ProgramData(programId, modelId);
         this.priority = priority;
         this.isVisible = true;
-        this.programData.setModel(modelId);
 
         if (uniforms)
         {

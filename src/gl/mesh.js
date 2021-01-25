@@ -35,6 +35,7 @@ const xz = (minX, maxX, minZ, maxZ) => [
 ];
 
 const meshes = new SafeMap([
+    [$.MESH_DEBUG, [0, 0, 0, 2, 2, 2, 0, 0, 0, -2, 2, 2, 0, 0, 0, 2, -2, 2, 0, 0, 0, -2, 2, -2]],
     [$.MESH_GROUND, xz(-2, 2, -2, 2)],
     [$.MESH_PLAYER, xy(-0.4, 0.4, 0, 1.5)],
     [$.MESH_AVATAR_PLAYER, rect(187, 600)],

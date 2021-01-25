@@ -106,7 +106,8 @@ export const
     MESH_SCREEN = i++,
     MESH_PLAYER = i++,
     MESH_AVATAR_PLAYER = i++,
-    MESH_TEST = i++;
+    MESH_TEST = i++,
+    MESH_DEBUG = i++;
 
 export const
     TEX_BRAID = i++,

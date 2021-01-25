@@ -8,10 +8,9 @@ import { Model } from "./model";
 
 export class ProgramData
 {
-    constructor(programId)
+    constructor(programId, modelId)
     {
         const prepared = Program.getPrepared(programId);
-        this.modelId = null;
 
         // Program
         this.program = prepared.get($.PROG_DATA_PROGRAM);
@@ -20,14 +19,15 @@ export class ProgramData
         // Attributes
         this.aLayout = prepared.get($.PROG_DATA_A_LAYOUT);
         this.vao = gl.createVertexArray();
+        this.setModel(modelId);
 
         // Uniforms
         this.uSetters = prepared.get($.PROG_DATA_U_SETTERS);
         this.uBlocks = prepared.get($.PROG_DATA_U_BLOCKS);
         this.uStaging = new SafeMap();
-        const defaults = prepared.get($.PROG_DATA_U_DEFAULTS);
+        const uDefaults = prepared.get($.PROG_DATA_U_DEFAULTS);
 
-        for (const [name, values] of defaults)
+        for (const [name, values] of uDefaults)
         {
             this.uStaging.set(name, values.slice());
         }
