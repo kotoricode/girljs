@@ -3,28 +3,14 @@ import { gl } from "../dom";
 import { Texture } from "./texture";
 
 export const Framebuffer = {
-    attachDepth(rbo)
-    {
-        assertIsBound();
-
-        gl.framebufferRenderbuffer(
-            $.FRAMEBUFFER,
-            $.DEPTH_ATTACHMENT,
-            $.RENDERBUFFER,
-            rbo
-        );
-    },
     bind()
     {
-        if (isBound) throw Error;
-
         gl.bindFramebuffer($.FRAMEBUFFER, fbo);
-        isBound = true;
+        gl.bindRenderbuffer($.RENDERBUFFER, rboDepth);
     },
-    createTexture()
+    prepare()
     {
-        assertIsBound();
-
+        Framebuffer.bind();
         texture = Texture.get($.TEX_FB);
 
         gl.framebufferTexture2D(
@@ -35,22 +21,29 @@ export const Framebuffer = {
             0
         );
 
-        return texture;
+        gl.renderbufferStorage(
+            $.RENDERBUFFER,
+            $.DEPTH_COMPONENT16,
+            gl.canvas.width,
+            gl.canvas.height
+        );
+
+        gl.framebufferRenderbuffer(
+            $.FRAMEBUFFER,
+            $.DEPTH_ATTACHMENT,
+            $.RENDERBUFFER,
+            rboDepth
+        );
+
+        Framebuffer.unbind();
     },
     unbind()
     {
-        assertIsBound();
-
+        gl.bindRenderbuffer($.RENDERBUFFER, null);
         gl.bindFramebuffer($.FRAMEBUFFER, null);
-        isBound = false;
     }
 };
 
-const assertIsBound = () =>
-{
-    if (!isBound) throw Error;
-};
-
 const fbo = gl.createFramebuffer();
+const rboDepth = gl.createRenderbuffer();
 let texture;
-let isBound = false;

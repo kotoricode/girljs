@@ -6,7 +6,6 @@ import { drawArraysVao, setProgram } from "./gl-helper";
 import { Texture } from "./texture";
 import { ProgramData } from "./program-data";
 import { SafeMap, SafeSet } from "../utility";
-import { Renderbuffer } from "./renderbuffer";
 import { Framebuffer } from "./framebuffer";
 import { Model } from "./model";
 import { Dialogue } from "../dialogue";
@@ -29,7 +28,6 @@ export const render = () =>
         Prepare framebuffer
     --------------------------------------------------------------------------*/
     Framebuffer.bind();
-    Renderbuffer.bindDepth();
 
     gl.clear($.COLOR_BUFFER_BIT | $.DEPTH_BUFFER_BIT);
     gl.clearColor(0.8, 0.8, 0.8, 1.0);
@@ -40,7 +38,6 @@ export const render = () =>
     renderQueue($.RENDER_QUEUE_SPRITE);
     renderQueue($.RENDER_QUEUE_UI);
 
-    Renderbuffer.unbind();
     Framebuffer.unbind();
 
     draw(imageProgramData);
@@ -100,14 +97,7 @@ gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
 const imageProgramData = new ProgramData($.PROG_IMAGE, $.MODEL_FB);
 
-// Prepare framebuffer
-Framebuffer.bind();
-Renderbuffer.bindDepth();
-const fbTexture = Framebuffer.createTexture();
-const rboDepth = Renderbuffer.createDepth();
-Framebuffer.attachDepth(rboDepth);
-Renderbuffer.unbind();
-Framebuffer.unbind();
+Framebuffer.prepare();
 
 const queues = new SafeMap([
     [$.RENDER_QUEUE_BACKGROUND, new SafeSet()],

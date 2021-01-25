@@ -172,7 +172,8 @@ models.set($.MODEL_DEBUG, new ModelData(
         [$.A_XYZ, pushData(debugData, mesh)]
     ]),
     $.BUF_ARR_DEBUG,
-    "",
+    null,
+    null,
     mesh.length / 3
 ));
 
