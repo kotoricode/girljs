@@ -43,7 +43,7 @@ export const render = () =>
     Renderbuffer.unbind();
     Framebuffer.unbind();
 
-    draw2(imageProgramData);
+    draw(imageProgramData);
     renderText();
     renderDebug();
 
@@ -67,13 +67,8 @@ const renderText = () =>
     const textProgramData = Dialogue.getTextProgramData();
     const bubbleProgramData = Dialogue.getBubbleProgramData();
 
-    const textTexture = Dialogue.getTextTexture();
-    const bubbleTexture = Dialogue.getBubbleTexture();
-
-    draw(bubbleProgramData, bubbleTexture);
-    draw(textProgramData, textTexture);
-
-    Texture.unbind();
+    draw(bubbleProgramData);
+    draw(textProgramData);
 };
 
 const renderQueue = (queueId) =>
@@ -82,21 +77,11 @@ const renderQueue = (queueId) =>
 
     for (const { programData } of queue)
     {
-        draw2(programData);
+        draw(programData);
     }
 };
 
-const draw = (programData, texture) =>
-{
-    const drawSize = Model.getDrawSize(programData.modelId);
-
-    setProgram(programData);
-    Texture.bind(texture);
-    programData.setUniforms();
-    drawArraysVao($.TRIANGLES, drawSize, programData);
-};
-
-const draw2 = (programData) =>
+const draw = (programData) =>
 {
     const uvId = Model.getUvId(programData.modelId);
     const texture = Texture.getByUv(uvId);

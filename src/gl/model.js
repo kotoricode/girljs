@@ -142,7 +142,9 @@ const modelDef = [
     $.MODEL_BRAID_24, $.MESH_PLAYER,        $.UV_BRAID_24,
     $.MODEL_BRAID_26, $.MESH_PLAYER,        $.UV_BRAID_26,
     $.MODEL_TEST,     $.MESH_TEST,          $.UV_TEST,
-    $.MODEL_SCREEN,   $.MESH_SCREEN,        $.UV_SCREEN
+    $.MODEL_SCREEN,   $.MESH_SCREEN,        $.UV_SCREEN,
+    $.MODEL_TEXT,     $.MESH_SCREEN,        $.UV_TEXT,
+    $.MODEL_BUBBLE,   $.MESH_SCREEN,        $.UV_BUBBLE,
 ];
 
 const models = new SafeMap();

@@ -60,6 +60,8 @@ export const
     BUF_ARR_MODEL = i++;
 
 export const
+    MODEL_BUBBLE = "MODEL_BUBBLE",
+    MODEL_TEXT = "MODEL_TEXT",
     MODEL_TEST = "MODEL_TEST",
     MODEL_GIRL = "MODEL_GIRL",
     MODEL_DEBUG = "MODEL_DEBUG",
@@ -86,6 +88,8 @@ export const
     UV_SCREEN = "UV_SCREEN",
     UV_GIRL_00 = "UV_GIRL_00",
     UV_GROUND = "UV_GROUND",
+    UV_TEXT = "UV_TEXT",
+    UV_BUBBLE = "UV_BUBBLE",
     UV_BRAID_00 = i++,
     UV_BRAID_02 = i++,
     UV_BRAID_04 = i++,

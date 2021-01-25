@@ -124,8 +124,12 @@ const textureDef = [
     $.TEX_FRAMEBUFFER, createFbTexture(), [
         $.UV_SCREEN
     ],
-    $.TEX_UI_TEXT, createTexture(), null,
-    $.TEX_UI_BUBBLE, createTexture(), null
+    $.TEX_UI_TEXT, createTexture(), [
+        $.UV_TEXT
+    ],
+    $.TEX_UI_BUBBLE, createTexture(), [
+        $.UV_BUBBLE
+    ]
 ];
 
 for (let i = 0; i < textureDef.length;)

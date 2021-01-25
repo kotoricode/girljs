@@ -1,4 +1,5 @@
 import * as $ from "./const";
+import { Model } from "./gl/model";
 import { ProgramData } from "./gl/program-data";
 import { Texture } from "./gl/texture";
 import { Bezier } from "./math/bezier";
@@ -6,9 +7,9 @@ import { isString } from "./utility";
 
 class UiCanvas
 {
-    constructor(textureId, color)
+    constructor(modelId, textureId, color)
     {
-        this.programData = new ProgramData($.PROG_SCREEN, $.MODEL_SCREEN);
+        this.programData = new ProgramData($.PROG_SCREEN, modelId);
         this.programData.stageUniform($.U_COLOR, color);
 
         this.canvas = window.document.createElement("canvas");
@@ -41,10 +42,6 @@ export const Dialogue = {
         text.clear();
         bubble.clear();
     },
-    getBubbleTexture()
-    {
-        return bubble.texture;
-    },
     getTextProgramData()
     {
         return text.programData;
@@ -52,10 +49,6 @@ export const Dialogue = {
     getBubbleProgramData()
     {
         return bubble.programData;
-    },
-    getTextTexture()
-    {
-        return text.texture;
     },
     setText(dialogue, speaker)
     {
@@ -201,8 +194,8 @@ const fillText = (str, yPos) =>
     text.ctx.fillText(str, xPix, yPos);
 };
 
-const text = new UiCanvas($.TEX_UI_TEXT, [1, 1, 1, 1]);
-const bubble = new UiCanvas($.TEX_UI_BUBBLE, [0, 0, 0, 0.7]);
+const text = new UiCanvas($.MODEL_TEXT, $.TEX_UI_TEXT, [1, 1, 1, 1]);
+const bubble = new UiCanvas($.MODEL_BUBBLE, $.TEX_UI_BUBBLE, [0, 0, 0, 0.7]);
 
 /*------------------------------------------------------------------------------
     Draw area
