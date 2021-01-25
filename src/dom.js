@@ -2,10 +2,15 @@ import * as $ from "./const";
 import { Vector } from "./math/vector";
 import { getElement, LISTENER_ONCE } from "./utility";
 
+export const Dom = {
+    hideLoading()
+    {
+        canvas.addEventListener("click", (e) => Mouse.onClick(e));
+        loading.style.visibility = "hidden";
+    }
+};
+
 export const Mouse = {
-    clip: new Vector(),
-    screen: new Vector(),
-    isWorldClick: false,
     onClick(e)
     {
         Mouse.isWorldClick = true;
@@ -18,7 +23,10 @@ export const Mouse = {
 
         Mouse.screen.x = x * $.SCREEN_WIDTH;
         Mouse.screen.y = y * $.SCREEN_HEIGHT;
-    }
+    },
+    clip: new Vector(),
+    screen: new Vector(),
+    isWorldClick: false,
 };
 
 const onResize = () =>
@@ -55,7 +63,6 @@ window.addEventListener("resize", onResize);
 
 const canvas = getElement("canvas");
 let canvasRect = canvas.getBoundingClientRect();
-canvas.addEventListener("click", (e) => Mouse.onClick(e));
 
 export const gl = canvas.getContext("webgl2", { alpha: false });
 
@@ -64,3 +71,5 @@ let canvasHeight = $.SCREEN_HEIGHT;
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
 gl.viewport(0, 0, canvasWidth, canvasHeight);
+
+const loading = getElement("loading");

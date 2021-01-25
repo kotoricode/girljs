@@ -36,6 +36,16 @@ export const Model = {
     getUvId(modelId)
     {
         return models.get(modelId).uvId;
+    },
+    load()
+    {
+        return new Promise((resolve) =>
+        {
+            window.setTimeout(() =>
+            {
+                resolve();
+            }, 3000);
+        });
     }
 };
 

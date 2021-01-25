@@ -12,13 +12,24 @@ html, body
     background-color: aquamarine;
 }
 
-#canvasHolder
+#holder
 {
     display: grid;
 }
 
-#canvasHolder canvas
+#holder *
 {
     grid-column: 1;
     grid-row: 1;
+}
+
+#loading
+{
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 33;
+    font-size: 48px;
+    color: white;
+    font-family: "Lucida Console", "Courier New", monospace;
 }

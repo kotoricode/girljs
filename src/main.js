@@ -1,8 +1,9 @@
 import * as $ from "./const";
-import { Mouse } from "./dom";
+import { Dom, Mouse } from "./dom";
 import { Scene } from "./scene";
 import { SafeMap } from "./utility";
 import "./audio-player";
+import { Model } from "./gl/model";
 
 const mainLoop = (timestamp) =>
 {
@@ -43,4 +44,8 @@ setActiveScene($.SCENE_TEST);
 
 let oldTimestamp = 0;
 
-mainLoop(0);
+Model.load().then(() =>
+{
+    Dom.hideLoading();
+    mainLoop(0);
+});
