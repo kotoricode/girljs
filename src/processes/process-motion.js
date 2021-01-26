@@ -5,6 +5,8 @@ import { Scene } from "../scene";
 
 export const processMotion = (dt) =>
 {
+    Scene.cleanGraph();
+
     for (const [motion, space] of Scene.all(Motion, Space))
     {
         if (motion.hasTarget())
@@ -53,6 +55,7 @@ export const processMotion = (dt) =>
             // Step to or towards target
             space.local.translation.add(distance);
             Scene.markDirty(space);
+            Scene.cleanGraph();
         }
     }
 };

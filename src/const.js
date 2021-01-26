@@ -120,13 +120,12 @@ export const
     TEX_UI_BUBBLE = i++;
 
 export const
-    DIALOGUE_LEFT = i++,
-    DIALOGUE_RIGHT = i++,
-    DIALOGUE_NAME = i++,
-    DIALOGUE_LINE = i++,
-    DIALOGUE_TYPE = i++;
-
-export const
+    DIALOGUE_LEFT_AVATAR = i++,
+    DIALOGUE_RIGHT_AVATAR = i++,
+    DIALOGUE_LEFT_NAME = i++,
+    DIALOGUE_RIGHT_NAME = i++,
+    DIALOGUE_ACTIVE_LEFT = i++,
+    DIALOGUE_ACTIVE_RIGHT = i++,
     DIALOGUE_TYPE_SPEAK = i++,
     DIALOGUE_TYPE_THINK = i++;
 

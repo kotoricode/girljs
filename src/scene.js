@@ -15,6 +15,13 @@ export const Scene = {
             yield yieldComponents(entity, components);
         }
     },
+    cleanGraph()
+    {
+        for (const childId of root.childIds)
+        {
+            cleanSpaces(childId);
+        }
+    },
     getEntity(entityId)
     {
         return entities.get(entityId);
@@ -70,21 +77,9 @@ export const Scene = {
     },
     update(dt)
     {
-        // Pre-process cleanup (new entities etc)
-        if (dirty.size)
-        {
-            cleanGraph();
-        }
-
         for (const process of processes)
         {
             process(dt);
-        }
-
-        // Post-process cleanup (movement etc)
-        if (dirty.size)
-        {
-            cleanGraph();
         }
 
         // TODO: check for lost context
@@ -144,14 +139,6 @@ const addEntity = (entity, parentId) =>
                 programData.stageUniform($.U_UVSIZE, [width, height]);
             }
         }
-    }
-};
-
-const cleanGraph = () =>
-{
-    for (const childId of root.childIds)
-    {
-        cleanSpaces(childId);
     }
 };
 

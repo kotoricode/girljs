@@ -1,9 +1,12 @@
 import * as $ from "./const";
 
 const test = [
-    $.DIALOGUE_LEFT, $.ENTITY_AV_PLAYER,
-    $.DIALOGUE_NAME, $.NAME_PLAYER,
-    $.DIALOGUE_TYPE, $.DIALOGUE_TYPE_SPEAK
+    $.DIALOGUE_RIGHT_NAME, $.ENTITY_AV_PLAYER,
+    $.DIALOGUE_RIGHT_AVATAR, $.NAME_PLAYER,
+    $.DIALOGUE_ACTIVE_RIGHT,
+    $.DIALOGUE_TYPE_SPEAK,
+    "hello world",
+    "testing this shit"
 ];
 
 export const DialogueParser = {
