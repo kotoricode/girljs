@@ -34,7 +34,6 @@ export const
     GL
 ------------------------------------------------------------------------------*/
 export const
-    PRO_TEST = i++,
     PRO_COLOR = i++,
     PRO_IMAGE = i++,
     PRO_REPEAT = i++,
@@ -46,13 +45,6 @@ export const
     QUE_BACKGROUND = i++,
     QUE_SPRITE = i++,
     QUE_UI = i++;
-
-export const
-    DAT_A_LAYOUT = i++,
-    DAT_PROGRAM = i++,
-    DAT_U_BLOCKS = i++,
-    DAT_U_DEFAULTS = i++,
-    DAT_U_SETTERS = i++;
 
 export const
     BUF_UNI_CAMERA = i++,
@@ -82,34 +74,6 @@ export const
     MOD_BRAID_22 = i++,
     MOD_BRAID_24 = i++,
     MOD_BRAID_26 = i++;
-
-export const
-    UV_TEST = "UV_TEST",
-    UV_SCREEN = "UV_SCREEN",
-    UV_GIRL_00 = "UV_GIRL_00",
-    UV_GROUND = "UV_GROUND",
-    UV_BRAID_00 = i++,
-    UV_BRAID_02 = i++,
-    UV_BRAID_04 = i++,
-    UV_BRAID_06 = i++,
-    UV_BRAID_08 = i++,
-    UV_BRAID_10 = i++,
-    UV_BRAID_12 = i++,
-    UV_BRAID_14 = i++,
-    UV_BRAID_16 = i++,
-    UV_BRAID_18 = i++,
-    UV_BRAID_20 = i++,
-    UV_BRAID_22 = i++,
-    UV_BRAID_24 = i++,
-    UV_BRAID_26 = i++;
-
-export const
-    MSH_DEBUG = i++,
-    MSH_AV_PLAYER = i++,
-    MSH_GROUND = i++,
-    MSH_PLAYER = i++,
-    MSH_SCREEN = i++,
-    MSH_TEST = i++;
 
 export const
     TEX_BRAID = i++,

@@ -22,18 +22,18 @@ export class Program
         const prepared = preparedPrograms.get(programId);
 
         // Program
-        this.glProgram = prepared.get($.DAT_PROGRAM);
+        this.glProgram = prepared.get(DAT_PROGRAM);
 
         // Attributes
-        this.aLayout = prepared.get($.DAT_A_LAYOUT);
+        this.aLayout = prepared.get(DAT_A_LAYOUT);
         this.vao = gl.createVertexArray();
         this.setModel(modelId);
 
         // Uniforms
-        this.uSetters = prepared.get($.DAT_U_SETTERS);
-        this.uBlocks = prepared.get($.DAT_U_BLOCKS);
+        this.uSetters = prepared.get(DAT_U_SETTERS);
+        this.uBlocks = prepared.get(DAT_U_BLOCKS);
         this.uStaging = new SafeMap();
-        const uDefaults = prepared.get($.DAT_U_DEFAULTS);
+        const uDefaults = prepared.get(DAT_U_DEFAULTS);
 
         for (const [name, values] of uDefaults)
         {
@@ -184,6 +184,12 @@ const createFragDef = (id, src, ...uData) =>
 };
 
 let activeGlProgram;
+
+const DAT_A_LAYOUT = 0;
+const DAT_PROGRAM = 1;
+const DAT_U_BLOCKS = 2;
+const DAT_U_DEFAULTS = 3;
+const DAT_U_SETTERS = 4;
 
 /*------------------------------------------------------------------------------
     Const
@@ -339,10 +345,10 @@ for (let i = 0; i < programDef.length;)
     }
 
     preparedPrograms.set(programId, new SafeMap([
-        [$.DAT_PROGRAM, program],
-        [$.DAT_A_LAYOUT, aLayout],
-        [$.DAT_U_BLOCKS, uBlocks],
-        [$.DAT_U_DEFAULTS, uDefaults],
-        [$.DAT_U_SETTERS, uSetters]
+        [DAT_PROGRAM, program],
+        [DAT_A_LAYOUT, aLayout],
+        [DAT_U_BLOCKS, uBlocks],
+        [DAT_U_DEFAULTS, uDefaults],
+        [DAT_U_SETTERS, uSetters]
     ]));
 }
