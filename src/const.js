@@ -88,8 +88,6 @@ export const
     UV_SCREEN = "UV_SCREEN",
     UV_GIRL_00 = "UV_GIRL_00",
     UV_GROUND = "UV_GROUND",
-    UV_TEXT = "UV_TEXT",
-    UV_BUBBLE = "UV_BUBBLE",
     UV_BRAID_00 = i++,
     UV_BRAID_02 = i++,
     UV_BRAID_04 = i++,

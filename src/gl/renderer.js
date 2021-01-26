@@ -13,9 +13,6 @@ import { Scene } from "../scene";
 
 export const render = () =>
 {
-    /*--------------------------------------------------------------------------
-        Queue up drawables
-    --------------------------------------------------------------------------*/
     for (const [drawable] of Scene.all(Drawable))
     {
         if (drawable.isVisible)
@@ -24,19 +21,17 @@ export const render = () =>
         }
     }
 
-    /*--------------------------------------------------------------------------
-        Prepare framebuffer
-    --------------------------------------------------------------------------*/
     Framebuffer.bind();
 
     gl.clear($.COLOR_BUFFER_BIT | $.DEPTH_BUFFER_BIT);
-    gl.clearColor(0.8, 0.8, 0.8, 1.0);
+    gl.clearColor(0.6, 0.6, 0.6, 1.0);
 
     gl.enable($.DEPTH_TEST);
-    renderQueue($.RENDER_QUEUE_BACKGROUND);
+    drawQueue($.RENDER_QUEUE_BACKGROUND);
+
     gl.disable($.DEPTH_TEST);
-    renderQueue($.RENDER_QUEUE_SPRITE);
-    renderQueue($.RENDER_QUEUE_UI);
+    drawQueue($.RENDER_QUEUE_SPRITE);
+    drawQueue($.RENDER_QUEUE_UI);
 
     Framebuffer.unbind();
 
@@ -68,7 +63,7 @@ const renderText = () =>
     draw(textProgramData);
 };
 
-const renderQueue = (queueId) =>
+const drawQueue = (queueId) =>
 {
     const queue = queues.get(queueId);
 
