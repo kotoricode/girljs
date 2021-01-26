@@ -17,12 +17,10 @@ const mainLoop = (timestamp) =>
     window.requestAnimationFrame(mainLoop);
 };
 
-mainLoop(0);
-
-let isReady = false;
-
-let oldTimestamp = 0;
 Scene.load($.SCENE_TEST);
+let isReady = false;
+let oldTimestamp = 0;
+mainLoop(0);
 
 Model.load().then(() =>
 {

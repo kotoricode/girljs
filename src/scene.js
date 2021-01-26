@@ -15,13 +15,40 @@ export const Scene = {
             yield yieldComponents(entity, components);
         }
     },
-    cleanGraph()
+    cleanAll()
     {
-        const space = root.getComponent(Space);
-
-        for (const child of space.children)
+        for (const child of rootSpace.children)
         {
-            cleanSpaces(child);
+            Scene.cleanSpace(child);
+        }
+    },
+    cleanSpace(space, isAncestorDirty, parentMatrix)
+    {
+        const isSelfDirty = dirty.has(space);
+        const isDirty = isAncestorDirty || isSelfDirty;
+
+        if (isDirty)
+        {
+            const { matrix } = space;
+
+            matrix.composeFrom(space.local);
+
+            if (parentMatrix)
+            {
+                matrix.multiplyTransform(parentMatrix);
+            }
+
+            space.world.decomposeFrom(matrix);
+
+            if (isSelfDirty)
+            {
+                dirty.delete(space);
+            }
+        }
+
+        for (const childSpace of space.children)
+        {
+            Scene.cleanSpace(childSpace, isDirty, parentMatrix);
         }
     },
     getEntity(entityId)
@@ -149,35 +176,6 @@ const addEntity = (entity, parentId) =>
     }
 };
 
-const cleanSpaces = (space, isAncestorDirty, parentMatrix) =>
-{
-    const isDirty = isAncestorDirty || dirty.has(space);
-
-    if (isDirty)
-    {
-        const { matrix } = space;
-
-        matrix.composeFrom(space.local);
-
-        if (parentMatrix)
-        {
-            matrix.multiplyTransform(parentMatrix);
-        }
-
-        space.world.decomposeFrom(matrix);
-
-        if (dirty.has(space))
-        {
-            dirty.delete(space);
-        }
-    }
-
-    for (const childSpace of space.children)
-    {
-        cleanSpaces(childSpace, isDirty, parentMatrix);
-    }
-};
-
 const getEntitiesWith = (components) =>
 {
     let flags = 0;
@@ -239,4 +237,5 @@ const dirty = new SafeSet();
 const entities = new SafeMap();
 const processes = new SafeSet();
 
-const root = new Entity($.ENTITY_ROOT, new Space());
+const rootSpace = new Space();
+const root = new Entity($.ENTITY_ROOT, rootSpace);
