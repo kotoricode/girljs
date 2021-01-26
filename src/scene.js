@@ -17,9 +17,11 @@ export const Scene = {
     },
     cleanGraph()
     {
-        for (const childId of root.childIds)
+        const space = root.getComponent(Space);
+
+        for (const child of space.children)
         {
-            cleanSpaces(childId);
+            cleanSpaces(child);
         }
     },
     getEntity(entityId)
@@ -90,11 +92,6 @@ export const Scene = {
 
 const addEntity = (entity, parentId) =>
 {
-    const parent = Scene.getEntity(parentId);
-
-    parent.addChildId(entity.id);
-    entities.set(entity.id, entity);
-
     for (const [flags, cache] of cached)
     {
         if (entity.hasFlags(flags))
@@ -105,7 +102,17 @@ const addEntity = (entity, parentId) =>
 
     if (entity.hasComponent(Space))
     {
+        const parent = Scene.getEntity(parentId);
+
+        if (!parent.hasComponent(Space)) throw Error;
+
+        const parentSpace = parent.getComponent(Space);
         const space = entity.getComponent(Space);
+
+        parentSpace.addChild(space);
+        space.setParent(parentSpace);
+
+        entities.set(entity.id, entity);
         dirty.add(space);
 
         if (entity.hasComponent(Drawable))
@@ -142,10 +149,8 @@ const addEntity = (entity, parentId) =>
     }
 };
 
-const cleanSpaces = (entityId, isAncestorDirty, parentMatrix) =>
+const cleanSpaces = (space, isAncestorDirty, parentMatrix) =>
 {
-    const entity = Scene.getEntity(entityId);
-    const space = entity.getComponent(Space);
     const isDirty = isAncestorDirty || dirty.has(space);
 
     if (isDirty)
@@ -167,9 +172,9 @@ const cleanSpaces = (entityId, isAncestorDirty, parentMatrix) =>
         }
     }
 
-    for (const childId of entity.childIds)
+    for (const childSpace of space.children)
     {
-        cleanSpaces(childId, isDirty, parentMatrix);
+        cleanSpaces(childSpace, isDirty, parentMatrix);
     }
 };
 
@@ -205,7 +210,7 @@ const loadEntities = (bpEntities, parentId) =>
     for (const [entityId, entityBp] of bpEntities)
     {
         const components = entityBp.get($.BP_COMPONENTS);
-        const entity = new Entity(entityId, parentId, ...components);
+        const entity = new Entity(entityId, ...components);
         addEntity(entity, parentId);
 
         if (entityBp.has($.BP_CHILDREN))
@@ -234,4 +239,4 @@ const dirty = new SafeSet();
 const entities = new SafeMap();
 const processes = new SafeSet();
 
-const root = new Entity($.ENTITY_ROOT);
+const root = new Entity($.ENTITY_ROOT, new Space());

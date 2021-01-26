@@ -2,21 +2,15 @@ import { SafeMap, SafeSet } from "./utility";
 
 export class Entity
 {
-    constructor(id, parentId, ...comps)
+    constructor(id, ...comps)
     {
         this.id = id;
-        this.parentId = parentId;
 
         this.flags = 0;
         this.components = new SafeMap();
         this.childIds = new SafeSet();
 
         this.addComponent(...comps);
-    }
-
-    addChildId(entityId)
-    {
-        this.childIds.add(entityId);
     }
 
     addComponent(...components)
