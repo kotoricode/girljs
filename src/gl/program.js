@@ -41,6 +41,23 @@ export class Program
         }
     }
 
+    activate()
+    {
+        if (this.glProgram !== activeGlProgram)
+        {
+            gl.useProgram(this.glProgram);
+            activeGlProgram = this.glProgram;
+
+            if (this.blocks)
+            {
+                for (const blockId of this.blocks)
+                {
+                    Buffer.prepareBlock(this.glProgram, blockId);
+                }
+            }
+        }
+    }
+
     delete()
     {
         gl.deleteVertexArray(this.vao);
@@ -165,6 +182,8 @@ const createFragDef = (id, src, ...uData) =>
 
     return [id, map];
 };
+
+let activeGlProgram;
 
 /*------------------------------------------------------------------------------
     Const

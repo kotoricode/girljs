@@ -2,7 +2,7 @@ import * as $ from "../const";
 import { gl } from "../dom";
 import { Drawable } from "../components/drawable";
 import { Debug } from "./debug";
-import { drawArraysVao, setProgram } from "./gl-helper";
+import { VertexArray } from "./vertex-array";
 import { Texture } from "./texture";
 import { Program } from "./program";
 import { SafeMap, SafeSet } from "../utility";
@@ -48,7 +48,7 @@ export const render = () =>
 const renderDebug = () =>
 {
     const program = Debug.getProgram();
-    setProgram(program);
+    program.activate();
     const drawSize = Model.getDrawSize(program.modelId);
 
     drawArraysVao($.LINES, drawSize, program);
@@ -67,9 +67,9 @@ const drawQueue = (queueId) =>
 {
     const queue = queues.get(queueId);
 
-    for (const { program } of queue)
+    for (const drawable of queue)
     {
-        draw(program);
+        draw(drawable.program);
     }
 };
 
@@ -78,10 +78,17 @@ const draw = (program) =>
     const texture = Model.getTexture(program.modelId);
     const drawSize = Model.getDrawSize(program.modelId);
 
-    setProgram(program);
+    program.activate();
     Texture.bind(texture);
     program.setUniforms();
     drawArraysVao($.TRIANGLES, drawSize, program);
+};
+
+const drawArraysVao = (mode, drawSize, program) =>
+{
+    VertexArray.bind(program.vao);
+    gl.drawArrays(mode, 0, drawSize);
+    VertexArray.unbind();
 };
 
 gl.disable($.CULL_FACE);
