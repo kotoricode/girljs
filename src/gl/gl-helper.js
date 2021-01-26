@@ -2,30 +2,30 @@ import { gl } from "../dom";
 import { Buffer } from "./buffer";
 import { VertexArray } from "./vertex-array";
 
-export const drawArraysVao = (mode, length, programData) =>
+export const drawArraysVao = (mode, length, program) =>
 {
-    VertexArray.bind(programData.vao);
+    VertexArray.bind(program.vao);
     gl.drawArrays(mode, 0, length);
     VertexArray.unbind();
 };
 
-export const setProgram = (programData) =>
+export const setProgram = (program) =>
 {
-    const { program, blocks } = programData;
+    const { glProgram, blocks } = program;
 
-    if (program !== activeProgram)
+    if (glProgram !== activeGlProgram)
     {
-        gl.useProgram(program);
-        activeProgram = program;
+        gl.useProgram(glProgram);
+        activeGlProgram = glProgram;
 
         if (blocks)
         {
             for (const blockId of blocks)
             {
-                Buffer.prepareBlock(program, blockId);
+                Buffer.prepareBlock(glProgram, blockId);
             }
         }
     }
 };
 
-let activeProgram;
+let activeGlProgram;

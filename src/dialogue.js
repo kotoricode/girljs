@@ -1,6 +1,6 @@
 import * as $ from "./const";
 import { Model } from "./gl/model";
-import { ProgramData } from "./gl/program-data";
+import { Program } from "./gl/program";
 import { Texture } from "./gl/texture";
 import { Bezier } from "./math/bezier";
 import { isString } from "./utility";
@@ -9,8 +9,8 @@ class UiCanvas
 {
     constructor(modelId, color)
     {
-        this.programData = new ProgramData($.PRO_SCREEN, modelId);
-        this.programData.stageUniform($.U_COLOR, color);
+        this.program = new Program($.PRO_SCREEN, modelId);
+        this.program.stageUniform($.U_COLOR, color);
 
         this.canvas = window.document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d");
@@ -25,7 +25,7 @@ class UiCanvas
 
     canvasToTexture()
     {
-        const texture = Model.getTexture(this.programData.modelId);
+        const texture = Model.getTexture(this.program.modelId);
 
         Texture.flip(true);
         Texture.bind(texture);
@@ -42,13 +42,13 @@ export const Dialogue = {
         text.clear();
         bubble.clear();
     },
-    getTextProgramData()
+    getTextProgram()
     {
-        return text.programData;
+        return text.program;
     },
-    getBubbleProgramData()
+    getBubbleProgram()
     {
-        return bubble.programData;
+        return bubble.program;
     },
     setText(dialogue, speaker)
     {

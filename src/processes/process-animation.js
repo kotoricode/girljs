@@ -14,14 +14,14 @@ export const processAnimation = (dt) =>
             {
                 anim.setState($.ANI_MOVE);
                 const model = anim.getModel();
-                drawable.programData.setModel(model);
+                drawable.program.setModel(model);
             }
         }
         else if (anim.isState($.ANI_MOVE))
         {
             anim.setState($.ANI_IDLE);
             const model = anim.getModel();
-            drawable.programData.setModel(model);
+            drawable.program.setModel(model);
         }
     }
 
@@ -42,7 +42,7 @@ export const processAnimation = (dt) =>
 
             anim.frameIdx %= models.length;
             const model = anim.getModel();
-            drawable.programData.setModel(model);
+            drawable.program.setModel(model);
         }
     }
 };

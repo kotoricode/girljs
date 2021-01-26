@@ -146,31 +146,31 @@ const addEntity = (entity, parentId) =>
         {
             const drawable = entity.getComponent(Drawable);
 
-            const { programData } = drawable;
+            const { program } = drawable;
 
-            if (programData.hasStaging($.U_TRANSFORM))
+            if (program.hasStaging($.U_TRANSFORM))
             {
-                programData.stageUniformAtIndex(
+                program.stageUniformAtIndex(
                     $.U_TRANSFORM,
                     1,
                     space.matrix
                 );
             }
 
-            if (programData.hasStaging($.U_UVOFFSET) &&
-                programData.hasStaging($.U_UVREPEAT))
+            if (program.hasStaging($.U_UVOFFSET) &&
+                program.hasStaging($.U_UVREPEAT))
             {
                 const [
                     uvMinX, uvMaxY,
                     uvMaxX, ,
                     , uvMinY
-                ] = Model.getUv(drawable.programData.modelId);
+                ] = Model.getUv(drawable.program.modelId);
 
                 const width = uvMaxX - uvMinX;
                 const height = uvMaxY - uvMinY;
 
-                programData.stageUniform($.U_UVOFFSET, [uvMinX, uvMinY]);
-                programData.stageUniform($.U_UVSIZE, [width, height]);
+                program.stageUniform($.U_UVOFFSET, [uvMinX, uvMinY]);
+                program.stageUniform($.U_UVSIZE, [width, height]);
             }
         }
     }

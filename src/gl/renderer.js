@@ -4,7 +4,7 @@ import { Drawable } from "../components/drawable";
 import { Debug } from "./debug";
 import { drawArraysVao, setProgram } from "./gl-helper";
 import { Texture } from "./texture";
-import { ProgramData } from "./program-data";
+import { Program } from "./program";
 import { SafeMap, SafeSet } from "../utility";
 import { Framebuffer } from "./framebuffer";
 import { Model } from "./model";
@@ -35,7 +35,7 @@ export const render = () =>
 
     Framebuffer.unbind();
 
-    draw(imageProgramData);
+    draw(imageProgram);
     renderText();
     renderDebug();
 
@@ -47,41 +47,41 @@ export const render = () =>
 
 const renderDebug = () =>
 {
-    const programData = Debug.getProgramData();
-    setProgram(programData);
-    const drawSize = Model.getDrawSize(programData.modelId);
+    const program = Debug.getProgram();
+    setProgram(program);
+    const drawSize = Model.getDrawSize(program.modelId);
 
-    drawArraysVao($.LINES, drawSize, programData);
+    drawArraysVao($.LINES, drawSize, program);
 };
 
 const renderText = () =>
 {
-    const textProgramData = Dialogue.getTextProgramData();
-    const bubbleProgramData = Dialogue.getBubbleProgramData();
+    const textProgram = Dialogue.getTextProgram();
+    const bubbleProgram = Dialogue.getBubbleProgram();
 
-    draw(bubbleProgramData);
-    draw(textProgramData);
+    draw(bubbleProgram);
+    draw(textProgram);
 };
 
 const drawQueue = (queueId) =>
 {
     const queue = queues.get(queueId);
 
-    for (const { programData } of queue)
+    for (const { program } of queue)
     {
-        draw(programData);
+        draw(program);
     }
 };
 
-const draw = (programData) =>
+const draw = (program) =>
 {
-    const texture = Model.getTexture(programData.modelId);
-    const drawSize = Model.getDrawSize(programData.modelId);
+    const texture = Model.getTexture(program.modelId);
+    const drawSize = Model.getDrawSize(program.modelId);
 
-    setProgram(programData);
+    setProgram(program);
     Texture.bind(texture);
-    programData.setUniforms();
-    drawArraysVao($.TRIANGLES, drawSize, programData);
+    program.setUniforms();
+    drawArraysVao($.TRIANGLES, drawSize, program);
 };
 
 gl.disable($.CULL_FACE);
@@ -90,7 +90,7 @@ gl.disable($.CULL_FACE);
 gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
-const imageProgramData = new ProgramData($.PRO_IMAGE, $.MOD_FB);
+const imageProgram = new Program($.PRO_IMAGE, $.MOD_FB);
 
 Framebuffer.prepare();
 

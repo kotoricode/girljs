@@ -1,11 +1,11 @@
 import * as $ from "../const";
-import { ProgramData } from "./program-data";
+import { Program } from "./program";
 
 export const Debug = {
-    getProgramData()
+    getProgram()
     {
         return program;
     }
 };
 
-const program = new ProgramData($.PRO_COLOR, $.MOD_DEBUG);
+const program = new Program($.PRO_COLOR, $.MOD_DEBUG);

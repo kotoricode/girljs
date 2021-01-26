@@ -1,5 +1,5 @@
 import { Component } from "./component";
-import { ProgramData } from "../gl/program-data";
+import { Program } from "../gl/program";
 
 export class Drawable extends Component
 {
@@ -7,7 +7,7 @@ export class Drawable extends Component
     {
         super();
 
-        this.programData = new ProgramData(programId, modelId);
+        this.program = new Program(programId, modelId);
         this.priority = priority;
         this.isVisible = true;
 
@@ -15,7 +15,7 @@ export class Drawable extends Component
         {
             for (const [key, value] of uniforms)
             {
-                this.programData.stageUniform(key, value);
+                this.program.stageUniform(key, value);
             }
         }
     }
