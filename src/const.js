@@ -7,7 +7,7 @@ let i = 0;
 
 export const
     ENTITY_TEST = "ENTITY_TEST",
-    ENTITY_GIRL = "ENTITY_GIRL",
+    ENTITY_AV_PLAYER = "ENTITY_AV_PLAYER",
     ENTITY_GROUND = "ENTITY_GROUND",
     ENTITY_PLAYER = "ENTITY_PLAYER",
     ENTITY_ROOT = "ENTITY_ROOT";
@@ -63,7 +63,7 @@ export const
     MODEL_BUBBLE = "MODEL_BUBBLE",
     MODEL_TEXT = "MODEL_TEXT",
     MODEL_TEST = "MODEL_TEST",
-    MODEL_GIRL = "MODEL_GIRL",
+    MODEL_AV_PLAYER = "MODEL_AV_PLAYER",
     MODEL_DEBUG = "MODEL_DEBUG",
     MODEL_GROUND = "MODEL_GROUND",
     MODEL_FB = "MODEL_SCREEN",
@@ -104,12 +104,12 @@ export const
     UV_BRAID_26 = i++;
 
 export const
-    MESH_GROUND = i++,
-    MESH_SCREEN = i++,
-    MESH_PLAYER = i++,
+    MESH_DEBUG = i++,
     MESH_AV_PLAYER = i++,
-    MESH_TEST = i++,
-    MESH_DEBUG = i++;
+    MESH_GROUND = i++,
+    MESH_PLAYER = i++,
+    MESH_SCREEN = i++,
+    MESH_TEST = i++;
 
 export const
     TEX_BRAID = i++,
@@ -118,6 +118,17 @@ export const
     TEX_FB = i++,
     TEX_UI_TEXT = i++,
     TEX_UI_BUBBLE = i++;
+
+export const
+    DIALOGUE_LEFT = i++,
+    DIALOGUE_RIGHT = i++,
+    DIALOGUE_NAME = i++,
+    DIALOGUE_LINE = i++,
+    DIALOGUE_TYPE = i++;
+
+export const
+    DIALOGUE_TYPE_SPEAK = i++,
+    DIALOGUE_TYPE_THINK = i++;
 
 /*------------------------------------------------------------------------------
     Program --- DO NOT MODIFY

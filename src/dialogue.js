@@ -108,26 +108,9 @@ const drawArrow = () =>
     const { ctx } = bubble;
 
     ctx.beginPath();
-
-    ctx.moveTo(
-        $.SCREEN_WIDTH * 0.6859375,
-        $.SCREEN_HEIGHT * 0.6375
-    );
-
-    ctx.quadraticCurveTo(
-        $.SCREEN_WIDTH * 0.734,
-        $.SCREEN_HEIGHT * 0.63,
-        $.SCREEN_WIDTH * 0.775,
-        $.SCREEN_HEIGHT * 0.565
-    );
-
-    ctx.quadraticCurveTo(
-        $.SCREEN_WIDTH * 0.765,
-        $.SCREEN_HEIGHT * 0.63,
-        $.SCREEN_WIDTH * 0.742,
-        $.SCREEN_HEIGHT * 0.674
-    );
-
+    ctx.moveTo(arrow[0], arrow[1]);
+    ctx.quadraticCurveTo(arrow[2], arrow[3], arrow[4], arrow[5]);
+    ctx.quadraticCurveTo(arrow[6], arrow[7], arrow[8], arrow[9]);
     ctx.closePath();
     ctx.fill();
 };
@@ -141,7 +124,7 @@ const drawDialogueText = (str) =>
     const words = str.split(/(?=\s)/);
     let fits;
     let maybeFits;
-    let yPos = yPix;
+    let yPos = yPx;
 
     for (let i = 0; i < words.length; i++)
     {
@@ -177,7 +160,7 @@ const drawDialogueText = (str) =>
 
             fillText(fits, yPos);
             fits = null;
-            yPos += fontSize + fontPad;
+            yPos += fontSize + fontMargin;
 
             if (isLastWord && maybeFits)
             {
@@ -191,7 +174,7 @@ const fillText = (str, yPos) =>
 {
     if (yPos === undefined) throw Error;
 
-    text.ctx.fillText(str, xPix, yPos);
+    text.ctx.fillText(str, xPx, yPos);
 };
 
 const text = new UiCanvas($.MODEL_TEXT, $.TEX_UI_TEXT, [1, 1, 1, 1]);
@@ -201,15 +184,15 @@ const bubble = new UiCanvas($.MODEL_BUBBLE, $.TEX_UI_BUBBLE, [0, 0, 0, 0.7]);
     Draw area
 ------------------------------------------------------------------------------*/
 const fontSize = 32;
-const fontPad = 10;
+const fontMargin = 10;
 
 const x = 0.3;
 const y = 0.7;
 
-const xPix = x * $.SCREEN_WIDTH;
-const yPix = y * $.SCREEN_HEIGHT;
+const xPx = x * $.SCREEN_WIDTH;
+const yPx = y * $.SCREEN_HEIGHT;
 
-const width = $.SCREEN_WIDTH - 2*xPix;
+const width = $.SCREEN_WIDTH - 2*xPx;
 
 text.ctx.textAlign = "left";
 text.ctx.textBaseline = "top";
@@ -219,11 +202,24 @@ text.ctx.font = `${fontSize}px Arial`;
 text.ctx.fillStyle = bubble.ctx.fillStyle = "#fff";
 text.ctx.shadowColor = "#000";
 
-const midLineY = 0.7 + (1.5 * fontSize + fontPad) / $.SCREEN_HEIGHT;
+const midLineY = 0.7 + (1.5 * fontSize + fontMargin) / $.SCREEN_HEIGHT;
 
 const bezierSpeech = [
     new Bezier(0.2, midLineY, 180, 180, 90),
     new Bezier(0.8, midLineY, 180, 180, -90),
+];
+
+const arrow = [
+    $.SCREEN_WIDTH * 0.6859375,
+    $.SCREEN_HEIGHT * 0.6375,
+    $.SCREEN_WIDTH * 0.734,
+    $.SCREEN_HEIGHT * 0.63,
+    $.SCREEN_WIDTH * 0.775,
+    $.SCREEN_HEIGHT * 0.565,
+    $.SCREEN_WIDTH * 0.765,
+    $.SCREEN_HEIGHT * 0.63,
+    $.SCREEN_WIDTH * 0.742,
+    $.SCREEN_HEIGHT * 0.674
 ];
 
 canvasToTexture();

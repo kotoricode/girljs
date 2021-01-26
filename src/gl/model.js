@@ -207,7 +207,7 @@ const buildModelData = () =>
     Data/definitions
 ------------------------------------------------------------------------------*/
 const modelDef = [
-    $.MODEL_GIRL,     $.MESH_AV_PLAYER, $.UV_GIRL_00,  $.TEX_GIRL,
+    $.MODEL_AV_PLAYER,     $.MESH_AV_PLAYER, $.UV_GIRL_00,  $.TEX_GIRL,
     $.MODEL_GROUND,   $.MESH_GROUND,    $.UV_GROUND,   $.TEX_TEXTURE,
     $.MODEL_BRAID_00, $.MESH_PLAYER,    $.UV_BRAID_00, $.TEX_BRAID,
     $.MODEL_BRAID_02, $.MESH_PLAYER,    $.UV_BRAID_02, $.TEX_BRAID,
