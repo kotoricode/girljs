@@ -27,11 +27,11 @@ export const render = () =>
     gl.clearColor(0.6, 0.6, 0.6, 1.0);
 
     gl.enable($.DEPTH_TEST);
-    drawQueue($.DRAW_QUEUE_BACKGROUND);
+    drawQueue($.QUE_BACKGROUND);
 
     gl.disable($.DEPTH_TEST);
-    drawQueue($.DRAW_QUEUE_SPRITE);
-    drawQueue($.DRAW_QUEUE_UI);
+    drawQueue($.QUE_SPRITE);
+    drawQueue($.QUE_UI);
 
     Framebuffer.unbind();
 
@@ -90,12 +90,12 @@ gl.disable($.CULL_FACE);
 gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
-const imageProgramData = new ProgramData($.PROG_IMAGE, $.MODEL_FB);
+const imageProgramData = new ProgramData($.PRO_IMAGE, $.MOD_FB);
 
 Framebuffer.prepare();
 
 const queues = new SafeMap([
-    [$.DRAW_QUEUE_BACKGROUND, new SafeSet()],
-    [$.DRAW_QUEUE_SPRITE, new SafeSet()],
-    [$.DRAW_QUEUE_UI, new SafeSet()]
+    [$.QUE_BACKGROUND, new SafeSet()],
+    [$.QUE_SPRITE, new SafeSet()],
+    [$.QUE_UI, new SafeSet()]
 ]);

@@ -56,19 +56,19 @@ const getGain = (gainId, parent) =>
 const PATH = "./snd/";
 
 const audio = new SafeMap([
-    [$.AUDIO_MUSIC, {
+    [$.AUD_MUSIC, {
         element: null,
         url: $.URL_AUD_OMOIDE,
         gainId: $.PREF_MUSIC,
         isLoop: true,
     }],
-    [$.AUDIO_SOUND, {
+    [$.AUD_SOUND, {
         element: null,
         url: null,
         gainId: $.PREF_SOUND,
         isLoop: false,
     }],
-    [$.AUDIO_SOUND_LOOP, {
+    [$.AUD_SOUND_LOOP, {
         element: null,
         url: null,
         gainId: $.PREF_SOUND,

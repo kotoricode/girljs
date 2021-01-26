@@ -14,94 +14,94 @@ import { processAnimation } from "./processes/process-animation";
 import { processPlayer }    from "./processes/process-player";
 
 const createPlayer = () => [$.ENT_PLAYER, new SafeMap([
-    [$.BP_COMPONENTS, new SafeSet([
+    [$.BLU_COMPONENTS, new SafeSet([
         new Space(),
         new Motion(3),
         new Player(),
         new Drawable(
-            $.PROG_SPRITE,
-            $.DRAW_QUEUE_SPRITE,
-            $.MODEL_BRAID_00
+            $.PRO_SPRITE,
+            $.QUE_SPRITE,
+            $.MOD_BRAID_00
         ),
         new Anim(new SafeMap([
-            [$.ANIM_IDLE, [$.MODEL_BRAID_00]],
-            [$.ANIM_MOVE, [
-                $.MODEL_BRAID_00,
-                $.MODEL_BRAID_02,
-                $.MODEL_BRAID_04,
-                $.MODEL_BRAID_06,
-                $.MODEL_BRAID_08,
-                $.MODEL_BRAID_10,
-                $.MODEL_BRAID_12,
-                $.MODEL_BRAID_14,
-                $.MODEL_BRAID_16,
-                $.MODEL_BRAID_18,
-                $.MODEL_BRAID_20,
-                $.MODEL_BRAID_22,
-                $.MODEL_BRAID_24,
-                $.MODEL_BRAID_26,
+            [$.ANI_IDLE, [$.MOD_BRAID_00]],
+            [$.ANI_MOVE, [
+                $.MOD_BRAID_00,
+                $.MOD_BRAID_02,
+                $.MOD_BRAID_04,
+                $.MOD_BRAID_06,
+                $.MOD_BRAID_08,
+                $.MOD_BRAID_10,
+                $.MOD_BRAID_12,
+                $.MOD_BRAID_14,
+                $.MOD_BRAID_16,
+                $.MOD_BRAID_18,
+                $.MOD_BRAID_20,
+                $.MOD_BRAID_22,
+                $.MOD_BRAID_24,
+                $.MOD_BRAID_26,
             ]],
         ]), new SafeMap([
-            [$.ANIM_IDLE, [Infinity]],
-            [$.ANIM_MOVE, [0.07]],
+            [$.ANI_IDLE, [Infinity]],
+            [$.ANI_MOVE, [0.07]],
         ]))
     ])],
-    [$.BP_CHILDREN, new SafeSet()]
+    [$.BLU_CHILDREN, new SafeSet()]
 ])];
 
 const createTachie = () => [$.ENT_AV_PLAYER, new SafeMap([
-    [$.BP_COMPONENTS, new SafeSet([
+    [$.BLU_COMPONENTS, new SafeSet([
         new Space(0.75, -0.2, 0),
         new Drawable(
-            $.PROG_UI,
-            $.DRAW_QUEUE_UI,
-            $.MODEL_AV_PLAYER,
+            $.PRO_UI,
+            $.QUE_UI,
+            $.MOD_AV_PLAYER,
             new SafeMap([
                 [$.U_COLOR, [1, 0.871, 0.855, 1]]
             ])
         )
     ])],
-    [$.BP_CHILDREN, new SafeSet()]
+    [$.BLU_CHILDREN, new SafeSet()]
 ])];
 
 const createGround = () => [$.ENT_GROUND, new SafeMap([
-    [$.BP_COMPONENTS, new SafeSet([
+    [$.BLU_COMPONENTS, new SafeSet([
         new Space(),
         new Ground(-2, 2, -2, 2),
         new Drawable(
-            $.PROG_REPEAT,
-            $.DRAW_QUEUE_BACKGROUND,
-            $.MODEL_GROUND,
+            $.PRO_REPEAT,
+            $.QUE_BACKGROUND,
+            $.MOD_GROUND,
             new SafeMap([
                 [$.U_UVREPEAT, [4, 4]],
                 [$.U_COLOR, [1, 1, 1, 1]]
             ])
         )
     ])],
-    [$.BP_CHILDREN, new SafeSet()]
+    [$.BLU_CHILDREN, new SafeSet()]
 ])];
 
 const createTest = () => [$.ENT_TEST, new SafeMap([
-    [$.BP_COMPONENTS, new SafeSet([
+    [$.BLU_COMPONENTS, new SafeSet([
         new Space(),
         new Drawable(
-            $.PROG_SPRITE,
-            $.DRAW_QUEUE_BACKGROUND,
-            $.MODEL_TEST
+            $.PRO_SPRITE,
+            $.QUE_BACKGROUND,
+            $.MOD_TEST
         )
     ])],
-    [$.BP_CHILDREN, new SafeSet()]
+    [$.BLU_CHILDREN, new SafeSet()]
 ])];
 
 export const blueprint = new SafeMap([
-    [$.SCENE_TEST, () => new SafeMap([
-        [$.BP_ENTITIES, new SafeMap([
+    [$.SCN_TEST, () => new SafeMap([
+        [$.BLU_ENTITIES, new SafeMap([
             createPlayer(),
             createGround(),
             createTachie(),
             createTest()
         ])],
-        [$.BP_PROCESSES, new SafeSet([
+        [$.BLU_PROCESSES, new SafeSet([
             processMotion,
             processAnimation,
             processCamera,

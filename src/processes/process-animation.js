@@ -10,16 +10,16 @@ export const processAnimation = (dt) =>
     {
         if (motion.hasTarget())
         {
-            if (anim.isState($.ANIM_IDLE))
+            if (anim.isState($.ANI_IDLE))
             {
-                anim.setState($.ANIM_MOVE);
+                anim.setState($.ANI_MOVE);
                 const model = anim.getModel();
                 drawable.programData.setModel(model);
             }
         }
-        else if (anim.isState($.ANIM_MOVE))
+        else if (anim.isState($.ANI_MOVE))
         {
-            anim.setState($.ANIM_IDLE);
+            anim.setState($.ANI_IDLE);
             const model = anim.getModel();
             drawable.programData.setModel(model);
         }

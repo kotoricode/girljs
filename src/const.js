@@ -1,7 +1,7 @@
 export const
-    VIEW_WIDTH = 1280,
-    VIEW_HEIGHT = 720,
-    VIEW_ASPECT = VIEW_WIDTH / VIEW_HEIGHT;
+    RES_WIDTH = 1280,
+    RES_HEIGHT = 720,
+    RES_ASPECT = RES_WIDTH / RES_HEIGHT;
 
 let i = 0;
 
@@ -13,46 +13,46 @@ export const
     ENT_ROOT = "root";
 
 export const
-    SCENE_TEST = i++;
+    SCN_TEST = i++;
 
 export const
-    BP_CHILDREN = i++,
-    BP_COMPONENTS = i++,
-    BP_ENTITIES = i++,
-    BP_PROCESSES = i++;
+    BLU_CHILDREN = i++,
+    BLU_COMPONENTS = i++,
+    BLU_ENTITIES = i++,
+    BLU_PROCESSES = i++;
 
 export const
-    AUDIO_MUSIC = i++,
-    AUDIO_SOUND = i++,
-    AUDIO_SOUND_LOOP = i++;
+    AUD_MUSIC = i++,
+    AUD_SOUND = i++,
+    AUD_SOUND_LOOP = i++;
 
 export const
-    ANIM_IDLE = i++,
-    ANIM_MOVE = i++;
+    ANI_IDLE = i++,
+    ANI_MOVE = i++;
 
 /*------------------------------------------------------------------------------
     GL
 ------------------------------------------------------------------------------*/
 export const
-    PROG_TEST = i++,
-    PROG_COLOR = i++,
-    PROG_IMAGE = i++,
-    PROG_REPEAT = i++,
-    PROG_SCREEN = i++,
-    PROG_SPRITE = i++,
-    PROG_UI = i++;
+    PRO_TEST = i++,
+    PRO_COLOR = i++,
+    PRO_IMAGE = i++,
+    PRO_REPEAT = i++,
+    PRO_SCREEN = i++,
+    PRO_SPRITE = i++,
+    PRO_UI = i++;
 
 export const
-    DRAW_QUEUE_BACKGROUND = i++,
-    DRAW_QUEUE_SPRITE = i++,
-    DRAW_QUEUE_UI = i++;
+    QUE_BACKGROUND = i++,
+    QUE_SPRITE = i++,
+    QUE_UI = i++;
 
 export const
-    PROG_DATA_A_LAYOUT = i++,
-    PROG_DATA_PROGRAM = i++,
-    PROG_DATA_U_BLOCKS = i++,
-    PROG_DATA_U_DEFAULTS = i++,
-    PROG_DATA_U_SETTERS = i++;
+    DAT_A_LAYOUT = i++,
+    DAT_PROGRAM = i++,
+    DAT_U_BLOCKS = i++,
+    DAT_U_DEFAULTS = i++,
+    DAT_U_SETTERS = i++;
 
 export const
     BUF_UNI_CAMERA = i++,
@@ -60,28 +60,28 @@ export const
     BUF_ARR_MODEL = i++;
 
 export const
-    MODEL_BUBBLE = "MODEL_BUBBLE",
-    MODEL_TEXT = "MODEL_TEXT",
-    MODEL_TEST = "MODEL_TEST",
-    MODEL_AV_PLAYER = "MODEL_AV_PLAYER",
-    MODEL_DEBUG = "MODEL_DEBUG",
-    MODEL_GROUND = "MODEL_GROUND",
-    MODEL_FB = "MODEL_SCREEN",
-    MODEL_PLAYER = "MODEL_PLAYER",
-    MODEL_BRAID_00 = i++,
-    MODEL_BRAID_02 = i++,
-    MODEL_BRAID_04 = i++,
-    MODEL_BRAID_06 = i++,
-    MODEL_BRAID_08 = i++,
-    MODEL_BRAID_10 = i++,
-    MODEL_BRAID_12 = i++,
-    MODEL_BRAID_14 = i++,
-    MODEL_BRAID_16 = i++,
-    MODEL_BRAID_18 = i++,
-    MODEL_BRAID_20 = i++,
-    MODEL_BRAID_22 = i++,
-    MODEL_BRAID_24 = i++,
-    MODEL_BRAID_26 = i++;
+    MOD_BUBBLE = "MOD_BUBBLE",
+    MOD_TEXT = "MOD_TEXT",
+    MOD_TEST = "MOD_TEST",
+    MOD_AV_PLAYER = "MOD_AV_PLAYER",
+    MOD_DEBUG = "MOD_DEBUG",
+    MOD_GROUND = "MOD_GROUND",
+    MOD_FB = "MOD_SCREEN",
+    MOD_PLAYER = "MOD_PLAYER",
+    MOD_BRAID_00 = i++,
+    MOD_BRAID_02 = i++,
+    MOD_BRAID_04 = i++,
+    MOD_BRAID_06 = i++,
+    MOD_BRAID_08 = i++,
+    MOD_BRAID_10 = i++,
+    MOD_BRAID_12 = i++,
+    MOD_BRAID_14 = i++,
+    MOD_BRAID_16 = i++,
+    MOD_BRAID_18 = i++,
+    MOD_BRAID_20 = i++,
+    MOD_BRAID_22 = i++,
+    MOD_BRAID_24 = i++,
+    MOD_BRAID_26 = i++;
 
 export const
     UV_TEST = "UV_TEST",
@@ -104,12 +104,12 @@ export const
     UV_BRAID_26 = i++;
 
 export const
-    MESH_DEBUG = i++,
-    MESH_AV_PLAYER = i++,
-    MESH_GROUND = i++,
-    MESH_PLAYER = i++,
-    MESH_SCREEN = i++,
-    MESH_TEST = i++;
+    MSH_DEBUG = i++,
+    MSH_AV_PLAYER = i++,
+    MSH_GROUND = i++,
+    MSH_PLAYER = i++,
+    MSH_SCREEN = i++,
+    MSH_TEST = i++;
 
 export const
     TEX_BRAID = i++,

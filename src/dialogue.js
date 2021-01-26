@@ -7,15 +7,15 @@ import { isString } from "./utility";
 
 class UiCanvas
 {
-    constructor(modelId, textureId, color)
+    constructor(modelId, color)
     {
-        this.programData = new ProgramData($.PROG_SCREEN, modelId);
+        this.programData = new ProgramData($.PRO_SCREEN, modelId);
         this.programData.stageUniform($.U_COLOR, color);
 
         this.canvas = window.document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d");
-        this.canvas.width = $.VIEW_WIDTH;
-        this.canvas.height = $.VIEW_HEIGHT;
+        this.canvas.width = $.RES_WIDTH;
+        this.canvas.height = $.RES_HEIGHT;
     }
 
     clear()
@@ -55,16 +55,10 @@ export const Dialogue = {
         Dialogue.clear();
 
         // Bubble
-        text.ctx.shadowBlur = 0;
-        text.ctx.shadowOffsetX = 0;
-        text.ctx.shadowOffsetY = 0;
         drawBubble(bezierSpeech);
         drawArrow();
 
         // Text
-        text.ctx.shadowBlur = 5;
-        text.ctx.shadowOffsetX = 3;
-        text.ctx.shadowOffsetY = 3;
         drawSpeakerText(speaker);
         drawDialogueText(dialogue);
 
@@ -146,16 +140,16 @@ const drawDialogueText = (str) =>
         }
         else
         {
-            if (!fits)
+            if (fits)
+            {
+                maybeFits = word.trimStart();
+            }
+            else
             {
                 console.warn(`Word too long: ${maybeFits}`);
 
                 fits = maybeFits;
                 maybeFits = null;
-            }
-            else
-            {
-                maybeFits = word.trimStart();
             }
 
             fillText(fits, yPos);
@@ -177,8 +171,8 @@ const fillText = (str, yPos) =>
     text.ctx.fillText(str, xPx, yPos);
 };
 
-const text = new UiCanvas($.MODEL_TEXT, $.TEX_UI_TEXT, [1, 1, 1, 1]);
-const bubble = new UiCanvas($.MODEL_BUBBLE, $.TEX_UI_BUBBLE, [0, 0, 0, 0.7]);
+const text = new UiCanvas($.MOD_TEXT, [0.2, 0.2, 0.2, 1]);
+const bubble = new UiCanvas($.MOD_BUBBLE, [0.92, 0.92, 0.92, 1]);
 
 /*------------------------------------------------------------------------------
     Draw area
@@ -189,20 +183,20 @@ const fontMargin = 10;
 const x = 0.3;
 const y = 0.7;
 
-const xPx = x * $.VIEW_WIDTH;
-const yPx = y * $.VIEW_HEIGHT;
+const xPx = x * $.RES_WIDTH;
+const yPx = y * $.RES_HEIGHT;
 
-const width = $.VIEW_WIDTH - 2*xPx;
+const width = $.RES_WIDTH - 2*xPx;
 
 text.ctx.textAlign = "left";
 text.ctx.textBaseline = "top";
-text.ctx.font = `${fontSize}px Arial`;
+text.ctx.font = `${fontSize}px Cuprum`;
 
 // These are tints for the shaders, not the actual colors
 text.ctx.fillStyle = bubble.ctx.fillStyle = "#fff";
 text.ctx.shadowColor = "#000";
 
-const midLineY = 0.7 + (1.5 * fontSize + fontMargin) / $.VIEW_HEIGHT;
+const midLineY = 0.7 + (1.5 * fontSize + fontMargin) / $.RES_HEIGHT;
 
 const bezierSpeech = [
     new Bezier(0.2, midLineY, 180, 180, 90),
@@ -210,16 +204,16 @@ const bezierSpeech = [
 ];
 
 const arrow = [
-    $.VIEW_WIDTH * 0.6859375,
-    $.VIEW_HEIGHT * 0.6375,
-    $.VIEW_WIDTH * 0.734,
-    $.VIEW_HEIGHT * 0.63,
-    $.VIEW_WIDTH * 0.775,
-    $.VIEW_HEIGHT * 0.565,
-    $.VIEW_WIDTH * 0.765,
-    $.VIEW_HEIGHT * 0.63,
-    $.VIEW_WIDTH * 0.742,
-    $.VIEW_HEIGHT * 0.674
+    $.RES_WIDTH * 0.6859375,
+    $.RES_HEIGHT * 0.6375,
+    $.RES_WIDTH * 0.734,
+    $.RES_HEIGHT * 0.63,
+    $.RES_WIDTH * 0.775,
+    $.RES_HEIGHT * 0.565,
+    $.RES_WIDTH * 0.765,
+    $.RES_HEIGHT * 0.63,
+    $.RES_WIDTH * 0.742,
+    $.RES_HEIGHT * 0.674
 ];
 
 canvasToTexture();

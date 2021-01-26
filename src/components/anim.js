@@ -9,7 +9,7 @@ export class Anim extends Component
 
         this.stateModels = stateModels;
         this.stateDelays = stateDelays;
-        this.state = $.ANIM_IDLE;
+        this.state = $.ANI_IDLE;
 
         this.setState(this.state);
     }

@@ -79,7 +79,7 @@ const createFbTexture = () =>
 {
     const texture = createTexture();
     Texture.bind(texture);
-    gl.texStorage2D($.TEXTURE_2D, 1, $.RGB8, $.VIEW_WIDTH, $.VIEW_HEIGHT);
+    gl.texStorage2D($.TEXTURE_2D, 1, $.RGB8, $.RES_WIDTH, $.RES_HEIGHT);
     Texture.unbind();
 
     return texture;

@@ -84,8 +84,8 @@ export const Scene = {
         entities.set(root.id, root);
 
         const bp = blueprint.get(sceneId)();
-        const bpProcesses = bp.get($.BP_PROCESSES);
-        const bpEntities = bp.get($.BP_ENTITIES);
+        const bpProcesses = bp.get($.BLU_PROCESSES);
+        const bpEntities = bp.get($.BLU_ENTITIES);
 
         for (const process of bpProcesses)
         {
@@ -207,13 +207,13 @@ const loadEntities = (bpEntities, parentId) =>
 {
     for (const [entityId, entityBp] of bpEntities)
     {
-        const components = entityBp.get($.BP_COMPONENTS);
+        const components = entityBp.get($.BLU_COMPONENTS);
         const entity = new Entity(entityId, ...components);
         addEntity(entity, parentId);
 
-        if (entityBp.has($.BP_CHILDREN))
+        if (entityBp.has($.BLU_CHILDREN))
         {
-            const children = entityBp.get($.BP_CHILDREN);
+            const children = entityBp.get($.BLU_CHILDREN);
 
             if (children)
             {

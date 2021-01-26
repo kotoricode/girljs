@@ -157,12 +157,12 @@ const fragDef = new SafeMap([
     Program definitions
 ------------------------------------------------------------------------------*/
 const programDef = [
-    $.PROG_COLOR,   VS_COLOR,  FS_COLOR,
-    $.PROG_IMAGE,   VS_SCREEN, FS_IMAGE,
-    $.PROG_REPEAT,  VS_WORLD,  FS_TEX_RECT_REPEAT,
-    $.PROG_SCREEN,  VS_SCREEN, FS_TEX,
-    $.PROG_SPRITE,  VS_WORLD,  FS_TEX,
-    $.PROG_UI,      VS_UI,     FS_TEX,
+    $.PRO_COLOR,   VS_COLOR,  FS_COLOR,
+    $.PRO_IMAGE,   VS_SCREEN, FS_IMAGE,
+    $.PRO_REPEAT,  VS_WORLD,  FS_TEX_RECT_REPEAT,
+    $.PRO_SCREEN,  VS_SCREEN, FS_TEX,
+    $.PRO_SPRITE,  VS_WORLD,  FS_TEX,
+    $.PRO_UI,      VS_UI,     FS_TEX,
 ];
 
 /*------------------------------------------------------------------------------
@@ -236,10 +236,10 @@ for (let i = 0; i < programDef.length;)
     }
 
     preparedPrograms.set(programId, new SafeMap([
-        [$.PROG_DATA_PROGRAM, program],
-        [$.PROG_DATA_A_LAYOUT, aLayout],
-        [$.PROG_DATA_U_BLOCKS, uBlocks],
-        [$.PROG_DATA_U_DEFAULTS, uDefaults],
-        [$.PROG_DATA_U_SETTERS, uSetters]
+        [$.DAT_PROGRAM, program],
+        [$.DAT_A_LAYOUT, aLayout],
+        [$.DAT_U_BLOCKS, uBlocks],
+        [$.DAT_U_DEFAULTS, uDefaults],
+        [$.DAT_U_SETTERS, uSetters]
     ]));
 }

@@ -21,8 +21,8 @@ export const Mouse = {
         Mouse.clip.x = 2*x - 1;
         Mouse.clip.y = 1 - 2*y;
 
-        Mouse.screen.x = x * $.VIEW_WIDTH;
-        Mouse.screen.y = y * $.VIEW_HEIGHT;
+        Mouse.screen.x = x * $.RES_WIDTH;
+        Mouse.screen.y = y * $.RES_HEIGHT;
     },
     clip: new Vector(),
     screen: new Vector(),
@@ -33,13 +33,13 @@ const onResize = () =>
 {
     const width = Math.min(
         window.innerWidth,
-        window.innerHeight * $.VIEW_ASPECT,
-        $.VIEW_WIDTH
+        window.innerHeight * $.RES_ASPECT,
+        $.RES_WIDTH
     );
 
     if (width !== canvasWidth)
     {
-        const height = width / $.VIEW_ASPECT;
+        const height = width / $.RES_ASPECT;
 
         if (height !== canvasHeight)
         {
@@ -66,8 +66,8 @@ let canvasRect = canvas.getBoundingClientRect();
 
 export const gl = canvas.getContext("webgl2", { alpha: false });
 
-let canvasWidth = $.VIEW_WIDTH;
-let canvasHeight = $.VIEW_HEIGHT;
+let canvasWidth = $.RES_WIDTH;
+let canvasHeight = $.RES_HEIGHT;
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
 gl.viewport(0, 0, canvasWidth, canvasHeight);
