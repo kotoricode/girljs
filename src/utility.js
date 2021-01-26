@@ -8,7 +8,9 @@ export const DEG_TO_RAD = Math.PI / 180;
 
 export const getElement = (elemId) => window.document.getElementById(elemId);
 
-export const isString = (value) => typeof value === "string";
+export const isString = (val) => typeof val === "string";
+
+export const isNullOrUndefined = (val) => val === null || val === undefined;
 
 export class SettableFloat32Array extends Float32Array
 {
@@ -42,13 +44,13 @@ export class SafeMap extends Map
 
     delete(key)
     {
-        if (key === undefined || key === null) throw Error;
+        if (isNullOrUndefined(key)) throw Error;
         if (!super.delete(key)) throw Error;
     }
 
     get(key)
     {
-        if (key === undefined || key === null) throw Error;
+        if (isNullOrUndefined(key)) throw Error;
         if (!this.has(key)) throw Error;
 
         return super.get(key);
@@ -56,8 +58,8 @@ export class SafeMap extends Map
 
     set(key, value)
     {
-        if (key === undefined || key === null) throw Error;
-        if (value === undefined || value === null) throw Error;
+        if (isNullOrUndefined(key)) throw Error;
+        if (isNullOrUndefined(value)) throw Error;
         if (this.has(key)) throw Error;
 
         return super.set(key, value);
@@ -65,8 +67,8 @@ export class SafeMap extends Map
 
     update(key, value)
     {
-        if (key === undefined || key === null) throw Error;
-        if (value === undefined || value === null) throw Error;
+        if (isNullOrUndefined(key)) throw Error;
+        if (isNullOrUndefined(value)) throw Error;
         if (!this.has(key)) throw Error;
 
         return super.set(key, value);
@@ -82,7 +84,7 @@ export class SafeSet extends Set
 
     add(value)
     {
-        if (value === undefined || value === null) throw Error;
+        if (isNullOrUndefined(value)) throw Error;
         if (this.has(value)) throw Error;
 
         return super.add(value);
@@ -90,7 +92,7 @@ export class SafeSet extends Set
 
     delete(value)
     {
-        if (value === undefined || value === null) throw Error;
+        if (isNullOrUndefined(value)) throw Error;
         if (!super.delete(value)) throw Error;
     }
 }
