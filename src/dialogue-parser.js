@@ -1,10 +1,10 @@
 import * as $ from "./const";
 
 const test = [
-    $.DIALOGUE_RIGHT_NAME, $.ENTITY_AV_PLAYER,
-    $.DIALOGUE_RIGHT_AVATAR, $.NAME_PLAYER,
-    $.DIALOGUE_ACTIVE_RIGHT,
-    $.DIALOGUE_TYPE_SPEAK,
+    $.DLG_RIGHT_NAME, $.E_AV_PLAYER,
+    $.DLG_RIGHT_AVATAR, $.NAME_PLAYER,
+    $.DLG_ACTIVE_RIGHT,
+    $.DLG_TYPE_SPEAK,
     "hello world",
     "testing this shit"
 ];

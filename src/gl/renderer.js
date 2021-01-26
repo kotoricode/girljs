@@ -27,11 +27,11 @@ export const render = () =>
     gl.clearColor(0.6, 0.6, 0.6, 1.0);
 
     gl.enable($.DEPTH_TEST);
-    drawQueue($.RENDER_QUEUE_BACKGROUND);
+    drawQueue($.DRAW_QUEUE_BACKGROUND);
 
     gl.disable($.DEPTH_TEST);
-    drawQueue($.RENDER_QUEUE_SPRITE);
-    drawQueue($.RENDER_QUEUE_UI);
+    drawQueue($.DRAW_QUEUE_SPRITE);
+    drawQueue($.DRAW_QUEUE_UI);
 
     Framebuffer.unbind();
 
@@ -95,7 +95,7 @@ const imageProgramData = new ProgramData($.PROG_IMAGE, $.MODEL_FB);
 Framebuffer.prepare();
 
 const queues = new SafeMap([
-    [$.RENDER_QUEUE_BACKGROUND, new SafeSet()],
-    [$.RENDER_QUEUE_SPRITE, new SafeSet()],
-    [$.RENDER_QUEUE_UI, new SafeSet()]
+    [$.DRAW_QUEUE_BACKGROUND, new SafeSet()],
+    [$.DRAW_QUEUE_SPRITE, new SafeSet()],
+    [$.DRAW_QUEUE_UI, new SafeSet()]
 ]);

@@ -1,16 +1,16 @@
 export const
-    SCREEN_WIDTH = 1280,
-    SCREEN_HEIGHT = 720,
-    SCREEN_ASPECT = SCREEN_WIDTH / SCREEN_HEIGHT;
+    VIEW_WIDTH = 1280,
+    VIEW_HEIGHT = 720,
+    VIEW_ASPECT = VIEW_WIDTH / VIEW_HEIGHT;
 
 let i = 0;
 
 export const
-    ENTITY_TEST = "ENTITY_TEST",
-    ENTITY_AV_PLAYER = "ENTITY_AV_PLAYER",
-    ENTITY_GROUND = "ENTITY_GROUND",
-    ENTITY_PLAYER = "ENTITY_PLAYER",
-    ENTITY_ROOT = "ENTITY_ROOT";
+    ENT_TEST = "test",
+    ENT_AV_PLAYER = "av_player",
+    ENT_GROUND = "ground",
+    ENT_PLAYER = "player",
+    ENT_ROOT = "root";
 
 export const
     SCENE_TEST = i++;
@@ -43,9 +43,9 @@ export const
     PROG_UI = i++;
 
 export const
-    RENDER_QUEUE_BACKGROUND = i++,
-    RENDER_QUEUE_SPRITE = i++,
-    RENDER_QUEUE_UI = i++;
+    DRAW_QUEUE_BACKGROUND = i++,
+    DRAW_QUEUE_SPRITE = i++,
+    DRAW_QUEUE_UI = i++;
 
 export const
     PROG_DATA_A_LAYOUT = i++,
@@ -120,14 +120,14 @@ export const
     TEX_UI_BUBBLE = i++;
 
 export const
-    DIALOGUE_LEFT_AVATAR = i++,
-    DIALOGUE_RIGHT_AVATAR = i++,
-    DIALOGUE_LEFT_NAME = i++,
-    DIALOGUE_RIGHT_NAME = i++,
-    DIALOGUE_ACTIVE_LEFT = i++,
-    DIALOGUE_ACTIVE_RIGHT = i++,
-    DIALOGUE_TYPE_SPEAK = i++,
-    DIALOGUE_TYPE_THINK = i++;
+    DLG_LEFT_AVATAR = i++,
+    DLG_RIGHT_AVATAR = i++,
+    DLG_LEFT_NAME = i++,
+    DLG_RIGHT_NAME = i++,
+    DLG_ACTIVE_LEFT = i++,
+    DLG_ACTIVE_RIGHT = i++,
+    DLG_TYPE_SPEAK = i++,
+    DLG_TYPE_THINK = i++;
 
 /*------------------------------------------------------------------------------
     Program --- DO NOT MODIFY

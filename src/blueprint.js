@@ -13,14 +13,14 @@ import { processCamera }    from "./processes/process-camera";
 import { processAnimation } from "./processes/process-animation";
 import { processPlayer }    from "./processes/process-player";
 
-const createPlayer = () => [$.ENTITY_PLAYER, new SafeMap([
+const createPlayer = () => [$.ENT_PLAYER, new SafeMap([
     [$.BP_COMPONENTS, new SafeSet([
         new Space(),
         new Motion(3),
         new Player(),
         new Drawable(
             $.PROG_SPRITE,
-            $.RENDER_QUEUE_SPRITE,
+            $.DRAW_QUEUE_SPRITE,
             $.MODEL_BRAID_00
         ),
         new Anim(new SafeMap([
@@ -49,12 +49,12 @@ const createPlayer = () => [$.ENTITY_PLAYER, new SafeMap([
     [$.BP_CHILDREN, new SafeSet()]
 ])];
 
-const createTachie = () => [$.ENTITY_AV_PLAYER, new SafeMap([
+const createTachie = () => [$.ENT_AV_PLAYER, new SafeMap([
     [$.BP_COMPONENTS, new SafeSet([
         new Space(0.75, -0.2, 0),
         new Drawable(
             $.PROG_UI,
-            $.RENDER_QUEUE_UI,
+            $.DRAW_QUEUE_UI,
             $.MODEL_AV_PLAYER,
             new SafeMap([
                 [$.U_COLOR, [1, 0.871, 0.855, 1]]
@@ -64,13 +64,13 @@ const createTachie = () => [$.ENTITY_AV_PLAYER, new SafeMap([
     [$.BP_CHILDREN, new SafeSet()]
 ])];
 
-const createGround = () => [$.ENTITY_GROUND, new SafeMap([
+const createGround = () => [$.ENT_GROUND, new SafeMap([
     [$.BP_COMPONENTS, new SafeSet([
         new Space(),
         new Ground(-2, 2, -2, 2),
         new Drawable(
             $.PROG_REPEAT,
-            $.RENDER_QUEUE_BACKGROUND,
+            $.DRAW_QUEUE_BACKGROUND,
             $.MODEL_GROUND,
             new SafeMap([
                 [$.U_UVREPEAT, [4, 4]],
@@ -81,12 +81,12 @@ const createGround = () => [$.ENTITY_GROUND, new SafeMap([
     [$.BP_CHILDREN, new SafeSet()]
 ])];
 
-const createTest = () => [$.ENTITY_TEST, new SafeMap([
+const createTest = () => [$.ENT_TEST, new SafeMap([
     [$.BP_COMPONENTS, new SafeSet([
         new Space(),
         new Drawable(
             $.PROG_SPRITE,
-            $.RENDER_QUEUE_BACKGROUND,
+            $.DRAW_QUEUE_BACKGROUND,
             $.MODEL_TEST
         )
     ])],

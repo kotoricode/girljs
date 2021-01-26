@@ -238,4 +238,4 @@ const entities = new SafeMap();
 const processes = new SafeSet();
 
 const rootSpace = new Space();
-const root = new Entity($.ENTITY_ROOT, rootSpace);
+const root = new Entity($.ENT_ROOT, rootSpace);

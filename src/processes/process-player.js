@@ -15,7 +15,7 @@ export const processPlayer = () =>
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
         );
 
-        const [ground] = Scene.one($.ENTITY_GROUND, Ground);
+        const [ground] = Scene.one($.ENT_GROUND, Ground);
         const ivp = Camera.getInvViewProjection();
 
         ray.numHits = 0;
@@ -25,7 +25,7 @@ export const processPlayer = () =>
         // Update player, marker paths
         if (ray.numHits)
         {
-            const [plMotion] = Scene.one($.ENTITY_PLAYER, Motion);
+            const [plMotion] = Scene.one($.ENT_PLAYER, Motion);
 
             const hit = ray.hit[0];
             plMotion.setMainTarget(hit);

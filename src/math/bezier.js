@@ -5,8 +5,8 @@ export class Bezier
 {
     constructor(x, y, cp1dist, cp2dist, angle)
     {
-        this.x = x * $.SCREEN_WIDTH;
-        this.y = y * $.SCREEN_HEIGHT;
+        this.x = x * $.VIEW_WIDTH;
+        this.y = y * $.VIEW_HEIGHT;
         this.cp1dist = cp1dist;
         this.cp2dist = cp2dist;
         this.angle = angle;
@@ -16,8 +16,8 @@ export class Bezier
 
     setPosition(x, y)
     {
-        this.x = x * $.SCREEN_WIDTH;
-        this.y = y * $.SCREEN_HEIGHT;
+        this.x = x * $.VIEW_WIDTH;
+        this.y = y * $.VIEW_HEIGHT;
     }
 
     setControlPoints()
@@ -33,8 +33,8 @@ export class Bezier
 
     setDelta(x, y, cp1dist, cp2dist, angle)
     {
-        this.x += x * $.SCREEN_WIDTH;
-        this.y += y * $.SCREEN_HEIGHT;
+        this.x += x * $.VIEW_WIDTH;
+        this.y += y * $.VIEW_HEIGHT;
         this.cp1dist += cp1dist;
         this.cp2dist += cp2dist;
         this.angle += angle;

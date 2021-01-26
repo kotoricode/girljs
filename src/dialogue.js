@@ -14,8 +14,8 @@ class UiCanvas
 
         this.canvas = window.document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d");
-        this.canvas.width = $.SCREEN_WIDTH;
-        this.canvas.height = $.SCREEN_HEIGHT;
+        this.canvas.width = $.VIEW_WIDTH;
+        this.canvas.height = $.VIEW_HEIGHT;
     }
 
     clear()
@@ -189,10 +189,10 @@ const fontMargin = 10;
 const x = 0.3;
 const y = 0.7;
 
-const xPx = x * $.SCREEN_WIDTH;
-const yPx = y * $.SCREEN_HEIGHT;
+const xPx = x * $.VIEW_WIDTH;
+const yPx = y * $.VIEW_HEIGHT;
 
-const width = $.SCREEN_WIDTH - 2*xPx;
+const width = $.VIEW_WIDTH - 2*xPx;
 
 text.ctx.textAlign = "left";
 text.ctx.textBaseline = "top";
@@ -202,7 +202,7 @@ text.ctx.font = `${fontSize}px Arial`;
 text.ctx.fillStyle = bubble.ctx.fillStyle = "#fff";
 text.ctx.shadowColor = "#000";
 
-const midLineY = 0.7 + (1.5 * fontSize + fontMargin) / $.SCREEN_HEIGHT;
+const midLineY = 0.7 + (1.5 * fontSize + fontMargin) / $.VIEW_HEIGHT;
 
 const bezierSpeech = [
     new Bezier(0.2, midLineY, 180, 180, 90),
@@ -210,16 +210,16 @@ const bezierSpeech = [
 ];
 
 const arrow = [
-    $.SCREEN_WIDTH * 0.6859375,
-    $.SCREEN_HEIGHT * 0.6375,
-    $.SCREEN_WIDTH * 0.734,
-    $.SCREEN_HEIGHT * 0.63,
-    $.SCREEN_WIDTH * 0.775,
-    $.SCREEN_HEIGHT * 0.565,
-    $.SCREEN_WIDTH * 0.765,
-    $.SCREEN_HEIGHT * 0.63,
-    $.SCREEN_WIDTH * 0.742,
-    $.SCREEN_HEIGHT * 0.674
+    $.VIEW_WIDTH * 0.6859375,
+    $.VIEW_HEIGHT * 0.6375,
+    $.VIEW_WIDTH * 0.734,
+    $.VIEW_HEIGHT * 0.63,
+    $.VIEW_WIDTH * 0.775,
+    $.VIEW_HEIGHT * 0.565,
+    $.VIEW_WIDTH * 0.765,
+    $.VIEW_HEIGHT * 0.63,
+    $.VIEW_WIDTH * 0.742,
+    $.VIEW_HEIGHT * 0.674
 ];
 
 canvasToTexture();
