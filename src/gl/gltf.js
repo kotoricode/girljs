@@ -43,20 +43,21 @@ export const Gltf = {
             data.push(...value);
         }
 
-        const jsonLength = toUint32(data.slice(12, 16));
+        const jsonLength = toUint(data.slice(12, 16));
         const jsonStart = 20;
         const jsonEnd = jsonStart + jsonLength;
 
         jsonData.push(data.slice(jsonStart, jsonEnd));
 
-        const binLength = toUint32(data.slice(jsonEnd, jsonEnd + 4));
+        const binLength = toUint(data.slice(jsonEnd, jsonEnd + 4));
         const binStart = jsonEnd + 8;
         const binEnd = binStart + binLength;
 
         binData.push(data.slice(binStart, binEnd));
+
+        console.log(jsonData);
+        console.log(binData);
     }
 };
 
-const toUint32 = (bytes) => (
-    ((bytes[3] << 24) + (bytes[2] << 16) + (bytes[1] << 8) + bytes[0]) >>> 0
-);
+const toUint = (bytes) => bytes.reduce((a, b, i) => a += b << (i * 8)) >>> 0;
