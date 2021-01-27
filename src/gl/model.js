@@ -1,7 +1,8 @@
 import * as $ from "../const";
-import { SafeMap, SafeSet, SettableFloat32Array } from "../utility";
+import { SafeMap, SettableFloat32Array } from "../utility";
 import { Buffer } from "./buffer";
 import { Texture } from "./texture";
+import { Gltf } from "./gltf";
 
 /*------------------------------------------------------------------------------
     Consts
@@ -82,15 +83,6 @@ const uvRect = (x, y, width, height, baseWidth, baseHeight) =>
     ];
 };
 
-const meshes = new SafeMap([
-    [MSH_DEBUG, [0, 0, 0, 2, 2, 2, 0, 0, 0, -2, 2, 2, 0, 0, 0, 2, -2, 2, 0, 0, 0, -2, 2, -2]],
-    [MSH_GROUND, meshXz(-2, 2, -2, 2)],
-    [MSH_PLAYER, meshXy(-0.4, 0.4, 0, 1.5)],
-    [MSH_AV_PLAYER, meshXyScreen(187, 600)],
-    [MSH_SCREEN, meshXyScreen($.RES_WIDTH, $.RES_HEIGHT)],
-    [MSH_TEST, [-1.000000, 1.000000, -1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, -1.000000, 1.000000, 1.000000, 1.000000, -1.000000, -1.000000, 1.000000, 1.000000, -1.000000, 1.000000, -1.000000, 1.000000, 1.000000, -1.000000, -1.000000, -1.000000, -1.000000, -1.000000, 1.000000, 1.000000, -1.000000, -1.000000, -1.000000, -1.000000, 1.000000, -1.000000, -1.000000, -1.000000, 1.000000, 1.000000, -1.000000, 1.000000, -1.000000, 1.000000, 1.000000, -1.000000, -1.000000, -1.000000, 1.000000, -1.000000, 1.000000, -1.000000, -1.000000, -1.000000, -1.000000, -1.000000, -1.000000, 1.000000, -1.000000, -1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, -1.000000, 1.000000, 1.000000, -1.000000, -1.000000, 1.000000, -1.000000, 1.000000, 1.000000, -1.000000, 1.000000, -1.000000, -1.000000, -1.000000, -1.000000, 1.000000, -1.000000, -1.000000, 1.000000, -1.000000, 1.000000, -1.000000, -1.000000, 1.000000, 1.000000, 1.000000, -1.000000, 1.000000, 1.000000, 1.000000, 1.000000, -1.000000, 1.000000, -1.000000, 1.000000, -1.000000, 1.000000, 1.000000, -1.000000, 1.000000, -1.000000, -1.000000, ]]
-]);
-
 const uvs = new SafeMap([
     [UV_GIRL_00, uvRect(0, 0, 356, 1170, 356, 1170)],
     [UV_BRAID_00, uvRect1024(0, 10, 136, 136)],
@@ -159,6 +151,13 @@ export const Model = {
         {
             loadPromise = new Promise((resolve) =>
             {
+                window.fetch("/data/mesh.glb").then(async(response) =>
+                {
+                    const blob = await response.blob();
+                    const data = await Gltf.parse(blob);
+                    console.log(data);
+                });
+
                 window.setTimeout(() =>
                 {
                     buildModelData();
@@ -184,6 +183,38 @@ const pushData = (buffer, data) =>
 
 const buildModelData = () =>
 {
+    const meshes = new SafeMap([
+        [MSH_DEBUG, [0, 0, 0, 2, 2, 2, 0, 0, 0, -2, 2, 2, 0, 0, 0, 2, -2, 2, 0, 0, 0, -2, 2, -2]],
+        [MSH_GROUND, meshXz(-2, 2, -2, 2)],
+        [MSH_PLAYER, meshXy(-0.4, 0.4, 0, 1.5)],
+        [MSH_AV_PLAYER, meshXyScreen(187, 600)],
+        [MSH_SCREEN, meshXyScreen($.RES_WIDTH, $.RES_HEIGHT)],
+        [MSH_TEST, [-1.000000, 1.000000, -1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, -1.000000, 1.000000, 1.000000, 1.000000, -1.000000, -1.000000, 1.000000, 1.000000, -1.000000, 1.000000, -1.000000, 1.000000, 1.000000, -1.000000, -1.000000, -1.000000, -1.000000, -1.000000, 1.000000, 1.000000, -1.000000, -1.000000, -1.000000, -1.000000, 1.000000, -1.000000, -1.000000, -1.000000, 1.000000, 1.000000, -1.000000, 1.000000, -1.000000, 1.000000, 1.000000, -1.000000, -1.000000, -1.000000, 1.000000, -1.000000, 1.000000, -1.000000, -1.000000, -1.000000, -1.000000, -1.000000, -1.000000, 1.000000, -1.000000, -1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, -1.000000, 1.000000, 1.000000, -1.000000, -1.000000, 1.000000, -1.000000, 1.000000, 1.000000, -1.000000, 1.000000, -1.000000, -1.000000, -1.000000, -1.000000, 1.000000, -1.000000, -1.000000, 1.000000, -1.000000, 1.000000, -1.000000, -1.000000, 1.000000, 1.000000, 1.000000, -1.000000, 1.000000, 1.000000, 1.000000, 1.000000, -1.000000, 1.000000, -1.000000, 1.000000, -1.000000, 1.000000, 1.000000, -1.000000, 1.000000, -1.000000, -1.000000, ]]
+    ]);
+
+    const modelMesh = [
+        $.MOD_AV_PLAYER, MSH_AV_PLAYER, UV_GIRL_00,
+        $.MOD_GROUND,    MSH_GROUND,    UV_GROUND,
+        $.MOD_BRAID_00,  MSH_PLAYER,    UV_BRAID_00,
+        $.MOD_BRAID_02,  MSH_PLAYER,    UV_BRAID_02,
+        $.MOD_BRAID_04,  MSH_PLAYER,    UV_BRAID_04,
+        $.MOD_BRAID_06,  MSH_PLAYER,    UV_BRAID_06,
+        $.MOD_BRAID_08,  MSH_PLAYER,    UV_BRAID_08,
+        $.MOD_BRAID_10,  MSH_PLAYER,    UV_BRAID_10,
+        $.MOD_BRAID_12,  MSH_PLAYER,    UV_BRAID_12,
+        $.MOD_BRAID_14,  MSH_PLAYER,    UV_BRAID_14,
+        $.MOD_BRAID_16,  MSH_PLAYER,    UV_BRAID_16,
+        $.MOD_BRAID_18,  MSH_PLAYER,    UV_BRAID_18,
+        $.MOD_BRAID_20,  MSH_PLAYER,    UV_BRAID_20,
+        $.MOD_BRAID_22,  MSH_PLAYER,    UV_BRAID_22,
+        $.MOD_BRAID_24,  MSH_PLAYER,    UV_BRAID_24,
+        $.MOD_BRAID_26,  MSH_PLAYER,    UV_BRAID_26,
+        $.MOD_TEST,      MSH_TEST,      UV_TEST,
+        $.MOD_FB,        MSH_SCREEN,    UV_SCREEN,
+        $.MOD_TEXT,      MSH_SCREEN,    UV_SCREEN,
+        $.MOD_BUBBLE,    MSH_SCREEN,    UV_SCREEN,
+    ];
+
     const modelData = [];
 
     const xyzOffsets = new SafeMap();
@@ -255,32 +286,6 @@ const buildModelData = () =>
         new SettableFloat32Array(debugData)
     );
 };
-
-/*------------------------------------------------------------------------------
-    Model definitions
-------------------------------------------------------------------------------*/
-const modelMesh = [
-    $.MOD_AV_PLAYER, MSH_AV_PLAYER, UV_GIRL_00,
-    $.MOD_GROUND,    MSH_GROUND,    UV_GROUND,
-    $.MOD_BRAID_00,  MSH_PLAYER,    UV_BRAID_00,
-    $.MOD_BRAID_02,  MSH_PLAYER,    UV_BRAID_02,
-    $.MOD_BRAID_04,  MSH_PLAYER,    UV_BRAID_04,
-    $.MOD_BRAID_06,  MSH_PLAYER,    UV_BRAID_06,
-    $.MOD_BRAID_08,  MSH_PLAYER,    UV_BRAID_08,
-    $.MOD_BRAID_10,  MSH_PLAYER,    UV_BRAID_10,
-    $.MOD_BRAID_12,  MSH_PLAYER,    UV_BRAID_12,
-    $.MOD_BRAID_14,  MSH_PLAYER,    UV_BRAID_14,
-    $.MOD_BRAID_16,  MSH_PLAYER,    UV_BRAID_16,
-    $.MOD_BRAID_18,  MSH_PLAYER,    UV_BRAID_18,
-    $.MOD_BRAID_20,  MSH_PLAYER,    UV_BRAID_20,
-    $.MOD_BRAID_22,  MSH_PLAYER,    UV_BRAID_22,
-    $.MOD_BRAID_24,  MSH_PLAYER,    UV_BRAID_24,
-    $.MOD_BRAID_26,  MSH_PLAYER,    UV_BRAID_26,
-    $.MOD_TEST,      MSH_TEST,      UV_TEST,
-    $.MOD_FB,        MSH_SCREEN,    UV_SCREEN,
-    $.MOD_TEXT,      MSH_SCREEN,    UV_SCREEN,
-    $.MOD_BUBBLE,    MSH_SCREEN,    UV_SCREEN,
-];
 
 const modelTex = new SafeMap([
     [$.MOD_AV_PLAYER,$.TEX_GIRL],
