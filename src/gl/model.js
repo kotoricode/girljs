@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { SafeMap, SettableFloat32Array } from "../utility";
+import { SafeMap, SafeSet, SettableFloat32Array } from "../utility";
 import { Buffer } from "./buffer";
 import { Texture } from "./texture";
 
@@ -142,7 +142,7 @@ export const Model = {
     },
     getTexture(modelId)
     {
-        const textureId = models.get(modelId).textureId;
+        const textureId = modelTex.get(modelId);
 
         return Texture.get(textureId);
     },
@@ -156,25 +156,31 @@ export const Model = {
     {
         return new Promise((resolve) =>
         {
-            // window.fetch("/data/test.blob").then((res) =>
-            // {
-            //     res.blob().then((data) =>
-            //     {
-            //         console.log(data);
-
-            //         data.arrayBuffer().then((arr) =>
-            //         {
-            //             const c = new Float32Array(arr);
-            //             console.log(c);
-            //         });
-            //     });
-            // });
-
-            window.setTimeout(() =>
+            if (isLoaded)
             {
-                buildModelData();
                 resolve();
-            }, 400);
+            }
+            else
+            {
+                resolvers.add(resolve);
+
+                if (!isLoading)
+                {
+                    isLoading = true;
+                    window.setTimeout(() =>
+                    {
+                        buildModelData();
+
+                        for (const resolver of resolvers)
+                        {
+                            resolver();
+                        }
+
+                        isLoaded = 2;
+                        resolvers.clear();
+                    }, 2000);
+                }
+            }
         });
     }
 };
@@ -197,12 +203,11 @@ const buildModelData = () =>
     const uvOffsets = new SafeMap();
     const drawSizes = new SafeMap();
 
-    for (let i = 0; i < modelDef.length;)
+    for (let i = 0; i < modelMesh.length;)
     {
-        const modelId = modelDef[i++];
-        const meshId = modelDef[i++];
-        const uvId = modelDef[i++];
-        const textureId = modelDef[i++];
+        const modelId = modelMesh[i++];
+        const meshId = modelMesh[i++];
+        const uvId = modelMesh[i++];
 
         if (!xyzOffsets.has(meshId))
         {
@@ -221,14 +226,16 @@ const buildModelData = () =>
             uvOffsets.set(uvId, uvOffset);
         }
 
+        const attrib = new SafeMap([
+            [$.A_XYZ, xyzOffsets.get(meshId)],
+            [$.A_UV, uvOffsets.get(uvId)]
+        ]);
+
         models.set(modelId, new ModelData(
-            new SafeMap([
-                [$.A_XYZ, xyzOffsets.get(meshId)],
-                [$.A_UV, uvOffsets.get(uvId)]
-            ]),
+            attrib,
             $.BUF_ARR_MODEL,
             uvId,
-            textureId,
+            modelTex.get(modelId),
             drawSizes.get(meshId),
         ));
     }
@@ -244,10 +251,12 @@ const buildModelData = () =>
     const debugData = [];
     const mesh = meshes.get(MSH_DEBUG);
 
+    const debugAttrib = new SafeMap([
+        [$.A_XYZ, pushData(debugData, mesh)]
+    ]);
+
     models.set($.MOD_DEBUG, new ModelData(
-        new SafeMap([
-            [$.A_XYZ, pushData(debugData, mesh)]
-        ]),
+        debugAttrib,
         $.BUF_ARR_DEBUG,
         null,
         null,
@@ -263,27 +272,53 @@ const buildModelData = () =>
 /*------------------------------------------------------------------------------
     Model definitions
 ------------------------------------------------------------------------------*/
-const modelDef = [
-    $.MOD_AV_PLAYER, MSH_AV_PLAYER, UV_GIRL_00,  $.TEX_GIRL,
-    $.MOD_GROUND,    MSH_GROUND,    UV_GROUND,   $.TEX_TEXTURE,
-    $.MOD_BRAID_00,  MSH_PLAYER,    UV_BRAID_00, $.TEX_BRAID,
-    $.MOD_BRAID_02,  MSH_PLAYER,    UV_BRAID_02, $.TEX_BRAID,
-    $.MOD_BRAID_04,  MSH_PLAYER,    UV_BRAID_04, $.TEX_BRAID,
-    $.MOD_BRAID_06,  MSH_PLAYER,    UV_BRAID_06, $.TEX_BRAID,
-    $.MOD_BRAID_08,  MSH_PLAYER,    UV_BRAID_08, $.TEX_BRAID,
-    $.MOD_BRAID_10,  MSH_PLAYER,    UV_BRAID_10, $.TEX_BRAID,
-    $.MOD_BRAID_12,  MSH_PLAYER,    UV_BRAID_12, $.TEX_BRAID,
-    $.MOD_BRAID_14,  MSH_PLAYER,    UV_BRAID_14, $.TEX_BRAID,
-    $.MOD_BRAID_16,  MSH_PLAYER,    UV_BRAID_16, $.TEX_BRAID,
-    $.MOD_BRAID_18,  MSH_PLAYER,    UV_BRAID_18, $.TEX_BRAID,
-    $.MOD_BRAID_20,  MSH_PLAYER,    UV_BRAID_20, $.TEX_BRAID,
-    $.MOD_BRAID_22,  MSH_PLAYER,    UV_BRAID_22, $.TEX_BRAID,
-    $.MOD_BRAID_24,  MSH_PLAYER,    UV_BRAID_24, $.TEX_BRAID,
-    $.MOD_BRAID_26,  MSH_PLAYER,    UV_BRAID_26, $.TEX_BRAID,
-    $.MOD_TEST,      MSH_TEST,      UV_TEST,     $.TEX_TEXTURE,
-    $.MOD_FB,        MSH_SCREEN,    UV_SCREEN,   $.TEX_FB,
-    $.MOD_TEXT,      MSH_SCREEN,    UV_SCREEN,   $.TEX_UI_TEXT,
-    $.MOD_BUBBLE,    MSH_SCREEN,    UV_SCREEN,   $.TEX_UI_BUBBLE
+const modelMesh = [
+    $.MOD_AV_PLAYER, MSH_AV_PLAYER, UV_GIRL_00,
+    $.MOD_GROUND,    MSH_GROUND,    UV_GROUND,
+    $.MOD_BRAID_00,  MSH_PLAYER,    UV_BRAID_00,
+    $.MOD_BRAID_02,  MSH_PLAYER,    UV_BRAID_02,
+    $.MOD_BRAID_04,  MSH_PLAYER,    UV_BRAID_04,
+    $.MOD_BRAID_06,  MSH_PLAYER,    UV_BRAID_06,
+    $.MOD_BRAID_08,  MSH_PLAYER,    UV_BRAID_08,
+    $.MOD_BRAID_10,  MSH_PLAYER,    UV_BRAID_10,
+    $.MOD_BRAID_12,  MSH_PLAYER,    UV_BRAID_12,
+    $.MOD_BRAID_14,  MSH_PLAYER,    UV_BRAID_14,
+    $.MOD_BRAID_16,  MSH_PLAYER,    UV_BRAID_16,
+    $.MOD_BRAID_18,  MSH_PLAYER,    UV_BRAID_18,
+    $.MOD_BRAID_20,  MSH_PLAYER,    UV_BRAID_20,
+    $.MOD_BRAID_22,  MSH_PLAYER,    UV_BRAID_22,
+    $.MOD_BRAID_24,  MSH_PLAYER,    UV_BRAID_24,
+    $.MOD_BRAID_26,  MSH_PLAYER,    UV_BRAID_26,
+    $.MOD_TEST,      MSH_TEST,      UV_TEST,
+    $.MOD_FB,        MSH_SCREEN,    UV_SCREEN,
+    $.MOD_TEXT,      MSH_SCREEN,    UV_SCREEN,
+    $.MOD_BUBBLE,    MSH_SCREEN,    UV_SCREEN,
 ];
 
+const modelTex = new SafeMap([
+    [$.MOD_AV_PLAYER,$.TEX_GIRL],
+    [$.MOD_GROUND,   $.TEX_TEXTURE],
+    [$.MOD_BRAID_00, $.TEX_BRAID],
+    [$.MOD_BRAID_02, $.TEX_BRAID],
+    [$.MOD_BRAID_04, $.TEX_BRAID],
+    [$.MOD_BRAID_06, $.TEX_BRAID],
+    [$.MOD_BRAID_08, $.TEX_BRAID],
+    [$.MOD_BRAID_10, $.TEX_BRAID],
+    [$.MOD_BRAID_12, $.TEX_BRAID],
+    [$.MOD_BRAID_14, $.TEX_BRAID],
+    [$.MOD_BRAID_16, $.TEX_BRAID],
+    [$.MOD_BRAID_18, $.TEX_BRAID],
+    [$.MOD_BRAID_20, $.TEX_BRAID],
+    [$.MOD_BRAID_22, $.TEX_BRAID],
+    [$.MOD_BRAID_24, $.TEX_BRAID],
+    [$.MOD_BRAID_26, $.TEX_BRAID],
+    [$.MOD_TEST,     $.TEX_TEXTURE],
+    [$.MOD_FB,       $.TEX_FB],
+    [$.MOD_TEXT,     $.TEX_UI_TEXT],
+    [$.MOD_BUBBLE,   $.TEX_UI_BUBBLE]
+]);
+
 const models = new SafeMap();
+const resolvers = new SafeSet();
+let isLoaded = false;
+let isLoading = false;

@@ -50,21 +50,6 @@ export const Dialogue = {
     {
         return bubble.program;
     },
-    init()
-    {
-        text = new UiCanvas($.MOD_TEXT, [0.2, 0.2, 0.2, 1]);
-        bubble = new UiCanvas($.MOD_BUBBLE, [0.92, 0.92, 0.92, 1]);
-
-        text.ctx.textAlign = "left";
-        text.ctx.textBaseline = "top";
-        text.ctx.font = `${fontSize}px Cuprum`;
-
-        // These are tints for the shaders, not the actual colors
-        text.ctx.fillStyle = bubble.ctx.fillStyle = "#fff";
-        text.ctx.shadowColor = "#000";
-
-        canvasToTexture();
-    },
     setText(dialogue, speaker)
     {
         Dialogue.clear();
@@ -186,9 +171,6 @@ const fillText = (str, yPos) =>
     text.ctx.fillText(str, xPx, yPos);
 };
 
-let text;
-let bubble;
-
 /*------------------------------------------------------------------------------
     Draw area
 ------------------------------------------------------------------------------*/
@@ -222,3 +204,16 @@ const arrow = [
     $.RES_WIDTH * 0.742,
     $.RES_HEIGHT * 0.674
 ];
+
+const text = new UiCanvas($.MOD_TEXT, [0.2, 0.2, 0.2, 1]);
+const bubble = new UiCanvas($.MOD_BUBBLE, [0.92, 0.92, 0.92, 1]);
+
+text.ctx.textAlign = "left";
+text.ctx.textBaseline = "top";
+text.ctx.font = `${fontSize}px Cuprum`;
+
+// These are tints for the shaders, not the actual colors
+text.ctx.fillStyle = bubble.ctx.fillStyle = "#fff";
+text.ctx.shadowColor = "#000";
+
+canvasToTexture();
