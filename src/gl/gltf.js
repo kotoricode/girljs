@@ -24,13 +24,10 @@ const compSizes = new SafeMap([
 export const Gltf = {
     async parse(blob)
     {
-        const bytes = [];
         const stream = blob.stream();
         const reader = stream.getReader();
-        let offset = 0;
 
-        let state = STATE_SEARCHING_JSON;
-
+        const data = [];
         const jsonData = [];
         const binData = [];
 
@@ -43,64 +40,23 @@ export const Gltf = {
                 break;
             }
 
-            while (offset < value.length)
-            {
-                bytes[0] = value[offset++];
-                bytes[1] = value[offset++];
-                bytes[2] = value[offset++];
-                bytes[3] = value[offset++];
-
-                switch (state)
-                {
-                    case STATE_SEARCHING_JSON:
-                        if (isJsonHeader(bytes))
-                        {
-                            state = STATE_READING_JSON;
-                        }
-                        break;
-
-                    case STATE_READING_JSON:
-                        if (isBinHeader(bytes))
-                        {
-                            state = STATE_READING_BIN;
-                        }
-                        else
-                        {
-                            jsonData.push(...bytes);
-                        }
-                        break;
-
-                    case STATE_READING_BIN:
-                        binData.push(...bytes);
-                        break;
-
-                    default:
-                        throw Error;
-                }
-            }
+            data.push(...value);
         }
 
-        return {
-            jsonData,
-            binData
-        };
+        const jsonLength = toUint32(data.slice(12, 16));
+        const jsonStart = 20;
+        const jsonEnd = jsonStart + jsonLength;
+
+        jsonData.push(data.slice(jsonStart, jsonEnd));
+
+        const binLength = toUint32(data.slice(jsonEnd, jsonEnd + 4));
+        const binStart = jsonEnd + 8;
+        const binEnd = binStart + binLength;
+
+        binData.push(data.slice(binStart, binEnd));
     }
 };
 
-const isJsonHeader = (bytes) => (
-    bytes[0] === 74 &&
-    bytes[1] === 83 &&
-    bytes[2] === 79 &&
-    bytes[3] === 78
+const toUint32 = (bytes) => (
+    ((bytes[3] << 24) + (bytes[2] << 16) + (bytes[1] << 8) + bytes[0]) >>> 0
 );
-
-const isBinHeader = (bytes) => (
-    bytes[0] === 66 &&
-    bytes[1] === 73 &&
-    bytes[2] === 78 &&
-    bytes[3] === 0
-);
-
-const STATE_SEARCHING_JSON = 0;
-const STATE_READING_JSON = 1;
-const STATE_READING_BIN = 2;
