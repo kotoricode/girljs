@@ -72,31 +72,43 @@ export class Program
     {
         this.modelId = modelId;
 
-        Model.load().then(() =>
+        if (Model.isLoaded)
         {
-            const attributes = Model.getAttributes(modelId);
-            const bufferId = Model.getBufferId(modelId);
-
-            VertexArray.bind(this.vao);
-            Buffer.bind(bufferId);
-
-            for (const [name, attribSize] of this.aLayout)
+            this.setModelValues();
+        }
+        else
+        {
+            Model.load().then(() =>
             {
-                const pos = gl.getAttribLocation(this.glProgram, name);
-                gl.enableVertexAttribArray(pos);
-                gl.vertexAttribPointer(
-                    pos,
-                    attribSize,
-                    $.FLOAT,
-                    false,
-                    0,
-                    attributes.get(name)
-                );
-            }
+                this.setModelValues();
+            });
+        }
+    }
 
-            Buffer.unbind(bufferId);
-            VertexArray.unbind();
-        });
+    setModelValues()
+    {
+        const attributes = Model.getAttributes(this.modelId);
+        const bufferId = Model.getBufferId(this.modelId);
+
+        VertexArray.bind(this.vao);
+        Buffer.bind(bufferId);
+
+        for (const [name, attribSize] of this.aLayout)
+        {
+            const pos = gl.getAttribLocation(this.glProgram, name);
+            gl.enableVertexAttribArray(pos);
+            gl.vertexAttribPointer(
+                pos,
+                attribSize,
+                $.FLOAT,
+                false,
+                0,
+                attributes.get(name)
+            );
+        }
+
+        Buffer.unbind(bufferId);
+        VertexArray.unbind();
     }
 
     setUniforms()

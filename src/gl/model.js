@@ -128,6 +128,7 @@ class ModelData
 }
 
 export const Model = {
+    isLoaded: false,
     getAttributes(modelId)
     {
         return models.get(modelId).attributes;
@@ -154,34 +155,20 @@ export const Model = {
     },
     load()
     {
-        return new Promise((resolve) =>
+        if (!loadPromise)
         {
-            if (isLoaded)
+            loadPromise = new Promise((resolve) =>
             {
-                resolve();
-            }
-            else
-            {
-                resolvers.add(resolve);
-
-                if (!isLoading)
+                window.setTimeout(() =>
                 {
-                    isLoading = true;
-                    window.setTimeout(() =>
-                    {
-                        buildModelData();
+                    buildModelData();
+                    Model.isLoaded = true;
+                    resolve();
+                }, 2000);
+            });
+        }
 
-                        for (const resolver of resolvers)
-                        {
-                            resolver();
-                        }
-
-                        isLoaded = 2;
-                        resolvers.clear();
-                    }, 2000);
-                }
-            }
-        });
+        return loadPromise;
     }
 };
 
@@ -319,6 +306,4 @@ const modelTex = new SafeMap([
 ]);
 
 const models = new SafeMap();
-const resolvers = new SafeSet();
-let isLoaded = false;
-let isLoading = false;
+let loadPromise;
