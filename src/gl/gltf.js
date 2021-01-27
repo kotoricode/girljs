@@ -21,29 +21,34 @@ const compSizes = new SafeMap([
     ["MAT4", 16],
 ]);
 
-export class Gltf
-{
-    constructor(meshOffset, uvOffset)
+export const Gltf = {
+    async parse(blob)
     {
-        this.meshOffset = meshOffset;
-        this.uvOffset = uvOffset;
-    }
+        const bytes = [];
+        const stream = blob.stream();
+        const reader = stream.getReader();
+        let offset = 0;
 
-    static async parse(blob)
-    {
-        const process = async(data) =>
+        let state = STATE_SEARCHING_JSON;
+
+        const jsonData = [];
+        const binData = [];
+
+        while (true)
         {
-            if (data.done)
+            const { done, value } = await reader.read();
+
+            if (done)
             {
-                return true;
+                break;
             }
 
-            while (offset < data.value.length)
+            while (offset < value.length)
             {
-                bytes[0] = data.value[offset++];
-                bytes[1] = data.value[offset++];
-                bytes[2] = data.value[offset++];
-                bytes[3] = data.value[offset++];
+                bytes[0] = value[offset++];
+                bytes[1] = value[offset++];
+                bytes[2] = value[offset++];
+                bytes[3] = value[offset++];
 
                 switch (state)
                 {
@@ -53,6 +58,7 @@ export class Gltf
                             state = STATE_READING_JSON;
                         }
                         break;
+
                     case STATE_READING_JSON:
                         if (isBinHeader(bytes))
                         {
@@ -63,39 +69,23 @@ export class Gltf
                             jsonData.push(...bytes);
                         }
                         break;
+
                     case STATE_READING_BIN:
                         binData.push(...bytes);
                         break;
+
                     default:
                         throw Error;
                 }
             }
-
-            return data.done;
-        };
-
-        const bytes = [];
-        const stream = blob.stream();
-        const reader = stream.getReader();
-        let isFullyRead = false;
-        let offset = 0;
-
-        let state = STATE_SEARCHING_JSON;
-
-        const jsonData = [];
-        const binData = [];
-
-        while (!isFullyRead)
-        {
-            isFullyRead = await reader.read().then(process);
         }
 
-        console.log(jsonData);
-        console.log(binData);
-
-        return "lol";
+        return {
+            jsonData,
+            binData
+        };
     }
-}
+};
 
 const isJsonHeader = (bytes) => (
     bytes[0] === 74 &&
