@@ -5,7 +5,11 @@ export const Debug = {
     getProgram()
     {
         return program;
+    },
+    init()
+    {
+        program = new Program($.PRO_COLOR, $.MOD_DEBUG);
     }
 };
 
-const program = new Program($.PRO_COLOR, $.MOD_DEBUG);
+let program;

@@ -172,6 +172,7 @@ export const Model = {
 
             window.setTimeout(() =>
             {
+                buildModelData();
                 resolve();
             }, 400);
         });
@@ -236,6 +237,27 @@ const buildModelData = () =>
         $.BUF_ARR_MODEL,
         new SettableFloat32Array(modelData)
     );
+
+    /*--------------------------------------------------------------------------
+        Debug
+    --------------------------------------------------------------------------*/
+    const debugData = [];
+    const mesh = meshes.get(MSH_DEBUG);
+
+    models.set($.MOD_DEBUG, new ModelData(
+        new SafeMap([
+            [$.A_XYZ, pushData(debugData, mesh)]
+        ]),
+        $.BUF_ARR_DEBUG,
+        null,
+        null,
+        mesh.length / 3
+    ));
+
+    Buffer.setData(
+        $.BUF_ARR_DEBUG,
+        new SettableFloat32Array(debugData)
+    );
 };
 
 /*------------------------------------------------------------------------------
@@ -265,26 +287,3 @@ const modelDef = [
 ];
 
 const models = new SafeMap();
-
-buildModelData();
-
-/*------------------------------------------------------------------------------
-    Debug
-------------------------------------------------------------------------------*/
-const debugData = [];
-const mesh = meshes.get(MSH_DEBUG);
-
-models.set($.MOD_DEBUG, new ModelData(
-    new SafeMap([
-        [$.A_XYZ, pushData(debugData, mesh)]
-    ]),
-    $.BUF_ARR_DEBUG,
-    null,
-    null,
-    mesh.length / 3
-));
-
-Buffer.setData(
-    $.BUF_ARR_DEBUG,
-    new SettableFloat32Array(debugData)
-);

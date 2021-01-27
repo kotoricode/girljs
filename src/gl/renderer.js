@@ -11,37 +11,43 @@ import { Model } from "./model";
 import { Dialogue } from "../dialogue";
 import { Scene } from "../scene";
 
-export const render = () =>
-{
-    for (const [drawable] of Scene.all(Drawable))
+export const Renderer = {
+    init()
     {
-        if (drawable.isVisible)
+        imageProgram = new Program($.PRO_IMAGE, $.MOD_FB);
+    },
+    render()
+    {
+        for (const [drawable] of Scene.all(Drawable))
         {
-            queues.get(drawable.priority).add(drawable);
+            if (drawable.isVisible)
+            {
+                queues.get(drawable.priority).add(drawable);
+            }
         }
-    }
 
-    Framebuffer.bind();
+        Framebuffer.bind();
 
-    gl.clear($.COLOR_BUFFER_BIT | $.DEPTH_BUFFER_BIT);
-    gl.clearColor(0.6, 0.6, 0.6, 1.0);
+        gl.clear($.COLOR_BUFFER_BIT | $.DEPTH_BUFFER_BIT);
+        gl.clearColor(0.6, 0.6, 0.6, 1.0);
 
-    gl.enable($.DEPTH_TEST);
-    drawQueue($.QUE_BACKGROUND);
+        gl.enable($.DEPTH_TEST);
+        drawQueue($.QUE_BACKGROUND);
 
-    gl.disable($.DEPTH_TEST);
-    drawQueue($.QUE_SPRITE);
-    drawQueue($.QUE_UI);
+        gl.disable($.DEPTH_TEST);
+        drawQueue($.QUE_SPRITE);
+        drawQueue($.QUE_UI);
 
-    Framebuffer.unbind();
+        Framebuffer.unbind();
 
-    draw(imageProgram);
-    renderText();
-    renderDebug();
+        draw(imageProgram);
+        renderText();
+        renderDebug();
 
-    for (const queue of queues.values())
-    {
-        queue.clear();
+        for (const queue of queues.values())
+        {
+            queue.clear();
+        }
     }
 };
 
@@ -97,7 +103,7 @@ gl.disable($.CULL_FACE);
 gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
-const imageProgram = new Program($.PRO_IMAGE, $.MOD_FB);
+let imageProgram;
 
 Framebuffer.prepare();
 
