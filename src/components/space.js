@@ -14,13 +14,9 @@ export class Space extends Component
         this.world = new Transform();
     }
 
-    setParent(space)
+    attachTo(parent)
     {
-        this.parent = space;
-    }
-
-    addChild(space)
-    {
-        this.children.add(space);
+        this.parent = parent;
+        parent.children.add(this);
     }
 }

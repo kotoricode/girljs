@@ -21,42 +21,49 @@ const compSizes = new SafeMap([
     ["MAT4", 16],
 ]);
 
-export const Gltf = {
+export const Glb = {
     async parse(blob)
     {
         const stream = blob.stream();
         const reader = stream.getReader();
-
         const data = [];
-        const jsonData = [];
-        const binData = [];
 
         while (true)
         {
-            const { done, value } = await reader.read();
+            const chunk = await reader.read();
 
-            if (done)
+            if (chunk.done)
             {
                 break;
             }
 
-            data.push(...value);
+            data.push(...chunk.value);
         }
 
-        const jsonLength = toUint(data.slice(12, 16));
-        const jsonStart = 20;
+        // skip 4 bytes magic, 4 bytes version, 4 bytes length
+        const jsonLengthBytes = data.slice(12, 16);
+        const jsonLength = toUint(jsonLengthBytes);
+        const jsonStart = 20; // skip 4 bytes JSON header
         const jsonEnd = jsonStart + jsonLength;
 
-        jsonData.push(data.slice(jsonStart, jsonEnd));
+        const jsonBytes = data.slice(jsonStart, jsonEnd);
+        const json = JSON.parse(String.fromCharCode(...jsonBytes));
 
-        const binLength = toUint(data.slice(jsonEnd, jsonEnd + 4));
-        const binStart = jsonEnd + 8;
+        const binLengthBytes = data.slice(jsonEnd, jsonEnd + 4);
+        const binLength = toUint(binLengthBytes);
+        const binStart = jsonEnd + 8; // skip 4 bytes BIN\0 header
         const binEnd = binStart + binLength;
 
-        binData.push(data.slice(binStart, binEnd));
+        const bin = data.slice(binStart, binEnd);
 
-        console.log(jsonData);
-        console.log(binData);
+        for (let i = 0; i < 900000000;)
+        {
+            i++;
+        }
+
+        console.log("parse done");
+
+        return { json, bin };
     }
 };
 

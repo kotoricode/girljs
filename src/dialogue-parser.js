@@ -10,5 +10,8 @@ const test = [
 ];
 
 export const DialogueParser = {
+    parse(data)
+    {
 
+    }
 };

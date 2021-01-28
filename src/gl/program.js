@@ -68,21 +68,16 @@ export class Program
         return this.uStaging.has(uId);
     }
 
-    setModel(modelId)
+    async setModel(modelId)
     {
         this.modelId = modelId;
 
-        if (Model.isLoaded)
+        if (!Model.isLoaded)
         {
-            this.setModelValues();
+            await Model.load();
         }
-        else
-        {
-            Model.load().then(() =>
-            {
-                this.setModelValues();
-            });
-        }
+
+        this.setModelValues();
     }
 
     setModelValues()

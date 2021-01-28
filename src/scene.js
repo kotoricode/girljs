@@ -136,8 +136,7 @@ const addEntity = (entity, parentId) =>
         const parentSpace = parent.getComponent(Space);
         const space = entity.getComponent(Space);
 
-        parentSpace.addChild(space);
-        space.setParent(parentSpace);
+        space.attachTo(parentSpace);
 
         entities.set(entity.id, entity);
         dirty.add(space);

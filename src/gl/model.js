@@ -2,7 +2,7 @@ import * as $ from "../const";
 import { SafeMap, SettableFloat32Array } from "../utility";
 import { Buffer } from "./buffer";
 import { Texture } from "./texture";
-import { Gltf } from "./gltf";
+import { Glb } from "./glb";
 
 /*------------------------------------------------------------------------------
     Consts
@@ -149,26 +149,28 @@ export const Model = {
     {
         if (!loadPromise)
         {
-            loadPromise = new Promise((resolve) =>
+            loadPromise = (async() =>
             {
-                window.fetch("/data/mesh.glb").then(async(response) =>
-                {
-                    const blob = await response.blob();
-                    const data = await Gltf.parse(blob);
-                    console.log(data);
-                });
-
-                window.setTimeout(() =>
-                {
-                    buildModelData();
-                    Model.isLoaded = true;
-                    resolve();
-                }, 2000);
-            });
+                await this.downloadMeshes(["mesh"]);
+                console.log("building models");
+                buildModelData();
+                Model.isLoaded = true;
+            })();
         }
 
         return loadPromise;
-    }
+    },
+    async downloadMeshes(fileNames)
+    {
+        return Promise.all(
+            fileNames.map(fileName => (async() =>
+            {
+                const response = await window.fetch(`/data/${fileName}.glb`);
+                const blob = await response.blob();
+                const data = await Glb.parse(blob);
+            })())
+        );
+    },
 };
 
 const pushData = (buffer, data) =>
