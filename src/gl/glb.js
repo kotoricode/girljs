@@ -60,85 +60,69 @@ export const Glb = {
         const viewUv = meta.bufferViews[1]; // 4 byte float
         const viewIdx = meta.bufferViews[2]; // 2 byte ushort
 
-        //console.log(viewMesh);
-        //console.log(viewUv);
-        //console.log(viewIdx);
+        const idx = new Array(viewIdx.byteLength / 6);
 
-        const xyz = [];
-        const uv = [];
-        const idx = [];
+        const objXyz = {
+            f32: new Float32Array(9 * idx.length),
+            array: new Array(viewMesh.byteLength / 12)
+        };
 
-        for (let i = 0; i < viewMesh.byteLength;)
+        const objUv = {
+            f32: new Float32Array(6 * idx.length),
+            array: new Array(viewUv.byteLength / 8)
+        };
+
+        for (let i = 0, j = 0; i < viewMesh.byteLength; i += 12)
         {
-            const arr = [
-                [bin[i++], bin[i++], bin[i++], bin[i++]],
-                [bin[i++], bin[i++], bin[i++], bin[i++]],
-                [bin[i++], bin[i++], bin[i++], bin[i++]]
+            objXyz.array[j++] = [
+                toUint(bin.subarray(i, i+4)),
+                toUint(bin.subarray(i+4, i+8)),
+                toUint(bin.subarray(i+8, i+12))
             ];
-
-            xyz.push(arr);
         }
 
-        for (let i = viewUv.byteOffset; i < viewUv.byteOffset + viewUv.byteLength;)
-        {
-            const arr = [
-                [bin[i++], bin[i++], bin[i++], bin[i++]],
-                [bin[i++], bin[i++], bin[i++], bin[i++]]
-            ];
+        const viewUvEnd = viewUv.byteOffset + viewUv.byteLength;
 
-            uv.push(arr);
+        for (let i = viewUv.byteOffset, j = 0; i < viewUvEnd; i += 8)
+        {
+            objUv.array[j++] = [
+                toUint(bin.subarray(i, i+4)),
+                toUint(bin.subarray(i+4, i+8))
+            ];
         }
 
-        for (let i = viewIdx.byteOffset; i < viewIdx.byteLength + viewIdx.byteOffset;)
-        {
-            const arr = [
-                toUint([bin[i++], bin[i++]]),
-                toUint([bin[i++], bin[i++]]),
-                toUint([bin[i++], bin[i++]])
-            ];
+        const viewIdxEnd = viewIdx.byteLength + viewIdx.byteOffset;
 
-            idx.push(arr);
+        for (let i = viewIdx.byteOffset, j = 0; i < viewIdxEnd; i += 6)
+        {
+            idx[j++] = [
+                toUint(bin.subarray(i, i+2)),
+                toUint(bin.subarray(i+2, i+4)),
+                toUint(bin.subarray(i+4, i+6))
+            ];
         }
 
-        const floatXyz = new Float32Array(3 * 3 * idx.length);
-        const floatXyzView = new DataView(floatXyz.buffer);
-        let byteOffset = 0;
-
-        for (const verticesIdx of idx)
+        for (const obj of [objXyz, objUv])
         {
-            for (const vertexIdx of verticesIdx)
+            let byteOffset = 0;
+            const view = new DataView(obj.f32.buffer);
+
+            for (const verticesIdx of idx)
             {
-                for (const coord of xyz[vertexIdx])
+                for (const vertexIdx of verticesIdx)
                 {
-                    for (const byte of coord)
+                    for (const coord of obj.array[vertexIdx])
                     {
-                        floatXyzView.setUint8(byteOffset++, byte);
-                    }
-                }
-            }
-        }
-
-        const floatUv = new Float32Array(2 * 3 * idx.length);
-        const floatUvView = new DataView(floatUv.buffer);
-        byteOffset = 0;
-
-        for (const verticesIdx of idx)
-        {
-            for (const vertexIdx of verticesIdx)
-            {
-                for (const coord of uv[vertexIdx])
-                {
-                    for (const byte of coord)
-                    {
-                        floatUvView.setUint8(byteOffset++, byte);
+                        view.setUint32(byteOffset, coord, true);
+                        byteOffset += Float32Array.BYTES_PER_ELEMENT;
                     }
                 }
             }
         }
 
         return {
-            floatXyz: Array.from(floatXyz),
-            floatUv: Array.from(floatUv)
+            floatXyz: Array.from(objXyz.f32),
+            floatUv: Array.from(objUv.f32)
         };
     }
 };
