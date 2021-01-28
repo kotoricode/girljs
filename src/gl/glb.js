@@ -121,8 +121,8 @@ export const Glb = {
         }
 
         return {
-            floatXyz: Array.from(objXyz.f32),
-            floatUv: Array.from(objUv.f32)
+            mesh: Array.from(objXyz.f32),
+            uv: Array.from(objUv.f32)
         };
     }
 };
