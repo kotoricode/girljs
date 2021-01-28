@@ -1,6 +1,7 @@
 // https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md
-
 import { SafeMap } from "../utility";
+
+const toUint = (bytes) => bytes.reduce((a, b, i) => a + (b << i*8)) >>> 0;
 
 const byteSizes = new SafeMap([
     ["5120", 1], // byte
@@ -21,50 +22,40 @@ const compSizes = new SafeMap([
     ["MAT4", 16],
 ]);
 
+const decoder = new TextDecoder();
+
 export const Glb = {
     async parse(blob)
     {
         const stream = blob.stream();
         const reader = stream.getReader();
-        const data = [];
+        const data = new Uint8Array(blob.size);
+        let offset = 0;
 
-        while (true)
+        while (offset !== blob.size)
         {
-            const chunk = await reader.read();
-
-            if (chunk.done)
-            {
-                break;
-            }
-
-            data.push(...chunk.value);
+            const { value } = await reader.read();
+            data.set(value, offset);
+            offset += value.byteLength;
         }
 
         // skip 4 bytes magic, 4 bytes version, 4 bytes length
-        const jsonLengthBytes = data.slice(12, 16);
+        const jsonLengthBytes = data.subarray(12, 16);
         const jsonLength = toUint(jsonLengthBytes);
         const jsonStart = 20; // skip 4 bytes JSON header
         const jsonEnd = jsonStart + jsonLength;
 
-        const jsonBytes = data.slice(jsonStart, jsonEnd);
-        const json = JSON.parse(String.fromCharCode(...jsonBytes));
+        const jsonBytes = data.subarray(jsonStart, jsonEnd);
+        const jsonString = decoder.decode(jsonBytes);
+        const meta = JSON.parse(jsonString);
 
-        const binLengthBytes = data.slice(jsonEnd, jsonEnd + 4);
+        const binLengthBytes = data.subarray(jsonEnd, jsonEnd + 4);
         const binLength = toUint(binLengthBytes);
         const binStart = jsonEnd + 8; // skip 4 bytes BIN\0 header
         const binEnd = binStart + binLength;
 
-        const bin = data.slice(binStart, binEnd);
+        const bin = data.subarray(binStart, binEnd);
 
-        for (let i = 0; i < 900000000;)
-        {
-            i++;
-        }
-
-        console.log("parse done");
-
-        return { json, bin };
+        return { meta, bin };
     }
 };
-
-const toUint = (bytes) => bytes.reduce((a, b, i) => a + (b << i*8)) >>> 0;
