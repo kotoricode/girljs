@@ -56,8 +56,89 @@ export const Glb = {
 
         const bin = data.subarray(binStart, binEnd);
 
-        //for (let i = 0; i < 900000000;) i++;
+        const viewMesh = meta.bufferViews[0]; // 4 byte float
+        const viewUv = meta.bufferViews[1]; // 4 byte float
+        const viewIdx = meta.bufferViews[2]; // 2 byte ushort
 
-        return { meta, bin };
+        //console.log(viewMesh);
+        //console.log(viewUv);
+        //console.log(viewIdx);
+
+        const xyz = [];
+        const uv = [];
+        const idx = [];
+
+        for (let i = 0; i < viewMesh.byteLength;)
+        {
+            const arr = [
+                [bin[i++], bin[i++], bin[i++], bin[i++]],
+                [bin[i++], bin[i++], bin[i++], bin[i++]],
+                [bin[i++], bin[i++], bin[i++], bin[i++]]
+            ];
+
+            xyz.push(arr);
+        }
+
+        for (let i = viewUv.byteOffset; i < viewUv.byteOffset + viewUv.byteLength;)
+        {
+            const arr = [
+                [bin[i++], bin[i++], bin[i++], bin[i++]],
+                [bin[i++], bin[i++], bin[i++], bin[i++]]
+            ];
+
+            uv.push(arr);
+        }
+
+        for (let i = viewIdx.byteOffset; i < viewIdx.byteLength + viewIdx.byteOffset;)
+        {
+            const arr = [
+                toUint([bin[i++], bin[i++]]),
+                toUint([bin[i++], bin[i++]]),
+                toUint([bin[i++], bin[i++]])
+            ];
+
+            idx.push(arr);
+        }
+
+        const floatXyz = new Float32Array(3 * 3 * idx.length);
+        const floatXyzView = new DataView(floatXyz.buffer);
+        let byteOffset = 0;
+
+        for (const verticesIdx of idx)
+        {
+            for (const vertexIdx of verticesIdx)
+            {
+                for (const coord of xyz[vertexIdx])
+                {
+                    for (const byte of coord)
+                    {
+                        floatXyzView.setUint8(byteOffset++, byte);
+                    }
+                }
+            }
+        }
+
+        const floatUv = new Float32Array(2 * 3 * idx.length);
+        const floatUvView = new DataView(floatUv.buffer);
+        byteOffset = 0;
+
+        for (const verticesIdx of idx)
+        {
+            for (const vertexIdx of verticesIdx)
+            {
+                for (const coord of uv[vertexIdx])
+                {
+                    for (const byte of coord)
+                    {
+                        floatUvView.setUint8(byteOffset++, byte);
+                    }
+                }
+            }
+        }
+
+        return {
+            floatXyz: Array.from(floatXyz),
+            floatUv: Array.from(floatUv)
+        };
     }
 };

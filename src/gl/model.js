@@ -188,12 +188,12 @@ export const Model = {
                 const blob = await response.blob();
                 const data = await Glb.parse(blob);
 
-                const viewMesh = data.meta.bufferViews[0]; // 4 byte float
-                const viewUv = data.meta.bufferViews[1]; // 4 byte float
-                const viewIdx = data.meta.bufferViews[2]; // 2 byte ushort
+                const [meshId, uvId] = urls.get(fileName);
 
-                console.log(data.meta);
+                console.log(data);
 
+                meshes.update(meshId, [...data.floatXyz]);
+                uvs.update(uvId, [...data.floatUv]);
             })())
         );
     },

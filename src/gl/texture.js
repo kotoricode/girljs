@@ -94,7 +94,7 @@ const imageTextures = new SafeMap();
 const textures = new SafeMap([
     [$.TEX_GIRL, createImageTexture("girl.png")],
     [$.TEX_BRAID, createImageTexture("braid.png")],
-    [$.TEX_TEXTURE, createImageTexture("texture.png")],
+    [$.TEX_TEXTURE, createImageTexture("monkey.png")],
     [$.TEX_FB, createFbTexture()],
     [$.TEX_UI_TEXT, createTexture()],
     [$.TEX_UI_BUBBLE, createTexture()]
