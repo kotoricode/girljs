@@ -56,6 +56,8 @@ export const Glb = {
 
         const bin = data.subarray(binStart, binEnd);
 
+        //for (let i = 0; i < 900000000;) i++;
+
         return { meta, bin };
     }
 };

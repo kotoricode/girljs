@@ -89,7 +89,7 @@ const meshes = new SafeMap([
     [MSH_PLAYER, meshXy(-0.4, 0.4, 0, 1.5)],
     [MSH_AV_PLAYER, meshXyScreen(187, 600)],
     [MSH_SCREEN, meshXyScreen($.RES_WIDTH, $.RES_HEIGHT)],
-    [MSH_TEST, [-1.000000, 1.000000, -1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, -1.000000, 1.000000, 1.000000, 1.000000, -1.000000, -1.000000, 1.000000, 1.000000, -1.000000, 1.000000, -1.000000, 1.000000, 1.000000, -1.000000, -1.000000, -1.000000, -1.000000, -1.000000, 1.000000, 1.000000, -1.000000, -1.000000, -1.000000, -1.000000, 1.000000, -1.000000, -1.000000, -1.000000, 1.000000, 1.000000, -1.000000, 1.000000, -1.000000, 1.000000, 1.000000, -1.000000, -1.000000, -1.000000, 1.000000, -1.000000, 1.000000, -1.000000, -1.000000, -1.000000, -1.000000, -1.000000, -1.000000, 1.000000, -1.000000, -1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, -1.000000, 1.000000, 1.000000, -1.000000, -1.000000, 1.000000, -1.000000, 1.000000, 1.000000, -1.000000, 1.000000, -1.000000, -1.000000, -1.000000, -1.000000, 1.000000, -1.000000, -1.000000, 1.000000, -1.000000, 1.000000, -1.000000, -1.000000, 1.000000, 1.000000, 1.000000, -1.000000, 1.000000, 1.000000, 1.000000, 1.000000, -1.000000, 1.000000, -1.000000, 1.000000, -1.000000, 1.000000, 1.000000, -1.000000, 1.000000, -1.000000, -1.000000, ]]
+    [MSH_TEST, [-1, 1, -1, 1, 1, 1, 1, 1, -1, 1, 1, 1, -1, -1, 1, 1, -1, 1., -1., 1., 1., -1., -1., -1., -1., -1., 1., 1., -1., -1., -1., -1., 1., -1., -1., -1., 1.000000, 1.000000, -1.000000, 1.000000, -1.000000, 1.000000, 1.000000, -1.000000, -1.000000, -1.000000, 1.000000, -1.000000, 1.000000, -1.000000, -1.000000, -1.000000, -1.000000, -1.000000, -1.000000, 1.000000, -1.000000, -1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, 1.000000, -1.000000, 1.000000, 1.000000, -1, -1, 1, -1, 1, 1, -1, 1, -1, -1, -1.000000, -1.000000, 1.000000, -1.000000, -1.000000, 1.000000, -1.000000, 1.000000, -1.000000, -1.000000, 1.000000, 1.000000, 1.000000, -1.000000, 1.000000, 1.000000, 1.000000, 1.000000, -1.000000, 1.000000, -1, 1, -1, 1, 1, -1, 1, -1, -1, ]]
 ]);
 
 const uvs = new SafeMap([
@@ -112,6 +112,15 @@ const uvs = new SafeMap([
     [UV_SCREEN, [0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]],
     [UV_TEST,  [0.875000, 0.500000, 0.625000, 0.750000, 0.625000, 0.500000, 0.625000, 0.750000, 0.375000, 1.000000, 0.375000, 0.750000, 0.625000, 0.000000, 0.375000, 0.250000, 0.375000, 0.000000, 0.375000, 0.500000, 0.125000, 0.750000, 0.125000, 0.500000, 0.625000, 0.500000, 0.375000, 0.750000, 0.375000, 0.500000, 0.625000, 0.250000, 0.375000, 0.500000, 0.375000, 0.250000, 0.875000, 0.500000, 0.875000, 0.750000, 0.625000, 0.750000, 0.625000, 0.750000, 0.625000, 1.000000, 0.375000, 1.000000, 0.625000, 0.000000, 0.625000, 0.250000, 0.375000, 0.250000, 0.375000, 0.500000, 0.375000, 0.750000, 0.125000, 0.750000, 0.625000, 0.500000, 0.625000, 0.750000, 0.375000, 0.750000, 0.625000, 0.250000, 0.625000, 0.500000, 0.375000, 0.500000, ]]
 ]);
+
+const urls = new SafeMap([
+    ["/data/mesh.glb", [MSH_TEST, UV_TEST]]
+]);
+
+const modelData = [];
+const debugData = [];
+const models = new SafeMap();
+let loadPromise;
 
 /*------------------------------------------------------------------------------
     Model
@@ -160,9 +169,10 @@ export const Model = {
         {
             loadPromise = (async() =>
             {
-                await this.downloadMeshes(["mesh"]);
+                await this.downloadMeshes(Array.from(urls.keys()));
                 console.log("building models");
                 buildModelData();
+                sendToBuffer();
                 Model.isLoaded = true;
             })();
         }
@@ -174,11 +184,16 @@ export const Model = {
         return Promise.all(
             fileNames.map(fileName => (async() =>
             {
-                const response = await window.fetch(`/data/${fileName}.glb`);
+                const response = await window.fetch(fileName);
                 const blob = await response.blob();
                 const data = await Glb.parse(blob);
 
-                console.log(data);
+                const viewMesh = data.meta.bufferViews[0]; // 4 byte float
+                const viewUv = data.meta.bufferViews[1]; // 4 byte float
+                const viewIdx = data.meta.bufferViews[2]; // 2 byte ushort
+
+                console.log(data.meta);
+
             })())
         );
     },
@@ -192,6 +207,19 @@ const pushData = (buffer, data) =>
     buffer.push(...data);
 
     return offset;
+};
+
+const sendToBuffer = () =>
+{
+    Buffer.setData(
+        $.BUF_ARR_MODEL,
+        new SettableFloat32Array(modelData)
+    );
+
+    Buffer.setData(
+        $.BUF_ARR_DEBUG,
+        new SettableFloat32Array(debugData)
+    );
 };
 
 const buildModelData = () =>
@@ -218,8 +246,6 @@ const buildModelData = () =>
         $.MOD_TEXT,      MSH_SCREEN,    UV_SCREEN,
         $.MOD_BUBBLE,    MSH_SCREEN,    UV_SCREEN,
     ];
-
-    const modelData = [];
 
     const xyzOffsets = new SafeMap();
     const uvOffsets = new SafeMap();
@@ -262,15 +288,9 @@ const buildModelData = () =>
         ));
     }
 
-    Buffer.setData(
-        $.BUF_ARR_MODEL,
-        new SettableFloat32Array(modelData)
-    );
-
     /*--------------------------------------------------------------------------
         Debug
     --------------------------------------------------------------------------*/
-    const debugData = [];
     const mesh = meshes.get(MSH_DEBUG);
 
     const debugAttrib = new SafeMap([
@@ -284,11 +304,6 @@ const buildModelData = () =>
         null,
         mesh.length / 3
     ));
-
-    Buffer.setData(
-        $.BUF_ARR_DEBUG,
-        new SettableFloat32Array(debugData)
-    );
 };
 
 const modelTex = new SafeMap([
@@ -313,6 +328,3 @@ const modelTex = new SafeMap([
     [$.MOD_TEXT,     $.TEX_UI_TEXT],
     [$.MOD_BUBBLE,   $.TEX_UI_BUBBLE]
 ]);
-
-const models = new SafeMap();
-let loadPromise;
