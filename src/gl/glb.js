@@ -67,4 +67,4 @@ export const Glb = {
     }
 };
 
-const toUint = (bytes) => bytes.reduce((a, b, i) => a += b << (i * 8)) >>> 0;
+const toUint = (bytes) => bytes.reduce((a, b, i) => a + (b << i*8)) >>> 0;
