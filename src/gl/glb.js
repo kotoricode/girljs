@@ -1,35 +1,21 @@
 // https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md
+
 const toUint = (bytes) => bytes.reduce((a, b, i) => a + (b << i*8)) >>> 0;
 
 const decoder = new TextDecoder();
 
-const test = (bin, view, arr, range, sizeOf) =>
-{
-    for (let i = view.byteOffset, j = 0;
-        i < (view.byteLength + view.byteOffset);
-        i += (range.length * sizeOf))
-    {
-        arr[j++] = range.map(
-            k => toUint(bin.subarray(
-                i + k * sizeOf,
-                i + (k+1) * sizeOf
-            ))
-        );
-    }
-};
-
-class Test
+class GlbData
 {
     constructor(bin, view, range, sizeOf)
     {
-        this.data = new Array(view.byteLength / (sizeOf * range.length));
+        this.data = new Array(view.byteLength / (sizeOf * range));
         this.range = range;
+        const viewEnd = view.byteLength + view.byteOffset;
+        const increment = range * sizeOf;
 
-        for (let i = view.byteOffset, j = 0;
-            i < (view.byteLength + view.byteOffset);
-            i += (range.length * sizeOf))
+        for (let i = view.byteOffset, j = 0; i < viewEnd; i += increment)
         {
-            this.data[j++] = range.map(
+            this.data[j++] = [...Array(range).keys()].map(
                 k => toUint(bin.subarray(
                     i + k * sizeOf,
                     i + (k+1) * sizeOf
@@ -42,6 +28,9 @@ class Test
 export const Glb = {
     async parse(blob)
     {
+        /*----------------------------------------------------------------------
+            Read glb
+        ----------------------------------------------------------------------*/
         const stream = blob.stream();
         const reader = stream.getReader();
         const data = new Uint8Array(blob.size);
@@ -54,39 +43,46 @@ export const Glb = {
             offset += value.byteLength;
         }
 
-        // skip 4 bytes magic, 4 bytes version, 4 bytes length
-        const jsonLengthBytes = data.subarray(12, 16);
-        const jsonLength = toUint(jsonLengthBytes);
-        const jsonStart = 20; // skip 4 bytes JSON header
-        const jsonEnd = jsonStart + jsonLength;
+        /*----------------------------------------------------------------------
+            Get JSON
+        ----------------------------------------------------------------------*/
+        const jsonLenBytes = data.subarray(12, 16); // skip header 12 bytes
+        const jsonLen = toUint(jsonLenBytes);
+        const jsonStart = 20; // skip header 4 bytes
+        const jsonEnd = jsonStart + jsonLen;
 
         const jsonBytes = data.subarray(jsonStart, jsonEnd);
         const jsonString = decoder.decode(jsonBytes);
         const meta = JSON.parse(jsonString);
 
-        const binLengthBytes = data.subarray(jsonEnd, jsonEnd + 4);
-        const binLength = toUint(binLengthBytes);
-        const binStart = jsonEnd + 8; // skip 4 bytes BIN\0 header
-        const binEnd = binStart + binLength;
-
+        /*----------------------------------------------------------------------
+            Get binary
+        ----------------------------------------------------------------------*/
+        const binLenBytes = data.subarray(jsonEnd, jsonEnd + 4);
+        const binLen = toUint(binLenBytes);
+        const binStart = jsonEnd + 8; // skip header 4 bytes
+        const binEnd = binStart + binLen;
         const bin = data.subarray(binStart, binEnd);
 
+        /*----------------------------------------------------------------------
+            Process binary
+        ----------------------------------------------------------------------*/
         const [viewMesh, viewUv, viewIdx] = meta.bufferViews;
 
         const USHORT_BYTES = 2;
         const FLOAT32_BYTES = 4;
-        const RANGE_3 = [0, 1, 2];
-        const RANGE_2 = [0, 1];
+        const RANGE_3 = 3;
+        const RANGE_2 = 2;
         const VEC3 = 3;
 
-        const objXyz = new Test(bin, viewMesh, RANGE_3, FLOAT32_BYTES);
-        const objUv = new Test(bin, viewUv, RANGE_2, FLOAT32_BYTES);
-        const objIdx = new Test(bin, viewIdx, RANGE_3, USHORT_BYTES);
+        const objXyz = new GlbData(bin, viewMesh, RANGE_3, FLOAT32_BYTES);
+        const objUv = new GlbData(bin, viewUv, RANGE_2, FLOAT32_BYTES);
+        const objIdx = new GlbData(bin, viewIdx, RANGE_3, USHORT_BYTES);
 
         for (const obj of [objXyz, objUv])
         {
             let byteOffset = 0;
-            obj.f32 = new Float32Array(objIdx.data.length * (VEC3 * obj.range.length));
+            obj.f32 = new Float32Array(objIdx.data.length * (VEC3 * obj.range));
             const view = new DataView(obj.f32.buffer);
 
             for (const verticesIdx of objIdx.data)
