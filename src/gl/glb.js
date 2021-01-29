@@ -13,9 +13,9 @@ class GlbData
         this.range = range;
         const viewEnd = view.byteLength + view.byteOffset;
 
-        for (let i = view.byteOffset, j = 0; i < viewEnd; i += increment)
+        for (let i = view.byteOffset, j = 0; i < viewEnd; i += increment, j++)
         {
-            this.data[j++] = [...Array(range).keys()].map(
+            this.data[j] = [...Array(range).keys()].map(
                 k => toUint(bin.subarray(
                     i + k * sizeOf,
                     i + (k+1) * sizeOf
