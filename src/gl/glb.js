@@ -8,14 +8,18 @@ class GlbData
 {
     constructor(bin, view, range, sizeOf)
     {
-        const increment = range * sizeOf;
-        this.data = new Array(view.byteLength / increment);
-        this.range = range;
-        const viewEnd = view.byteLength + view.byteOffset;
+        const { byteLength, byteOffset } = view;
 
-        for (let i = view.byteOffset, j = 0; i < viewEnd; i += increment, j++)
+        const increment = range * sizeOf;
+        this.data = new Array(byteLength / increment);
+        this.range = range;
+        const viewEnd = byteLength + byteOffset;
+
+        const rangeArr = [...Array(range).keys()];
+
+        for (let i = byteOffset, j = 0; i < viewEnd; i += increment, j++)
         {
-            this.data[j] = [...Array(range).keys()].map(
+            this.data[j] = rangeArr.map(
                 k => toUint(bin.subarray(
                     i + k * sizeOf,
                     i + (k+1) * sizeOf
@@ -82,7 +86,7 @@ export const Glb = {
         for (const obj of [objXyz, objUv])
         {
             let byteOffset = 0;
-            obj.f32 = new Float32Array(objIdx.data.length * (VEC3 * obj.range));
+            obj.f32 = new Float32Array(objIdx.data.length * VEC3 * obj.range);
             const view = new DataView(obj.f32.buffer);
 
             for (const verticesIdx of objIdx.data)

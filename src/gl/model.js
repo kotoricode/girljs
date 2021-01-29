@@ -112,7 +112,7 @@ const uvs = new SafeMap([
 ]);
 
 const glb = new SafeMap([
-    ["/data/mesh.glb", [MSH_TEST, UV_TEST]]
+    ["/data/monkey.glb", [MSH_TEST, UV_TEST]]
 ]);
 
 const models = new SafeMap();
