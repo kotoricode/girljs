@@ -43,17 +43,14 @@ export class Program
 
     activate()
     {
-        if (this.glProgram !== activeGlProgram)
+        if (this !== activeProgram)
         {
             gl.useProgram(this.glProgram);
-            activeGlProgram = this.glProgram;
+            activeProgram = this;
 
-            if (this.blocks)
+            for (const blockId of this.uBlocks)
             {
-                for (const blockId of this.blocks)
-                {
-                    Buffer.prepareBlock(this.glProgram, blockId);
-                }
+                Buffer.prepareBlock(this.glProgram, blockId);
             }
         }
     }
@@ -194,7 +191,7 @@ const createFragDef = (id, src, ...uData) =>
     return [id, map];
 };
 
-let activeGlProgram;
+let activeProgram;
 
 const DAT_A_LAYOUT = 0;
 const DAT_PROGRAM = 1;

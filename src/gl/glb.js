@@ -52,11 +52,12 @@ export const Glb = {
         ----------------------------------------------------------------------*/
         const jsonLenBytes = data.subarray(12, 16); // skip header 12 bytes
         const jsonLen = toUint(jsonLenBytes);
+
         const jsonStart = 20; // skip header 4 bytes
         const jsonEnd = jsonStart + jsonLen;
+        const json = data.subarray(jsonStart, jsonEnd);
 
-        const jsonBytes = data.subarray(jsonStart, jsonEnd);
-        const jsonString = decoder.decode(jsonBytes);
+        const jsonString = decoder.decode(json);
         const meta = JSON.parse(jsonString);
 
         /*----------------------------------------------------------------------
@@ -64,6 +65,7 @@ export const Glb = {
         ----------------------------------------------------------------------*/
         const binLenBytes = data.subarray(jsonEnd, jsonEnd + 4);
         const binLen = toUint(binLenBytes);
+
         const binStart = jsonEnd + 8; // skip header 4 bytes
         const binEnd = binStart + binLen;
         const bin = data.subarray(binStart, binEnd);
@@ -79,32 +81,32 @@ export const Glb = {
         const RANGE_2 = 2;
         const VEC3 = 3;
 
-        const objXyz = new GlbData(bin, viewMesh, RANGE_3, FLOAT32_BYTES);
-        const objUv = new GlbData(bin, viewUv, RANGE_2, FLOAT32_BYTES);
-        const objIdx = new GlbData(bin, viewIdx, RANGE_3, USHORT_BYTES);
+        const mesh = new GlbData(bin, viewMesh, RANGE_3, FLOAT32_BYTES);
+        const uv = new GlbData(bin, viewUv, RANGE_2, FLOAT32_BYTES);
+        const idx = new GlbData(bin, viewIdx, RANGE_3, USHORT_BYTES);
 
-        for (const obj of [objXyz, objUv])
+        for (const obj of [mesh, uv])
         {
             let byteOffset = 0;
-            obj.f32 = new Float32Array(objIdx.data.length * VEC3 * obj.range);
+            obj.f32 = new Float32Array(idx.data.length * VEC3 * obj.range);
             const view = new DataView(obj.f32.buffer);
 
-            for (const verticesIdx of objIdx.data)
+            for (const verticesIdx of idx.data)
             {
                 for (const vertexIdx of verticesIdx)
                 {
                     for (const coord of obj.data[vertexIdx])
                     {
                         view.setUint32(byteOffset, coord, true);
-                        byteOffset += Float32Array.BYTES_PER_ELEMENT;
+                        byteOffset += FLOAT32_BYTES;
                     }
                 }
             }
         }
 
         return {
-            mesh: Array.from(objXyz.f32),
-            uv: Array.from(objUv.f32)
+            mesh: Array.from(mesh.f32),
+            uv: Array.from(uv.f32)
         };
     }
 };
