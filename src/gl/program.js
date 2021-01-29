@@ -42,14 +42,14 @@ export class Program
 
     activate()
     {
-        if (this !== activeProgram)
+        if (activeProgram !== this.glProgram)
         {
-            gl.useProgram(this.glProgram);
-            activeProgram = this;
+            activeProgram = this.glProgram;
+            gl.useProgram(activeProgram);
 
             for (const blockId of this.uBlocks)
             {
-                Buffer.prepareBlock(this.glProgram, blockId);
+                Buffer.prepareBlock(activeProgram, blockId);
             }
         }
     }
@@ -74,20 +74,13 @@ export class Program
 
     async setModel(modelId)
     {
-        this.modelId = modelId;
-
         if (!Model.isLoaded)
         {
             await Model.load();
         }
 
-        this.setModelValues();
-    }
-
-    setModelValues()
-    {
-        const attributes = Model.getAttributes(this.modelId);
-        const bufferId = Model.getBufferId(this.modelId);
+        const attributes = Model.getAttributes(modelId);
+        const bufferId = Model.getBufferId(modelId);
 
         this.bindVao();
         Buffer.bind(bufferId);
@@ -108,6 +101,8 @@ export class Program
 
         Buffer.unbind(bufferId);
         this.unbindVao();
+
+        this.modelId = modelId;
     }
 
     setUniforms()
@@ -142,6 +137,13 @@ export class Program
         gl.bindVertexArray(activeVao);
     }
 }
+
+let activeProgram;
+let activeVao;
+
+/*------------------------------------------------------------------------------
+    Program creation
+------------------------------------------------------------------------------*/
 
 const createAttachShader = (program, shaderId, shaderDef) =>
 {
@@ -205,9 +207,6 @@ const createFragDef = (id, src, ...uData) =>
 
     return [id, map];
 };
-
-let activeProgram;
-let activeVao;
 
 const DAT_A_LAYOUT = 0;
 const DAT_PROGRAM = 1;
