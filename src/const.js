@@ -10,7 +10,8 @@ export const
     ENT_AV_PLAYER = "av_player",
     ENT_GROUND = "ground",
     ENT_PLAYER = "player",
-    ENT_ROOT = "root";
+    ENT_ROOT = "root",
+    ENT_MONKEY = "monkey";
 
 export const
     SCN_TEST = i++;
@@ -52,6 +53,7 @@ export const
     BUF_ARR_MODEL = i++;
 
 export const
+    MOD_MONKEY = "MOD_MONKEY",
     MOD_BUBBLE = "MOD_BUBBLE",
     MOD_TEXT = "MOD_TEXT",
     MOD_TEST = "MOD_TEST",

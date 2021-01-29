@@ -90,9 +90,9 @@ export const Glb = {
             const f32 = new Float32Array(idx.data.length * VEC3 * obj.rangeLen);
             const view = new DataView(f32.buffer);
 
-            for (const verticesIdx of idx.data)
+            for (const triangleIdx of idx.data)
             {
-                for (const vertexIdx of verticesIdx)
+                for (const vertexIdx of triangleIdx)
                 {
                     for (const coord of obj.data[vertexIdx])
                     {

@@ -93,13 +93,26 @@ const createTest = () => [$.ENT_TEST, new SafeMap([
     [$.BLU_CHILDREN, new SafeSet()]
 ])];
 
+const createMonkey = () => [$.ENT_MONKEY, new SafeMap([
+    [$.BLU_COMPONENTS, new SafeSet([
+        new Space(3, 0, 0),
+        new Drawable(
+            $.PRO_SPRITE,
+            $.QUE_BACKGROUND,
+            $.MOD_MONKEY
+        )
+    ])],
+    [$.BLU_CHILDREN, new SafeSet()]
+])];
+
 export const blueprint = new SafeMap([
     [$.SCN_TEST, () => new SafeMap([
         [$.BLU_ENTITIES, new SafeMap([
             createPlayer(),
             createGround(),
             createTachie(),
-            createTest()
+            createTest(),
+            createMonkey()
         ])],
         [$.BLU_PROCESSES, new SafeSet([
             processMotion,

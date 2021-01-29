@@ -13,6 +13,7 @@ const MSH_GROUND = "MSH_GROUND";
 const MSH_PLAYER = "MSH_PLAYER";
 const MSH_SCREEN = "MSH_SCREEN";
 const MSH_TEST = "MSH_TEST";
+const MSH_MONKEY = "MSH_MONKEY";
 
 const UV_TEST = "UV_TEST";
 const UV_SCREEN = "UV_SCREEN";
@@ -32,6 +33,7 @@ const UV_BRAID_20 = "UV_BRAID_20";
 const UV_BRAID_22 = "UV_BRAID_22";
 const UV_BRAID_24 = "UV_BRAID_24";
 const UV_BRAID_26 = "UV_BRAID_26";
+const UV_MONKEY = "UV_MONKEY";
 
 /*------------------------------------------------------------------------------
     Mesh, UV
@@ -112,7 +114,8 @@ const uvs = new SafeMap([
 ]);
 
 const glb = new SafeMap([
-    ["/data/big_monkey.glb", [MSH_TEST, UV_TEST]]
+    ["/data/mesh.glb", [MSH_TEST, UV_TEST]],
+    ["/data/big_monkey.glb", [MSH_MONKEY, UV_MONKEY]]
 ]);
 
 const models = new SafeMap();
@@ -229,6 +232,7 @@ const buildModelData = () =>
         $.MOD_BRAID_24,  MSH_PLAYER,    UV_BRAID_24,
         $.MOD_BRAID_26,  MSH_PLAYER,    UV_BRAID_26,
         $.MOD_TEST,      MSH_TEST,      UV_TEST,
+        $.MOD_MONKEY,    MSH_MONKEY,    UV_MONKEY,
         $.MOD_FB,        MSH_SCREEN,    UV_SCREEN,
         $.MOD_TEXT,      MSH_SCREEN,    UV_SCREEN,
         $.MOD_BUBBLE,    MSH_SCREEN,    UV_SCREEN,
@@ -300,24 +304,25 @@ const buildModelData = () =>
 };
 
 const modelTex = new SafeMap([
-    [$.MOD_AV_PLAYER,$.TEX_GIRL],
-    [$.MOD_GROUND,   $.TEX_TEXTURE],
-    [$.MOD_BRAID_00, $.TEX_BRAID],
-    [$.MOD_BRAID_02, $.TEX_BRAID],
-    [$.MOD_BRAID_04, $.TEX_BRAID],
-    [$.MOD_BRAID_06, $.TEX_BRAID],
-    [$.MOD_BRAID_08, $.TEX_BRAID],
-    [$.MOD_BRAID_10, $.TEX_BRAID],
-    [$.MOD_BRAID_12, $.TEX_BRAID],
-    [$.MOD_BRAID_14, $.TEX_BRAID],
-    [$.MOD_BRAID_16, $.TEX_BRAID],
-    [$.MOD_BRAID_18, $.TEX_BRAID],
-    [$.MOD_BRAID_20, $.TEX_BRAID],
-    [$.MOD_BRAID_22, $.TEX_BRAID],
-    [$.MOD_BRAID_24, $.TEX_BRAID],
-    [$.MOD_BRAID_26, $.TEX_BRAID],
-    [$.MOD_TEST,     $.TEX_TEXTURE],
-    [$.MOD_FB,       $.TEX_FB],
-    [$.MOD_TEXT,     $.TEX_UI_TEXT],
-    [$.MOD_BUBBLE,   $.TEX_UI_BUBBLE]
+    [$.MOD_AV_PLAYER, $.TEX_GIRL],
+    [$.MOD_GROUND,    $.TEX_TEXTURE],
+    [$.MOD_BRAID_00,  $.TEX_BRAID],
+    [$.MOD_BRAID_02,  $.TEX_BRAID],
+    [$.MOD_BRAID_04,  $.TEX_BRAID],
+    [$.MOD_BRAID_06,  $.TEX_BRAID],
+    [$.MOD_BRAID_08,  $.TEX_BRAID],
+    [$.MOD_BRAID_10,  $.TEX_BRAID],
+    [$.MOD_BRAID_12,  $.TEX_BRAID],
+    [$.MOD_BRAID_14,  $.TEX_BRAID],
+    [$.MOD_BRAID_16,  $.TEX_BRAID],
+    [$.MOD_BRAID_18,  $.TEX_BRAID],
+    [$.MOD_BRAID_20,  $.TEX_BRAID],
+    [$.MOD_BRAID_22,  $.TEX_BRAID],
+    [$.MOD_BRAID_24,  $.TEX_BRAID],
+    [$.MOD_BRAID_26,  $.TEX_BRAID],
+    [$.MOD_TEST,      $.TEX_TEXTURE],
+    [$.MOD_MONKEY,    $.TEX_TEXTURE],
+    [$.MOD_FB,        $.TEX_FB],
+    [$.MOD_TEXT,      $.TEX_UI_TEXT],
+    [$.MOD_BUBBLE,    $.TEX_UI_BUBBLE]
 ]);
