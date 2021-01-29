@@ -111,6 +111,7 @@ const drawArrow = () =>
 
 const drawSpeakerText = (str) =>
 {
+    // TODO
 };
 
 const drawDialogueText = (str) =>

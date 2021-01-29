@@ -12,6 +12,7 @@ module.exports = {
         sourceType: "module"
     },
     rules: {
+        "array-callback-return": 2,
         "block-spacing": 2,
         "brace-style": [2, "allman"],
         "class-methods-use-this": 2,
@@ -21,19 +22,30 @@ module.exports = {
         "eqeqeq": 2,
         "eol-last": 2,
         "func-call-spacing": [2, "never"],
+        "guard-for-in": 2,
         "indent": [2, 4, {
             "SwitchCase": 1,
             "VariableDeclarator": "first",
             "ignoredNodes": ["ConditionalExpression"]
         }],
         "linebreak-style": [2, "windows"],
-        "max-len": [0, {
-            "code": 80
+        "max-len": [1, {
+            "code": 80,
+            "ignoreComments": true
         }],
         "newline-before-return": 2,
-        "no-constant-condition": 0,
+        "no-alert": 2,
+        "no-caller": 2,
+        "no-constant-condition": 2,
+        "no-constructor-return": 2,
+        "no-empty-function": 2,
+        "no-eval": 2,
+        "no-extend-native": 2,
         "no-implicit-globals": 2,
+        "no-implied-eval": 2,
         "no-invalid-this": 2,
+        "no-iterator": 2,
+        "no-loss-of-precision": 2,
         "no-mixed-spaces-and-tabs": 2,
         "no-multi-spaces": [2, {
             "exceptions": {
@@ -41,7 +53,13 @@ module.exports = {
                 "ArrayExpression": true
             }
         }],
+        "no-new": 2,
+        "no-new-func": 2,
+        "no-new-wrappers": 2,
+        "no-param-reassign": 2,
         "no-plusplus": 0,
+        "no-promise-executor-return": 2,
+        "no-proto": 2,
         "no-restricted-globals": [2,
             "applicationCache",
             "caches",
@@ -289,17 +307,22 @@ module.exports = {
             "vrdisplaydisconnect",
             "vrdisplaypresentchange",
         ],
+        "no-sequences": 2,
         "no-shadow": 2,
+        "no-template-curly-in-string": 2,
         "no-throw-literal": 2,
         "no-trailing-spaces": 2,
         "no-unexpected-multiline": 2,
+        "no-unmodified-loop-condition": 2,
         "no-unreachable-loop": 2,
+        "no-unsafe-optional-chaining": 2,
         "no-unused-vars": 1,
         "no-var": 2,
         "no-whitespace-before-property": 2,
         "prefer-const": 2,
         "quote-props": [2, "as-needed"],
         "quotes": [2, "double"],
+        "require-atomic-updates": 2,
         "semi": [2, "always"],
         "semi-spacing": 2,
         "semi-style": [2, "last"],
@@ -310,6 +333,7 @@ module.exports = {
             "asyncArrow": "never"
         }],
         "space-in-parens": [2, "never"],
-        "space-unary-ops": 2
+        "space-unary-ops": 2,
+        "yoda": 2
     }
 };

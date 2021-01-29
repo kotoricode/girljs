@@ -86,7 +86,19 @@ const uvRect = (x, y, width, height, baseWidth, baseHeight) =>
 };
 
 const meshes = new SafeMap([
-    [MSH_DEBUG, [0, 0, 0, 2, 2, 2, 0, 0, 0, -2, 2, 2, 0, 0, 0, 2, -2, 2, 0, 0, 0, -2, 2, -2]],
+    [MSH_DEBUG, [
+        0, 0, 0,
+        2, 2, 2,
+
+        0, 0, 0,
+        -2, 2, 2,
+
+        0, 0, 0,
+        2, -2, 2,
+
+        0, 0, 0,
+        -2, 2, -2
+    ]],
     [MSH_GROUND, meshXz(-2, 2, -2, 2)],
     [MSH_PLAYER, meshXy(-0.4, 0.4, 0, 1.5)],
     [MSH_AV_PLAYER, meshXyScreen(187, 600)],
