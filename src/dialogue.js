@@ -205,8 +205,8 @@ const arrow = [
     $.RES_HEIGHT * 0.674
 ];
 
-const text = new UiCanvas($.MOD_TEXT, [0.2, 0.2, 0.2, 1]);
-const bubble = new UiCanvas($.MOD_BUBBLE, [0.92, 0.92, 0.92, 1]);
+const text = new UiCanvas($.MDL_TEXT, [0.2, 0.2, 0.2, 1]);
+const bubble = new UiCanvas($.MDL_BUBBLE, [0.92, 0.92, 0.92, 1]);
 
 text.ctx.textAlign = "left";
 text.ctx.textBaseline = "top";

@@ -2,7 +2,6 @@ import * as $ from "../const";
 import { gl } from "../dom";
 import { SafeMap, SafeSet } from "../utility";
 import { Model } from "./model";
-import { VertexArray } from "./vertex-array";
 import { Buffer } from "./buffer";
 
 import vsScreenSrc from "./shaders/vert/screen.vert";
@@ -55,6 +54,14 @@ export class Program
         }
     }
 
+    bindVao()
+    {
+        if (activeVao === this.vao) throw Error;
+
+        activeVao = this.vao;
+        gl.bindVertexArray(activeVao);
+    }
+
     delete()
     {
         gl.deleteVertexArray(this.vao);
@@ -82,7 +89,7 @@ export class Program
         const attributes = Model.getAttributes(this.modelId);
         const bufferId = Model.getBufferId(this.modelId);
 
-        VertexArray.bind(this.vao);
+        this.bindVao();
         Buffer.bind(bufferId);
 
         for (const [name, attribSize] of this.aLayout)
@@ -100,7 +107,7 @@ export class Program
         }
 
         Buffer.unbind(bufferId);
-        VertexArray.unbind();
+        this.unbindVao();
     }
 
     setUniforms()
@@ -125,6 +132,14 @@ export class Program
         if (!Array.isArray(staged) || staged.length <= idx) throw Error;
 
         staged[idx] = value;
+    }
+
+    unbindVao()
+    {
+        if (activeVao !== this.vao) throw Error;
+
+        activeVao = null;
+        gl.bindVertexArray(activeVao);
     }
 }
 
@@ -192,6 +207,7 @@ const createFragDef = (id, src, ...uData) =>
 };
 
 let activeProgram;
+let activeVao;
 
 const DAT_A_LAYOUT = 0;
 const DAT_PROGRAM = 1;

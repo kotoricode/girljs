@@ -21,25 +21,25 @@ const createPlayer = () => [$.ENT_PLAYER, new SafeMap([
         new Drawable(
             $.PRO_SPRITE,
             $.QUE_SPRITE,
-            $.MOD_BRAID_00
+            $.MDL_BRAID_00
         ),
         new Anim(new SafeMap([
-            [$.ANI_IDLE, [$.MOD_BRAID_00]],
+            [$.ANI_IDLE, [$.MDL_BRAID_00]],
             [$.ANI_MOVE, [
-                $.MOD_BRAID_00,
-                $.MOD_BRAID_02,
-                $.MOD_BRAID_04,
-                $.MOD_BRAID_06,
-                $.MOD_BRAID_08,
-                $.MOD_BRAID_10,
-                $.MOD_BRAID_12,
-                $.MOD_BRAID_14,
-                $.MOD_BRAID_16,
-                $.MOD_BRAID_18,
-                $.MOD_BRAID_20,
-                $.MOD_BRAID_22,
-                $.MOD_BRAID_24,
-                $.MOD_BRAID_26,
+                $.MDL_BRAID_00,
+                $.MDL_BRAID_02,
+                $.MDL_BRAID_04,
+                $.MDL_BRAID_06,
+                $.MDL_BRAID_08,
+                $.MDL_BRAID_10,
+                $.MDL_BRAID_12,
+                $.MDL_BRAID_14,
+                $.MDL_BRAID_16,
+                $.MDL_BRAID_18,
+                $.MDL_BRAID_20,
+                $.MDL_BRAID_22,
+                $.MDL_BRAID_24,
+                $.MDL_BRAID_26,
             ]],
         ]), new SafeMap([
             [$.ANI_IDLE, [Infinity]],
@@ -55,7 +55,7 @@ const createTachie = () => [$.ENT_AV_PLAYER, new SafeMap([
         new Drawable(
             $.PRO_UI,
             $.QUE_UI,
-            $.MOD_AV_PLAYER,
+            $.MDL_AV_PLAYER,
             new SafeMap([
                 [$.U_COLOR, [1, 0.871, 0.855, 1]]
             ])
@@ -71,7 +71,7 @@ const createGround = () => [$.ENT_GROUND, new SafeMap([
         new Drawable(
             $.PRO_REPEAT,
             $.QUE_BACKGROUND,
-            $.MOD_GROUND,
+            $.MDL_GROUND,
             new SafeMap([
                 [$.U_UVREPEAT, [4, 4]],
                 [$.U_COLOR, [1, 1, 1, 1]]
@@ -87,7 +87,7 @@ const createTest = () => [$.ENT_TEST, new SafeMap([
         new Drawable(
             $.PRO_SPRITE,
             $.QUE_BACKGROUND,
-            $.MOD_TEST
+            $.MDL_TEST
         )
     ])],
     [$.BLU_CHILDREN, new SafeSet()]
@@ -99,7 +99,7 @@ const createMonkey = () => [$.ENT_MONKEY, new SafeMap([
         new Drawable(
             $.PRO_SPRITE,
             $.QUE_BACKGROUND,
-            $.MOD_MONKEY
+            $.MDL_MONKEY
         )
     ])],
     [$.BLU_CHILDREN, new SafeSet()]

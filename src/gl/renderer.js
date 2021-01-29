@@ -2,7 +2,6 @@ import * as $ from "../const";
 import { gl } from "../dom";
 import { Drawable } from "../components/drawable";
 import { Debug } from "./debug";
-import { VertexArray } from "./vertex-array";
 import { Texture } from "./texture";
 import { Program } from "./program";
 import { SafeMap, SafeSet } from "../utility";
@@ -86,9 +85,9 @@ const draw = (program) =>
 
 const drawArraysVao = (mode, drawSize, program) =>
 {
-    VertexArray.bind(program.vao);
+    program.bindVao();
     gl.drawArrays(mode, 0, drawSize);
-    VertexArray.unbind();
+    program.unbindVao();
 };
 
 gl.disable($.CULL_FACE);
@@ -97,7 +96,7 @@ gl.disable($.CULL_FACE);
 gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
-const imageProgram = new Program($.PRO_IMAGE, $.MOD_FB);
+const imageProgram = new Program($.PRO_IMAGE, $.MDL_FB);
 
 Framebuffer.prepare();
 
