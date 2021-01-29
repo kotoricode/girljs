@@ -195,17 +195,15 @@ const pushData = (buffer, data) =>
 {
     if (!Array.isArray(data)) throw Error;
 
-    const offset = buffer.length * Float32Array.BYTES_PER_ELEMENT;
-
-    const start = buffer.length;
+    const offset = buffer.length;
     buffer.length += data.length;
 
     for (let i = 0; i < data.length; i++)
     {
-        buffer[start + i] = data[i];
+        buffer[offset + i] = data[i];
     }
 
-    return offset;
+    return offset * Float32Array.BYTES_PER_ELEMENT;
 };
 
 const buildModelData = () =>

@@ -4,27 +4,32 @@ const toUint = (bytes) => bytes.reduce((a, b, i) => a + (b << i*8)) >>> 0;
 
 const decoder = new TextDecoder();
 
+const RANGE_2 = [0, 1];
+const RANGE_3 = [0, 1, 2];
+const USHORT_BYTES = Uint16Array.BYTES_PER_ELEMENT;
+const FLOAT32_BYTES = Float32Array.BYTES_PER_ELEMENT;
+const VEC3 = 3;
+
 class GlbData
 {
     constructor(bin, view, range, sizeOf)
     {
         const { byteLength, byteOffset } = view;
 
-        const increment = range * sizeOf;
+        this.rangeLen = range.length;
+        const increment = this.rangeLen * sizeOf;
         this.data = new Array(byteLength / increment);
-        this.range = range;
-        const viewEnd = byteLength + byteOffset;
 
-        const rangeArr = [...Array(range).keys()];
-
-        for (let i = byteOffset, j = 0; i < viewEnd; i += increment, j++)
+        for (let i = 0; i < this.data.length; i++)
         {
-            this.data[j] = rangeArr.map(
-                k => toUint(bin.subarray(
-                    i + k * sizeOf,
-                    i + (k+1) * sizeOf
-                ))
-            );
+            const offset = byteOffset + i * increment;
+
+            this.data[i] = range.map(j => toUint(
+                bin.subarray(
+                    offset + j * sizeOf,
+                    offset + (j+1) * sizeOf
+                )
+            ));
         }
     }
 }
@@ -75,12 +80,6 @@ export const Glb = {
         ----------------------------------------------------------------------*/
         const [viewMesh, viewUv, viewIdx] = meta.bufferViews;
 
-        const USHORT_BYTES = 2;
-        const FLOAT32_BYTES = 4;
-        const RANGE_3 = 3;
-        const RANGE_2 = 2;
-        const VEC3 = 3;
-
         const mesh = new GlbData(bin, viewMesh, RANGE_3, FLOAT32_BYTES);
         const uv = new GlbData(bin, viewUv, RANGE_2, FLOAT32_BYTES);
         const idx = new GlbData(bin, viewIdx, RANGE_3, USHORT_BYTES);
@@ -88,8 +87,8 @@ export const Glb = {
         for (const obj of [mesh, uv])
         {
             let byteOffset = 0;
-            obj.f32 = new Float32Array(idx.data.length * VEC3 * obj.range);
-            const view = new DataView(obj.f32.buffer);
+            const f32 = new Float32Array(idx.data.length * VEC3 * obj.rangeLen);
+            const view = new DataView(f32.buffer);
 
             for (const verticesIdx of idx.data)
             {
@@ -102,11 +101,13 @@ export const Glb = {
                     }
                 }
             }
+
+            obj.array = Array.from(f32);
         }
 
         return {
-            mesh: Array.from(mesh.f32),
-            uv: Array.from(uv.f32)
+            mesh: mesh.array,
+            uv: uv.array
         };
     }
 };
