@@ -112,7 +112,7 @@ const uvs = new SafeMap([
 ]);
 
 const glb = new SafeMap([
-    ["/data/monkey.glb", [MSH_TEST, UV_TEST]]
+    ["/data/big_monkey.glb", [MSH_TEST, UV_TEST]]
 ]);
 
 const models = new SafeMap();
@@ -196,7 +196,14 @@ const pushData = (buffer, data) =>
     if (!Array.isArray(data)) throw Error;
 
     const offset = buffer.length * Float32Array.BYTES_PER_ELEMENT;
-    buffer.push(...data);
+
+    const start = buffer.length;
+    buffer.length += data.length;
+
+    for (let i = 0; i < data.length; i++)
+    {
+        buffer[start + i] = data[i];
+    }
 
     return offset;
 };
