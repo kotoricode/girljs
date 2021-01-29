@@ -1,5 +1,5 @@
 import * as $ from "./const";
-import { Storage } from "./utility";
+import { isNullOrUndefined, Storage } from "./utility";
 
 export const Prefs = {
     get(prefId)
@@ -14,7 +14,7 @@ export const Prefs = {
         {
             const stored = Storage.get(key);
 
-            if (stored !== null)
+            if (!isNullOrUndefined(stored))
             {
                 prefs[key] = stored;
             }

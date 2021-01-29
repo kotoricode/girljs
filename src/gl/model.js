@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { SafeMap, SafeSet, SettableFloat32Array } from "../utility";
+import { SafeMap, SettableFloat32Array } from "../utility";
 import { Buffer } from "./buffer";
 import { Texture } from "./texture";
 import { Glb } from "./glb";
@@ -115,17 +115,17 @@ const uvs = new SafeMap([
 
 class GlbFile
 {
-    constructor(url, meshId, uvId)
+    constructor(fileName, meshId, uvId)
     {
-        this.url = url;
+        this.url = `/data/${fileName}.glb`;
         this.meshId = meshId;
         this.uvId = uvId;
     }
 }
 
 const glb = [
-    new GlbFile("/data/mesh.glb", MSH_TEST, UV_TEST),
-    new GlbFile("/data/big_monkey.glb", MSH_MONKEY, UV_MONKEY),
+    new GlbFile("mesh", MSH_TEST, UV_TEST),
+    new GlbFile("big_monkey", MSH_MONKEY, UV_MONKEY),
 ];
 
 const models = new SafeMap();
@@ -179,7 +179,6 @@ export const Model = {
             loadPromise = (async() =>
             {
                 await downloadMeshes();
-                console.log("building models");
                 buildModelData();
                 Model.isLoaded = true;
             })();

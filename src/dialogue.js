@@ -3,7 +3,7 @@ import { Model } from "./gl/model";
 import { Program } from "./gl/program";
 import { Texture } from "./gl/texture";
 import { Bezier } from "./math/bezier";
-import { isString } from "./utility";
+import { isNullOrUndefined, isString } from "./utility";
 
 class UiCanvas
 {
@@ -166,7 +166,7 @@ const drawDialogueText = (str) =>
 
 const fillText = (str, yPos) =>
 {
-    if (yPos === undefined) throw Error;
+    if (isNullOrUndefined(yPos)) throw Error;
 
     text.ctx.fillText(str, xPx, yPos);
 };
@@ -193,7 +193,7 @@ const bezierSpeech = [
 ];
 
 const arrow = [
-    $.RES_WIDTH * 0.6859375,
+    $.RES_WIDTH * 0.686,
     $.RES_HEIGHT * 0.6375,
     $.RES_WIDTH * 0.734,
     $.RES_HEIGHT * 0.63,
@@ -215,6 +215,5 @@ text.ctx.font = `${fontSize}px Cuprum`;
 // These are tints for the shaders, not the actual colors
 text.ctx.fillStyle = bubble.ctx.fillStyle = "#fff";
 text.ctx.shadowColor = "#000";
-
 
 Model.load().then(() => canvasToTexture());
