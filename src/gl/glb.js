@@ -1,28 +1,43 @@
 // https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md
-import { SafeMap } from "../utility";
-
 const toUint = (bytes) => bytes.reduce((a, b, i) => a + (b << i*8)) >>> 0;
 
-const byteSizes = new SafeMap([
-    ["5120", 1], // byte
-    ["5121", 1], // ubyte
-    ["5122", 2], // short
-    ["5123", 2], // ushort
-    ["5125", 4], // uint
-    ["5126", 4], // float
-]);
-
-const compSizes = new SafeMap([
-    ["SCALAR", 1],
-    ["VEC2", 2],
-    ["VEC3", 3],
-    ["VEC4", 4],
-    ["MAT2", 4],
-    ["MAT3", 9],
-    ["MAT4", 16],
-]);
-
 const decoder = new TextDecoder();
+
+const test = (bin, view, arr, range, sizeOf) =>
+{
+    for (let i = view.byteOffset, j = 0;
+        i < (view.byteLength + view.byteOffset);
+        i += (range.length * sizeOf))
+    {
+        arr[j++] = range.map(
+            k => toUint(bin.subarray(
+                i + k * sizeOf,
+                i + (k+1) * sizeOf
+            ))
+        );
+    }
+};
+
+class Test
+{
+    constructor(bin, view, range, sizeOf)
+    {
+        this.data = new Array(view.byteLength / (sizeOf * range.length));
+        this.range = range;
+
+        for (let i = view.byteOffset, j = 0;
+            i < (view.byteLength + view.byteOffset);
+            i += (range.length * sizeOf))
+        {
+            this.data[j++] = range.map(
+                k => toUint(bin.subarray(
+                    i + k * sizeOf,
+                    i + (k+1) * sizeOf
+                ))
+            );
+        }
+    }
+}
 
 export const Glb = {
     async parse(blob)
@@ -56,62 +71,29 @@ export const Glb = {
 
         const bin = data.subarray(binStart, binEnd);
 
-        const viewMesh = meta.bufferViews[0]; // 4 byte float
-        const viewUv = meta.bufferViews[1]; // 4 byte float
-        const viewIdx = meta.bufferViews[2]; // 2 byte ushort
+        const [viewMesh, viewUv, viewIdx] = meta.bufferViews;
 
-        const idx = new Array(viewIdx.byteLength / 6);
+        const USHORT_BYTES = 2;
+        const FLOAT32_BYTES = 4;
+        const RANGE_3 = [0, 1, 2];
+        const RANGE_2 = [0, 1];
+        const VEC3 = 3;
 
-        const objXyz = {
-            f32: new Float32Array(9 * idx.length),
-            array: new Array(viewMesh.byteLength / 12)
-        };
-
-        const objUv = {
-            f32: new Float32Array(6 * idx.length),
-            array: new Array(viewUv.byteLength / 8)
-        };
-
-        for (let i = 0, j = 0; i < viewMesh.byteLength; i += 12)
-        {
-            objXyz.array[j++] = [
-                toUint(bin.subarray(i, i+4)),
-                toUint(bin.subarray(i+4, i+8)),
-                toUint(bin.subarray(i+8, i+12))
-            ];
-        }
-
-        const viewUvEnd = viewUv.byteOffset + viewUv.byteLength;
-
-        for (let i = viewUv.byteOffset, j = 0; i < viewUvEnd; i += 8)
-        {
-            objUv.array[j++] = [
-                toUint(bin.subarray(i, i+4)),
-                toUint(bin.subarray(i+4, i+8))
-            ];
-        }
-
-        const viewIdxEnd = viewIdx.byteLength + viewIdx.byteOffset;
-
-        for (let i = viewIdx.byteOffset, j = 0; i < viewIdxEnd; i += 6)
-        {
-            idx[j++] = [
-                toUint(bin.subarray(i, i+2)),
-                toUint(bin.subarray(i+2, i+4)),
-                toUint(bin.subarray(i+4, i+6))
-            ];
-        }
+        const objXyz = new Test(bin, viewMesh, RANGE_3, FLOAT32_BYTES);
+        const objUv = new Test(bin, viewUv, RANGE_2, FLOAT32_BYTES);
+        const objIdx = new Test(bin, viewIdx, RANGE_3, USHORT_BYTES);
 
         for (const obj of [objXyz, objUv])
         {
             let byteOffset = 0;
+            obj.f32 = new Float32Array(objIdx.data.length * (VEC3 * obj.range.length));
             const view = new DataView(obj.f32.buffer);
 
-            for (const verticesIdx of idx)
+            for (const verticesIdx of objIdx.data)
             {
                 for (const vertexIdx of verticesIdx)
                 {
-                    for (const coord of obj.array[vertexIdx])
+                    for (const coord of obj.data[vertexIdx])
                     {
                         view.setUint32(byteOffset, coord, true);
                         byteOffset += Float32Array.BYTES_PER_ELEMENT;
