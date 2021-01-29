@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { SafeMap, SettableFloat32Array } from "../utility";
+import { SafeMap, SafeSet, SettableFloat32Array } from "../utility";
 import { Buffer } from "./buffer";
 import { Texture } from "./texture";
 import { Glb } from "./glb";
@@ -113,10 +113,20 @@ const uvs = new SafeMap([
     [UV_SCREEN, [0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]],
 ]);
 
-const glb = new SafeMap([
-    ["/data/mesh.glb", [MSH_TEST, UV_TEST]],
-    ["/data/big_monkey.glb", [MSH_MONKEY, UV_MONKEY]]
-]);
+class GlbFile
+{
+    constructor(url, meshId, uvId)
+    {
+        this.url = url;
+        this.meshId = meshId;
+        this.uvId = uvId;
+    }
+}
+
+const glb = [
+    new GlbFile("/data/mesh.glb", MSH_TEST, UV_TEST),
+    new GlbFile("/data/big_monkey.glb", MSH_MONKEY, UV_MONKEY),
+];
 
 const models = new SafeMap();
 let loadPromise;
@@ -168,7 +178,7 @@ export const Model = {
         {
             loadPromise = (async() =>
             {
-                await downloadMeshes(Array.from(glb.keys()));
+                await downloadMeshes();
                 console.log("building models");
                 buildModelData();
                 Model.isLoaded = true;
@@ -186,18 +196,17 @@ const getModel = (modelId) =>
     return models.get(modelId);
 };
 
-const downloadMeshes = async(fileNames) =>
+const downloadMeshes = () =>
 {
     return Promise.all(
-        fileNames.map(fileName => (async() =>
+        glb.map(obj => (async() =>
         {
-            const response = await window.fetch(fileName);
+            const response = await window.fetch(obj.url);
             const blob = await response.blob();
             const { mesh, uv } = await Glb.parse(blob);
-            const [meshId, uvId] = glb.get(fileName);
 
-            meshes.set(meshId, mesh);
-            uvs.set(uvId, uv);
+            meshes.set(obj.meshId, mesh);
+            uvs.set(obj.uvId, uv);
         })())
     );
 };
