@@ -8,10 +8,10 @@ class GlbData
 {
     constructor(bin, view, range, sizeOf)
     {
-        this.data = new Array(view.byteLength / (sizeOf * range));
+        const increment = range * sizeOf;
+        this.data = new Array(view.byteLength / increment);
         this.range = range;
         const viewEnd = view.byteLength + view.byteOffset;
-        const increment = range * sizeOf;
 
         for (let i = view.byteOffset, j = 0; i < viewEnd; i += increment)
         {
