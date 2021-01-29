@@ -216,4 +216,5 @@ text.ctx.font = `${fontSize}px Cuprum`;
 text.ctx.fillStyle = bubble.ctx.fillStyle = "#fff";
 text.ctx.shadowColor = "#000";
 
-canvasToTexture();
+
+Model.load().then(() => canvasToTexture());

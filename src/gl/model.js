@@ -140,25 +140,25 @@ export const Model = {
     isLoaded: false,
     getAttributes(modelId)
     {
-        return models.get(modelId).attributes;
+        return getModel(modelId).attributes;
     },
     getBufferId(modelId)
     {
-        return models.get(modelId).bufferId;
+        return getModel(modelId).bufferId;
     },
     getDrawSize(modelId)
     {
-        return models.get(modelId).drawSize;
+        return getModel(modelId).drawSize;
     },
     getTexture(modelId)
     {
-        const textureId = modelTex.get(modelId);
+        const textureId = getModel(modelId).textureId;
 
         return Texture.get(textureId);
     },
     getUv(modelId)
     {
-        const uvId = models.get(modelId).uvId;
+        const uvId = getModel(modelId).uvId;
 
         return uvs.get(uvId);
     },
@@ -168,7 +168,7 @@ export const Model = {
         {
             loadPromise = (async() =>
             {
-                await this.downloadMeshes(Array.from(glb.keys()));
+                await downloadMeshes(Array.from(glb.keys()));
                 console.log("building models");
                 buildModelData();
                 Model.isLoaded = true;
@@ -176,22 +176,30 @@ export const Model = {
         }
 
         return loadPromise;
-    },
-    async downloadMeshes(fileNames)
-    {
-        return Promise.all(
-            fileNames.map(fileName => (async() =>
-            {
-                const response = await window.fetch(fileName);
-                const blob = await response.blob();
-                const { mesh, uv } = await Glb.parse(blob);
-                const [meshId, uvId] = glb.get(fileName);
+    }
+};
 
-                meshes.set(meshId, mesh);
-                uvs.set(uvId, uv);
-            })())
-        );
-    },
+const getModel = (modelId) =>
+{
+    if (!Model.isLoaded) throw Error("Model is not Loaded yet");
+
+    return models.get(modelId);
+};
+
+const downloadMeshes = async(fileNames) =>
+{
+    return Promise.all(
+        fileNames.map(fileName => (async() =>
+        {
+            const response = await window.fetch(fileName);
+            const blob = await response.blob();
+            const { mesh, uv } = await Glb.parse(blob);
+            const [meshId, uvId] = glb.get(fileName);
+
+            meshes.set(meshId, mesh);
+            uvs.set(uvId, uv);
+        })())
+    );
 };
 
 const pushData = (buffer, data) =>
@@ -214,39 +222,40 @@ const buildModelData = () =>
     const modelData = [];
     const debugData = [];
 
-    const modelMesh = [
-        $.MOD_AV_PLAYER, MSH_AV_PLAYER, UV_GIRL_00,
-        $.MOD_GROUND,    MSH_GROUND,    UV_GROUND,
-        $.MOD_BRAID_00,  MSH_PLAYER,    UV_BRAID_00,
-        $.MOD_BRAID_02,  MSH_PLAYER,    UV_BRAID_02,
-        $.MOD_BRAID_04,  MSH_PLAYER,    UV_BRAID_04,
-        $.MOD_BRAID_06,  MSH_PLAYER,    UV_BRAID_06,
-        $.MOD_BRAID_08,  MSH_PLAYER,    UV_BRAID_08,
-        $.MOD_BRAID_10,  MSH_PLAYER,    UV_BRAID_10,
-        $.MOD_BRAID_12,  MSH_PLAYER,    UV_BRAID_12,
-        $.MOD_BRAID_14,  MSH_PLAYER,    UV_BRAID_14,
-        $.MOD_BRAID_16,  MSH_PLAYER,    UV_BRAID_16,
-        $.MOD_BRAID_18,  MSH_PLAYER,    UV_BRAID_18,
-        $.MOD_BRAID_20,  MSH_PLAYER,    UV_BRAID_20,
-        $.MOD_BRAID_22,  MSH_PLAYER,    UV_BRAID_22,
-        $.MOD_BRAID_24,  MSH_PLAYER,    UV_BRAID_24,
-        $.MOD_BRAID_26,  MSH_PLAYER,    UV_BRAID_26,
-        $.MOD_TEST,      MSH_TEST,      UV_TEST,
-        $.MOD_MONKEY,    MSH_MONKEY,    UV_MONKEY,
-        $.MOD_FB,        MSH_SCREEN,    UV_SCREEN,
-        $.MOD_TEXT,      MSH_SCREEN,    UV_SCREEN,
-        $.MOD_BUBBLE,    MSH_SCREEN,    UV_SCREEN,
+    const modelDef = [
+        $.MOD_AV_PLAYER, MSH_AV_PLAYER, UV_GIRL_00,  $.TEX_GIRL,
+        $.MOD_GROUND,    MSH_GROUND,    UV_GROUND,   $.TEX_TEXTURE,
+        $.MOD_BRAID_00,  MSH_PLAYER,    UV_BRAID_00, $.TEX_BRAID,
+        $.MOD_BRAID_02,  MSH_PLAYER,    UV_BRAID_02, $.TEX_BRAID,
+        $.MOD_BRAID_04,  MSH_PLAYER,    UV_BRAID_04, $.TEX_BRAID,
+        $.MOD_BRAID_06,  MSH_PLAYER,    UV_BRAID_06, $.TEX_BRAID,
+        $.MOD_BRAID_08,  MSH_PLAYER,    UV_BRAID_08, $.TEX_BRAID,
+        $.MOD_BRAID_10,  MSH_PLAYER,    UV_BRAID_10, $.TEX_BRAID,
+        $.MOD_BRAID_12,  MSH_PLAYER,    UV_BRAID_12, $.TEX_BRAID,
+        $.MOD_BRAID_14,  MSH_PLAYER,    UV_BRAID_14, $.TEX_BRAID,
+        $.MOD_BRAID_16,  MSH_PLAYER,    UV_BRAID_16, $.TEX_BRAID,
+        $.MOD_BRAID_18,  MSH_PLAYER,    UV_BRAID_18, $.TEX_BRAID,
+        $.MOD_BRAID_20,  MSH_PLAYER,    UV_BRAID_20, $.TEX_BRAID,
+        $.MOD_BRAID_22,  MSH_PLAYER,    UV_BRAID_22, $.TEX_BRAID,
+        $.MOD_BRAID_24,  MSH_PLAYER,    UV_BRAID_24, $.TEX_BRAID,
+        $.MOD_BRAID_26,  MSH_PLAYER,    UV_BRAID_26, $.TEX_BRAID,
+        $.MOD_TEST,      MSH_TEST,      UV_TEST,     $.TEX_TEXTURE,
+        $.MOD_MONKEY,    MSH_MONKEY,    UV_MONKEY,   $.TEX_TEXTURE,
+        $.MOD_FB,        MSH_SCREEN,    UV_SCREEN,   $.TEX_FB,
+        $.MOD_TEXT,      MSH_SCREEN,    UV_SCREEN,   $.TEX_UI_TEXT,
+        $.MOD_BUBBLE,    MSH_SCREEN,    UV_SCREEN,   $.TEX_UI_BUBBLE,
     ];
 
     const xyzOffsets = new SafeMap();
     const uvOffsets = new SafeMap();
     const drawSizes = new SafeMap();
 
-    for (let i = 0; i < modelMesh.length;)
+    for (let i = 0; i < modelDef.length;)
     {
-        const modelId = modelMesh[i++];
-        const meshId = modelMesh[i++];
-        const uvId = modelMesh[i++];
+        const modelId = modelDef[i++];
+        const meshId = modelDef[i++];
+        const uvId = modelDef[i++];
+        const textureId = modelDef[i++];
 
         if (!xyzOffsets.has(meshId))
         {
@@ -274,7 +283,7 @@ const buildModelData = () =>
             attrib,
             $.BUF_ARR_MODEL,
             uvId,
-            modelTex.get(modelId),
+            textureId,
             drawSizes.get(meshId),
         ));
     }
@@ -302,27 +311,3 @@ const buildModelData = () =>
     Buffer.setData($.BUF_ARR_MODEL, new SettableFloat32Array(modelData));
     Buffer.setData($.BUF_ARR_DEBUG, new SettableFloat32Array(debugData));
 };
-
-const modelTex = new SafeMap([
-    [$.MOD_AV_PLAYER, $.TEX_GIRL],
-    [$.MOD_GROUND,    $.TEX_TEXTURE],
-    [$.MOD_BRAID_00,  $.TEX_BRAID],
-    [$.MOD_BRAID_02,  $.TEX_BRAID],
-    [$.MOD_BRAID_04,  $.TEX_BRAID],
-    [$.MOD_BRAID_06,  $.TEX_BRAID],
-    [$.MOD_BRAID_08,  $.TEX_BRAID],
-    [$.MOD_BRAID_10,  $.TEX_BRAID],
-    [$.MOD_BRAID_12,  $.TEX_BRAID],
-    [$.MOD_BRAID_14,  $.TEX_BRAID],
-    [$.MOD_BRAID_16,  $.TEX_BRAID],
-    [$.MOD_BRAID_18,  $.TEX_BRAID],
-    [$.MOD_BRAID_20,  $.TEX_BRAID],
-    [$.MOD_BRAID_22,  $.TEX_BRAID],
-    [$.MOD_BRAID_24,  $.TEX_BRAID],
-    [$.MOD_BRAID_26,  $.TEX_BRAID],
-    [$.MOD_TEST,      $.TEX_TEXTURE],
-    [$.MOD_MONKEY,    $.TEX_TEXTURE],
-    [$.MOD_FB,        $.TEX_FB],
-    [$.MOD_TEXT,      $.TEX_UI_TEXT],
-    [$.MOD_BUBBLE,    $.TEX_UI_BUBBLE]
-]);
