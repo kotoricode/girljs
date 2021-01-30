@@ -1,7 +1,6 @@
 import * as $ from "../const";
 import { gl } from "../dom";
 import { Drawable } from "../components/drawable";
-import { Debug } from "./debug";
 import { Texture } from "./texture";
 import { Program } from "./program";
 import { SafeMap, SafeSet } from "../utility";
@@ -68,11 +67,13 @@ const drawQueue = (queueId) =>
 
 const draw = (program) =>
 {
+    const { modelId } = program;
+
     program.activate();
 
-    if (Model.isTextured(program.modelId))
+    if (Model.isTextured(modelId))
     {
-        const texture = Model.getTexture(program.modelId);
+        const texture = Model.getTexture(modelId);
         Texture.bind(texture);
     }
 
@@ -81,8 +82,8 @@ const draw = (program) =>
         program.setUniforms();
     }
 
-    const drawMode = Model.getDrawMode(program.modelId);
-    const drawSize = Model.getDrawSize(program.modelId);
+    const drawMode = Model.getDrawMode(modelId);
+    const drawSize = Model.getDrawSize(modelId);
 
     program.bindVao();
     gl.drawArrays(drawMode, 0, drawSize);
@@ -100,7 +101,7 @@ const uiPrograms = new SafeSet([
     new Program($.PRG_IMAGE, $.MDL_FB),
     Dialogue.getBubbleProgram(),
     Dialogue.getTextProgram(),
-    Debug.getProgram()
+    new Program($.PRG_COLOR, $.MDL_DEBUG)
 ]);
 
 const queues = new SafeMap([
