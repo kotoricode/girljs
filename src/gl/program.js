@@ -13,6 +13,7 @@ import fsImageSrc    from "./shaders/frag/image.frag";
 import fsTexSrc       from "./shaders/frag/tex.frag";
 import fsTexRectRepeatSrc from "./shaders/frag/tex-rect-repeat.frag";
 import fsColorSrc    from "./shaders/frag/color.frag";
+import { Matrix } from "../math/matrix";
 
 export class Program
 {
@@ -144,7 +145,6 @@ let activeVao;
 /*------------------------------------------------------------------------------
     Program creation
 ------------------------------------------------------------------------------*/
-
 const createAttachShader = (program, shaderId, shaderDef) =>
 {
     const shader = gl.createShader(shaderId);
@@ -155,14 +155,41 @@ const createAttachShader = (program, shaderId, shaderDef) =>
     return shader;
 };
 
-// TODO: setters for each type so we don't have to look it up all the time
-// TODO: verify that values correspond to the setter's expected datatype
-const createSetter = (type, loc) => (values) => gl[type](loc, ...values);
-
 const detachDeleteShader = (program, shader) =>
 {
     gl.detachShader(program, shader);
     gl.deleteShader(shader);
+};
+
+/*------------------------------------------------------------------------------
+    Uniform setter
+------------------------------------------------------------------------------*/
+const createUniSetter = (pos, loc) =>
+{
+    switch (pos)
+    {
+        case U_TYPE_2F:
+            return (values) =>
+            {
+                if (values.length !== 2) throw Error;
+                gl.uniform2f(loc, ...values);
+            };
+        case U_TYPE_4F:
+            return (values) =>
+            {
+                if (values.length !== 4) throw Error;
+                gl.uniform4f(loc, ...values);
+            };
+        case U_TYPE_M4FV:
+            return (values) =>
+            {
+                if (values.length !== 2) throw Error;
+                if (!(values[1] instanceof Matrix)) throw Error;
+                gl.uniformMatrix4fv(loc, ...values);
+            };
+        default:
+            throw Error;
+    }
 };
 
 /*------------------------------------------------------------------------------
@@ -232,9 +259,9 @@ const FS_IMAGE = 1;
 const FS_TEX_RECT_REPEAT = 2;
 const FS_TEX = 3;
 
-const U_TYPE_2F = "uniform2f";
-const U_TYPE_4F = "uniform4f";
-const U_TYPE_M4FV = "uniformMatrix4fv";
+const U_TYPE_2F = 0;
+const U_TYPE_4F = 1;
+const U_TYPE_M4FV = 2;
 
 /*------------------------------------------------------------------------------
     Templates
@@ -359,7 +386,7 @@ for (let i = 0; i < programDef.length;)
                 for (const [name, values] of map)
                 {
                     const pos = gl.getUniformLocation(program, name);
-                    const setter = createSetter(type, pos);
+                    const setter = createUniSetter(type, pos);
                     uSetters.set(name, setter);
                     uDefaults.set(name, values);
                 }

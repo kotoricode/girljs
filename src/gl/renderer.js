@@ -5,10 +5,21 @@ import { Debug } from "./debug";
 import { Texture } from "./texture";
 import { Program } from "./program";
 import { SafeMap, SafeSet } from "../utility";
-import { Framebuffer } from "./framebuffer";
 import { Model } from "./model";
 import { Dialogue } from "../dialogue";
 import { Scene } from "../scene";
+
+const bindFb = () =>
+{
+    gl.bindFramebuffer($.FRAMEBUFFER, fbo);
+    gl.bindRenderbuffer($.RENDERBUFFER, rboDepth);
+};
+
+const unbindFb = () =>
+{
+    gl.bindRenderbuffer($.RENDERBUFFER, null);
+    gl.bindFramebuffer($.FRAMEBUFFER, null);
+};
 
 export const render = () =>
 {
@@ -20,7 +31,8 @@ export const render = () =>
         }
     }
 
-    Framebuffer.bind();
+    gl.bindFramebuffer($.FRAMEBUFFER, fbo);
+    gl.bindRenderbuffer($.RENDERBUFFER, rboDepth);
 
     gl.clear($.COLOR_BUFFER_BIT | $.DEPTH_BUFFER_BIT);
     gl.clearColor(0.6, 0.6, 0.6, 1.0);
@@ -32,7 +44,8 @@ export const render = () =>
     drawQueue($.QUE_SPRITE);
     drawQueue($.QUE_UI);
 
-    Framebuffer.unbind();
+    gl.bindRenderbuffer($.RENDERBUFFER, null);
+    gl.bindFramebuffer($.FRAMEBUFFER, null);
 
     draw(imageProgram);
     renderText();
@@ -98,7 +111,35 @@ gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
 const imageProgram = new Program($.PRO_IMAGE, $.MDL_FB);
 
-Framebuffer.prepare();
+const fbo = gl.createFramebuffer();
+const rboDepth = gl.createRenderbuffer();
+const fbTexture = Texture.get($.TEX_FB);
+
+bindFb();
+
+gl.framebufferTexture2D(
+    $.FRAMEBUFFER,
+    $.COLOR_ATTACHMENT0,
+    $.TEXTURE_2D,
+    fbTexture,
+    0
+);
+
+gl.renderbufferStorage(
+    $.RENDERBUFFER,
+    $.DEPTH_COMPONENT16,
+    gl.canvas.width,
+    gl.canvas.height
+);
+
+gl.framebufferRenderbuffer(
+    $.FRAMEBUFFER,
+    $.DEPTH_ATTACHMENT,
+    $.RENDERBUFFER,
+    rboDepth
+);
+
+unbindFb();
 
 const queues = new SafeMap([
     [$.QUE_BACKGROUND, new SafeSet()],
