@@ -31,8 +31,7 @@ export const render = () =>
         }
     }
 
-    gl.bindFramebuffer($.FRAMEBUFFER, fbo);
-    gl.bindRenderbuffer($.RENDERBUFFER, rboDepth);
+    bindFb();
 
     gl.clear($.COLOR_BUFFER_BIT | $.DEPTH_BUFFER_BIT);
     gl.clearColor(0.6, 0.6, 0.6, 1.0);
@@ -44,8 +43,7 @@ export const render = () =>
     drawQueue($.QUE_SPRITE);
     drawQueue($.QUE_UI);
 
-    gl.bindRenderbuffer($.RENDERBUFFER, null);
-    gl.bindFramebuffer($.FRAMEBUFFER, null);
+    unbindFb();
 
     draw(imageProgram);
     renderText();
