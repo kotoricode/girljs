@@ -1,7 +1,7 @@
 import * as $ from "../const";
 import { Mouse } from "../dom";
 import { Camera } from "../camera";
-import { Ground } from "../components/ground";
+import { HitBox } from "../components/hitbox";
 import { Ray } from "../math/ray";
 import { Dialogue } from "../dialogue";
 import { Motion } from "../components/motion";
@@ -15,13 +15,13 @@ export const processPlayer = () =>
         //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
         // );
 
-        const [ground] = Scene.one($.ENT_GROUND, Ground);
+        const [ground] = Scene.one($.ENT_GROUND, HitBox);
         const ivp = Camera.getInvViewProjection();
 
         ray.numHits = 0;
         ray.fromMouse(ivp, Mouse.clip);
-        console.log(ray.collideAABB());
-        ray.collideGround(ground);
+        ray.collide(ground);
+        //ray.collideGround(ground);
 
         // Update player, marker paths
         if (ray.numHits)

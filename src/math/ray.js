@@ -14,11 +14,84 @@ export class Ray
         this.hit = [];
     }
 
-    setDirection()
+    addHit(x, y, z)
     {
-        this.direction.from(this.end);
-        this.direction.subtract(this.start);
-        this.direction.normalize();
+        if (this.numHits === this.hit.length)
+        {
+            const newVec = new Vector();
+            this.hit.push(newVec);
+        }
+
+        const vec = this.hit[this.numHits++];
+        vec.setValues(x, y, z);
+    }
+
+    // https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-box-intersection
+    collide(box)
+    {
+        let temp;
+
+        let tmin = (box.min.x - this.start.x) / this.direction.x;
+        let tmax = (box.max.x - this.start.x) / this.direction.x;
+
+        if (tmin > tmax)
+        {
+            temp = tmin;
+            tmin = tmax;
+            tmax = temp;
+        }
+
+        let tymin = (box.min.y - this.start.y) / this.direction.y;
+        let tymax = (box.max.y - this.start.y) / this.direction.y;
+
+        if (tymin > tymax)
+        {
+            temp = tymin;
+            tymin = tymax;
+            tymax = temp;
+        }
+
+        if (tmin <= tymax && tmax >= tymin)
+        {
+            if (tmin < tymin)
+            {
+                tmin = tymin;
+            }
+
+            if (tmax > tymax)
+            {
+                tmax = tymax;
+            }
+
+            let tzmin = (box.min.z - this.start.z) / this.direction.z;
+            let tzmax = (box.max.z - this.start.z) / this.direction.z;
+
+            if (tzmin > tzmax)
+            {
+                temp = tzmin;
+                tzmin = tzmax;
+                tzmax = temp;
+            }
+
+            if (tmin <= tzmax && tmax >= tzmin)
+            {
+                if (tmin < tzmin)
+                {
+                    tmin = tzmin;
+                }
+
+                if (tmax > tzmax)
+                {
+                    tmax = tzmax;
+                }
+
+                this.addHit(
+                    this.start.x + this.direction.x * tmin,
+                    this.start.y + this.direction.y * tmin,
+                    this.start.z + this.direction.z * tmin
+                );
+            }
+        }
     }
 
     fromMouse(ivp, mouse)
@@ -40,115 +113,10 @@ export class Ray
         this.setDirection();
     }
 
-    collideBox(box)
+    setDirection()
     {
-        const multi = this.start.z / this.direction.z;
-        const x = this.start.x - multi*this.direction.x;
-
-        if (box.min.x <= x && x <= box.max.x)
-        {
-            const y = this.start.y - multi*this.direction.y;
-
-            if (box.min.y <= y && y <= box.max.y)
-            {
-                this.addHit(x, y, 0);
-            }
-        }
-    }
-
-    // https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-box-intersection
-    collideAABB()
-    {
-        const box = {
-            min: new Vector(-0.5, -0.5, -0.5),
-            max: new Vector(0.5, 0.5, 0.5)
-        };
-
-        let tmin = (box.min.x - this.start.x) / this.direction.x;
-        let tmax = (box.max.x - this.start.x) / this.direction.x;
-
-        if (tmin > tmax)
-        {
-            [tmin, tmax] = [tmax, tmin];
-        }
-
-        let tymin = (box.min.y - this.start.y) / this.direction.y;
-        let tymax = (box.max.y - this.start.y) / this.direction.y;
-
-        if (tymin > tymax)
-        {
-            [tymin, tymax] = [tymax, tymin];
-        }
-
-        if ((tmin > tymax) || (tymin > tmax))
-        {
-            return false;
-        }
-
-        if (tymin > tmin)
-        {
-            tmin = tymin;
-        }
-
-        if (tymax < tmax)
-        {
-            tmax = tymax;
-        }
-
-        let tzmin = (box.min.z - this.start.z) / this.direction.z;
-        let tzmax = (box.max.z - this.start.z) / this.direction.z;
-
-        if (tzmin > tzmax)
-        {
-            [tzmin, tzmax] = [tzmax, tzmin];
-        }
-
-        if ((tmin > tzmax) || (tzmin > tmax))
-        {
-            return false;
-        }
-
-        if (tzmin > tmin)
-        {
-            tmin = tzmin;
-        }
-
-        if (tzmax < tmax)
-        {
-            tmax = tzmax;
-        }
-
-        console.log(tmin);
-        console.log(tmax);
-
-        return true;
-    }
-
-    collideGround(ground)
-    {
-        const multi = this.start.y / this.direction.y;
-        const x = this.start.x - multi*this.direction.x;
-
-        if (ground.min.x <= x && x <= ground.max.x)
-        {
-            const z = this.start.z - multi*this.direction.z;
-
-            if (ground.min.z <= z && z <= ground.max.z)
-            {
-                this.addHit(x, 0, z);
-            }
-        }
-    }
-
-    addHit(x, y, z)
-    {
-        if (this.numHits === this.hit.length)
-        {
-            const newVec = new Vector();
-            this.hit.push(newVec);
-        }
-
-        const vec = this.hit[this.numHits++];
-        vec.setValues(x, y, z);
+        this.direction.from(this.end);
+        this.direction.subtract(this.start);
+        this.direction.normalize();
     }
 }

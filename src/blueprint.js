@@ -1,12 +1,12 @@
 import * as $ from "./const";
 import { SafeMap, SafeSet } from "./utility";
 
-import { Space }  from "./components/space";
-import { Motion } from "./components/motion";
-import { Player } from "./components/player";
+import { Space }    from "./components/space";
+import { Motion }   from "./components/motion";
+import { Player }   from "./components/player";
 import { Drawable } from "./components/drawable";
-import { Ground } from "./components/ground";
-import { Anim }   from "./components/anim";
+import { HitBox }   from "./components/hitbox";
+import { Anim }     from "./components/anim";
 
 import { processMotion }    from "./processes/process-motion";
 import { processCamera }    from "./processes/process-camera";
@@ -67,7 +67,7 @@ const createTachie = () => [$.ENT_AV_PLAYER, new SafeMap([
 const createGround = () => [$.ENT_GROUND, new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
         new Space(),
-        new Ground(-2, 2, -2, 2),
+        new HitBox(-2, 2, -Number.EPSILON, 0, -2, 2),
         new Drawable(
             $.PRG_REPEAT,
             $.QUE_BACKGROUND,
