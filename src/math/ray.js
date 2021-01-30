@@ -30,9 +30,32 @@ export class Ray
     collide(box)
     {
         let temp;
+        let tmin = -Infinity;
+        let tmax = Infinity;
 
-        let tmin = (box.min.x - this.start.x) / this.direction.x;
-        let tmax = (box.max.x - this.start.x) / this.direction.x;
+        for (let i = 0; i < 3; i++)
+        {
+            const start = this.start[i];
+            const dir = this.direction[i];
+
+            let min = (box.min[i] - start) / dir;
+            let max = (box.max[i] - start) / dir;
+
+            if (min > max)
+            {
+                temp = min;
+                min = max;
+                max = temp;
+            }
+
+            if (tmin > max || tmax < min)
+            {
+                return;
+            }
+
+            tmin = Math.max(tmin, min);
+            tmax = Math.min(tmax, max);
+        }
 
         if (tmin > tmax)
         {
@@ -41,58 +64,87 @@ export class Ray
             tmax = temp;
         }
 
-        let tymin = (box.min.y - this.start.y) / this.direction.y;
-        let tymax = (box.max.y - this.start.y) / this.direction.y;
-
-        if (tymin > tymax)
-        {
-            temp = tymin;
-            tymin = tymax;
-            tymax = temp;
-        }
-
-        if (tmin <= tymax && tmax >= tymin)
-        {
-            if (tmin < tymin)
-            {
-                tmin = tymin;
-            }
-
-            if (tmax > tymax)
-            {
-                tmax = tymax;
-            }
-
-            let tzmin = (box.min.z - this.start.z) / this.direction.z;
-            let tzmax = (box.max.z - this.start.z) / this.direction.z;
-
-            if (tzmin > tzmax)
-            {
-                temp = tzmin;
-                tzmin = tzmax;
-                tzmax = temp;
-            }
-
-            if (tmin <= tzmax && tmax >= tzmin)
-            {
-                if (tmin < tzmin)
-                {
-                    tmin = tzmin;
-                }
-
-                // if (tmax > tzmax)
-                // {
-                //     tmax = tzmax;
-                // }
-
-                this.addHit(
-                    this.start.x + this.direction.x * tmin,
-                    this.start.y + this.direction.y * tmin,
-                    this.start.z + this.direction.z * tmin
-                );
-            }
-        }
+        this.addHit(
+            this.start.x + this.direction.x * tmin,
+            this.start.y + this.direction.y * tmin,
+            this.start.z + this.direction.z * tmin
+        );
     }
+
+    // https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-box-intersection
+    // collide2(box)
+    // {
+    //     let temp;
+
+    //     let tmin = (box.min.x - this.start.x) / this.direction.x;
+    //     let tmax = (box.max.x - this.start.x) / this.direction.x;
+
+    //     if (tmin > tmax)
+    //     {
+    //         temp = tmin;
+    //         tmin = tmax;
+    //         tmax = temp;
+    //     }
+
+    //     let tymin = (box.min.y - this.start.y) / this.direction.y;
+    //     let tymax = (box.max.y - this.start.y) / this.direction.y;
+
+    //     if (tymin > tymax)
+    //     {
+    //         temp = tymin;
+    //         tymin = tymax;
+    //         tymax = temp;
+    //     }
+
+    //     if (tmin <= tymax && tmax >= tymin)
+    //     {
+    //         if (tmin < tymin)
+    //         {
+    //             tmin = tymin;
+    //         }
+
+    //         if (tmax > tymax)
+    //         {
+    //             tmax = tymax;
+    //         }
+
+    //         let tzmin = (box.min.z - this.start.z) / this.direction.z;
+    //         let tzmax = (box.max.z - this.start.z) / this.direction.z;
+
+    //         if (tzmin > tzmax)
+    //         {
+    //             temp = tzmin;
+    //             tzmin = tzmax;
+    //             tzmax = temp;
+    //         }
+
+    //         if (tmin <= tzmax && tmax >= tzmin)
+    //         {
+    //             if (tmin < tzmin)
+    //             {
+    //                 tmin = tzmin;
+    //             }
+
+    //             if (tmax > tzmax)
+    //             {
+    //                 tmax = tzmax;
+    //             }
+
+    //             if (tmin > tmax)
+    //             {
+    //                 temp = tmin;
+    //                 tmin = tmax;
+    //                 tmax = temp;
+    //             }
+
+    //             this.addHit(
+    //                 this.start.x + this.direction.x * tmin,
+    //                 this.start.y + this.direction.y * tmin,
+    //                 this.start.z + this.direction.z * tmin
+    //             );
+    //         }
+    //     }
+    // }
 
     fromMouse(ivp, mouse)
     {
