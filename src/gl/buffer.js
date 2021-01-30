@@ -21,9 +21,9 @@ export const Buffer = {
     prepareBlock(program, blockId)
     {
         const bufferId = blockBuffers.get(blockId);
-        const bindingPoint = uniformBufferBindingPoint.get(bufferId);
+        const binding = uBufferBindings.get(bufferId);
         const blockIdx = gl.getUniformBlockIndex(program, blockId);
-        gl.uniformBlockBinding(program, blockIdx, bindingPoint);
+        gl.uniformBlockBinding(program, blockIdx, binding);
     },
     setData(bufferId, data)
     {
@@ -51,14 +51,14 @@ const blockBuffers = new SafeMap([
     [$.UB_CAMERA, $.BUF_UNI_CAMERA]
 ]);
 
-const uniformBufferBindingPoint = new SafeMap();
+const uBufferBindings = new SafeMap();
 
 for (const [bufferId, bufferData] of buffers)
 {
     if (bufferData.type === $.UNIFORM_BUFFER)
     {
-        const bindingPoint = uniformBufferBindingPoint.size;
-        gl.bindBufferBase($.UNIFORM_BUFFER, bindingPoint, bufferData.buffer);
-        uniformBufferBindingPoint.set(bufferId, bindingPoint);
+        const binding = uBufferBindings.size;
+        gl.bindBufferBase($.UNIFORM_BUFFER, binding, bufferData.buffer);
+        uBufferBindings.set(bufferId, binding);
     }
 }

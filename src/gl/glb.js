@@ -24,6 +24,8 @@ class GlbData
         {
             const offset = byteOffset + i * increment;
 
+            // easiest way to turn raw 4 bytes into float is to read them as
+            // uint32 here, then write to float32array using setUint32
             this.data[i] = range.map(j => toUint(
                 bin.subarray(
                     offset + j * sizeOf,
@@ -33,6 +35,27 @@ class GlbData
         }
     }
 }
+
+const toUnindexedArray = (obj, idx) =>
+{
+    let byteOffset = 0;
+    const f32 = new Float32Array(idx.data.length * VEC3 * obj.rangeLen);
+    const view = new DataView(f32.buffer);
+
+    for (const triangleIdx of idx.data)
+    {
+        for (const vertexIdx of triangleIdx)
+        {
+            for (const coord of obj.data[vertexIdx])
+            {
+                view.setUint32(byteOffset, coord, true);
+                byteOffset += FLOAT32_BYTES;
+            }
+        }
+    }
+
+    return Array.from(f32);
+};
 
 export const Glb = {
     async parse(blob)
@@ -86,30 +109,9 @@ export const Glb = {
         const uv = new GlbData(bin, viewUv, RANGE_2, FLOAT32_BYTES);
         const idx = new GlbData(bin, viewIdx, RANGE_3, USHORT_BYTES);
 
-        for (const obj of [mesh, uv])
-        {
-            let byteOffset = 0;
-            const f32 = new Float32Array(idx.data.length * VEC3 * obj.rangeLen);
-            const view = new DataView(f32.buffer);
-
-            for (const triangleIdx of idx.data)
-            {
-                for (const vertexIdx of triangleIdx)
-                {
-                    for (const coord of obj.data[vertexIdx])
-                    {
-                        view.setUint32(byteOffset, coord, true);
-                        byteOffset += FLOAT32_BYTES;
-                    }
-                }
-            }
-
-            obj.array = Array.from(f32);
-        }
-
         return {
-            mesh: mesh.array,
-            uv: uv.array
+            mesh: toUnindexedArray(mesh, idx),
+            uv: toUnindexedArray(uv, idx)
         };
     }
 };
