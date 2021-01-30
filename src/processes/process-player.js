@@ -11,15 +11,16 @@ export const processPlayer = () =>
 {
     if (Mouse.isWorldClick)
     {
-        Dialogue.setText(
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-        );
+        // Dialogue.setText(
+        //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+        // );
 
         const [ground] = Scene.one($.ENT_GROUND, Ground);
         const ivp = Camera.getInvViewProjection();
 
         ray.numHits = 0;
         ray.fromMouse(ivp, Mouse.clip);
+        console.log(ray.collideAABB());
         ray.collideGround(ground);
 
         // Update player, marker paths

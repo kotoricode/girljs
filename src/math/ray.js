@@ -56,6 +56,74 @@ export class Ray
         }
     }
 
+    // https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-box-intersection
+    collideAABB()
+    {
+        const box = {
+            min: new Vector(-0.5, -0.5, -0.5),
+            max: new Vector(0.5, 0.5, 0.5)
+        };
+
+        let tmin = (box.min.x - this.start.x) / this.direction.x;
+        let tmax = (box.max.x - this.start.x) / this.direction.x;
+
+        if (tmin > tmax)
+        {
+            [tmin, tmax] = [tmax, tmin];
+        }
+
+        let tymin = (box.min.y - this.start.y) / this.direction.y;
+        let tymax = (box.max.y - this.start.y) / this.direction.y;
+
+        if (tymin > tymax)
+        {
+            [tymin, tymax] = [tymax, tymin];
+        }
+
+        if ((tmin > tymax) || (tymin > tmax))
+        {
+            return false;
+        }
+
+        if (tymin > tmin)
+        {
+            tmin = tymin;
+        }
+
+        if (tymax < tmax)
+        {
+            tmax = tymax;
+        }
+
+        let tzmin = (box.min.z - this.start.z) / this.direction.z;
+        let tzmax = (box.max.z - this.start.z) / this.direction.z;
+
+        if (tzmin > tzmax)
+        {
+            [tzmin, tzmax] = [tzmax, tzmin];
+        }
+
+        if ((tmin > tzmax) || (tzmin > tmax))
+        {
+            return false;
+        }
+
+        if (tzmin > tmin)
+        {
+            tmin = tzmin;
+        }
+
+        if (tzmax < tmax)
+        {
+            tmax = tzmax;
+        }
+
+        console.log(tmin);
+        console.log(tmax);
+
+        return true;
+    }
+
     collideGround(ground)
     {
         const multi = this.start.y / this.direction.y;
