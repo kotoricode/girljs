@@ -3,7 +3,7 @@ import { Mouse } from "../dom";
 import { Camera } from "../camera";
 import { HitBox } from "../components/hitbox";
 import { Ray } from "../math/ray";
-import { Dialogue } from "../dialogue";
+//import { Dialogue } from "../dialogue";
 import { Motion } from "../components/motion";
 import { Scene } from "../scene";
 

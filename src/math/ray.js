@@ -80,10 +80,10 @@ export class Ray
                     tmin = tzmin;
                 }
 
-                if (tmax > tzmax)
-                {
-                    tmax = tzmax;
-                }
+                // if (tmax > tzmax)
+                // {
+                //     tmax = tzmax;
+                // }
 
                 this.addHit(
                     this.start.x + this.direction.x * tmin,
