@@ -2,7 +2,7 @@ import * as $ from "../const";
 import { isNullOrUndefined, SafeMap, SettableFloat32Array } from "../utility";
 import { Buffer } from "./buffer";
 import { Texture } from "./texture";
-import { Glb } from "./glb";
+import { parseGlb } from "./glb";
 
 /*------------------------------------------------------------------------------
     Consts
@@ -226,7 +226,7 @@ const fetchExternalModels = () =>
         {
             const response = await window.fetch(obj.url);
             const blob = await response.blob();
-            const { mesh, uv } = await Glb.parse(blob);
+            const { mesh, uv } = await parseGlb(blob);
 
             meshes.set(obj.meshId, mesh);
             uvs.set(obj.uvId, uv);

@@ -178,7 +178,7 @@ const fillText = (str, yPos) =>
 const fontSize = 32;
 const fontMargin = 10;
 
-const x = 0.3;
+const x = 0.26;
 const y = 0.7;
 
 const xPx = x * $.RES_WIDTH;
