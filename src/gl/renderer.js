@@ -50,8 +50,6 @@ export const render = () =>
         draw(program);
     }
 
-    draw(debugProgram, $.LINES);
-
     for (const queue of queues.values())
     {
         queue.clear();
@@ -98,12 +96,11 @@ gl.disable($.CULL_FACE);
 gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
-const debugProgram = Debug.getProgram();
-
 const uiPrograms = new SafeSet([
     new Program($.PRG_IMAGE, $.MDL_FB),
     Dialogue.getBubbleProgram(),
     Dialogue.getTextProgram(),
+    Debug.getProgram()
 ]);
 
 const queues = new SafeMap([
