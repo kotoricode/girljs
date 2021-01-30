@@ -167,7 +167,7 @@ const drawDialogueText = (str) =>
 
 const fillText = (str, yPos) =>
 {
-    if (isNullOrUndefined(yPos)) throw Error;
+    if (isNullOrUndefined(yPos)) throw yPos;
 
     text.ctx.fillText(str, xPx, yPos);
 };

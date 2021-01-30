@@ -40,7 +40,7 @@ export class Entity
 
     hasFlags(flags)
     {
-        if (!Number.isInteger(flags)) throw Error;
+        if (!Number.isInteger(flags)) throw flags;
 
         return (flags & this.flags) === flags;
     }

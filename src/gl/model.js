@@ -120,7 +120,7 @@ const meshes = new SafeMap([
         .5, -.5, .5,
         .5, .5, .5,
     ]],
-    [MSH_GROUND, meshXz(-2, 2, -2, 2)],
+    [MSH_GROUND, meshXz(-15, 15, -2, 2)],
     [MSH_PLAYER, meshXy(-0.4, 0.4, 0, 1.5)],
     [MSH_AV_PLAYER, meshXyScreen(187, 600)],
     [MSH_SCREEN, meshXyScreen($.RES_WIDTH, $.RES_HEIGHT)],
@@ -235,7 +235,7 @@ export const Model = {
 
 const getModel = (modelId) =>
 {
-    if (!Model.isLoaded) throw Error("Model is not Loaded yet");
+    if (!Model.isLoaded) throw Error("Model not loaded");
 
     return models.get(modelId);
 };
@@ -257,7 +257,7 @@ const fetchExternalModels = () =>
 
 const pushData = (buffer, data) =>
 {
-    if (!Array.isArray(data)) throw Error;
+    if (!Array.isArray(data)) throw data;
 
     const offset = buffer.length;
     buffer.length += data.length;

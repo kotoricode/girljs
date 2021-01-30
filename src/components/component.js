@@ -11,7 +11,7 @@ export class Component
 
         if (!flagged.has(ctorName))
         {
-            if (flagged.size > 31) throw Error;
+            if (flagged.size > 31) throw flagged;
 
             ctor.flag = 1 << flagged.size;
             flagged.add(ctorName);

@@ -131,7 +131,7 @@ const addEntity = (entity, parentId) =>
     {
         const parent = Scene.getEntity(parentId);
 
-        if (!parent.hasComponent(Space)) throw Error;
+        if (!parent.hasComponent(Space)) throw parentId;
 
         const parentSpace = parent.getComponent(Space);
         const space = entity.getComponent(Space);

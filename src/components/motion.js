@@ -7,7 +7,7 @@ export class Motion extends Component
     {
         super();
 
-        if (!speed) throw Error;
+        if (!speed) throw speed;
 
         this.speed = speed;
         this.direction = new Vector();
@@ -22,7 +22,7 @@ export class Motion extends Component
 
     getTarget()
     {
-        if (this.idx < 0 || this.waypoints.length <= this.idx) throw Error;
+        if (this.idx < 0 || this.waypoints.length <= this.idx) throw this.idx;
 
         return this.waypoints[this.idx];
     }

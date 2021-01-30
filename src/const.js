@@ -6,12 +6,10 @@ export const
 let i = 0;
 
 export const
-    ENT_TEST = "test",
     ENT_AV_PLAYER = "av_player",
     ENT_GROUND = "ground",
     ENT_PLAYER = "player",
-    ENT_ROOT = "root",
-    ENT_MONKEY = "monkey";
+    ENT_ROOT = "root";
 
 export const
     SCN_TEST = i++;

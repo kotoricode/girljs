@@ -5,7 +5,7 @@ import { clamp, SafeMap, LISTENER_ONCE } from "./utility";
 export const AudioPlayer = {
     play(audioId, url)
     {
-        if (!url) throw Error;
+        if (!url) throw url;
 
         const audioObj = audio.get(audioId);
         audioObj.url = url;

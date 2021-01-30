@@ -26,7 +26,7 @@ export class SettableFloat32Array extends Float32Array
 
     setValues(...values)
     {
-        if (this.length !== values.length) throw Error;
+        if (this.length !== values.length) throw values;
 
         for (let i = 0; i < values.length; i++)
         {
@@ -44,32 +44,32 @@ export class SafeMap extends Map
 
     delete(key)
     {
-        if (isNullOrUndefined(key)) throw Error;
-        if (!super.delete(key)) throw Error;
+        if (isNullOrUndefined(key)) throw key;
+        if (!super.delete(key)) throw key;
     }
 
     get(key)
     {
-        if (isNullOrUndefined(key)) throw Error;
-        if (!this.has(key)) throw Error;
+        if (isNullOrUndefined(key)) throw key;
+        if (!this.has(key)) throw key;
 
         return super.get(key);
     }
 
     set(key, value)
     {
-        if (isNullOrUndefined(key)) throw Error;
-        if (isNullOrUndefined(value)) throw Error;
-        if (this.has(key)) throw Error;
+        if (isNullOrUndefined(key)) throw key;
+        if (isNullOrUndefined(value)) throw value;
+        if (this.has(key)) throw key;
 
         return super.set(key, value);
     }
 
     update(key, value)
     {
-        if (isNullOrUndefined(key)) throw Error;
-        if (isNullOrUndefined(value)) throw Error;
-        if (!this.has(key)) throw Error;
+        if (isNullOrUndefined(key)) throw key;
+        if (isNullOrUndefined(value)) throw value;
+        if (!this.has(key)) throw key;
 
         return super.set(key, value);
     }
@@ -84,16 +84,16 @@ export class SafeSet extends Set
 
     add(value)
     {
-        if (isNullOrUndefined(value)) throw Error;
-        if (this.has(value)) throw Error;
+        if (isNullOrUndefined(value)) throw value;
+        if (this.has(value)) throw value;
 
         return super.add(value);
     }
 
     delete(value)
     {
-        if (isNullOrUndefined(value)) throw Error;
-        if (!super.delete(value)) throw Error;
+        if (isNullOrUndefined(value)) throw value;
+        if (!super.delete(value)) throw value;
     }
 }
 
@@ -111,7 +111,7 @@ export class SettableArray extends Array
 
     setValues(...values)
     {
-        if (this.length !== values.length) throw Error;
+        if (this.length !== values.length) throw values;
 
         for (let i = 0; i < values.length; i++)
         {
@@ -135,7 +135,7 @@ export const Publisher = {
     },
     subscribe(event, subFunc)
     {
-        if (!(subFunc instanceof Function)) throw Error;
+        if (!(subFunc instanceof Function)) throw subFunc;
 
         if (!eventSubs.has(event))
         {
@@ -170,7 +170,7 @@ export const Storage = {
         }
         catch
         {
-            throw Error;
+            throw key;
         }
     },
     set(key, value)

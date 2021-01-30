@@ -88,7 +88,7 @@ export class Vector extends SettableArray
     {
         const magnitude = this.magnitude();
 
-        if (!magnitude) throw Error;
+        if (!magnitude) throw magnitude;
 
         this.multiplyScalar(toMagnitude / magnitude);
     }

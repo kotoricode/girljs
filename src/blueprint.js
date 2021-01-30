@@ -67,13 +67,13 @@ const createTachie = () => [$.ENT_AV_PLAYER, new SafeMap([
 const createGround = () => [$.ENT_GROUND, new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
         new Space(),
-        new HitBox(-2, 2, -Number.EPSILON, 0, -2, 2),
+        new HitBox(-15, 15, -Number.EPSILON, 0, -2, 2),
         new Drawable(
             $.PRG_REPEAT,
             $.QUE_BACKGROUND,
             $.MDL_GROUND,
             new SafeMap([
-                [$.U_UVREPEAT, [4, 4]],
+                [$.U_UVREPEAT, [30, 4]],
                 [$.U_COLOR, [1, 1, 1, 1]]
             ])
         )
@@ -81,7 +81,7 @@ const createGround = () => [$.ENT_GROUND, new SafeMap([
     [$.BLU_CHILDREN, new SafeSet()]
 ])];
 
-const createTest = () => [$.ENT_TEST, new SafeMap([
+const createTest = () => [Symbol(), new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
         new Space(),
         new Drawable(
@@ -93,7 +93,7 @@ const createTest = () => [$.ENT_TEST, new SafeMap([
     [$.BLU_CHILDREN, new SafeSet()]
 ])];
 
-const createMonkey = () => [$.ENT_MONKEY, new SafeMap([
+const createMonkey = () => [Symbol(), new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
         new Space(3, 0, 0),
         new Drawable(

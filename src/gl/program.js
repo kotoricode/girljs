@@ -57,7 +57,7 @@ export class Program
 
     bindVao()
     {
-        if (activeVao === this.vao) throw Error;
+        if (activeVao === this.vao) throw activeVao;
 
         activeVao = this.vao;
         gl.bindVertexArray(activeVao);
@@ -121,7 +121,7 @@ export class Program
 
     stageUniform(key, value)
     {
-        if (!Array.isArray(value)) throw Error;
+        if (!Array.isArray(value)) throw value;
 
         this.uStaging.update(key, value);
     }
@@ -130,14 +130,14 @@ export class Program
     {
         const staged = this.uStaging.get(key);
 
-        if (!Array.isArray(staged) || staged.length <= idx) throw Error;
+        if (!Array.isArray(staged) || staged.length <= idx) throw staged;
 
         staged[idx] = value;
     }
 
     unbindVao()
     {
-        if (activeVao !== this.vao) throw Error;
+        if (activeVao !== this.vao) throw activeVao;
 
         activeVao = null;
         gl.bindVertexArray(activeVao);
@@ -176,24 +176,24 @@ const createUniSetter = (pos, loc) =>
         case U_TYPE_2F:
             return (values) =>
             {
-                if (values.length !== 2) throw Error;
+                if (values.length !== 2) throw values;
                 gl.uniform2f(loc, ...values);
             };
         case U_TYPE_4F:
             return (values) =>
             {
-                if (values.length !== 4) throw Error;
+                if (values.length !== 4) throw values;
                 gl.uniform4f(loc, ...values);
             };
         case U_TYPE_M4FV:
             return (values) =>
             {
-                if (values.length !== 2) throw Error;
-                if (!(values[1] instanceof Matrix)) throw Error;
+                if (values.length !== 2) throw values;
+                if (!(values[1] instanceof Matrix)) throw values;
                 gl.uniformMatrix4fv(loc, ...values);
             };
         default:
-            throw Error;
+            throw pos;
     }
 };
 
@@ -350,7 +350,7 @@ for (let i = 0; i < programDef.length;)
     const fs = createAttachShader(program, $.FRAGMENT_SHADER, frag);
     gl.linkProgram(program);
 
-    if (!gl.getProgramParameter(program, $.LINK_STATUS)) throw Error;
+    if (!gl.getProgramParameter(program, $.LINK_STATUS)) throw program;
 
     detachDeleteShader(program, vs);
     detachDeleteShader(program, fs);

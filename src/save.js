@@ -37,7 +37,7 @@ export const Prefs = {
 
 const assertHasKey = (prefId) =>
 {
-    if (!(prefId in prefs)) throw Error;
+    if (!(prefId in prefs)) throw prefId;
 };
 
 const prefs = {

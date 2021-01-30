@@ -7,7 +7,7 @@ export class Matrix extends SettableArray
     {
         if (params.length)
         {
-            if (params.length !== 16) throw Error;
+            if (params.length !== 16) throw params;
 
             super(...params);
         }
@@ -102,7 +102,7 @@ export class Matrix extends SettableArray
 
         const invDet = 1 / (M0*A0 + M1*A1 + M2*A2 + M3*A3);
 
-        if (!Number.isFinite(invDet)) throw Error;
+        if (!Number.isFinite(invDet)) throw invDet;
 
         const M0D = M0 * MD;
         const M0E = M0 * ME;
