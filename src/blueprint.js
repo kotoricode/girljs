@@ -19,7 +19,7 @@ const createPlayer = () => [$.ENT_PLAYER, new SafeMap([
         new Motion(3),
         new Player(),
         new Drawable(
-            $.PRO_SPRITE,
+            $.PRG_SPRITE,
             $.QUE_SPRITE,
             $.MDL_BRAID_00
         ),
@@ -53,7 +53,7 @@ const createTachie = () => [$.ENT_AV_PLAYER, new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
         new Space(0.75, -0.2, 0),
         new Drawable(
-            $.PRO_UI,
+            $.PRG_UI,
             $.QUE_UI,
             $.MDL_AV_PLAYER,
             new SafeMap([
@@ -69,7 +69,7 @@ const createGround = () => [$.ENT_GROUND, new SafeMap([
         new Space(),
         new Ground(-2, 2, -2, 2),
         new Drawable(
-            $.PRO_REPEAT,
+            $.PRG_REPEAT,
             $.QUE_BACKGROUND,
             $.MDL_GROUND,
             new SafeMap([
@@ -85,7 +85,7 @@ const createTest = () => [$.ENT_TEST, new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
         new Space(),
         new Drawable(
-            $.PRO_SPRITE,
+            $.PRG_SPRITE,
             $.QUE_BACKGROUND,
             $.MDL_TEST
         )
@@ -97,7 +97,7 @@ const createMonkey = () => [$.ENT_MONKEY, new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
         new Space(3, 0, 0),
         new Drawable(
-            $.PRO_SPRITE,
+            $.PRG_SPRITE,
             $.QUE_BACKGROUND,
             $.MDL_MONKEY
         )

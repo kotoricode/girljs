@@ -73,6 +73,11 @@ export class Program
         return this.uStaging.has(uId);
     }
 
+    hasUniforms()
+    {
+        return this.uStaging.size > 0;
+    }
+
     async setModel(modelId)
     {
         if (!Model.isLoaded)
@@ -316,12 +321,12 @@ const fragDef = new SafeMap([
     Program definitions
 ------------------------------------------------------------------------------*/
 const programDef = [
-    $.PRO_COLOR,   VS_COLOR,  FS_COLOR,
-    $.PRO_IMAGE,   VS_SCREEN, FS_IMAGE,
-    $.PRO_REPEAT,  VS_WORLD,  FS_TEX_RECT_REPEAT,
-    $.PRO_SCREEN,  VS_SCREEN, FS_TEX,
-    $.PRO_SPRITE,  VS_WORLD,  FS_TEX,
-    $.PRO_UI,      VS_UI,     FS_TEX,
+    $.PRG_COLOR,  VS_COLOR,  FS_COLOR,
+    $.PRG_IMAGE,  VS_SCREEN, FS_IMAGE,
+    $.PRG_REPEAT, VS_WORLD,  FS_TEX_RECT_REPEAT,
+    $.PRG_SCREEN, VS_SCREEN, FS_TEX,
+    $.PRG_SPRITE, VS_WORLD,  FS_TEX,
+    $.PRG_UI,     VS_UI,     FS_TEX,
 ];
 
 /*------------------------------------------------------------------------------

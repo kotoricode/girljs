@@ -9,7 +9,7 @@ class UiCanvas
 {
     constructor(modelId, color)
     {
-        this.program = new Program($.PRO_SCREEN, modelId);
+        this.program = new Program($.PRG_SCREEN, modelId);
         this.program.stageUniform($.U_COLOR, color);
 
         this.canvas = window.document.createElement("canvas");

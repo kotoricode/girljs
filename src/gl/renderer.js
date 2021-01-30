@@ -45,32 +45,17 @@ export const render = () =>
 
     unbindFb();
 
-    draw(imageProgram);
-    renderText();
-    renderDebug();
+    for (const program of uiPrograms)
+    {
+        draw(program);
+    }
+
+    draw(debugProgram, $.LINES);
 
     for (const queue of queues.values())
     {
         queue.clear();
     }
-};
-
-const renderDebug = () =>
-{
-    const program = Debug.getProgram();
-    program.activate();
-    const drawSize = Model.getDrawSize(program.modelId);
-
-    drawArraysVao($.LINES, drawSize, program);
-};
-
-const renderText = () =>
-{
-    const textProgram = Dialogue.getTextProgram();
-    const bubbleProgram = Dialogue.getBubbleProgram();
-
-    draw(bubbleProgram);
-    draw(textProgram);
 };
 
 const drawQueue = (queueId) =>
@@ -85,30 +70,51 @@ const drawQueue = (queueId) =>
 
 const draw = (program) =>
 {
-    const texture = Model.getTexture(program.modelId);
+    program.activate();
+
+    if (Model.isTextured(program.modelId))
+    {
+        const texture = Model.getTexture(program.modelId);
+        Texture.bind(texture);
+    }
+
+    if (program.hasUniforms())
+    {
+        program.setUniforms();
+    }
+
+    const drawMode = Model.getDrawMode(program.modelId);
     const drawSize = Model.getDrawSize(program.modelId);
 
-    program.activate();
-    Texture.bind(texture);
-    program.setUniforms();
-    drawArraysVao($.TRIANGLES, drawSize, program);
-};
-
-const drawArraysVao = (mode, drawSize, program) =>
-{
     program.bindVao();
-    gl.drawArrays(mode, 0, drawSize);
+    gl.drawArrays(drawMode, 0, drawSize);
     program.unbindVao();
 };
 
+/*------------------------------------------------------------------------------
+    Init
+------------------------------------------------------------------------------*/
 gl.disable($.CULL_FACE);
-
-// Blending
 gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
-const imageProgram = new Program($.PRO_IMAGE, $.MDL_FB);
+const debugProgram = Debug.getProgram();
 
+const uiPrograms = new SafeSet([
+    new Program($.PRG_IMAGE, $.MDL_FB),
+    Dialogue.getBubbleProgram(),
+    Dialogue.getTextProgram(),
+]);
+
+const queues = new SafeMap([
+    [$.QUE_BACKGROUND, new SafeSet()],
+    [$.QUE_SPRITE, new SafeSet()],
+    [$.QUE_UI, new SafeSet()]
+]);
+
+/*------------------------------------------------------------------------------
+    Framebuffer
+------------------------------------------------------------------------------*/
 const fbo = gl.createFramebuffer();
 const rboDepth = gl.createRenderbuffer();
 const fbTexture = Texture.get($.TEX_FB);
@@ -138,9 +144,3 @@ gl.framebufferRenderbuffer(
 );
 
 unbindFb();
-
-const queues = new SafeMap([
-    [$.QUE_BACKGROUND, new SafeSet()],
-    [$.QUE_SPRITE, new SafeSet()],
-    [$.QUE_UI, new SafeSet()]
-]);

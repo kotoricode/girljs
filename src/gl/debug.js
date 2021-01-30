@@ -8,4 +8,4 @@ export const Debug = {
     }
 };
 
-const program = new Program($.PRO_COLOR, $.MDL_DEBUG);
+const program = new Program($.PRG_COLOR, $.MDL_DEBUG);

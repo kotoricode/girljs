@@ -35,12 +35,12 @@ export const
     GL
 ------------------------------------------------------------------------------*/
 export const
-    PRO_COLOR = i++,
-    PRO_IMAGE = i++,
-    PRO_REPEAT = i++,
-    PRO_SCREEN = i++,
-    PRO_SPRITE = i++,
-    PRO_UI = i++;
+    PRG_COLOR = i++,
+    PRG_IMAGE = i++,
+    PRG_REPEAT = i++,
+    PRG_SCREEN = i++,
+    PRG_SPRITE = i++,
+    PRG_UI = i++;
 
 export const
     QUE_BACKGROUND = i++,
@@ -53,37 +53,37 @@ export const
     BUF_ARR_MODEL = i++;
 
 export const
-    MDL_MONKEY = "MOD_MONKEY",
-    MDL_BUBBLE = "MOD_BUBBLE",
-    MDL_TEXT = "MOD_TEXT",
-    MDL_TEST = "MOD_TEST",
-    MDL_AV_PLAYER = "MOD_AV_PLAYER",
-    MDL_DEBUG = "MOD_DEBUG",
-    MDL_GROUND = "MOD_GROUND",
-    MDL_FB = "MOD_SCREEN",
-    MDL_PLAYER = "MOD_PLAYER",
-    MDL_BRAID_00 = i++,
-    MDL_BRAID_02 = i++,
-    MDL_BRAID_04 = i++,
-    MDL_BRAID_06 = i++,
-    MDL_BRAID_08 = i++,
-    MDL_BRAID_10 = i++,
-    MDL_BRAID_12 = i++,
-    MDL_BRAID_14 = i++,
-    MDL_BRAID_16 = i++,
-    MDL_BRAID_18 = i++,
-    MDL_BRAID_20 = i++,
-    MDL_BRAID_22 = i++,
-    MDL_BRAID_24 = i++,
-    MDL_BRAID_26 = i++;
+    MDL_MONKEY = "MDL_MONKEY",
+    MDL_BUBBLE = "MDL_BUBBLE",
+    MDL_TEXT = "MDL_TEXT",
+    MDL_TEST = "MDL_TEST",
+    MDL_AV_PLAYER = "MDL_AV_PLAYER",
+    MDL_DEBUG = "MDL_DEBUG",
+    MDL_GROUND = "MDL_GROUND",
+    MDL_FB = "MDL_SCREEN",
+    MDL_PLAYER = "MDL_PLAYER",
+    MDL_BRAID_00 = "MDL_BRAID_00",
+    MDL_BRAID_02 = "MDL_BRAID_02",
+    MDL_BRAID_04 = "MDL_BRAID_04",
+    MDL_BRAID_06 = "MDL_BRAID_06",
+    MDL_BRAID_08 = "MDL_BRAID_08",
+    MDL_BRAID_10 = "MDL_BRAID_10",
+    MDL_BRAID_12 = "MDL_BRAID_12",
+    MDL_BRAID_14 = "MDL_BRAID_14",
+    MDL_BRAID_16 = "MDL_BRAID_16",
+    MDL_BRAID_18 = "MDL_BRAID_18",
+    MDL_BRAID_20 = "MDL_BRAID_20",
+    MDL_BRAID_22 = "MDL_BRAID_22",
+    MDL_BRAID_24 = "MDL_BRAID_24",
+    MDL_BRAID_26 = "MDL_BRAID_26";
 
 export const
-    TEX_BRAID = i++,
-    TEX_GIRL = i++,
-    TEX_TEXTURE = i++,
-    TEX_FB = i++,
-    TEX_UI_TEXT = i++,
-    TEX_UI_BUBBLE = i++;
+    TEX_BRAID = "TEX_BRAID",
+    TEX_GIRL = "TEX_GIRL",
+    TEX_TEXTURE = "TEX_TEXTURE",
+    TEX_FB = "TEX_FB",
+    TEX_UI_TEXT = "TEX_UI_TEXT",
+    TEX_UI_BUBBLE = "TEX_UI_BUBBLE";
 
 export const
     DLG_LEFT_AVATAR = i++,

@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { SafeMap, SettableFloat32Array } from "../utility";
+import { isNullOrUndefined, SafeMap, SettableFloat32Array } from "../utility";
 import { Buffer } from "./buffer";
 import { Texture } from "./texture";
 import { Glb } from "./glb";
@@ -149,13 +149,14 @@ let loadPromise;
 
 class ModelData
 {
-    constructor(attributes, bufferId, uvId, textureId, drawSize)
+    constructor(attributes, bufferId, drawMode, drawSize, uvId, textureId)
     {
         this.attributes = attributes;
         this.bufferId = bufferId;
+        this.drawMode = drawMode;
+        this.drawSize = drawSize;
         this.uvId = uvId;
         this.textureId = textureId;
-        this.drawSize = drawSize;
     }
 }
 
@@ -168,6 +169,10 @@ export const Model = {
     getBufferId(modelId)
     {
         return getModel(modelId).bufferId;
+    },
+    getDrawMode(modelId)
+    {
+        return getModel(modelId).drawMode;
     },
     getDrawSize(modelId)
     {
@@ -184,6 +189,12 @@ export const Model = {
         const uvId = getModel(modelId).uvId;
 
         return uvs.get(uvId);
+    },
+    isTextured(modelId)
+    {
+        const textureId = getModel(modelId).textureId;
+
+        return !isNullOrUndefined(textureId);
     },
     load()
     {
@@ -244,6 +255,8 @@ const buildModels = () =>
     const debugData = [];
 
     const modelDef = [
+    /* eslint-disable max-len */
+    //  MODEL_ID         MESH_ID        UV_ID        TEXTURE_ID
         $.MDL_AV_PLAYER, MSH_AV_PLAYER, UV_GIRL_00,  $.TEX_GIRL,
         $.MDL_GROUND,    MSH_GROUND,    UV_GROUND,   $.TEX_TEXTURE,
         $.MDL_BRAID_00,  MSH_PLAYER,    UV_BRAID_00, $.TEX_BRAID,
@@ -265,6 +278,8 @@ const buildModels = () =>
         $.MDL_FB,        MSH_SCREEN,    UV_SCREEN,   $.TEX_FB,
         $.MDL_TEXT,      MSH_SCREEN,    UV_SCREEN,   $.TEX_UI_TEXT,
         $.MDL_BUBBLE,    MSH_SCREEN,    UV_SCREEN,   $.TEX_UI_BUBBLE,
+    //  MODEL_ID         MESH_ID        UV_ID        TEXTURE_ID
+    /* eslint-disable max-len */
     ];
 
     const xyzOffsets = new SafeMap();
@@ -303,9 +318,10 @@ const buildModels = () =>
         models.set(modelId, new ModelData(
             attrib,
             $.BUF_ARR_MODEL,
+            $.TRIANGLES,
+            drawSizes.get(meshId),
             uvId,
             textureId,
-            drawSizes.get(meshId),
         ));
     }
 
@@ -321,9 +337,8 @@ const buildModels = () =>
     models.set($.MDL_DEBUG, new ModelData(
         debugAttrib,
         $.BUF_ARR_DEBUG,
-        null,
-        null,
-        mesh.length / 3
+        $.LINES,
+        mesh.length / 3,
     ));
 
     /*--------------------------------------------------------------------------
