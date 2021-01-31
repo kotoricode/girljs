@@ -221,38 +221,36 @@ const createUniSetter = (pos, loc) =>
 /*------------------------------------------------------------------------------
     Shader definition creation
 ------------------------------------------------------------------------------*/
-const setUniformData = (uData) =>
+class FShader
 {
-    const map = new SafeMap();
-
-    if (uData)
+    constructor(src, uBlocks, ...uniforms)
     {
-        const uMap = new SafeMap();
+        this.src = src;
+        this.uBlocks = uBlocks;
+        this.map = new SafeMap();
 
-        for (let i = 0; i < uData.length;)
+        if (uniforms)
         {
-            uMap.set(uData[i++], uData[i++]);
+            const uMap = new SafeMap();
+
+            for (let i = 0; i < uniforms.length;)
+            {
+                uMap.set(uniforms[i++], uniforms[i++]);
+            }
+
+            this.map.set(PROG_DEF_U, uMap);
         }
-
-        map.set(PROG_DEF_U, uMap);
     }
+}
 
-    return map;
-};
-
-const createVertDef = (src, layout, uBlocks, ...uniforms) =>
+class VShader extends FShader
 {
-    const map = setUniformData(uniforms);
-
-    return { src, layout, uBlocks, map };
-};
-
-const createFragDef = (src, uBlocks, ...uniforms) =>
-{
-    const map = setUniformData(uniforms);
-
-    return { src, uBlocks, map };
-};
+    constructor(src, layout, uBlocks, ...uniforms)
+    {
+        super(src, uBlocks, ...uniforms);
+        this.layout = layout;
+    }
+}
 
 const DAT_A_LAYOUT = 0;
 const DAT_PROGRAM = 1;
@@ -302,12 +300,12 @@ const uniMapColor = new SafeMap([uniColor]);
     Vertex shader definitions
 ------------------------------------------------------------------------------*/
 const vertDef = new SafeMap([
-    [VS_COLOR, createVertDef(vsColorSrc, new SafeMap([attribXyz]), ubCamera)],
-    [VS_SCREEN, createVertDef(vsScreenSrc, attrMapXyzUv)],
-    [VS_UI, createVertDef(vsUiSrc, attrMapXyzUv, null,
+    [VS_COLOR, new VShader(vsColorSrc, new SafeMap([attribXyz]), ubCamera)],
+    [VS_SCREEN, new VShader(vsScreenSrc, attrMapXyzUv)],
+    [VS_UI, new VShader(vsUiSrc, attrMapXyzUv, null,
         U_TYPE_M4FV, new SafeMap([uniTransform])
     )],
-    [VS_WORLD, createVertDef(vsWorldSrc, attrMapXyzUv, ubCamera,
+    [VS_WORLD, new VShader(vsWorldSrc, attrMapXyzUv, ubCamera,
         U_TYPE_M4FV, new SafeMap([uniTransform]),
         U_TYPE_2F, new SafeMap([uniUvRepeat])
     )]
@@ -317,13 +315,13 @@ const vertDef = new SafeMap([
     Fragment shader definitions
 ------------------------------------------------------------------------------*/
 const fragDef = new SafeMap([
-    [FS_COLOR, createFragDef(fsColorSrc)],
-    [FS_IMAGE, createFragDef(fsImageSrc)],
-    [FS_TEX_RECT_REPEAT, createFragDef(fsTexRectRepeatSrc, null,
+    [FS_COLOR, new FShader(fsColorSrc)],
+    [FS_IMAGE, new FShader(fsImageSrc)],
+    [FS_TEX_RECT_REPEAT, new FShader(fsTexRectRepeatSrc, null,
         U_TYPE_2F, new SafeMap([uniUvOffset, uniUvSize]),
         U_TYPE_4F, uniMapColor
     )],
-    [FS_TEX, createFragDef(fsTexSrc, null,
+    [FS_TEX, new FShader(fsTexSrc, null,
         U_TYPE_4F, uniMapColor
     )]
 ]);
