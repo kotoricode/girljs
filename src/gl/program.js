@@ -174,7 +174,7 @@ let activeVao;
 const createAttachShader = (program, shaderId, shaderDef) =>
 {
     const shader = gl.createShader(shaderId);
-    gl.shaderSource(shader, shaderDef.get(PROG_DEF_SRC));
+    gl.shaderSource(shader, shaderDef.src);
     gl.compileShader(shader);
     gl.attachShader(program, shader);
 
@@ -221,8 +221,10 @@ const createUniSetter = (pos, loc) =>
 /*------------------------------------------------------------------------------
     Shader definition creation
 ------------------------------------------------------------------------------*/
-const setUniformData = (map, uData) =>
+const setUniformData = (uData) =>
 {
+    const map = new SafeMap();
+
     if (uData)
     {
         const uMap = new SafeMap();
@@ -234,31 +236,22 @@ const setUniformData = (map, uData) =>
 
         map.set(PROG_DEF_U, uMap);
     }
+
+    return map;
 };
 
-const createVertDef = (id, src, layout, uBlocks, ...uData) =>
+const createVertDef = (src, layout, uBlocks, ...uniforms) =>
 {
-    const map = new SafeMap([
-        [PROG_DEF_SRC, src],
-        [PROG_DEF_A_LAYOUT, layout]
-    ]);
+    const map = setUniformData(uniforms);
 
-    if (uBlocks)
-    {
-        map.set(PROG_DEF_U_BLOCKS, uBlocks);
-    }
-
-    setUniformData(map, uData);
-
-    return [id, map];
+    return { src, layout, uBlocks, map };
 };
 
-const createFragDef = (id, src, ...uData) =>
+const createFragDef = (src, uBlocks, ...uniforms) =>
 {
-    const map = new SafeMap([[PROG_DEF_SRC, src]]);
-    setUniformData(map, uData);
+    const map = setUniformData(uniforms);
 
-    return [id, map];
+    return { src, uBlocks, map };
 };
 
 const DAT_A_LAYOUT = 0;
@@ -270,10 +263,7 @@ const DAT_U_SETTERS = 4;
 /*------------------------------------------------------------------------------
     Const
 ------------------------------------------------------------------------------*/
-const PROG_DEF_SRC = 0;
-const PROG_DEF_A_LAYOUT = 1;
 const PROG_DEF_U = 2;
-const PROG_DEF_U_BLOCKS = 3;
 
 const VS_COLOR = 0;
 const VS_SCREEN = 1;
@@ -312,30 +302,30 @@ const uniMapColor = new SafeMap([uniColor]);
     Vertex shader definitions
 ------------------------------------------------------------------------------*/
 const vertDef = new SafeMap([
-    createVertDef(VS_COLOR, vsColorSrc, new SafeMap([attribXyz]), ubCamera),
-    createVertDef(VS_SCREEN, vsScreenSrc, attrMapXyzUv),
-    createVertDef(VS_UI, vsUiSrc, attrMapXyzUv, null,
+    [VS_COLOR, createVertDef(vsColorSrc, new SafeMap([attribXyz]), ubCamera)],
+    [VS_SCREEN, createVertDef(vsScreenSrc, attrMapXyzUv)],
+    [VS_UI, createVertDef(vsUiSrc, attrMapXyzUv, null,
         U_TYPE_M4FV, new SafeMap([uniTransform])
-    ),
-    createVertDef(VS_WORLD, vsWorldSrc, attrMapXyzUv, ubCamera,
+    )],
+    [VS_WORLD, createVertDef(vsWorldSrc, attrMapXyzUv, ubCamera,
         U_TYPE_M4FV, new SafeMap([uniTransform]),
         U_TYPE_2F, new SafeMap([uniUvRepeat])
-    )
+    )]
 ]);
 
 /*------------------------------------------------------------------------------
     Fragment shader definitions
 ------------------------------------------------------------------------------*/
 const fragDef = new SafeMap([
-    createFragDef(FS_COLOR, fsColorSrc),
-    createFragDef(FS_IMAGE, fsImageSrc),
-    createFragDef(FS_TEX_RECT_REPEAT, fsTexRectRepeatSrc,
+    [FS_COLOR, createFragDef(fsColorSrc)],
+    [FS_IMAGE, createFragDef(fsImageSrc)],
+    [FS_TEX_RECT_REPEAT, createFragDef(fsTexRectRepeatSrc, null,
         U_TYPE_2F, new SafeMap([uniUvOffset, uniUvSize]),
         U_TYPE_4F, uniMapColor
-    ),
-    createFragDef(FS_TEX, fsTexSrc,
+    )],
+    [FS_TEX, createFragDef(fsTexSrc, null,
         U_TYPE_4F, uniMapColor
-    )
+    )]
 ]);
 
 /*------------------------------------------------------------------------------
@@ -361,7 +351,7 @@ for (let i = 0; i < programDef.length;)
     const vert = vertDef.get(programDef[i++]);
     const frag = fragDef.get(programDef[i++]);
 
-    const aLayout = vert.get(PROG_DEF_A_LAYOUT);
+    const aLayout = vert.layout;
 
     /*--------------------------------------------------------------------------
         Program
@@ -381,17 +371,17 @@ for (let i = 0; i < programDef.length;)
     --------------------------------------------------------------------------*/
     const uBlocks = new SafeSet();
 
-    if (vert.has(PROG_DEF_U_BLOCKS))
+    if (vert.uBlocks)
     {
-        for (const block of vert.get(PROG_DEF_U_BLOCKS))
+        for (const block of vert.uBlocks)
         {
             uBlocks.add(block);
         }
     }
 
-    if (frag.has(PROG_DEF_U_BLOCKS))
+    if (frag.uBlocks)
     {
-        for (const block of frag.has(PROG_DEF_U_BLOCKS))
+        for (const block of frag.uBlocks)
         {
             uBlocks.add(block);
         }
@@ -405,9 +395,9 @@ for (let i = 0; i < programDef.length;)
 
     for (const shader of [vert, frag])
     {
-        if (shader.has(PROG_DEF_U))
+        if (shader.map.has(PROG_DEF_U))
         {
-            for (const [type, map] of shader.get(PROG_DEF_U))
+            for (const [type, map] of shader.map.get(PROG_DEF_U))
             {
                 for (const [name, values] of map)
                 {
