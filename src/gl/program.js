@@ -221,7 +221,7 @@ const createUniSetter = (pos, loc) =>
 /*------------------------------------------------------------------------------
     Shader definition creation
 ------------------------------------------------------------------------------*/
-class FShader
+class Shader
 {
     constructor(src, uBlocks, uniforms)
     {
@@ -231,12 +231,22 @@ class FShader
     }
 }
 
-class VShader extends FShader
+class FShader extends Shader
+{
+    constructor(src, uBlocks, uniforms)
+    {
+        super(src, uBlocks, uniforms);
+        Object.freeze(this);
+    }
+}
+
+class VShader extends Shader
 {
     constructor(src, layout, uBlocks, uniforms)
     {
         super(src, uBlocks, uniforms);
         this.layout = layout;
+        Object.freeze(this);
     }
 }
 
@@ -256,7 +266,7 @@ const VS_WORLD = "VS_WORLD";
 
 const FS_COLOR = "FS_COLOR";
 const FS_IMAGE = "FS_IMAGE";
-const FS_TEX_RECT_REPEAT = "FS_TEXT_RECT_REPEAT";
+const FS_TEX_REPEAT = "FS_TEXT_REPEAT";
 const FS_TEX = "FS_TEX";
 
 const U_TYPE_2F = "U_TYPE_2F";
@@ -272,8 +282,8 @@ const vertDef = new SafeMap([
         new SafeMap([
             [$.A_XYZ, 3]
         ]),
-        [$.UB_CAMERA])
-    ],
+        [$.UB_CAMERA]
+    )],
 
     [VS_SCREEN, new VShader(
         vsScreenSrc,
@@ -323,7 +333,7 @@ const fragDef = new SafeMap([
 
     [FS_IMAGE, new FShader(fsImageSrc)],
 
-    [FS_TEX_RECT_REPEAT, new FShader(
+    [FS_TEX_REPEAT, new FShader(
         fsTexRectRepeatSrc,
         null,
         new Map([
@@ -354,7 +364,7 @@ const fragDef = new SafeMap([
 const programDef = [
     $.PRG_COLOR,  VS_COLOR,  FS_COLOR,
     $.PRG_IMAGE,  VS_SCREEN, FS_IMAGE,
-    $.PRG_REPEAT, VS_WORLD,  FS_TEX_RECT_REPEAT,
+    $.PRG_REPEAT, VS_WORLD,  FS_TEX_REPEAT,
     $.PRG_SCREEN, VS_SCREEN, FS_TEX,
     $.PRG_SPRITE, VS_WORLD,  FS_TEX,
     $.PRG_UI,     VS_UI,     FS_TEX,
