@@ -85,8 +85,7 @@ export class Program
             await Model.load();
         }
 
-        const attributes = Model.getAttributes(modelId);
-        const bufferId = Model.getBufferId(modelId);
+        const { attributes, bufferId } = Model.get(modelId);
 
         this.bindVao();
         Buffer.bind(bufferId);

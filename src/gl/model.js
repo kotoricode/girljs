@@ -165,43 +165,33 @@ class ModelData
 
 export const Model = {
     isLoaded: false,
-    getAttributes(modelId)
+    get(modelId)
     {
-        return getModel(modelId).attributes;
-    },
-    getBufferId(modelId)
-    {
-        return getModel(modelId).bufferId;
-    },
-    getDrawMode(modelId)
-    {
-        return getModel(modelId).drawMode;
-    },
-    getDrawSize(modelId)
-    {
-        return getModel(modelId).drawSize;
+        if (!Model.isLoaded) throw Error("Model not loaded");
+
+        return models.get(modelId);
     },
     getMesh(modelId)
     {
-        const meshId = getModel(modelId).meshId;
+        const meshId = Model.get(modelId).meshId;
 
         return meshes.get(meshId);
     },
     getTexture(modelId)
     {
-        const textureId = getModel(modelId).textureId;
+        const textureId = Model.get(modelId).textureId;
 
         return Texture.get(textureId);
     },
     getUv(modelId)
     {
-        const uvId = getModel(modelId).uvId;
+        const uvId = Model.get(modelId).uvId;
 
         return uvs.get(uvId);
     },
     isTextured(modelId)
     {
-        const textureId = getModel(modelId).textureId;
+        const textureId = Model.get(modelId).textureId;
 
         return !isNullOrUndefined(textureId);
     },
@@ -219,13 +209,6 @@ export const Model = {
 
         return loadPromise;
     }
-};
-
-const getModel = (modelId) =>
-{
-    if (!Model.isLoaded) throw Error("Model not loaded");
-
-    return models.get(modelId);
 };
 
 const fetchExternalModels = () =>
@@ -310,10 +293,8 @@ const buildModels = () =>
             const xyz = meshes.get(meshId);
             const xyzOffset = pushData(modelData, xyz);
 
-            const drawSize = xyz.length / 3;
-
             xyzOffsets.set(meshId, xyzOffset);
-            drawSizes.set(meshId, drawSize);
+            drawSizes.set(meshId, xyz.length / 3);
         }
 
         if (!uvOffsets.has(uvId))

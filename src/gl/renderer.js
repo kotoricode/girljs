@@ -3,7 +3,7 @@ import { gl } from "../dom";
 import { Drawable } from "../components/drawable";
 import { Texture } from "./texture";
 import { Program } from "./program";
-import { SafeMap, SafeSet, SettableFloat32Array } from "../utility";
+import { SafeMap, SafeSet } from "../utility";
 import { Model } from "./model";
 import { Dialogue } from "../dialogue";
 import { Scene } from "../scene";
@@ -129,8 +129,7 @@ const draw = (program) =>
         program.setUniforms();
     }
 
-    const drawMode = Model.getDrawMode(modelId);
-    const drawSize = Model.getDrawSize(modelId);
+    const { drawMode, drawSize } = Model.get(modelId);
 
     program.bindVao();
     gl.drawArrays(drawMode, 0, drawSize);
