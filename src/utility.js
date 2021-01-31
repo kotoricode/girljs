@@ -50,6 +50,7 @@ export class SafeMap extends Map
     constructor(...params)
     {
         super(...params);
+        Object.freeze(this);
     }
 
     delete(key)
@@ -90,6 +91,7 @@ export class SafeSet extends Set
     constructor(...params)
     {
         super(...params);
+        Object.freeze(this);
     }
 
     add(value)

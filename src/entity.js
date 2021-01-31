@@ -8,6 +8,7 @@ export class Entity
         this.flags = 0;
         this.components = new SafeMap();
         this.addComponent(...comps);
+        Object.freeze(this);
     }
 
     addComponent(...components)

@@ -8,5 +8,6 @@ export class HitBox extends Component
         super();
         this.min = new Vector(minx, miny, minz);
         this.max = new Vector(maxx, maxy, maxz);
+        Object.freeze(this);
     }
 }

@@ -9,6 +9,7 @@ class BufferData
         this.buffer = gl.createBuffer();
         this.type = type;
         this.usage = usage;
+        Object.freeze(this);
     }
 }
 

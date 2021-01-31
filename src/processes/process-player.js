@@ -21,9 +21,7 @@ export const processPlayer = () =>
         ray.numHits = 0;
         ray.fromMouse(ivp, Mouse.clip);
         ray.collide(ground);
-        //ray.collideGround(ground);
 
-        // Update player, marker paths
         if (ray.numHits)
         {
             const [plMotion] = Scene.one($.ENT_PLAYER, Motion);

@@ -33,6 +33,8 @@ class Glb
                 )
             ));
         }
+
+        Object.freeze(this);
     }
 }
 

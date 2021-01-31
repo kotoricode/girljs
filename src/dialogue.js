@@ -16,6 +16,7 @@ class UiCanvas
         this.ctx = this.canvas.getContext("2d");
         this.canvas.width = $.RES_WIDTH;
         this.canvas.height = $.RES_HEIGHT;
+        Object.freeze(this);
     }
 
     clear()

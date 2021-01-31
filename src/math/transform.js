@@ -8,6 +8,7 @@ export class Transform
         this.translation = new Vector(tx, ty, tz);
         this.rotation = new Quaternion();
         this.scale = new Vector(1, 1, 1);
+        Object.freeze(this);
     }
 
     decomposeFrom(matrix)

@@ -120,6 +120,8 @@ class ExternalModel
         this.url = `/data/${fileName}.glb`;
         this.meshId = meshId;
         this.uvId = uvId;
+
+        Object.freeze(this);
     }
 }
 
@@ -156,6 +158,8 @@ class ModelData
         this.textureId = textureId;
 
         if (!Number.isInteger(drawSize)) throw drawSize;
+
+        Object.freeze(this);
     }
 }
 
