@@ -227,19 +227,7 @@ class FShader
     {
         this.src = src;
         this.uBlocks = uBlocks;
-        this.map = new SafeMap();
-
-        if (uniforms)
-        {
-            const uMap = new SafeMap();
-
-            for (let i = 0; i < uniforms.length;)
-            {
-                uMap.set(uniforms[i++], uniforms[i++]);
-            }
-
-            this.map.set(PROG_DEF_U, uMap);
-        }
+        this.uniforms = uniforms;
     }
 }
 
@@ -252,66 +240,78 @@ class VShader extends FShader
     }
 }
 
-const DAT_A_LAYOUT = 0;
-const DAT_PROGRAM = 1;
-const DAT_U_BLOCKS = 2;
-const DAT_U_DEFAULTS = 3;
-const DAT_U_SETTERS = 4;
+const DAT_A_LAYOUT = "DAT_A_LAYOUT";
+const DAT_PROGRAM = "DAT_PROGRAM";
+const DAT_U_BLOCKS = "DAT_U_BLOCKS";
+const DAT_U_DEFAULTS = "DAT_U_DEFAULTS";
+const DAT_U_SETTERS = "DAT_U_SETTERS";
 
 /*------------------------------------------------------------------------------
     Const
 ------------------------------------------------------------------------------*/
-const PROG_DEF_U = 2;
+const VS_COLOR = "VS_COLOR";
+const VS_SCREEN = "VS_SCREEN";
+const VS_UI = "VS_UI";
+const VS_WORLD = "VS_WORLD";
 
-const VS_COLOR = 0;
-const VS_SCREEN = 1;
-const VS_UI = 2;
-const VS_WORLD = 3;
+const FS_COLOR = "FS_COLOR";
+const FS_IMAGE = "FS_IMAGE";
+const FS_TEX_RECT_REPEAT = "FS_TEXT_RECT_REPEAT";
+const FS_TEX = "FS_TEX";
 
-const FS_COLOR = 0;
-const FS_IMAGE = 1;
-const FS_TEX_RECT_REPEAT = 2;
-const FS_TEX = 3;
-
-const U_TYPE_2F = 0;
-const U_TYPE_4F = 1;
-const U_TYPE_M4FV = 2;
-
-/*------------------------------------------------------------------------------
-    Templates
-------------------------------------------------------------------------------*/
-const uniArrZeroZero = [0, 0];
-
-const ubCamera = [$.UB_CAMERA];
-
-const attribXyz = [$.A_XYZ, 3];
-const attribUv = [$.A_UV, 2];
-
-const uniTransform = [$.U_TRANSFORM, uniArrZeroZero];
-const uniColor = [$.U_COLOR, [1, 1, 1, 1]];
-const uniUvRepeat = [$.U_UVREPEAT, [1, 1]];
-const uniUvOffset = [$.U_UVOFFSET, uniArrZeroZero];
-const uniUvSize = [$.U_UVSIZE, uniArrZeroZero];
-
-const attrMapXyzUv = new SafeMap([attribXyz, attribUv]);
-const uniMapColor = new SafeMap([uniColor]);
+const U_TYPE_2F = "U_TYPE_2F";
+const U_TYPE_4F = "U_TYPE_4F";
+const U_TYPE_M4FV = "U_TYPE_M4FV";
 
 /*------------------------------------------------------------------------------
     Vertex shader definitions
 ------------------------------------------------------------------------------*/
 const vertDef = new SafeMap([
-    [VS_COLOR, new VShader(vsColorSrc, new SafeMap([attribXyz]), ubCamera)],
-    [VS_SCREEN, new VShader(vsScreenSrc, attrMapXyzUv)],
-    [VS_UI, new VShader(vsUiSrc, attrMapXyzUv, null,
-        [
-            U_TYPE_M4FV, new SafeMap([uniTransform])
-        ]
+    [VS_COLOR, new VShader(
+        vsColorSrc,
+        new SafeMap([
+            [$.A_XYZ, 3]
+        ]),
+        [$.UB_CAMERA])
+    ],
+
+    [VS_SCREEN, new VShader(
+        vsScreenSrc,
+        new SafeMap([
+            [$.A_XYZ, 3],
+            [$.A_UV, 2]
+        ])
     )],
-    [VS_WORLD, new VShader(vsWorldSrc, attrMapXyzUv, ubCamera,
-        [
-            U_TYPE_M4FV, new SafeMap([uniTransform]),
-            U_TYPE_2F, new SafeMap([uniUvRepeat])
-        ]
+
+    [VS_UI, new VShader(
+        vsUiSrc,
+        new SafeMap([
+            [$.A_XYZ, 3],
+            [$.A_UV, 2]
+        ]),
+        null,
+        new Map([
+            [U_TYPE_M4FV, new SafeMap([
+                [$.U_TRANSFORM, [0, 0]]
+            ])]
+        ])
+    )],
+
+    [VS_WORLD, new VShader(
+        vsWorldSrc,
+        new SafeMap([
+            [$.A_XYZ, 3],
+            [$.A_UV, 2]
+        ]),
+        [$.UB_CAMERA],
+        new Map([
+            [U_TYPE_M4FV, new SafeMap([
+                [$.U_TRANSFORM, [0, 0]]
+            ])],
+            [U_TYPE_2F, new SafeMap([
+                [$.U_UVREPEAT, [1, 1]]
+            ])]
+        ])
     )]
 ]);
 
@@ -320,17 +320,31 @@ const vertDef = new SafeMap([
 ------------------------------------------------------------------------------*/
 const fragDef = new SafeMap([
     [FS_COLOR, new FShader(fsColorSrc)],
+
     [FS_IMAGE, new FShader(fsImageSrc)],
-    [FS_TEX_RECT_REPEAT, new FShader(fsTexRectRepeatSrc, null,
-        [
-            U_TYPE_2F, new SafeMap([uniUvOffset, uniUvSize]),
-            U_TYPE_4F, uniMapColor
-        ]
+
+    [FS_TEX_RECT_REPEAT, new FShader(
+        fsTexRectRepeatSrc,
+        null,
+        new Map([
+            [U_TYPE_2F, new SafeMap([
+                [$.U_UVOFFSET, [0, 0]],
+                [$.U_UVSIZE, [0, 0]]
+            ])],
+            [U_TYPE_4F, new SafeMap([
+                [$.U_COLOR, [1, 1, 1, 1]]
+            ])]
+        ])
     )],
-    [FS_TEX, new FShader(fsTexSrc, null,
-        [
-            U_TYPE_4F, uniMapColor
-        ]
+
+    [FS_TEX, new FShader(
+        fsTexSrc,
+        null,
+        new Map([
+            [U_TYPE_4F, new SafeMap([
+                [$.U_COLOR, [1, 1, 1, 1]]
+            ])]
+        ])
     )]
 ]);
 
@@ -401,9 +415,9 @@ for (let i = 0; i < programDef.length;)
 
     for (const shader of [vert, frag])
     {
-        if (shader.map.has(PROG_DEF_U))
+        if (shader.uniforms)
         {
-            for (const [type, map] of shader.map.get(PROG_DEF_U))
+            for (const [type, map] of shader.uniforms)
             {
                 for (const [name, values] of map)
                 {
