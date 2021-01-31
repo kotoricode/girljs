@@ -4,7 +4,6 @@ import { Space } from "./components/space";
 import { Entity } from "./entity";
 import { render } from "./gl/renderer";
 import { SafeMap, SafeSet } from "./utility";
-import { Model } from "./gl/model";
 import { blueprint } from "./blueprint";
 
 export const Scene = {
