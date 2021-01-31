@@ -67,7 +67,7 @@ const createTachie = () => [$.ENT_AV_PLAYER, new SafeMap([
 const createGround = () => [$.ENT_GROUND, new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
         new Space(),
-        new HitBox(-15, 15, -Number.EPSILON, 0, -2, 2),
+        new HitBox(-15, 15, -0.1, 0, -2, 2),
         new Drawable(
             $.PRG_REPEAT,
             $.QUE_BACKGROUND,

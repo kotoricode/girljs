@@ -43,7 +43,7 @@ export const Buffer = {
 
 const buffers = new SafeMap([
     [$.BUF_ARR_MODEL, new BufferData($.ARRAY_BUFFER, $.STATIC_DRAW)],
-    [$.BUF_ARR_DEBUG, new BufferData($.ARRAY_BUFFER, $.STATIC_DRAW)],
+    [$.BUF_ARR_DEBUG, new BufferData($.ARRAY_BUFFER, $.DYNAMIC_DRAW)],
     [$.BUF_UNI_CAMERA, new BufferData($.UNIFORM_BUFFER, $.DYNAMIC_DRAW)]
 ]);
 

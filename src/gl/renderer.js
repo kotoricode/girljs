@@ -3,10 +3,12 @@ import { gl } from "../dom";
 import { Drawable } from "../components/drawable";
 import { Texture } from "./texture";
 import { Program } from "./program";
-import { SafeMap, SafeSet } from "../utility";
+import { SafeMap, SafeSet, SettableFloat32Array } from "../utility";
 import { Model } from "./model";
 import { Dialogue } from "../dialogue";
 import { Scene } from "../scene";
+import { Buffer } from "./buffer";
+import { HitBox } from "../components/hitbox";
 
 const bindFb = () =>
 {
@@ -20,6 +22,49 @@ const unbindFb = () =>
     gl.bindFramebuffer($.FRAMEBUFFER, null);
 };
 
+const setDebug = () =>
+{
+    const debugMesh = Model.getMesh($.MDL_DEBUG);
+
+    let idx = 0;
+    for (const [hitbox] of Scene.all(HitBox))
+    {
+        const { x: minX, y: minY, z: minZ } = hitbox.min;
+        const { x: maxX, y: maxY, z: maxZ } = hitbox.max;
+
+        debugMesh.setValuesAtIndex(idx,
+            minX, minY, minZ,
+            maxX, minY, minZ,
+            maxX, minY, minZ,
+            maxX, minY, maxZ,
+            maxX, minY, maxZ,
+            minX, minY, maxZ,
+            minX, minY, maxZ,
+            minX, minY, minZ,
+            minX, maxY, minZ,
+            maxX, maxY, minZ,
+            maxX, maxY, minZ,
+            maxX, maxY, maxZ,
+            maxX, maxY, maxZ,
+            minX, maxY, maxZ,
+            minX, maxY, maxZ,
+            minX, maxY, minZ,
+            minX, minY, minZ,
+            minX, maxY, minZ,
+            maxX, minY, minZ,
+            maxX, maxY, minZ,
+            minX, minY, maxZ,
+            minX, maxY, maxZ,
+            maxX, minY, maxZ,
+            maxX, maxY, maxZ,
+        );
+
+        idx += 72;
+    }
+
+    Buffer.setData($.BUF_ARR_DEBUG, debugMesh);
+};
+
 export const render = () =>
 {
     for (const [drawable] of Scene.all(Drawable))
@@ -29,6 +74,8 @@ export const render = () =>
             queues.get(drawable.priority).add(drawable);
         }
     }
+
+    setDebug();
 
     bindFb();
 

@@ -86,40 +86,7 @@ const uvRect = (x, y, width, height, baseWidth, baseHeight) =>
 };
 
 const meshes = new SafeMap([
-    [MSH_DEBUG, [
-        // bot
-        -.5, -.5, -.5,
-        -.5, -.5, .5,
-        -.5, -.5, .5,
-        .5, -.5, .5,
-        .5, -.5, .5,
-        .5, -.5, -.5,
-        .5, -.5, -.5,
-        -.5, -.5, -.5,
-
-        // top
-        -.5, .5, -.5,
-        -.5, .5, .5,
-        -.5, .5, .5,
-        .5, .5, .5,
-        .5, .5, .5,
-        .5, .5, -.5,
-        .5, .5, -.5,
-        -.5, .5, -.5,
-
-        // line
-        -.5, -.5, -.5,
-        -.5, .5, -.5,
-
-        -.5, -.5, .5,
-        -.5, .5, .5,
-
-        .5, -.5, -.5,
-        .5, .5, -.5,
-
-        .5, -.5, .5,
-        .5, .5, .5,
-    ]],
+    [MSH_DEBUG, new SettableFloat32Array(3 * 2 * 12 * 10)],
     [MSH_GROUND, meshXz(-15, 15, -2, 2)],
     [MSH_PLAYER, meshXy(-0.4, 0.4, 0, 1.5)],
     [MSH_AV_PLAYER, meshXyScreen(187, 600)],
@@ -170,14 +137,25 @@ let loadPromise;
 
 class ModelData
 {
-    constructor(attributes, bufferId, drawMode, drawSize, uvId, textureId)
+    constructor(
+        attributes,
+        bufferId,
+        drawMode,
+        drawSize,
+        meshId,
+        uvId,
+        textureId
+    )
     {
         this.attributes = attributes;
         this.bufferId = bufferId;
         this.drawMode = drawMode;
         this.drawSize = drawSize;
+        this.meshId = meshId;
         this.uvId = uvId;
         this.textureId = textureId;
+
+        if (!Number.isInteger(drawSize)) throw drawSize;
     }
 }
 
@@ -198,6 +176,12 @@ export const Model = {
     getDrawSize(modelId)
     {
         return getModel(modelId).drawSize;
+    },
+    getMesh(modelId)
+    {
+        const meshId = getModel(modelId).meshId;
+
+        return meshes.get(meshId);
     },
     getTexture(modelId)
     {
@@ -257,7 +241,10 @@ const fetchExternalModels = () =>
 
 const pushData = (buffer, data) =>
 {
-    if (!Array.isArray(data)) throw data;
+    if (!Array.isArray(data) && !(data instanceof Float32Array))
+    {
+        throw Error("Not an array");
+    }
 
     const offset = buffer.length;
     buffer.length += data.length;
@@ -319,8 +306,10 @@ const buildModels = () =>
             const xyz = meshes.get(meshId);
             const xyzOffset = pushData(modelData, xyz);
 
+            const drawSize = xyz.length / 3;
+
             xyzOffsets.set(meshId, xyzOffset);
-            drawSizes.set(meshId, xyz.length / 3);
+            drawSizes.set(meshId, drawSize);
         }
 
         if (!uvOffsets.has(uvId))
@@ -336,11 +325,14 @@ const buildModels = () =>
             [$.A_UV, uvOffsets.get(uvId)]
         ]);
 
+        const drawSize = drawSizes.get(meshId);
+
         models.set(modelId, new ModelData(
             attrib,
             $.BUF_ARR_MODEL,
             $.TRIANGLES,
-            drawSizes.get(meshId),
+            drawSize,
+            meshId,
             uvId,
             textureId,
         ));
@@ -360,11 +352,12 @@ const buildModels = () =>
         $.BUF_ARR_DEBUG,
         $.LINES,
         mesh.length / 3,
+        MSH_DEBUG
     ));
 
     /*--------------------------------------------------------------------------
         Set to buffer
     --------------------------------------------------------------------------*/
     Buffer.setData($.BUF_ARR_MODEL, new SettableFloat32Array(modelData));
-    Buffer.setData($.BUF_ARR_DEBUG, new SettableFloat32Array(debugData));
+    //Buffer.setData($.BUF_ARR_DEBUG, new SettableFloat32Array(debugData));
 };

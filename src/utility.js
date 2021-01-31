@@ -33,6 +33,16 @@ export class SettableFloat32Array extends Float32Array
             this[i] = values[i];
         }
     }
+
+    setValuesAtIndex(idx, ...values)
+    {
+        if (this.length < (idx + values.length)) throw values;
+
+        for (let i = 0; i < values.length; i++)
+        {
+            this[idx + i] = values[i];
+        }
+    }
 }
 
 export class SafeMap extends Map
