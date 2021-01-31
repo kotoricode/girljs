@@ -4,7 +4,6 @@ import { Drawable } from "../components/drawable";
 import { Texture } from "./texture";
 import { Program } from "./program";
 import { SafeMap, SafeSet } from "../utility";
-import { Model } from "./model";
 import { Dialogue } from "../dialogue";
 import { Scene } from "../scene";
 import { Buffer } from "./buffer";
@@ -24,7 +23,7 @@ const unbindFb = () =>
 
 const setDebug = () =>
 {
-    const debugMesh = Model.getMesh($.MDL_DEBUG);
+    const debugMesh = debugProgram.getMesh();
 
     let idx = 0;
     for (const [hitbox] of Scene.all(HitBox))
@@ -114,13 +113,11 @@ const drawQueue = (queueId) =>
 
 const draw = (program) =>
 {
-    const { modelId } = program;
-
     program.activate();
 
-    if (Model.isTextured(modelId))
+    if (program.isTextured())
     {
-        const texture = Model.getTexture(modelId);
+        const texture = program.getTexture();
         Texture.bind(texture);
     }
 
@@ -129,7 +126,7 @@ const draw = (program) =>
         program.setUniforms();
     }
 
-    const { drawMode, drawSize } = Model.get(modelId);
+    const { drawMode, drawSize } = program.model;
 
     program.bindVao();
     gl.drawArrays(drawMode, 0, drawSize);
@@ -143,11 +140,13 @@ gl.disable($.CULL_FACE);
 gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
+const debugProgram = new Program($.PRG_COLOR, $.MDL_DEBUG);
+
 const uiPrograms = new SafeSet([
     new Program($.PRG_IMAGE, $.MDL_FB),
     Dialogue.getBubbleProgram(),
     Dialogue.getTextProgram(),
-    new Program($.PRG_COLOR, $.MDL_DEBUG)
+    debugProgram
 ]);
 
 const queues = new SafeMap([

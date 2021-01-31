@@ -1,7 +1,6 @@
 import * as $ from "../const";
-import { isNullOrUndefined, SafeMap, SettableFloat32Array } from "../utility";
+import { SafeMap, SettableFloat32Array } from "../utility";
 import { Buffer } from "./buffer";
-import { Texture } from "./texture";
 import { parseGlb } from "./glb";
 
 /*------------------------------------------------------------------------------
@@ -131,6 +130,7 @@ const externalModels = [
 ];
 
 const models = new SafeMap();
+let isLoaded = false;
 
 /*------------------------------------------------------------------------------
     Model
@@ -139,61 +139,40 @@ let loadPromise;
 
 class ModelData
 {
-    constructor(
-        attributes,
-        bufferId,
-        drawMode,
-        drawSize,
-        meshId,
-        uvId,
-        textureId
-    )
+    constructor(attributes, bufferId, drawMode, meshId, uvId, textureId)
     {
         this.attributes = attributes;
         this.bufferId = bufferId;
         this.drawMode = drawMode;
-        this.drawSize = drawSize;
         this.meshId = meshId;
         this.uvId = uvId;
         this.textureId = textureId;
 
-        if (!Number.isInteger(drawSize)) throw drawSize;
+        this.drawSize = meshes.get(meshId).length / 3;
+        if (!Number.isInteger(this.drawSize)) throw this.drawSize;
 
         Object.freeze(this);
     }
 }
 
 export const Model = {
-    isLoaded: false,
     get(modelId)
     {
-        if (!Model.isLoaded) throw Error("Model not loaded");
+        if (!isLoaded) throw Error("Model not loaded");
 
         return models.get(modelId);
     },
-    getMesh(modelId)
+    getMesh(meshId)
     {
-        const meshId = Model.get(modelId).meshId;
-
         return meshes.get(meshId);
     },
-    getTexture(modelId)
+    getUv(uvId)
     {
-        const textureId = Model.get(modelId).textureId;
-
-        return Texture.get(textureId);
-    },
-    getUv(modelId)
-    {
-        const uvId = Model.get(modelId).uvId;
-
         return uvs.get(uvId);
     },
-    isTextured(modelId)
+    isLoaded()
     {
-        const textureId = Model.get(modelId).textureId;
-
-        return !isNullOrUndefined(textureId);
+        return isLoaded;
     },
     load()
     {
@@ -203,7 +182,7 @@ export const Model = {
             {
                 await fetchExternalModels();
                 buildModels();
-                Model.isLoaded = true;
+                isLoaded = true;
             })();
         }
 
@@ -247,7 +226,6 @@ const pushData = (buffer, data) =>
 const buildModels = () =>
 {
     const modelData = [];
-    const debugData = [];
 
     const modelDef = [
     /* eslint-disable max-len */
@@ -305,18 +283,15 @@ const buildModels = () =>
             uvOffsets.set(uvId, uvOffset);
         }
 
-        const attrib = new SafeMap([
+        const attributes = new SafeMap([
             [$.A_XYZ, xyzOffsets.get(meshId)],
             [$.A_UV, uvOffsets.get(uvId)]
         ]);
 
-        const drawSize = drawSizes.get(meshId);
-
         models.set(modelId, new ModelData(
-            attrib,
+            attributes,
             $.BUF_ARR_MODEL,
             $.TRIANGLES,
-            drawSize,
             meshId,
             uvId,
             textureId,
@@ -326,17 +301,14 @@ const buildModels = () =>
     /*--------------------------------------------------------------------------
         Debug
     --------------------------------------------------------------------------*/
-    const mesh = meshes.get(MSH_DEBUG);
-
     const debugAttrib = new SafeMap([
-        [$.A_XYZ, pushData(debugData, mesh)]
+        [$.A_XYZ, 0]
     ]);
 
     models.set($.MDL_DEBUG, new ModelData(
         debugAttrib,
         $.BUF_ARR_DEBUG,
         $.LINES,
-        mesh.length / 3,
         MSH_DEBUG
     ));
 
@@ -344,5 +316,4 @@ const buildModels = () =>
         Set to buffer
     --------------------------------------------------------------------------*/
     Buffer.setData($.BUF_ARR_MODEL, new SettableFloat32Array(modelData));
-    //Buffer.setData($.BUF_ARR_DEBUG, new SettableFloat32Array(debugData));
 };

@@ -1,6 +1,6 @@
 import * as $ from "../const";
 import { gl } from "../dom";
-import { SafeMap, SafeSet } from "../utility";
+import { isNullOrUndefined, SafeMap, SafeSet } from "../utility";
 import { Model } from "./model";
 import { Buffer } from "./buffer";
 
@@ -14,6 +14,7 @@ import fsTexSrc       from "./shaders/frag/tex.frag";
 import fsTexRectRepeatSrc from "./shaders/frag/tex-rect-repeat.frag";
 import fsColorSrc    from "./shaders/frag/color.frag";
 import { Matrix } from "../math/matrix";
+import { Texture } from "./texture";
 
 export class Program
 {
@@ -27,7 +28,6 @@ export class Program
         // Attributes
         this.aLayout = prepared.get(DAT_A_LAYOUT);
         this.vao = gl.createVertexArray();
-        this.setModel(modelId);
 
         // Uniforms
         this.uSetters = prepared.get(DAT_U_SETTERS);
@@ -39,6 +39,10 @@ export class Program
         {
             this.uStaging.set(name, values.slice());
         }
+
+        this.model = null;
+        this.setModel(modelId);
+        Object.seal(this);
     }
 
     activate()
@@ -68,6 +72,21 @@ export class Program
         gl.deleteVertexArray(this.vao);
     }
 
+    getMesh()
+    {
+        return Model.getMesh(this.model.meshId);
+    }
+
+    getTexture()
+    {
+        return Texture.get(this.model.textureId);
+    }
+
+    getUv()
+    {
+        return Model.getUv(this.model.uvId);
+    }
+
     hasStaging(uId)
     {
         return this.uStaging.has(uId);
@@ -78,17 +97,22 @@ export class Program
         return this.uStaging.size > 0;
     }
 
+    isTextured()
+    {
+        return !isNullOrUndefined(this.model.textureId);
+    }
+
     async setModel(modelId)
     {
-        if (!Model.isLoaded)
+        if (!Model.isLoaded())
         {
             await Model.load();
         }
 
-        const { attributes, bufferId } = Model.get(modelId);
+        this.model = Model.get(modelId);
 
         this.bindVao();
-        Buffer.bind(bufferId);
+        Buffer.bind(this.model.bufferId);
 
         for (const [name, attribSize] of this.aLayout)
         {
@@ -100,14 +124,12 @@ export class Program
                 $.FLOAT,
                 false,
                 0,
-                attributes.get(name)
+                this.model.attributes.get(name)
             );
         }
 
-        Buffer.unbind(bufferId);
+        Buffer.unbind(this.model.bufferId);
         this.unbindVao();
-
-        this.modelId = modelId;
     }
 
     setUniforms()

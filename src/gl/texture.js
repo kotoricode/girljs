@@ -29,7 +29,7 @@ export const Texture = {
     },
     unbind()
     {
-        Texture.bind(null);
+        this.bind(null);
     }
 };
 

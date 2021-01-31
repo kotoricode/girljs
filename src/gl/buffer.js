@@ -28,8 +28,7 @@ export const Buffer = {
     },
     setData(bufferId, data)
     {
-        const bufferData = buffers.get(bufferId);
-        const { type, buffer, usage } = bufferData;
+        const { type, buffer, usage } = buffers.get(bufferId);
 
         gl.bindBuffer(type, buffer);
         gl.bufferData(type, data, usage);

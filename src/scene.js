@@ -163,7 +163,7 @@ const addEntity = (entity, parentId) =>
                     uvMinX, uvMaxY,
                     uvMaxX, ,
                     , uvMinY
-                ] = Model.getUv(drawable.program.modelId);
+                ] = drawable.program.getUv();
 
                 const width = uvMaxX - uvMinX;
                 const height = uvMaxY - uvMinY;
