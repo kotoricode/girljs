@@ -223,7 +223,7 @@ const createUniSetter = (pos, loc) =>
 ------------------------------------------------------------------------------*/
 class FShader
 {
-    constructor(src, uBlocks, ...uniforms)
+    constructor(src, uBlocks, uniforms)
     {
         this.src = src;
         this.uBlocks = uBlocks;
@@ -245,9 +245,9 @@ class FShader
 
 class VShader extends FShader
 {
-    constructor(src, layout, uBlocks, ...uniforms)
+    constructor(src, layout, uBlocks, uniforms)
     {
-        super(src, uBlocks, ...uniforms);
+        super(src, uBlocks, uniforms);
         this.layout = layout;
     }
 }
@@ -303,11 +303,15 @@ const vertDef = new SafeMap([
     [VS_COLOR, new VShader(vsColorSrc, new SafeMap([attribXyz]), ubCamera)],
     [VS_SCREEN, new VShader(vsScreenSrc, attrMapXyzUv)],
     [VS_UI, new VShader(vsUiSrc, attrMapXyzUv, null,
-        U_TYPE_M4FV, new SafeMap([uniTransform])
+        [
+            U_TYPE_M4FV, new SafeMap([uniTransform])
+        ]
     )],
     [VS_WORLD, new VShader(vsWorldSrc, attrMapXyzUv, ubCamera,
-        U_TYPE_M4FV, new SafeMap([uniTransform]),
-        U_TYPE_2F, new SafeMap([uniUvRepeat])
+        [
+            U_TYPE_M4FV, new SafeMap([uniTransform]),
+            U_TYPE_2F, new SafeMap([uniUvRepeat])
+        ]
     )]
 ]);
 
@@ -318,11 +322,15 @@ const fragDef = new SafeMap([
     [FS_COLOR, new FShader(fsColorSrc)],
     [FS_IMAGE, new FShader(fsImageSrc)],
     [FS_TEX_RECT_REPEAT, new FShader(fsTexRectRepeatSrc, null,
-        U_TYPE_2F, new SafeMap([uniUvOffset, uniUvSize]),
-        U_TYPE_4F, uniMapColor
+        [
+            U_TYPE_2F, new SafeMap([uniUvOffset, uniUvSize]),
+            U_TYPE_4F, uniMapColor
+        ]
     )],
     [FS_TEX, new FShader(fsTexSrc, null,
-        U_TYPE_4F, uniMapColor
+        [
+            U_TYPE_4F, uniMapColor
+        ]
     )]
 ]);
 
