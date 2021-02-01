@@ -78,10 +78,12 @@ export const
 export const
     TEX_BRAID = "TEX_BRAID",
     TEX_GIRL = "TEX_GIRL",
-    TEX_TEXTURE = "TEX_TEXTURE",
+    TEX_GROUND = "TEX_GROUND",
     TEX_FB = "TEX_FB",
     TEX_UI_TEXT = "TEX_UI_TEXT",
-    TEX_UI_BUBBLE = "TEX_UI_BUBBLE";
+    TEX_UI_BUBBLE = "TEX_UI_BUBBLE",
+    TEX_WOOD = "TEX_WOOD",
+    TEX_WORLD = "TEX_WORLD";
 
 export const
     DLG_LEFT_AVATAR = i++,

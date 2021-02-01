@@ -7,6 +7,65 @@ import { SafeMap, SafeSet } from "./utility";
 import { blueprint } from "./blueprint";
 
 export const Scene = {
+    addEntity(entity, parentId)
+    {
+        for (const [flags, cache] of cached)
+        {
+            if (entity.hasFlags(flags))
+            {
+                cache.add(entity);
+            }
+        }
+
+        if (entity.hasComponent(Space))
+        {
+            const parent = Scene.getEntity(parentId);
+
+            if (!parent.hasComponent(Space)) throw parentId;
+
+            const parentSpace = parent.getComponent(Space);
+            const space = entity.getComponent(Space);
+
+            space.attachTo(parentSpace);
+
+            entities.set(entity.id, entity);
+
+            if (entity.hasComponent(Drawable))
+            {
+                const drawable = entity.getComponent(Drawable);
+
+                const { program } = drawable;
+
+                if (program.hasStaging($.U_TRANSFORM))
+                {
+                    program.stageUniformAtIndex(
+                        $.U_TRANSFORM,
+                        1,
+                        space.matrix
+                    );
+                }
+
+                if (program.hasStaging($.U_UVOFFSET) &&
+                    program.hasStaging($.U_UVREPEAT))
+                {
+                    const [
+                        uvMinX, uvMaxY,
+                        uvMaxX, ,
+                        , uvMinY
+                    ] = drawable.program.getUv();
+
+                    const width = uvMaxX - uvMinX;
+                    const height = uvMaxY - uvMinY;
+
+                    program.stageUniform($.U_UVOFFSET, [uvMinX, uvMinY]);
+                    program.stageUniform($.U_UVSIZE, [width, height]);
+                }
+            }
+
+            dirty.add(space);
+            this.cleanAll();
+        }
+    },
     * all(...components)
     {
         for (const entity of getEntitiesWith(components))
@@ -50,9 +109,27 @@ export const Scene = {
             Scene.cleanSpace(childSpace, isDirty, parentMatrix);
         }
     },
+    deleteEntity(entityId)
+    {
+        const entity = entities.get(entityId);
+
+        for (const [flags, cache] of cached)
+        {
+            if (entity.hasFlags(flags))
+            {
+                cache.delete(entity);
+            }
+        }
+
+        entities.delete(entityId);
+    },
     getEntity(entityId)
     {
         return entities.get(entityId);
+    },
+    hasEntity(entityId)
+    {
+        return entities.has(entityId);
     },
     load(sceneId)
     {
@@ -91,7 +168,7 @@ export const Scene = {
             processes.add(process);
         }
 
-        loadEntities(bpEntities, root.id);
+        createBlueprintEntities(bpEntities, root.id);
     },
     markDirty(space)
     {
@@ -113,64 +190,6 @@ export const Scene = {
         // TODO: check for lost context
         // https://www.khronos.org/webgl/wiki/HandlingContextLost
         render();
-    }
-};
-
-const addEntity = (entity, parentId) =>
-{
-    for (const [flags, cache] of cached)
-    {
-        if (entity.hasFlags(flags))
-        {
-            cache.add(entity);
-        }
-    }
-
-    if (entity.hasComponent(Space))
-    {
-        const parent = Scene.getEntity(parentId);
-
-        if (!parent.hasComponent(Space)) throw parentId;
-
-        const parentSpace = parent.getComponent(Space);
-        const space = entity.getComponent(Space);
-
-        space.attachTo(parentSpace);
-
-        entities.set(entity.id, entity);
-        dirty.add(space);
-
-        if (entity.hasComponent(Drawable))
-        {
-            const drawable = entity.getComponent(Drawable);
-
-            const { program } = drawable;
-
-            if (program.hasStaging($.U_TRANSFORM))
-            {
-                program.stageUniformAtIndex(
-                    $.U_TRANSFORM,
-                    1,
-                    space.matrix
-                );
-            }
-
-            if (program.hasStaging($.U_UVOFFSET) &&
-                program.hasStaging($.U_UVREPEAT))
-            {
-                const [
-                    uvMinX, uvMaxY,
-                    uvMaxX, ,
-                    , uvMinY
-                ] = drawable.program.getUv();
-
-                const width = uvMaxX - uvMinX;
-                const height = uvMaxY - uvMinY;
-
-                program.stageUniform($.U_UVOFFSET, [uvMinX, uvMinY]);
-                program.stageUniform($.U_UVSIZE, [width, height]);
-            }
-        }
     }
 };
 
@@ -201,13 +220,13 @@ const getEntitiesWith = (components) =>
     return cached.get(flags);
 };
 
-const loadEntities = (bpEntities, parentId) =>
+const createBlueprintEntities = (bpEntities, parentId) =>
 {
     for (const [entityId, entityBp] of bpEntities)
     {
         const components = entityBp.get($.BLU_COMPONENTS);
         const entity = new Entity(entityId, ...components);
-        addEntity(entity, parentId);
+        Scene.addEntity(entity, parentId);
 
         if (entityBp.has($.BLU_CHILDREN))
         {
@@ -215,7 +234,7 @@ const loadEntities = (bpEntities, parentId) =>
 
             if (children)
             {
-                loadEntities(children, entityId);
+                createBlueprintEntities(children, entityId);
             }
         }
     }

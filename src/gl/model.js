@@ -86,7 +86,7 @@ const uvRect = (x, y, width, height, baseWidth, baseHeight) =>
 
 const meshes = new SafeMap([
     [MSH_DEBUG, new SettableFloat32Array(3 * 2 * 12 * 10)],
-    [MSH_GROUND, meshXz(-15, 15, -2, 2)],
+    [MSH_GROUND, meshXz(-15, 15, 0, 3.5)],
     [MSH_PLAYER, meshXy(-0.4, 0.4, 0, 1.5)],
     [MSH_AV_PLAYER, meshXyScreen(187, 600)],
     [MSH_SCREEN, meshXyScreen($.RES_WIDTH, $.RES_HEIGHT)],
@@ -126,7 +126,7 @@ class ExternalModel
 
 const externalModels = [
     new ExternalModel("mesh", MSH_TEST, UV_TEST),
-    new ExternalModel("big_monkey", MSH_MONKEY, UV_MONKEY),
+    new ExternalModel("monkey", MSH_MONKEY, UV_MONKEY),
 ];
 
 const models = new SafeMap();
@@ -231,7 +231,7 @@ const buildModels = () =>
     /* eslint-disable max-len */
     //  MODEL_ID         MESH_ID        UV_ID        TEXTURE_ID
         $.MDL_AV_PLAYER, MSH_AV_PLAYER, UV_GIRL_00,  $.TEX_GIRL,
-        $.MDL_GROUND,    MSH_GROUND,    UV_GROUND,   $.TEX_TEXTURE,
+        $.MDL_GROUND,    MSH_GROUND,    UV_GROUND,   $.TEX_GROUND,
         $.MDL_BRAID_00,  MSH_PLAYER,    UV_BRAID_00, $.TEX_BRAID,
         $.MDL_BRAID_02,  MSH_PLAYER,    UV_BRAID_02, $.TEX_BRAID,
         $.MDL_BRAID_04,  MSH_PLAYER,    UV_BRAID_04, $.TEX_BRAID,
@@ -246,8 +246,8 @@ const buildModels = () =>
         $.MDL_BRAID_22,  MSH_PLAYER,    UV_BRAID_22, $.TEX_BRAID,
         $.MDL_BRAID_24,  MSH_PLAYER,    UV_BRAID_24, $.TEX_BRAID,
         $.MDL_BRAID_26,  MSH_PLAYER,    UV_BRAID_26, $.TEX_BRAID,
-        $.MDL_TEST,      MSH_TEST,      UV_TEST,     $.TEX_TEXTURE,
-        $.MDL_MONKEY,    MSH_MONKEY,    UV_MONKEY,   $.TEX_TEXTURE,
+        $.MDL_TEST,      MSH_TEST,      UV_TEST,     $.TEX_WORLD,
+        $.MDL_MONKEY,    MSH_MONKEY,    UV_MONKEY,   $.TEX_WOOD,
         $.MDL_FB,        MSH_SCREEN,    UV_SCREEN,   $.TEX_FB,
         $.MDL_TEXT,      MSH_SCREEN,    UV_SCREEN,   $.TEX_UI_TEXT,
         $.MDL_BUBBLE,    MSH_SCREEN,    UV_SCREEN,   $.TEX_UI_BUBBLE,

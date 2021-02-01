@@ -49,31 +49,31 @@ const createPlayer = () => [$.ENT_PLAYER, new SafeMap([
     [$.BLU_CHILDREN, new SafeSet()]
 ])];
 
-const createTachie = () => [$.ENT_AV_PLAYER, new SafeMap([
-    [$.BLU_COMPONENTS, new SafeSet([
-        new Space(0.75, -0.2, 0),
-        new Drawable(
-            $.PRG_UI,
-            $.QUE_UI,
-            $.MDL_AV_PLAYER,
-            new SafeMap([
-                [$.U_COLOR, [1, 0.871, 0.855, 1]]
-            ])
-        )
-    ])],
-    [$.BLU_CHILDREN, new SafeSet()]
-])];
+// const createTachie = () => [$.ENT_AV_PLAYER, new SafeMap([
+//     [$.BLU_COMPONENTS, new SafeSet([
+//         new Space(0.75, -0.2, 0),
+//         new Drawable(
+//             $.PRG_UI,
+//             $.QUE_UI,
+//             $.MDL_AV_PLAYER,
+//             new SafeMap([
+//                 [$.U_COLOR, [1, 0.871, 0.855, 1]]
+//             ])
+//         )
+//     ])],
+//     [$.BLU_CHILDREN, new SafeSet()]
+// ])];
 
 const createGround = () => [$.ENT_GROUND, new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
         new Space(),
-        new HitBox(-15, 15, -0.1, 0, -2, 2),
+        new HitBox(-15, 15, -0.1, 0, 0, 3.5),
         new Drawable(
             $.PRG_REPEAT,
             $.QUE_BACKGROUND,
             $.MDL_GROUND,
             new SafeMap([
-                [$.U_UVREPEAT, [30, 4]],
+                [$.U_UVREPEAT, [30, 3.5]],
                 [$.U_COLOR, [1, 1, 1, 1]]
             ])
         )
@@ -110,7 +110,7 @@ export const blueprint = new SafeMap([
         [$.BLU_ENTITIES, new SafeMap([
             createPlayer(),
             createGround(),
-            createTachie(),
+            //createTachie(),
             createTest(),
             createMonkey()
         ])],

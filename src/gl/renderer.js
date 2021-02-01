@@ -82,9 +82,11 @@ export const render = () =>
     gl.clearColor(0.6, 0.6, 0.6, 1.0);
 
     gl.enable($.DEPTH_TEST);
+    gl.enable($.CULL_FACE);
     drawQueue($.QUE_BACKGROUND);
 
     gl.disable($.DEPTH_TEST);
+    gl.disable($.CULL_FACE);
     drawQueue($.QUE_SPRITE);
     drawQueue($.QUE_UI);
 
@@ -136,7 +138,6 @@ const draw = (program) =>
 /*------------------------------------------------------------------------------
     Init
 ------------------------------------------------------------------------------*/
-gl.disable($.CULL_FACE);
 gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
