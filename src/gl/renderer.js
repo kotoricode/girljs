@@ -143,14 +143,9 @@ gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
 const imageProgram = new Program($.PRG_IMAGE, $.MDL_FB);
-const debugProgram = new Program($.PRG_COLOR, $.MDL_DEBUG);
+const debugProgram = new Program($.PRG_DEBUG, $.MDL_DEBUG);
 
-imageProgram.stageUniformAtIndex($.U_TRANSFORM, 1, new Matrix(
-    1, 0, 0, 0,
-    0, 1, 0, 0,
-    0, 0, 1, 0,
-    0, 0, 0, 1
-));
+imageProgram.stageUniformAtIndex($.U_TRANSFORM, 1, Matrix.identity());
 
 const uiPrograms = new SafeSet([
     imageProgram,

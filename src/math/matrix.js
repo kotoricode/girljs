@@ -22,6 +22,11 @@ export class Matrix extends SettableArray
         }
     }
 
+    static identity()
+    {
+        return identity;
+    }
+
     composeFrom(transform)
     {
         const [sx, sy, sz] = transform.scale;
@@ -220,3 +225,5 @@ export class Matrix extends SettableArray
         );
     }
 }
+
+const identity = new Matrix();

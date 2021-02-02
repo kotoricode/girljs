@@ -33,7 +33,7 @@ export const
     GL
 ------------------------------------------------------------------------------*/
 export const
-    PRG_COLOR = i++,
+    PRG_DEBUG = i++,
     PRG_IMAGE = i++,
     PRG_WORLD = i++,
     PRG_UI = i++;

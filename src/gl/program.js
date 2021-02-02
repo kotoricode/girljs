@@ -6,11 +6,11 @@ import { Buffer } from "./buffer";
 import { Matrix } from "../math/matrix";
 import { Texture } from "./texture";
 
-import vsColorSrc  from "./shaders/vert/color.vert";
+import vsDebugSrc  from "./shaders/vert/debug.vert";
 import vsUiSrc     from "./shaders/vert/ui.vert";
 import vsWorldSrc  from "./shaders/vert/world.vert";
 
-import fsColorSrc from "./shaders/frag/color.frag";
+import fsDebugSrc from "./shaders/frag/debug.frag";
 import fsImageSrc from "./shaders/frag/image.frag";
 import fsTexSrc   from "./shaders/frag/tex.frag";
 
@@ -257,11 +257,11 @@ const DAT_U_SETTERS = "DAT_U_SETTERS";
 /*------------------------------------------------------------------------------
     Const
 ------------------------------------------------------------------------------*/
-const VS_COLOR = "VS_COLOR";
+const VS_DEBUG = "VS_DEBUG";
 const VS_UI = "VS_UI";
 const VS_WORLD = "VS_WORLD";
 
-const FS_COLOR = "FS_COLOR";
+const FS_DEBUG = "FS_DEBUG";
 const FS_IMAGE = "FS_IMAGE";
 const FS_TEX = "FS_TEX";
 
@@ -273,8 +273,8 @@ const U_TYPE_M4FV = "U_TYPE_M4FV";
     Vertex shader definitions
 ------------------------------------------------------------------------------*/
 const vertDef = new SafeMap([
-    [VS_COLOR, new VShader(
-        vsColorSrc,
+    [VS_DEBUG, new VShader(
+        vsDebugSrc,
         new SafeMap([
             [$.A_XYZ, 3]
         ]),
@@ -314,7 +314,7 @@ const vertDef = new SafeMap([
     Fragment shader definitions
 ------------------------------------------------------------------------------*/
 const fragDef = new SafeMap([
-    [FS_COLOR, new FShader(fsColorSrc)],
+    [FS_DEBUG, new FShader(fsDebugSrc)],
 
     [FS_IMAGE, new FShader(fsImageSrc)],
 
@@ -333,10 +333,10 @@ const fragDef = new SafeMap([
     Program definitions
 ------------------------------------------------------------------------------*/
 const programDef = [
-    $.PRG_COLOR,  VS_COLOR,  FS_COLOR,
+    $.PRG_DEBUG,  VS_DEBUG,  FS_DEBUG,
     $.PRG_IMAGE,  VS_UI,     FS_IMAGE,
-    $.PRG_WORLD,  VS_WORLD,  FS_TEX,
     $.PRG_UI,     VS_UI,     FS_TEX,
+    $.PRG_WORLD,  VS_WORLD,  FS_TEX,
 ];
 
 /*------------------------------------------------------------------------------

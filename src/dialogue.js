@@ -15,12 +15,7 @@ class UiCanvas
         this.program.stageUniformAtIndex(
             $.U_TRANSFORM,
             1,
-            new Matrix(
-                1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, 0,
-                0, 0, 0, 1
-            )
+            Matrix.identity()
         );
 
         this.canvas = window.document.createElement("canvas");
