@@ -80,7 +80,7 @@ export const render = () =>
     bindFb();
 
     gl.clear($.COLOR_BUFFER_BIT | $.DEPTH_BUFFER_BIT);
-    gl.clearColor(0.6, 0.6, 0.6, 1.0);
+    gl.clearColor(0.15, 0.15, 0.15, 1);
 
     gl.enable($.DEPTH_TEST);
     gl.enable($.CULL_FACE);

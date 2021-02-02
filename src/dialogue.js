@@ -214,7 +214,7 @@ const arrow = [
 ];
 
 const text = new UiCanvas($.MDL_TEXT, [0.2, 0.2, 0.2, 1]);
-const bubble = new UiCanvas($.MDL_BUBBLE, [0.92, 0.92, 0.92, 1]);
+const bubble = new UiCanvas($.MDL_BUBBLE, [0.95, 0.95, 0.95, 1]);
 
 text.ctx.textAlign = "left";
 text.ctx.textBaseline = "top";
@@ -224,4 +224,4 @@ text.ctx.font = `${fontSize}px Cuprum`;
 text.ctx.fillStyle = bubble.ctx.fillStyle = "#fff";
 text.ctx.shadowColor = "#000";
 
-Model.load().then(() => canvasToTexture());
+Model.load().then(canvasToTexture);

@@ -5,20 +5,16 @@ export class Matrix extends SettableArray
 {
     constructor(...params)
     {
-        if (params.length)
+        switch (params.length)
         {
-            if (params.length !== 16) throw params;
-
-            super(...params);
-        }
-        else
-        {
-            super(
-                1, 0, 0, 0,
-                0, 1, 0, 0,
-                0, 0, 1, 0,
-                0, 0, 0, 1
-            );
+            case 0:
+                super(...Matrix.identity());
+                break;
+            case 16:
+                super(...params);
+                break;
+            default:
+                throw Error(params);
         }
     }
 
@@ -226,4 +222,11 @@ export class Matrix extends SettableArray
     }
 }
 
-const identity = new Matrix();
+const identity = Object.freeze(
+    new Matrix(
+        1, 0, 0, 0,
+        0, 1, 0, 0,
+        0, 0, 1, 0,
+        0, 0, 0, 1
+    )
+);

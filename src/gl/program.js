@@ -11,6 +11,7 @@ import vsUiSrc     from "./shaders/vert/ui.vert";
 import vsWorldSrc  from "./shaders/vert/world.vert";
 
 import fsDebugSrc from "./shaders/frag/debug.frag";
+import fsFxaaSrc  from "./shaders/frag/fxaa.frag";
 import fsImageSrc from "./shaders/frag/image.frag";
 import fsTexSrc   from "./shaders/frag/tex.frag";
 
@@ -316,7 +317,8 @@ const vertDef = new SafeMap([
 const fragDef = new SafeMap([
     [FS_DEBUG, new FShader(fsDebugSrc)],
 
-    [FS_IMAGE, new FShader(fsImageSrc)],
+    [FS_IMAGE, new FShader(fsFxaaSrc)],
+    //[FS_IMAGE, new FShader(fsImageSrc)],
 
     [FS_TEX, new FShader(
         fsTexSrc,

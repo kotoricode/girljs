@@ -64,7 +64,7 @@ const createTest = () => [Symbol(), new SafeMap([
 const createHome = () => [$.ENT_GROUND, new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
         new Space(),
-        new HitBox(-15, 15, -0.1, 0, 0, -3.5),
+        new HitBox(-3, 3, -0.1, 0, 0, -2.4),
         new Drawable(
             $.PRG_WORLD,
             $.QUE_BACKGROUND,
