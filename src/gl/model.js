@@ -7,8 +7,6 @@ import { parseGlb } from "./glb";
     Consts
 ------------------------------------------------------------------------------*/
 const MSH_DEBUG = "MSH_DEBUG";
-const MSH_AV_PLAYER = "MSH_AV_PLAYER";
-const MSH_GROUND = "MSH_GROUND";
 const MSH_PLAYER = "MSH_PLAYER";
 const MSH_SCREEN = "MSH_SCREEN";
 const MSH_TEST = "MSH_TEST";
@@ -18,7 +16,6 @@ const MSH_HOME = "MSH_HOME";
 const UV_TEST = "UV_TEST";
 const UV_HOME = "UV_HOME";
 const UV_SCREEN = "UV_SCREEN";
-const UV_GROUND = "UV_GROUND";
 const UV_BRAID_00 = "UV_BRAID_00";
 const UV_BRAID_02 = "UV_BRAID_02";
 const UV_BRAID_04 = "UV_BRAID_04";
@@ -55,15 +52,6 @@ const meshXyScreen = (width, height) =>
     return meshXy(-x, x, -y, y);
 };
 
-const meshXz = (minX, maxX, minZ, maxZ) => [
-    minX, 0, maxZ,
-    maxX, 0, maxZ,
-    minX, 0, minZ,
-    minX, 0, minZ,
-    maxX, 0, maxZ,
-    maxX, 0, minZ,
-];
-
 const uvRect1024 = (x, y, width, height) => uvRect(
     x, y, width, height, 1024, 1024
 );
@@ -87,7 +75,6 @@ const uvRect = (x, y, width, height, baseWidth, baseHeight) =>
 
 const meshes = new SafeMap([
     [MSH_DEBUG, new SettableFloat32Array(3 * 2 * 12 * 10)],
-    [MSH_GROUND, meshXz(-15, 15, -3.5, 0)],
     [MSH_PLAYER, meshXy(-0.375, 0.375, 0, 1.5)],
     [MSH_SCREEN, meshXyScreen($.RES_WIDTH, $.RES_HEIGHT)],
 ]);
@@ -107,7 +94,6 @@ const uvs = new SafeMap([
     [UV_BRAID_22, uvRect1024(128, 461, 136, 136)],
     [UV_BRAID_24, uvRect1024(384, 461, 136, 136)],
     [UV_BRAID_26, uvRect1024(640, 461, 136, 136)],
-    [UV_GROUND, uvRect(94, 97, 256, 256, 512, 512)],
     [UV_SCREEN, [0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]],
 ]);
 
@@ -230,7 +216,6 @@ const buildModels = () =>
     const modelDef = [
     /* eslint-disable max-len */
     //  MODEL_ID         MESH_ID        UV_ID        TEXTURE_ID
-        $.MDL_GROUND,    MSH_GROUND,    UV_GROUND,   $.TEX_GROUND,
         $.MDL_BRAID_00,  MSH_PLAYER,    UV_BRAID_00, $.TEX_BRAID,
         $.MDL_BRAID_02,  MSH_PLAYER,    UV_BRAID_02, $.TEX_BRAID,
         $.MDL_BRAID_04,  MSH_PLAYER,    UV_BRAID_04, $.TEX_BRAID,

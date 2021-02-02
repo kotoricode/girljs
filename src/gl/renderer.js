@@ -8,6 +8,7 @@ import { Dialogue } from "../dialogue";
 import { Scene } from "../scene";
 import { Buffer } from "./buffer";
 import { HitBox } from "../components/hitbox";
+import { Matrix } from "../math/matrix";
 
 const bindFb = () =>
 {
@@ -141,10 +142,18 @@ const draw = (program) =>
 gl.enable($.BLEND);
 gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
+const imageProgram = new Program($.PRG_IMAGE, $.MDL_FB);
 const debugProgram = new Program($.PRG_COLOR, $.MDL_DEBUG);
 
+imageProgram.stageUniformAtIndex($.U_TRANSFORM, 1, new Matrix(
+    1, 0, 0, 0,
+    0, 1, 0, 0,
+    0, 0, 1, 0,
+    0, 0, 0, 1
+));
+
 const uiPrograms = new SafeSet([
-    new Program($.PRG_IMAGE, $.MDL_FB),
+    imageProgram,
     Dialogue.getBubbleProgram(),
     Dialogue.getTextProgram(),
     debugProgram

@@ -49,19 +49,6 @@ const createPlayer = () => [$.ENT_PLAYER, new SafeMap([
     [$.BLU_CHILDREN, new SafeSet()]
 ])];
 
-const createGround = () => [$.ENT_GROUND, new SafeMap([
-    [$.BLU_COMPONENTS, new SafeSet([
-        new Space(),
-        new HitBox(-15, 15, -0.1, 0, 0, -3.5),
-        new Drawable(
-            $.PRG_WORLD,
-            $.QUE_BACKGROUND,
-            $.MDL_GROUND
-        )
-    ])],
-    [$.BLU_CHILDREN, new SafeSet()]
-])];
-
 const createTest = () => [Symbol(), new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
         new Space(),
@@ -74,9 +61,10 @@ const createTest = () => [Symbol(), new SafeMap([
     [$.BLU_CHILDREN, new SafeSet()]
 ])];
 
-const createHome = () => [Symbol(), new SafeMap([
+const createHome = () => [$.ENT_GROUND, new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
         new Space(),
+        new HitBox(-15, 15, -0.1, 0, 0, -3.5),
         new Drawable(
             $.PRG_WORLD,
             $.QUE_BACKGROUND,
@@ -102,7 +90,6 @@ export const blueprint = new SafeMap([
     [$.SCN_TEST, () => new SafeMap([
         [$.BLU_ENTITIES, new SafeMap([
             createPlayer(),
-            createGround(),
             createTest(),
             createMonkey(),
             createHome()

@@ -35,7 +35,6 @@ export const
 export const
     PRG_COLOR = i++,
     PRG_IMAGE = i++,
-    PRG_SCREEN = i++,
     PRG_WORLD = i++,
     PRG_UI = i++;
 

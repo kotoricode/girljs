@@ -6,14 +6,13 @@ import { Buffer } from "./buffer";
 import { Matrix } from "../math/matrix";
 import { Texture } from "./texture";
 
-import vsScreenSrc from "./shaders/vert/screen.vert";
-import vsWorldSrc  from "./shaders/vert/world.vert";
-import vsUiSrc     from "./shaders/vert/ui.vert";
 import vsColorSrc  from "./shaders/vert/color.vert";
+import vsUiSrc     from "./shaders/vert/ui.vert";
+import vsWorldSrc  from "./shaders/vert/world.vert";
 
+import fsColorSrc from "./shaders/frag/color.frag";
 import fsImageSrc from "./shaders/frag/image.frag";
 import fsTexSrc   from "./shaders/frag/tex.frag";
-import fsColorSrc from "./shaders/frag/color.frag";
 
 export class Program
 {
@@ -259,7 +258,6 @@ const DAT_U_SETTERS = "DAT_U_SETTERS";
     Const
 ------------------------------------------------------------------------------*/
 const VS_COLOR = "VS_COLOR";
-const VS_SCREEN = "VS_SCREEN";
 const VS_UI = "VS_UI";
 const VS_WORLD = "VS_WORLD";
 
@@ -281,14 +279,6 @@ const vertDef = new SafeMap([
             [$.A_XYZ, 3]
         ]),
         [$.UB_CAMERA]
-    )],
-
-    [VS_SCREEN, new VShader(
-        vsScreenSrc,
-        new SafeMap([
-            [$.A_XYZ, 3],
-            [$.A_UV, 2]
-        ])
     )],
 
     [VS_UI, new VShader(
@@ -344,8 +334,7 @@ const fragDef = new SafeMap([
 ------------------------------------------------------------------------------*/
 const programDef = [
     $.PRG_COLOR,  VS_COLOR,  FS_COLOR,
-    $.PRG_IMAGE,  VS_SCREEN, FS_IMAGE,
-    $.PRG_SCREEN, VS_SCREEN, FS_TEX,
+    $.PRG_IMAGE,  VS_UI,     FS_IMAGE,
     $.PRG_WORLD,  VS_WORLD,  FS_TEX,
     $.PRG_UI,     VS_UI,     FS_TEX,
 ];
