@@ -44,22 +44,6 @@ export const Scene = {
                         space.matrix
                     );
                 }
-
-                if (program.hasStaging($.U_UVOFFSET) &&
-                    program.hasStaging($.U_UVREPEAT))
-                {
-                    const [
-                        uvMinX, uvMaxY,
-                        uvMaxX, ,
-                        , uvMinY
-                    ] = drawable.program.getUv();
-
-                    const width = uvMaxX - uvMinX;
-                    const height = uvMaxY - uvMinY;
-
-                    program.stageUniform($.U_UVOFFSET, [uvMinX, uvMinY]);
-                    program.stageUniform($.U_UVSIZE, [width, height]);
-                }
             }
 
             dirty.add(space);

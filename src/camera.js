@@ -45,7 +45,7 @@ const far = 600;
 const near = 1;
 const fov = 30;
 
-const transform = new Transform(0, 2.75, 9.5);
+const transform = new Transform(0, 2.75, 6);
 const viewProjection = new Matrix();
 const invViewProjection = new Matrix();
 

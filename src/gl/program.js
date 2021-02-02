@@ -3,18 +3,17 @@ import { gl } from "../dom";
 import { isNullOrUndefined, SafeMap, SafeSet } from "../utility";
 import { Model } from "./model";
 import { Buffer } from "./buffer";
+import { Matrix } from "../math/matrix";
+import { Texture } from "./texture";
 
 import vsScreenSrc from "./shaders/vert/screen.vert";
 import vsWorldSrc  from "./shaders/vert/world.vert";
 import vsUiSrc     from "./shaders/vert/ui.vert";
 import vsColorSrc  from "./shaders/vert/color.vert";
 
-import fsImageSrc    from "./shaders/frag/image.frag";
-import fsTexSrc       from "./shaders/frag/tex.frag";
-import fsTexRectRepeatSrc from "./shaders/frag/tex-rect-repeat.frag";
-import fsColorSrc    from "./shaders/frag/color.frag";
-import { Matrix } from "../math/matrix";
-import { Texture } from "./texture";
+import fsImageSrc from "./shaders/frag/image.frag";
+import fsTexSrc   from "./shaders/frag/tex.frag";
+import fsColorSrc from "./shaders/frag/color.frag";
 
 export class Program
 {
@@ -266,7 +265,6 @@ const VS_WORLD = "VS_WORLD";
 
 const FS_COLOR = "FS_COLOR";
 const FS_IMAGE = "FS_IMAGE";
-const FS_TEX_REPEAT = "FS_TEXT_REPEAT";
 const FS_TEX = "FS_TEX";
 
 const U_TYPE_2F = "U_TYPE_2F";
@@ -317,9 +315,6 @@ const vertDef = new SafeMap([
         new Map([
             [U_TYPE_M4FV, new SafeMap([
                 [$.U_TRANSFORM, [0, 0]]
-            ])],
-            [U_TYPE_2F, new SafeMap([
-                [$.U_UVREPEAT, [1, 1]]
             ])]
         ])
     )]
@@ -332,20 +327,6 @@ const fragDef = new SafeMap([
     [FS_COLOR, new FShader(fsColorSrc)],
 
     [FS_IMAGE, new FShader(fsImageSrc)],
-
-    [FS_TEX_REPEAT, new FShader(
-        fsTexRectRepeatSrc,
-        null,
-        new Map([
-            [U_TYPE_2F, new SafeMap([
-                [$.U_UVOFFSET, [0, 0]],
-                [$.U_UVSIZE, [0, 0]]
-            ])],
-            [U_TYPE_4F, new SafeMap([
-                [$.U_COLOR, [1, 1, 1, 1]]
-            ])]
-        ])
-    )],
 
     [FS_TEX, new FShader(
         fsTexSrc,
@@ -364,9 +345,8 @@ const fragDef = new SafeMap([
 const programDef = [
     $.PRG_COLOR,  VS_COLOR,  FS_COLOR,
     $.PRG_IMAGE,  VS_SCREEN, FS_IMAGE,
-    $.PRG_REPEAT, VS_WORLD,  FS_TEX_REPEAT,
     $.PRG_SCREEN, VS_SCREEN, FS_TEX,
-    $.PRG_SPRITE, VS_WORLD,  FS_TEX,
+    $.PRG_WORLD,  VS_WORLD,  FS_TEX,
     $.PRG_UI,     VS_UI,     FS_TEX,
 ];
 

@@ -35,9 +35,8 @@ export const
 export const
     PRG_COLOR = i++,
     PRG_IMAGE = i++,
-    PRG_REPEAT = i++,
     PRG_SCREEN = i++,
-    PRG_SPRITE = i++,
+    PRG_WORLD = i++,
     PRG_UI = i++;
 
 export const
@@ -55,11 +54,11 @@ export const
     MDL_BUBBLE = "MDL_BUBBLE",
     MDL_TEXT = "MDL_TEXT",
     MDL_TEST = "MDL_TEST",
-    MDL_AV_PLAYER = "MDL_AV_PLAYER",
     MDL_DEBUG = "MDL_DEBUG",
     MDL_GROUND = "MDL_GROUND",
     MDL_FB = "MDL_SCREEN",
     MDL_PLAYER = "MDL_PLAYER",
+    MDL_HOME = "MDL_HOME",
     MDL_BRAID_00 = "MDL_BRAID_00",
     MDL_BRAID_02 = "MDL_BRAID_02",
     MDL_BRAID_04 = "MDL_BRAID_04",
@@ -77,9 +76,9 @@ export const
 
 export const
     TEX_BRAID = "TEX_BRAID",
-    TEX_GIRL = "TEX_GIRL",
     TEX_GROUND = "TEX_GROUND",
     TEX_FB = "TEX_FB",
+    TEX_HOME = "TEX_HOME",
     TEX_UI_TEXT = "TEX_UI_TEXT",
     TEX_UI_BUBBLE = "TEX_UI_BUBBLE",
     TEX_WOOD = "TEX_WOOD",
@@ -104,10 +103,7 @@ export const
 
 export const
     U_COLOR = "u_color",
-    U_TRANSFORM = "u_transform",
-    U_UVOFFSET = "u_uvOffset",
-    U_UVREPEAT = "u_uvRepeat",
-    U_UVSIZE = "u_uvSize";
+    U_TRANSFORM = "u_transform";
 
 export const
     UB_CAMERA = "camera";

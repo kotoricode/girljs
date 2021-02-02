@@ -13,10 +13,11 @@ const MSH_PLAYER = "MSH_PLAYER";
 const MSH_SCREEN = "MSH_SCREEN";
 const MSH_TEST = "MSH_TEST";
 const MSH_MONKEY = "MSH_MONKEY";
+const MSH_HOME = "MSH_HOME";
 
 const UV_TEST = "UV_TEST";
+const UV_HOME = "UV_HOME";
 const UV_SCREEN = "UV_SCREEN";
-const UV_GIRL_00 = "UV_GIRL_00";
 const UV_GROUND = "UV_GROUND";
 const UV_BRAID_00 = "UV_BRAID_00";
 const UV_BRAID_02 = "UV_BRAID_02";
@@ -86,14 +87,12 @@ const uvRect = (x, y, width, height, baseWidth, baseHeight) =>
 
 const meshes = new SafeMap([
     [MSH_DEBUG, new SettableFloat32Array(3 * 2 * 12 * 10)],
-    [MSH_GROUND, meshXz(-15, 15, 0, 3.5)],
-    [MSH_PLAYER, meshXy(-0.4, 0.4, 0, 1.5)],
-    [MSH_AV_PLAYER, meshXyScreen(187, 600)],
+    [MSH_GROUND, meshXz(-15, 15, -3.5, 0)],
+    [MSH_PLAYER, meshXy(-0.375, 0.375, 0, 1.5)],
     [MSH_SCREEN, meshXyScreen($.RES_WIDTH, $.RES_HEIGHT)],
 ]);
 
 const uvs = new SafeMap([
-    [UV_GIRL_00, uvRect(0, 0, 356, 1170, 356, 1170)],
     [UV_BRAID_00, uvRect1024(0, 10, 136, 136)],
     [UV_BRAID_02, uvRect1024(256, 10, 136, 136)],
     [UV_BRAID_04, uvRect1024(512, 10, 136, 136)],
@@ -127,6 +126,7 @@ class ExternalModel
 const externalModels = [
     new ExternalModel("mesh", MSH_TEST, UV_TEST),
     new ExternalModel("monkey", MSH_MONKEY, UV_MONKEY),
+    new ExternalModel("home", MSH_HOME, UV_HOME)
 ];
 
 const models = new SafeMap();
@@ -230,7 +230,6 @@ const buildModels = () =>
     const modelDef = [
     /* eslint-disable max-len */
     //  MODEL_ID         MESH_ID        UV_ID        TEXTURE_ID
-        $.MDL_AV_PLAYER, MSH_AV_PLAYER, UV_GIRL_00,  $.TEX_GIRL,
         $.MDL_GROUND,    MSH_GROUND,    UV_GROUND,   $.TEX_GROUND,
         $.MDL_BRAID_00,  MSH_PLAYER,    UV_BRAID_00, $.TEX_BRAID,
         $.MDL_BRAID_02,  MSH_PLAYER,    UV_BRAID_02, $.TEX_BRAID,
@@ -251,6 +250,7 @@ const buildModels = () =>
         $.MDL_FB,        MSH_SCREEN,    UV_SCREEN,   $.TEX_FB,
         $.MDL_TEXT,      MSH_SCREEN,    UV_SCREEN,   $.TEX_UI_TEXT,
         $.MDL_BUBBLE,    MSH_SCREEN,    UV_SCREEN,   $.TEX_UI_BUBBLE,
+        $.MDL_HOME,      MSH_HOME,      UV_HOME,     $.TEX_HOME
     //  MODEL_ID         MESH_ID        UV_ID        TEXTURE_ID
     /* eslint-disable max-len */
     ];

@@ -19,7 +19,7 @@ const createPlayer = () => [$.ENT_PLAYER, new SafeMap([
         new Motion(3),
         new Player(),
         new Drawable(
-            $.PRG_SPRITE,
+            $.PRG_WORLD,
             $.QUE_SPRITE,
             $.MDL_BRAID_00
         ),
@@ -49,33 +49,14 @@ const createPlayer = () => [$.ENT_PLAYER, new SafeMap([
     [$.BLU_CHILDREN, new SafeSet()]
 ])];
 
-// const createTachie = () => [$.ENT_AV_PLAYER, new SafeMap([
-//     [$.BLU_COMPONENTS, new SafeSet([
-//         new Space(0.75, -0.2, 0),
-//         new Drawable(
-//             $.PRG_UI,
-//             $.QUE_UI,
-//             $.MDL_AV_PLAYER,
-//             new SafeMap([
-//                 [$.U_COLOR, [1, 0.871, 0.855, 1]]
-//             ])
-//         )
-//     ])],
-//     [$.BLU_CHILDREN, new SafeSet()]
-// ])];
-
 const createGround = () => [$.ENT_GROUND, new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
         new Space(),
-        new HitBox(-15, 15, -0.1, 0, 0, 3.5),
+        new HitBox(-15, 15, -0.1, 0, 0, -3.5),
         new Drawable(
-            $.PRG_REPEAT,
+            $.PRG_WORLD,
             $.QUE_BACKGROUND,
-            $.MDL_GROUND,
-            new SafeMap([
-                [$.U_UVREPEAT, [30, 3.5]],
-                [$.U_COLOR, [1, 1, 1, 1]]
-            ])
+            $.MDL_GROUND
         )
     ])],
     [$.BLU_CHILDREN, new SafeSet()]
@@ -85,9 +66,21 @@ const createTest = () => [Symbol(), new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
         new Space(),
         new Drawable(
-            $.PRG_SPRITE,
+            $.PRG_WORLD,
             $.QUE_BACKGROUND,
             $.MDL_TEST
+        )
+    ])],
+    [$.BLU_CHILDREN, new SafeSet()]
+])];
+
+const createHome = () => [Symbol(), new SafeMap([
+    [$.BLU_COMPONENTS, new SafeSet([
+        new Space(),
+        new Drawable(
+            $.PRG_WORLD,
+            $.QUE_BACKGROUND,
+            $.MDL_HOME
         )
     ])],
     [$.BLU_CHILDREN, new SafeSet()]
@@ -97,7 +90,7 @@ const createMonkey = () => [Symbol(), new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
         new Space(3, 0, 0),
         new Drawable(
-            $.PRG_SPRITE,
+            $.PRG_WORLD,
             $.QUE_BACKGROUND,
             $.MDL_MONKEY
         )
@@ -110,9 +103,9 @@ export const blueprint = new SafeMap([
         [$.BLU_ENTITIES, new SafeMap([
             createPlayer(),
             createGround(),
-            //createTachie(),
             createTest(),
-            createMonkey()
+            createMonkey(),
+            createHome()
         ])],
         [$.BLU_PROCESSES, new SafeSet([
             processMotion,

@@ -1,6 +1,8 @@
 export const LISTENER_ONCE = { once: true };
 
-export const clamp = (val, min=0, max=1) => Math.min(max, Math.max(min, val));
+export const clamp = (value, min=0, max=1) => (
+    Math.min(max, Math.max(min, value))
+);
 
 export const lerp = (start, end, amount) => start*(1-amount) + end*amount;
 
@@ -8,9 +10,11 @@ export const DEG_TO_RAD = Math.PI / 180;
 
 export const getElement = (elemId) => window.document.getElementById(elemId);
 
-export const isString = (val) => typeof val === "string";
+export const isString = (value) => typeof value === "string";
 
-export const isNullOrUndefined = (val) => val === null || val === undefined;
+export const isNullOrUndefined = (value) => (
+    value === null || value === undefined
+);
 
 export class SettableFloat32Array extends Float32Array
 {

@@ -3,14 +3,25 @@ import { Model } from "./gl/model";
 import { Program } from "./gl/program";
 import { Texture } from "./gl/texture";
 import { Bezier } from "./math/bezier";
+import { Matrix } from "./math/matrix";
 import { isNullOrUndefined, isString } from "./utility";
 
 class UiCanvas
 {
     constructor(modelId, color)
     {
-        this.program = new Program($.PRG_SCREEN, modelId);
+        this.program = new Program($.PRG_UI, modelId);
         this.program.stageUniform($.U_COLOR, color);
+        this.program.stageUniformAtIndex(
+            $.U_TRANSFORM,
+            1,
+            new Matrix(
+                1, 0, 0, 0,
+                0, 1, 0, 0,
+                0, 0, 1, 0,
+                0, 0, 0, 1
+            )
+        );
 
         this.canvas = window.document.createElement("canvas");
         this.ctx = this.canvas.getContext("2d");
