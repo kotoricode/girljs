@@ -13,6 +13,8 @@ export const Dom = {
 export const Mouse = {
     consumeClick()
     {
+        if (!this.isClick) throw Error;
+
         this.isClick = false;
     },
     onClick(e)

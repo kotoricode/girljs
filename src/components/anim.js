@@ -14,7 +14,7 @@ export class Anim extends Component
         this.setState(this.state);
     }
 
-    getModel()
+    getModelId()
     {
         return this.models[this.frameIdx];
     }

@@ -13,15 +13,15 @@ export const processAnimation = (dt) =>
             if (anim.isState($.ANI_IDLE))
             {
                 anim.setState($.ANI_MOVE);
-                const model = anim.getModel();
-                drawable.program.setModel(model);
+                const modelId = anim.getModelId();
+                drawable.program.setModel(modelId);
             }
         }
         else if (anim.isState($.ANI_MOVE))
         {
             anim.setState($.ANI_IDLE);
-            const model = anim.getModel();
-            drawable.program.setModel(model);
+            const modelId = anim.getModelId();
+            drawable.program.setModel(modelId);
         }
     }
 
@@ -41,7 +41,7 @@ export const processAnimation = (dt) =>
             } while (anim.delay <= 0);
 
             anim.frameIdx %= models.length;
-            const model = anim.getModel();
+            const model = anim.getModelId();
             drawable.program.setModel(model);
         }
     }

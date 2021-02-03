@@ -4,7 +4,7 @@ import { Program } from "./gl/program";
 import { Texture } from "./gl/texture";
 import { Bezier } from "./math/bezier";
 import { Matrix } from "./math/matrix";
-import { isNullOrUndefined, isString } from "./utility";
+import { isNotSet, isString } from "./utility";
 
 class UiCanvas
 {
@@ -174,7 +174,7 @@ const drawDialogueText = (str) =>
 
 const fillText = (str, yPos) =>
 {
-    if (isNullOrUndefined(yPos)) throw yPos;
+    if (isNotSet(yPos)) throw yPos;
 
     text.ctx.fillText(str, xPx, yPos);
 };
@@ -224,4 +224,4 @@ text.ctx.font = `${fontSize}px Cuprum`;
 text.ctx.fillStyle = bubble.ctx.fillStyle = "#fff";
 text.ctx.shadowColor = "#000";
 
-Model.load().then(canvasToTexture);
+Model.waitLoad().then(canvasToTexture);

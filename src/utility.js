@@ -1,9 +1,5 @@
 export const LISTENER_ONCE = { once: true };
 
-export const clamp = (value, min=0, max=1) => (
-    Math.min(max, Math.max(min, value))
-);
-
 export const lerp = (start, end, amount) => start*(1-amount) + end*amount;
 
 export const DEG_TO_RAD = Math.PI / 180;
@@ -12,9 +8,7 @@ export const getElement = (elemId) => window.document.getElementById(elemId);
 
 export const isString = (value) => typeof value === "string";
 
-export const isNullOrUndefined = (value) => (
-    value === null || value === undefined
-);
+export const isNotSet = (value) => value === null || value === undefined;
 
 export class SettableFloat32Array extends Float32Array
 {
@@ -59,13 +53,13 @@ export class SafeMap extends Map
 
     delete(key)
     {
-        if (isNullOrUndefined(key)) throw key;
+        if (isNotSet(key)) throw key;
         if (!super.delete(key)) throw key;
     }
 
     get(key)
     {
-        if (isNullOrUndefined(key)) throw key;
+        if (isNotSet(key)) throw key;
         if (!this.has(key)) throw key;
 
         return super.get(key);
@@ -73,8 +67,8 @@ export class SafeMap extends Map
 
     set(key, value)
     {
-        if (isNullOrUndefined(key)) throw key;
-        if (isNullOrUndefined(value)) throw value;
+        if (isNotSet(key)) throw key;
+        if (isNotSet(value)) throw value;
         if (this.has(key)) throw key;
 
         return super.set(key, value);
@@ -82,8 +76,8 @@ export class SafeMap extends Map
 
     update(key, value)
     {
-        if (isNullOrUndefined(key)) throw key;
-        if (isNullOrUndefined(value)) throw value;
+        if (isNotSet(key)) throw key;
+        if (isNotSet(value)) throw value;
         if (!this.has(key)) throw key;
 
         return super.set(key, value);
@@ -100,7 +94,7 @@ export class SafeSet extends Set
 
     add(value)
     {
-        if (isNullOrUndefined(value)) throw value;
+        if (isNotSet(value)) throw value;
         if (this.has(value)) throw value;
 
         return super.add(value);
@@ -108,7 +102,7 @@ export class SafeSet extends Set
 
     delete(value)
     {
-        if (isNullOrUndefined(value)) throw value;
+        if (isNotSet(value)) throw value;
         if (!super.delete(value)) throw value;
     }
 }

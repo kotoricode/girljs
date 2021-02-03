@@ -1,6 +1,6 @@
 import * as $ from "../const";
 import { gl } from "../dom";
-import { isNullOrUndefined, SafeMap, SafeSet } from "../utility";
+import { isNotSet, SafeMap, SafeSet } from "../utility";
 import { Model } from "./model";
 import { Buffer } from "./buffer";
 import { Matrix } from "../math/matrix";
@@ -10,9 +10,10 @@ import vsDebugSrc  from "./shaders/vert/debug.vert";
 import vsUiSrc     from "./shaders/vert/ui.vert";
 import vsWorldSrc  from "./shaders/vert/world.vert";
 
-import fsDebugSrc from "./shaders/frag/debug.frag";
-import fsFxaaSrc  from "./shaders/frag/fxaa.frag";
-import fsTexSrc   from "./shaders/frag/tex.frag";
+import fsDebugSrc    from "./shaders/frag/debug.frag";
+import fsFxaaSrc     from "./shaders/frag/fxaa.frag";
+//import fsGraySrc     from "./shaders/frag/gray.frag";
+import fsTexturedSrc from "./shaders/frag/textured.frag";
 
 export class Program
 {
@@ -92,14 +93,14 @@ export class Program
 
     isTextured()
     {
-        return !isNullOrUndefined(this.model.textureId);
+        return !isNotSet(this.model.textureId);
     }
 
     async setModel(modelId)
     {
         if (!Model.isLoaded())
         {
-            await Model.load();
+            await Model.waitLoad();
         }
 
         this.model = Model.get(modelId);
@@ -258,7 +259,7 @@ const VS_WORLD = "VS_WORLD";
 
 const FS_DEBUG = "FS_DEBUG";
 const FS_FXAA = "FS_IMAGE";
-const FS_TEX = "FS_TEX";
+const FS_TEXTURED = "FS_TEX";
 
 const U_TYPE_2F = "U_TYPE_2F";
 const U_TYPE_4F = "U_TYPE_4F";
@@ -313,8 +314,8 @@ const fragDef = new SafeMap([
 
     [FS_FXAA, new FShader(fsFxaaSrc)],
 
-    [FS_TEX, new FShader(
-        fsTexSrc,
+    [FS_TEXTURED, new FShader(
+        fsTexturedSrc,
         null,
         new Map([
             [U_TYPE_4F, new SafeMap([
@@ -330,8 +331,8 @@ const fragDef = new SafeMap([
 const programDef = [
     $.PRG_DEBUG, VS_DEBUG, FS_DEBUG,
     $.PRG_IMAGE, VS_UI,    FS_FXAA,
-    $.PRG_UI,    VS_UI,    FS_TEX,
-    $.PRG_WORLD, VS_WORLD, FS_TEX,
+    $.PRG_UI,    VS_UI,    FS_TEXTURED,
+    $.PRG_WORLD, VS_WORLD, FS_TEXTURED,
 ];
 
 /*------------------------------------------------------------------------------

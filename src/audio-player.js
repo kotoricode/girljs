@@ -1,6 +1,6 @@
 import * as $ from "./const";
 import { Prefs } from "./save";
-import { clamp, SafeMap, LISTENER_ONCE } from "./utility";
+import { SafeMap, LISTENER_ONCE } from "./utility";
 
 export const AudioPlayer = {
     play(audioId, url)
@@ -15,19 +15,15 @@ export const AudioPlayer = {
             audioObj.element.src = PATH + url;
         }
     },
-    setGain(gainId, value, isSetPref=true)
+    setGain(gainId, value)
     {
-        const clamped = clamp(value, 0, 1);
+        if (value < 0 || 1 < value) throw value;
 
         if (ctx)
         {
-            gains.get(gainId).gain.value = clamped;
+            gains.get(gainId).gain.value = value;
         }
-
-        if (isSetPref)
-        {
-            Prefs.set(gainId, value);
-        }
+        //Prefs.set(gainId, value);
     },
     stop(audioId)
     {
@@ -48,7 +44,7 @@ const getGain = (gainId, parent) =>
     gains.set(gainId, gain);
 
     const volume = Prefs.get(gainId);
-    AudioPlayer.setGain(gainId, volume, false);
+    AudioPlayer.setGain(gainId, volume);
 
     return gain;
 };

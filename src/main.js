@@ -13,7 +13,7 @@ const mainLoop = (timestamp) =>
             Mouse.setClick();
         }
 
-        const dt = (timestamp - oldTimestamp) * 1e-3;
+        const dt = (timestamp - oldTimestamp) * 0.001;
         Scene.update(dt);
 
         if (Mouse.isClick)
@@ -30,10 +30,9 @@ let isReady = false;
 let oldTimestamp = 0;
 mainLoop(0);
 
-Model.load().then(() =>
+Model.waitLoad().then(() =>
 {
     Dom.hideLoading();
     Scene.load($.SCN_TEST);
     isReady = true;
 });
-

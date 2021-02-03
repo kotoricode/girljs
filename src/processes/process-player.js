@@ -11,9 +11,11 @@ export const processPlayer = () =>
 {
     if (Mouse.isClick)
     {
-        Dialogue.setText(
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-        );
+        Mouse.consumeClick();
+
+        // Dialogue.setText(
+        //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+        // );
 
         const [ground] = Scene.one($.ENT_GROUND, HitBox);
         const ivp = Camera.getInvViewProjection();
