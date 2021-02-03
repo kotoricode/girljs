@@ -1,25 +1,23 @@
 #version 300 es
 precision mediump float;
 
+const vec3 luma = vec3(0.299, 0.587, 0.114);
+
 uniform sampler2D u_texture;
 in vec2 v_uv;
 out vec4 outColor;
 
 void main()
 {
-    vec4 texColor = texture(u_texture, v_uv);
+    vec4 color = texture(u_texture, v_uv);
 
-    float desat = dot(
-        texColor.rgb,
-        vec3(0.2989, 0.5866, 0.1145)
-    );
+    float rgbLuma = dot(color.rgb, luma);
 
     ivec2 size = textureSize(u_texture, 0);
     float amount = gl_FragCoord.x / float(size.x);
 
-    outColor = mix(
-        texColor,
-        vec4(desat, desat, desat, 1),
-        amount
+    outColor = vec4(
+        mix(color.rgb, vec3(rgbLuma), amount),
+        color.a
     );
 }

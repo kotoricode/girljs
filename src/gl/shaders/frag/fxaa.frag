@@ -7,6 +7,7 @@ https://www.geeks3d.com/20110405/fxaa-fast-approximate-anti-aliasing-demo-glsl-o
 
 const ivec2 SE = ivec2(1, 1);
 const ivec2 NE = ivec2(1, -1);
+
 const vec3 luma = vec3(0.299, 0.587, 0.114);
 
 const vec2 spanMax = vec2(8, 8);
@@ -21,11 +22,11 @@ void main()
 {
     vec2 invRes = 1.0 / vec2(textureSize(u_texture, 0));
 
-    vec3 rgbNW = textureOffset(u_texture, v_uv, -SE).xyz;
-    vec3 rgbNE = textureOffset(u_texture, v_uv, NE).xyz;
-    vec3 rgbSW = textureOffset(u_texture, v_uv, -NE).xyz;
-    vec3 rgbSE = textureOffset(u_texture, v_uv, SE).xyz;
-    vec3 rgbM = texture(u_texture, v_uv).xyz;
+    vec3 rgbNW = textureOffset(u_texture, v_uv, -SE).rgb;
+    vec3 rgbNE = textureOffset(u_texture, v_uv, NE).rgb;
+    vec3 rgbSW = textureOffset(u_texture, v_uv, -NE).rgb;
+    vec3 rgbSE = textureOffset(u_texture, v_uv, SE).rgb;
+    vec3 rgbM = texture(u_texture, v_uv).rgb;
 
     float lumaNW = dot(rgbNW, luma);
     float lumaNE = dot(rgbNE, luma);
@@ -57,14 +58,14 @@ void main()
     vec2 sixthNewDir = halfNewDir / 3.0;
 
     vec3 rgbA = 0.5 * (
-        texture(u_texture, v_uv - sixthNewDir) +
-        texture(u_texture, v_uv + sixthNewDir)
-    ).xyz;
+        texture(u_texture, v_uv - sixthNewDir).rgb +
+        texture(u_texture, v_uv + sixthNewDir).rgb
+    );
     
     vec3 rgbB = rgbA * 0.5 + 0.25 * (
-        texture(u_texture, v_uv - halfNewDir) +
-        texture(u_texture, v_uv + halfNewDir)
-    ).xyz;
+        texture(u_texture, v_uv - halfNewDir).rgb +
+        texture(u_texture, v_uv + halfNewDir).rgb
+    );
 
     float lumaB = dot(rgbB, luma);
 
