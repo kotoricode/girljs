@@ -124,10 +124,7 @@ const draw = (program) =>
         Texture.bind(texture);
     }
 
-    if (program.hasUniforms())
-    {
-        program.setUniforms();
-    }
+    program.setUniforms();
 
     const { drawMode, drawSize } = program.model;
 

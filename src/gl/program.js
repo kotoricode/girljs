@@ -90,11 +90,6 @@ export class Program
         return this.uStaging.has(uId);
     }
 
-    hasUniforms()
-    {
-        return this.uStaging.size > 0;
-    }
-
     isTextured()
     {
         return !isNullOrUndefined(this.model.textureId);

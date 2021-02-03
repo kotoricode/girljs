@@ -97,11 +97,11 @@ const uvs = new SafeMap([
     [UV_SCREEN, [0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]],
 ]);
 
-class ExternalModel
+class ExternalModlInfo
 {
     constructor(fileName, meshId, uvId)
     {
-        this.url = `/data/${fileName}.glb`;
+        this.url = `/mdl/${fileName}.glb`;
         this.meshId = meshId;
         this.uvId = uvId;
 
@@ -110,9 +110,9 @@ class ExternalModel
 }
 
 const externalModels = [
-    new ExternalModel("mesh", MSH_TEST, UV_TEST),
-    new ExternalModel("monkey", MSH_MONKEY, UV_MONKEY),
-    new ExternalModel("home", MSH_HOME, UV_HOME)
+    new ExternalModlInfo("mesh", MSH_TEST, UV_TEST),
+    new ExternalModlInfo("monkey", MSH_MONKEY, UV_MONKEY),
+    new ExternalModlInfo("home", MSH_HOME, UV_HOME)
 ];
 
 const models = new SafeMap();
@@ -123,7 +123,7 @@ let isLoaded = false;
 ------------------------------------------------------------------------------*/
 let loadPromise;
 
-class ModelData
+export class Model
 {
     constructor(attributes, bufferId, drawMode, meshId, uvId, textureId)
     {
@@ -134,33 +134,35 @@ class ModelData
         this.uvId = uvId;
         this.textureId = textureId;
 
-        this.drawSize = meshes.get(meshId).length / 3;
+        this.drawSize = Model.getMesh(meshId).length / 3;
         if (!Number.isInteger(this.drawSize)) throw this.drawSize;
 
         Object.freeze(this);
     }
-}
 
-export const Model = {
-    get(modelId)
+    static get(modelId)
     {
         if (!isLoaded) throw Error("Model not loaded");
 
         return models.get(modelId);
-    },
-    getMesh(meshId)
+    }
+
+    static getMesh(meshId)
     {
         return meshes.get(meshId);
-    },
-    getUv(uvId)
+    }
+
+    static getUv(uvId)
     {
         return uvs.get(uvId);
-    },
-    isLoaded()
+    }
+
+    static isLoaded()
     {
         return isLoaded;
-    },
-    load()
+    }
+
+    static load()
     {
         if (!loadPromise)
         {
@@ -174,7 +176,7 @@ export const Model = {
 
         return loadPromise;
     }
-};
+}
 
 const fetchExternalModels = () =>
 {
@@ -273,7 +275,7 @@ const buildModels = () =>
             [$.A_UV, uvOffsets.get(uvId)]
         ]);
 
-        models.set(modelId, new ModelData(
+        models.set(modelId, new Model(
             attributes,
             $.BUF_ARR_MODEL,
             $.TRIANGLES,
@@ -290,7 +292,7 @@ const buildModels = () =>
         [$.A_XYZ, 0]
     ]);
 
-    models.set($.MDL_DEBUG, new ModelData(
+    models.set($.MDL_DEBUG, new Model(
         debugAttrib,
         $.BUF_ARR_DEBUG,
         $.LINES,

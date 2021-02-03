@@ -13,9 +13,9 @@ export class Quaternion extends SettableArray
     // https://quaternions.online/
     fromEuler(x, y, z)
     {
-        const hx = DEG_TO_RAD * x / 2;
-        const hy = DEG_TO_RAD * y / 2;
-        const hz = DEG_TO_RAD * z / 2;
+        const hx = DEG_TO_RAD * x * 0.5;
+        const hy = DEG_TO_RAD * y * 0.5;
+        const hz = DEG_TO_RAD * z * 0.5;
 
         const sx = Math.sin(hx);
         const cx = Math.cos(hx);
