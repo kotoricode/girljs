@@ -12,7 +12,6 @@ import vsWorldSrc  from "./shaders/vert/world.vert";
 
 import fsDebugSrc from "./shaders/frag/debug.frag";
 import fsFxaaSrc  from "./shaders/frag/fxaa.frag";
-import fsImageSrc from "./shaders/frag/image.frag";
 import fsTexSrc   from "./shaders/frag/tex.frag";
 
 export class Program
@@ -263,7 +262,7 @@ const VS_UI = "VS_UI";
 const VS_WORLD = "VS_WORLD";
 
 const FS_DEBUG = "FS_DEBUG";
-const FS_IMAGE = "FS_IMAGE";
+const FS_FXAA = "FS_IMAGE";
 const FS_TEX = "FS_TEX";
 
 const U_TYPE_2F = "U_TYPE_2F";
@@ -317,8 +316,7 @@ const vertDef = new SafeMap([
 const fragDef = new SafeMap([
     [FS_DEBUG, new FShader(fsDebugSrc)],
 
-    [FS_IMAGE, new FShader(fsFxaaSrc)],
-    //[FS_IMAGE, new FShader(fsImageSrc)],
+    [FS_FXAA, new FShader(fsFxaaSrc)],
 
     [FS_TEX, new FShader(
         fsTexSrc,
@@ -335,10 +333,10 @@ const fragDef = new SafeMap([
     Program definitions
 ------------------------------------------------------------------------------*/
 const programDef = [
-    $.PRG_DEBUG,  VS_DEBUG,  FS_DEBUG,
-    $.PRG_IMAGE,  VS_UI,     FS_IMAGE,
-    $.PRG_UI,     VS_UI,     FS_TEX,
-    $.PRG_WORLD,  VS_WORLD,  FS_TEX,
+    $.PRG_DEBUG, VS_DEBUG, FS_DEBUG,
+    $.PRG_IMAGE, VS_UI,    FS_FXAA,
+    $.PRG_UI,    VS_UI,    FS_TEX,
+    $.PRG_WORLD, VS_WORLD, FS_TEX,
 ];
 
 /*------------------------------------------------------------------------------
