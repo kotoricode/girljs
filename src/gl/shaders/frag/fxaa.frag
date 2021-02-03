@@ -15,18 +15,18 @@ const float reduceMul = 1.0 / 8.0;
 const float reduceMin = 1.0 / 128.0;
 
 uniform sampler2D u_texture;
-in vec2 v_uv;
+in vec2 v_texcoord;
 out vec4 outColor;
 
 void main() 
 {
     vec2 invRes = 1.0 / vec2(textureSize(u_texture, 0));
 
-    vec3 rgbNW = textureOffset(u_texture, v_uv, -SE).rgb;
-    vec3 rgbNE = textureOffset(u_texture, v_uv, NE).rgb;
-    vec3 rgbSW = textureOffset(u_texture, v_uv, -NE).rgb;
-    vec3 rgbSE = textureOffset(u_texture, v_uv, SE).rgb;
-    vec3 rgbM = texture(u_texture, v_uv).rgb;
+    vec3 rgbNW = textureOffset(u_texture, v_texcoord, -SE).rgb;
+    vec3 rgbNE = textureOffset(u_texture, v_texcoord, NE).rgb;
+    vec3 rgbSW = textureOffset(u_texture, v_texcoord, -NE).rgb;
+    vec3 rgbSE = textureOffset(u_texture, v_texcoord, SE).rgb;
+    vec3 rgbM = texture(u_texture, v_texcoord).rgb;
 
     float lumaNW = dot(rgbNW, luma);
     float lumaNE = dot(rgbNE, luma);
@@ -58,13 +58,13 @@ void main()
     vec2 sixthNewDir = halfNewDir / 3.0;
 
     vec3 rgbA = 0.5 * (
-        texture(u_texture, v_uv - sixthNewDir).rgb +
-        texture(u_texture, v_uv + sixthNewDir).rgb
+        texture(u_texture, v_texcoord - sixthNewDir).rgb +
+        texture(u_texture, v_texcoord + sixthNewDir).rgb
     );
     
     vec3 rgbB = rgbA * 0.5 + 0.25 * (
-        texture(u_texture, v_uv - halfNewDir).rgb +
-        texture(u_texture, v_uv + halfNewDir).rgb
+        texture(u_texture, v_texcoord - halfNewDir).rgb +
+        texture(u_texture, v_texcoord + halfNewDir).rgb
     );
 
     float lumaB = dot(rgbB, luma);

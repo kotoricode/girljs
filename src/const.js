@@ -97,8 +97,8 @@ export const
     Program --- DO NOT MODIFY
 ------------------------------------------------------------------------------*/
 export const
-    A_XYZ = "a_xyz",
-    A_UV = "a_uv";
+    A_POSITION = "a_position",
+    A_TEXCOORD = "a_texcoord";
 
 export const
     U_COLOR = "u_color",

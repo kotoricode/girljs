@@ -261,8 +261,8 @@ const buildModels = async() =>
         }
 
         const attributes = new SafeMap([
-            [$.A_XYZ, meshOffsets.get(meshId)],
-            [$.A_UV, uvOffsets.get(uvId)]
+            [$.A_POSITION, meshOffsets.get(meshId)],
+            [$.A_TEXCOORD, uvOffsets.get(uvId)]
         ]);
 
         models.set(modelId, new Model(
@@ -279,7 +279,7 @@ const buildModels = async() =>
         Debug
     --------------------------------------------------------------------------*/
     const debugAttrib = new SafeMap([
-        [$.A_XYZ, 0]
+        [$.A_POSITION, 0]
     ]);
 
     models.set($.MDL_DEBUG, new Model(

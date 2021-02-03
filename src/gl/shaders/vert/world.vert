@@ -6,12 +6,12 @@ uniform camera
 };
 
 uniform mat4 u_transform;
-in vec3 a_xyz;
-in vec2 a_uv;
-out vec2 v_uv;
+in vec3 a_position;
+in vec2 a_texcoord;
+out vec2 v_texcoord;
 
 void main()
 {
-    gl_Position = u_viewProjection * u_transform * vec4(a_xyz, 1);
-    v_uv = a_uv;
+    gl_Position = u_viewProjection * u_transform * vec4(a_position, 1);
+    v_texcoord = a_texcoord;
 }

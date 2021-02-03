@@ -271,7 +271,7 @@ const vertDef = new SafeMap([
     [VS_DEBUG, new VShader(
         vsDebugSrc,
         new SafeMap([
-            [$.A_XYZ, 3]
+            [$.A_POSITION, 3]
         ]),
         [$.UB_CAMERA]
     )],
@@ -279,8 +279,8 @@ const vertDef = new SafeMap([
     [VS_UI, new VShader(
         vsUiSrc,
         new SafeMap([
-            [$.A_XYZ, 3],
-            [$.A_UV, 2]
+            [$.A_POSITION, 3],
+            [$.A_TEXCOORD, 2]
         ]),
         null,
         new Map([
@@ -293,8 +293,8 @@ const vertDef = new SafeMap([
     [VS_WORLD, new VShader(
         vsWorldSrc,
         new SafeMap([
-            [$.A_XYZ, 3],
-            [$.A_UV, 2]
+            [$.A_POSITION, 3],
+            [$.A_TEXCOORD, 2]
         ]),
         [$.UB_CAMERA],
         new Map([

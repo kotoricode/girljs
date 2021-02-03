@@ -4,12 +4,12 @@ precision mediump float;
 const vec3 luma = vec3(0.299, 0.587, 0.114);
 
 uniform sampler2D u_texture;
-in vec2 v_uv;
+in vec2 v_texcoord;
 out vec4 outColor;
 
 void main()
 {
-    vec4 color = texture(u_texture, v_uv);
+    vec4 color = texture(u_texture, v_texcoord);
 
     float rgbLuma = dot(color.rgb, luma);
 
