@@ -22,17 +22,17 @@ export class Program
         const prepared = preparedPrograms.get(programId);
 
         // Program
-        this.glProgram = prepared.get(DAT_PROGRAM);
+        this.glProgram = prepared.glProgram;
 
         // Attributes
-        this.aLayout = prepared.get(DAT_A_LAYOUT);
+        this.aLayout = prepared.aLayout;
         this.vao = gl.createVertexArray();
 
         // Uniforms
-        this.uSetters = prepared.get(DAT_U_SETTERS);
-        this.uBlocks = prepared.get(DAT_U_BLOCKS);
+        this.uSetters = prepared.uSetters;
+        this.uBlocks = prepared.uBlocks;
         this.uStaging = new SafeMap();
-        const uDefaults = prepared.get(DAT_U_DEFAULTS);
+        const uDefaults = prepared.uDefaults;
 
         for (const [name, values] of uDefaults)
         {
@@ -244,12 +244,6 @@ class VShader extends Shader
     }
 }
 
-const DAT_A_LAYOUT = "DAT_A_LAYOUT";
-const DAT_PROGRAM = "DAT_PROGRAM";
-const DAT_U_BLOCKS = "DAT_U_BLOCKS";
-const DAT_U_DEFAULTS = "DAT_U_DEFAULTS";
-const DAT_U_SETTERS = "DAT_U_SETTERS";
-
 /*------------------------------------------------------------------------------
     Const
 ------------------------------------------------------------------------------*/
@@ -338,6 +332,19 @@ const programDef = [
 /*------------------------------------------------------------------------------
     Create and prepare programs
 ------------------------------------------------------------------------------*/
+class PreparedProgram
+{
+    constructor(glProgram, aLayout, uBlocks, uDefaults, uSetters)
+    {
+        this.glProgram = glProgram;
+        this.aLayout = aLayout;
+        this.uBlocks = uBlocks;
+        this.uDefaults = uDefaults;
+        this.uSetters = uSetters;
+        Object.freeze(this);
+    }
+}
+
 const preparedPrograms = new SafeMap();
 
 for (let i = 0; i < programDef.length;)
@@ -405,11 +412,11 @@ for (let i = 0; i < programDef.length;)
         }
     }
 
-    preparedPrograms.set(programId, new SafeMap([
-        [DAT_PROGRAM, program],
-        [DAT_A_LAYOUT, aLayout],
-        [DAT_U_BLOCKS, uBlocks],
-        [DAT_U_DEFAULTS, uDefaults],
-        [DAT_U_SETTERS, uSetters]
-    ]));
+    preparedPrograms.set(programId, new PreparedProgram(
+        program,
+        aLayout,
+        uBlocks,
+        uDefaults,
+        uSetters
+    ));
 }
