@@ -48,22 +48,22 @@ void main()
     
     float dirMin = min(abs(dir.x), abs(dir.y)) + dirReduce;
     
-    vec2 invDir2 = invRes * min(
+    vec2 newDir = invRes * min(
         spanMax, 
         max(-spanMax, dir / dirMin)
     );
 
-    vec2 invHalfDir2 = invDir2 * 0.5;
-    vec2 invSixthDir2 = invHalfDir2 / 3.0;
+    vec2 halfNewDir = newDir * 0.5;
+    vec2 sixthNewDir = halfNewDir / 3.0;
 
     vec3 rgbA = 0.5 * (
-        texture(u_texture, v_uv - invSixthDir2) +
-        texture(u_texture, v_uv + invSixthDir2)
+        texture(u_texture, v_uv - sixthNewDir) +
+        texture(u_texture, v_uv + sixthNewDir)
     ).xyz;
     
     vec3 rgbB = rgbA * 0.5 + 0.25 * (
-        texture(u_texture, v_uv - invHalfDir2) +
-        texture(u_texture, v_uv + invHalfDir2)
+        texture(u_texture, v_uv - halfNewDir) +
+        texture(u_texture, v_uv + halfNewDir)
     ).xyz;
 
     float lumaB = dot(rgbB, luma);
