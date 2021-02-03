@@ -33,7 +33,7 @@ const UV_BRAID_26 = "UV_BRAID_26";
 const UV_MONKEY = "UV_MONKEY";
 
 /*------------------------------------------------------------------------------
-    Mesh, UV
+    Internal meshes & UVs
 ------------------------------------------------------------------------------*/
 const meshXy = (minX, maxX, minY, maxY) => [
     minX, minY, 0,
@@ -97,32 +97,9 @@ const uvs = new SafeMap([
     [UV_SCREEN, [0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]],
 ]);
 
-class ExternalModlInfo
-{
-    constructor(fileName, meshId, uvId)
-    {
-        this.url = `/mdl/${fileName}.glb`;
-        this.meshId = meshId;
-        this.uvId = uvId;
-
-        Object.freeze(this);
-    }
-}
-
-const externalModels = [
-    new ExternalModlInfo("mesh", MSH_TEST, UV_TEST),
-    new ExternalModlInfo("monkey", MSH_MONKEY, UV_MONKEY),
-    new ExternalModlInfo("home", MSH_HOME, UV_HOME)
-];
-
-const models = new SafeMap();
-let isLoaded = false;
-
 /*------------------------------------------------------------------------------
     Model
 ------------------------------------------------------------------------------*/
-let loadPromise;
-
 export class Model
 {
     constructor(attributes, bufferId, drawMode, meshId, uvId, textureId)
@@ -166,58 +143,55 @@ export class Model
     {
         if (!loadPromise)
         {
-            loadPromise = (async() =>
-            {
-                await fetchExternalModels();
-                buildModels();
-                isLoaded = true;
-            })();
+            loadPromise = buildModels();
         }
 
         return loadPromise;
     }
 }
 
-const fetchExternalModels = () =>
+const buildModels = async() =>
 {
-    return Promise.all(
-        externalModels.map(obj => (async() =>
+    /*--------------------------------------------------------------------------
+        Download external models
+    --------------------------------------------------------------------------*/
+    class ExternalModelInfo
+    {
+        constructor(fileName, meshId, uvId)
         {
-            const response = await window.fetch(obj.url);
+            this.url = `/mdl/${fileName}.glb`;
+            this.meshId = meshId;
+            this.uvId = uvId;
+
+            Object.freeze(this);
+        }
+    }
+
+    const externalModels = [
+        new ExternalModelInfo("mesh", MSH_TEST, UV_TEST),
+        new ExternalModelInfo("monkey", MSH_MONKEY, UV_MONKEY),
+        new ExternalModelInfo("home", MSH_HOME, UV_HOME)
+    ];
+
+    await Promise.all(
+        externalModels.map(extModel => (async() =>
+        {
+            const response = await window.fetch(extModel.url);
             const blob = await response.blob();
             const { mesh, uv } = await parseGlb(blob);
 
-            meshes.set(obj.meshId, mesh);
-            uvs.set(obj.uvId, uv);
+            meshes.set(extModel.meshId, mesh);
+            uvs.set(extModel.uvId, uv);
         })())
     );
-};
 
-const pushData = (buffer, data) =>
-{
-    if (!Array.isArray(data) && !(data instanceof Float32Array))
-    {
-        throw Error("Not an array");
-    }
-
-    const offset = buffer.length;
-    buffer.length += data.length;
-
-    for (let i = 0; i < data.length; i++)
-    {
-        buffer[offset + i] = data[i];
-    }
-
-    return offset * Float32Array.BYTES_PER_ELEMENT;
-};
-
-const buildModels = () =>
-{
+    /*--------------------------------------------------------------------------
+        Build models from mesh + UV + texture information
+    --------------------------------------------------------------------------*/
     const modelData = [];
 
     const modelDef = [
-    /* eslint-disable max-len */
-    //  MODEL_ID         MESH_ID        UV_ID        TEXTURE_ID
+    //  MODEL ID         MESH ID        UV ID        TEXTURE ID
         $.MDL_BRAID_00,  MSH_PLAYER,    UV_BRAID_00, $.TEX_BRAID,
         $.MDL_BRAID_02,  MSH_PLAYER,    UV_BRAID_02, $.TEX_BRAID,
         $.MDL_BRAID_04,  MSH_PLAYER,    UV_BRAID_04, $.TEX_BRAID,
@@ -238,13 +212,30 @@ const buildModels = () =>
         $.MDL_TEXT,      MSH_SCREEN,    UV_SCREEN,   $.TEX_UI_TEXT,
         $.MDL_BUBBLE,    MSH_SCREEN,    UV_SCREEN,   $.TEX_UI_BUBBLE,
         $.MDL_HOME,      MSH_HOME,      UV_HOME,     $.TEX_HOME
-    //  MODEL_ID         MESH_ID        UV_ID        TEXTURE_ID
-    /* eslint-disable max-len */
     ];
 
-    const xyzOffsets = new SafeMap();
+    // Push data to modelData and return the offset
+    const pushModelData = (data) =>
+    {
+        if (!Array.isArray(data) && !(data instanceof Float32Array))
+        {
+            throw Error("Not an array");
+        }
+
+        const offset = modelData.length;
+        modelData.length += data.length;
+
+        for (let i = 0; i < data.length; i++)
+        {
+            modelData[offset + i] = data[i];
+        }
+
+        return offset * Float32Array.BYTES_PER_ELEMENT;
+    };
+
+    // Local build caches
+    const meshOffsets = new SafeMap();
     const uvOffsets = new SafeMap();
-    const drawSizes = new SafeMap();
 
     for (let i = 0; i < modelDef.length;)
     {
@@ -253,25 +244,24 @@ const buildModels = () =>
         const uvId = modelDef[i++];
         const textureId = modelDef[i++];
 
-        if (!xyzOffsets.has(meshId))
+        if (!meshOffsets.has(meshId))
         {
-            const xyz = meshes.get(meshId);
-            const xyzOffset = pushData(modelData, xyz);
+            const mesh = meshes.get(meshId);
+            const meshOffset = pushModelData(mesh);
 
-            xyzOffsets.set(meshId, xyzOffset);
-            drawSizes.set(meshId, xyz.length / 3);
+            meshOffsets.set(meshId, meshOffset);
         }
 
         if (!uvOffsets.has(uvId))
         {
             const uv = uvs.get(uvId);
-            const uvOffset = pushData(modelData, uv);
+            const uvOffset = pushModelData(uv);
 
             uvOffsets.set(uvId, uvOffset);
         }
 
         const attributes = new SafeMap([
-            [$.A_XYZ, xyzOffsets.get(meshId)],
+            [$.A_XYZ, meshOffsets.get(meshId)],
             [$.A_UV, uvOffsets.get(uvId)]
         ]);
 
@@ -300,7 +290,15 @@ const buildModels = () =>
     ));
 
     /*--------------------------------------------------------------------------
-        Set to buffer
+        Push to buffer and finish
     --------------------------------------------------------------------------*/
     Buffer.setData($.BUF_ARR_MODEL, new SettableFloat32Array(modelData));
+    isLoaded = true;
 };
+
+/*------------------------------------------------------------------------------
+    Init
+------------------------------------------------------------------------------*/
+const models = new SafeMap();
+let isLoaded = false;
+let loadPromise;
