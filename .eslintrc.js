@@ -36,7 +36,7 @@ module.exports = {
         "newline-before-return": 2,
         "no-alert": 2,
         "no-caller": 2,
-        "no-constant-condition": 2,
+        "no-constant-condition": 0,
         "no-constructor-return": 2,
         "no-empty-function": 2,
         "no-eval": 2,
@@ -333,7 +333,6 @@ module.exports = {
             "asyncArrow": "never"
         }],
         "space-in-parens": [2, "never"],
-        "space-unary-ops": 2,
-        "yoda": 2
+        "space-unary-ops": 2
     }
 };

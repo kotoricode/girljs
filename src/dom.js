@@ -11,22 +11,33 @@ export const Dom = {
 };
 
 export const Mouse = {
+    consumeClick()
+    {
+        this.isClick = false;
+    },
     onClick(e)
     {
-        Mouse.isWorldClick = true;
+        this.isPendingClick = true;
+        this.pendingClick.x = e.clientX;
+        this.pendingClick.y = e.clientY;
+    },
+    setClick()
+    {
+        if (!this.isPendingClick) throw Error;
 
-        const x = (e.clientX - canvasRect.left) / canvas.clientWidth;
-        const y = (e.clientY - canvasRect.top) / canvas.clientHeight;
+        const x = (this.pendingClick.x - canvasRect.left) / canvas.clientWidth;
+        const y = (this.pendingClick.y - canvasRect.top) / canvas.clientHeight;
 
         Mouse.clip.x = 2*x - 1;
         Mouse.clip.y = 1 - 2*y;
 
-        Mouse.screen.x = x * $.RES_WIDTH;
-        Mouse.screen.y = y * $.RES_HEIGHT;
+        this.isPendingClick = false;
+        this.isClick = true;
     },
     clip: new Vector(),
-    screen: new Vector(),
-    isWorldClick: false,
+    isClick: false,
+    isPendingClick: false,
+    pendingClick: new Vector()
 };
 
 const onResize = () =>

@@ -8,9 +8,18 @@ const mainLoop = (timestamp) =>
 {
     if (isReady)
     {
+        if (Mouse.isPendingClick)
+        {
+            Mouse.setClick();
+        }
+
         const dt = (timestamp - oldTimestamp) * 1e-3;
         Scene.update(dt);
-        Mouse.isWorldClick = false;
+
+        if (Mouse.isClick)
+        {
+            Mouse.consumeClick();
+        }
     }
 
     oldTimestamp = timestamp;

@@ -9,7 +9,7 @@ import { Scene } from "../scene";
 
 export const processPlayer = () =>
 {
-    if (Mouse.isWorldClick)
+    if (Mouse.isClick)
     {
         Dialogue.setText(
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
