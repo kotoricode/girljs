@@ -6,6 +6,7 @@ export const Dom = {
     hideLoading()
     {
         canvas.addEventListener("click", (e) => Mouse.onClick(e));
+        canvas.addEventListener("mousemove", (e) => Mouse.setClip(e));
         loading.style.visibility = "hidden";
     }
 };
@@ -19,22 +20,23 @@ export const Mouse = {
     },
     onClick(e)
     {
+        this.setClip(e);
         this.isPendingClick = true;
-        this.pendingClick.x = e.clientX;
-        this.pendingClick.y = e.clientY;
     },
     setClick()
     {
         if (!this.isPendingClick) throw Error;
 
-        const x = (this.pendingClick.x - canvasRect.left) / canvas.clientWidth;
-        const y = (this.pendingClick.y - canvasRect.top) / canvas.clientHeight;
+        this.isPendingClick = false;
+        this.isClick = true;
+    },
+    setClip(e)
+    {
+        const x = (e.clientX - canvasRect.left) / canvas.clientWidth;
+        const y = (e.clientY - canvasRect.top) / canvas.clientHeight;
 
         this.clip.x = 2*x - 1;
         this.clip.y = 1 - 2*y;
-
-        this.isPendingClick = false;
-        this.isClick = true;
     },
     clip: new Vector(),
     isClick: false,

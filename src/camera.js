@@ -3,6 +3,7 @@ import { Buffer } from "./gl/buffer";
 import { SettableFloat32Array, DEG_TO_RAD } from "./utility";
 import { Matrix } from "./math/matrix";
 import { Transform } from "./math/transform";
+import { Ray } from "./math/ray";
 
 export const Camera = {
     getFocusEntityId()
@@ -12,6 +13,10 @@ export const Camera = {
     getInvViewProjection()
     {
         return invViewProjection;
+    },
+    getRay()
+    {
+        return ray;
     },
     setFocusEntityId(entityId)
     {
@@ -44,6 +49,8 @@ let focus;
 const far = 600;
 const near = 1;
 const fov = 30;
+
+const ray = new Ray(0, 0, 0, 0, 0, 1);
 
 const transform = new Transform(0, 2.75, 6);
 const viewProjection = new Matrix();

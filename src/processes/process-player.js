@@ -20,6 +20,8 @@ export const processPlayer = () =>
         //const [ground] = Scene.one($.ENT_GROUND, HitBox);
         const ivp = Camera.getInvViewProjection();
 
+        const ray = Camera.getRay();
+
         ray.numHits = 0;
         ray.fromMouse(ivp, Mouse.clip);
         ray.collideZeroPlane();
@@ -34,5 +36,3 @@ export const processPlayer = () =>
         }
     }
 };
-
-const ray = new Ray(0, 0, 0, 0, 0, 1);

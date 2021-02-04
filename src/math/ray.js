@@ -5,10 +5,8 @@ export class Ray
     constructor(sx, sy, sz, ex, ey, ez)
     {
         this.start = new Vector(sx, sy, sz);
-        this.end = new Vector(ex, ey, ez);
-
-        this.direction = new Vector();
-        this.setDirection(this.end);
+        this.direction = new Vector(ex - sx, ey - sy, ez - sz);
+        this.direction.normalize();
 
         this.numHits = 0;
         this.hit = [];
@@ -107,17 +105,13 @@ export class Ray
         {
             const coord = ivp[i]*x + ivp[4+i]*y + ivp[12+i];
             const zcoord = ivp[8+i];
-            this.start[i] = (coord - zcoord) / iwNear;
-            this.end[i] = (coord + zcoord) / iwFar;
+
+            const start = (coord - zcoord) / iwNear;
+
+            this.start[i] = start;
+            this.direction[i] = ((coord + zcoord) / iwFar) - start;
         }
 
-        this.setDirection();
-    }
-
-    setDirection()
-    {
-        this.direction.from(this.end);
-        this.direction.subtract(this.start);
         this.direction.normalize();
     }
 }
