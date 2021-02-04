@@ -8,7 +8,7 @@ const mainLoop = (timestamp) =>
 {
     if (isReady)
     {
-        if (Mouse.isPendingClick)
+        if (Mouse.isClickPending())
         {
             Mouse.setClick();
         }
@@ -16,7 +16,7 @@ const mainLoop = (timestamp) =>
         const dt = (timestamp - oldTimestamp) * 0.001;
         Scene.update(dt);
 
-        if (Mouse.isClick)
+        if (Mouse.isClick())
         {
             Mouse.consumeClick();
         }

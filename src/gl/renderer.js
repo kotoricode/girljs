@@ -7,10 +7,10 @@ import { SafeMap, SafeSet } from "../utility";
 import { Dialogue } from "../dialogue";
 import { Scene } from "../scene";
 import { Buffer } from "./buffer";
-import { HitBox } from "../components/hitbox";
 import { Matrix } from "../math/matrix";
 import { Ground } from "../components/ground";
 import { Camera } from "../camera";
+import { Space } from "../components/space";
 
 const bindFb = () =>
 {
@@ -43,16 +43,21 @@ const debugGround = () =>
     }
 
     const ray = Camera.getRay();
+    ray.resetHits();
+    ray.fromMouse();
+    ray.collideZeroPlane();
 
-    ray.fromMouse(
-        Camera.getInvViewProjection(),
-        Mouse.clip
-    );
+    if (ray.hasHits())
+    {
+        const [space] = Scene.one($.ENT_PLAYER, Space);
 
-    debugMesh.setValuesAtIndex(i * 6,
-        ...ray.start,
-        0, 0, 0
-    );
+        const hit = ray.hits[0];
+
+        debugMesh.setValuesAtIndex(i * 6,
+            ...hit,
+            ...space.world.translation
+        );
+    }
 
     Buffer.setData($.BUF_ARR_DEBUG, debugMesh);
 };

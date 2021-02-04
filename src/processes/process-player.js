@@ -2,14 +2,13 @@ import * as $ from "../const";
 import { Mouse } from "../dom";
 import { Camera } from "../camera";
 import { HitBox } from "../components/hitbox";
-import { Ray } from "../math/ray";
 import { Dialogue } from "../dialogue";
 import { Motion } from "../components/motion";
 import { Scene } from "../scene";
 
 export const processPlayer = () =>
 {
-    if (Mouse.isClick)
+    if (Mouse.isClick())
     {
         Mouse.consumeClick();
 
@@ -18,20 +17,19 @@ export const processPlayer = () =>
         // );
 
         //const [ground] = Scene.one($.ENT_GROUND, HitBox);
-        const ivp = Camera.getInvViewProjection();
 
         const ray = Camera.getRay();
 
-        ray.numHits = 0;
-        ray.fromMouse(ivp, Mouse.clip);
+        ray.resetHits();
+        ray.fromMouse();
         ray.collideZeroPlane();
         //ray.collide(ground);
 
-        if (ray.numHits)
+        if (ray.hasHits())
         {
             const [plMotion] = Scene.one($.ENT_PLAYER, Motion);
 
-            const hit = ray.hit[0];
+            const hit = ray.hits[0];
             plMotion.setMainTarget(hit);
         }
     }

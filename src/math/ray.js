@@ -1,3 +1,5 @@
+import { Camera } from "../camera";
+import { Mouse } from "../dom";
 import { Vector } from "./vector";
 
 export class Ray
@@ -9,18 +11,18 @@ export class Ray
         this.direction.normalize();
 
         this.numHits = 0;
-        this.hit = [];
+        this.hits = [];
     }
 
     addHit(x, y, z)
     {
-        if (this.numHits === this.hit.length)
+        if (this.numHits === this.hits.length)
         {
             const newVec = new Vector();
-            this.hit.push(newVec);
+            this.hits.push(newVec);
         }
 
-        const vec = this.hit[this.numHits++];
+        const vec = this.hits[this.numHits++];
         vec.setValues(x, y, z);
     }
 
@@ -93,9 +95,11 @@ export class Ray
         }
     }
 
-    fromMouse(ivp, mouse)
+    fromMouse()
     {
-        const { x, y } = mouse;
+        const ivp = Camera.getInvViewProjection();
+        const { x, y } = Mouse.getClip();
+
         const w = ivp[3]*x + ivp[7]*y + ivp[15];
         const zw = ivp[11];
         const iwNear = w - zw;
@@ -113,5 +117,15 @@ export class Ray
         }
 
         this.direction.normalize();
+    }
+
+    hasHits()
+    {
+        return this.numHits > 0;
+    }
+
+    resetHits()
+    {
+        this.numHits = 0;
     }
 }

@@ -5,45 +5,63 @@ import { getElement, LISTENER_ONCE } from "./utility";
 export const Dom = {
     hideLoading()
     {
-        canvas.addEventListener("click", (e) => Mouse.onClick(e));
-        canvas.addEventListener("mousemove", (e) => Mouse.setClip(e));
+        canvas.addEventListener("click", (e) => mouseOnClick(e));
+        canvas.addEventListener("mousemove", (e) => mouseSetClip(e));
         loading.style.visibility = "hidden";
     }
 };
 
+/*------------------------------------------------------------------------------
+    Mouse
+------------------------------------------------------------------------------*/
 export const Mouse = {
     consumeClick()
     {
-        if (!this.isClick) throw Error;
-
-        this.isClick = false;
+        isMouseClick = false;
     },
-    onClick(e)
+    getClip()
     {
-        this.setClip(e);
-        this.isPendingClick = true;
+        return mouseClip;
+    },
+    isClick()
+    {
+        return isMouseClick;
+    },
+    isClickPending()
+    {
+        return isMouseClickPending;
     },
     setClick()
     {
-        if (!this.isPendingClick) throw Error;
+        if (!isMouseClickPending) throw Error;
 
-        this.isPendingClick = false;
-        this.isClick = true;
+        isMouseClickPending = false;
+        isMouseClick = true;
     },
-    setClip(e)
-    {
-        const x = (e.clientX - canvasRect.left) / canvas.clientWidth;
-        const y = (e.clientY - canvasRect.top) / canvas.clientHeight;
-
-        this.clip.x = 2*x - 1;
-        this.clip.y = 1 - 2*y;
-    },
-    clip: new Vector(),
-    isClick: false,
-    isPendingClick: false,
-    pendingClick: new Vector()
 };
 
+const mouseOnClick = (e) =>
+{
+    mouseSetClip(e);
+    isMouseClickPending = true;
+};
+
+const mouseSetClip = (e) =>
+{
+    const x = (e.clientX - canvasRect.left) / canvas.clientWidth;
+    const y = (e.clientY - canvasRect.top) / canvas.clientHeight;
+
+    mouseClip.x = 2*x - 1;
+    mouseClip.y = 1 - 2*y;
+};
+
+let isMouseClickPending = false;
+let isMouseClick = false;
+const mouseClip = new Vector();
+
+/*------------------------------------------------------------------------------
+    Resize
+------------------------------------------------------------------------------*/
 const onResize = () =>
 {
     const width = Math.min(
@@ -69,13 +87,13 @@ const onResize = () =>
     canvasRect = canvas.getBoundingClientRect();
 };
 
-for (const loadEvent of ["DOMContentLoaded", "load"])
-{
-    window.addEventListener(loadEvent, onResize, LISTENER_ONCE);
-}
-
+window.addEventListener("DOMContentLoaded", onResize, LISTENER_ONCE);
+window.addEventListener("load", onResize, LISTENER_ONCE);
 window.addEventListener("resize", onResize);
 
+/*------------------------------------------------------------------------------
+    Init
+------------------------------------------------------------------------------*/
 const canvas = getElement("canvas");
 let canvasRect = canvas.getBoundingClientRect();
 
