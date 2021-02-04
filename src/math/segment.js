@@ -9,7 +9,7 @@ export class Segment
         this.intersection = new Vector();
     }
 
-    getIntersection(other)
+    getIntersection(other, isOpenS1, isOpenS2, isOpenT1, isOpenT2)
     {
         const ax = this.end.x - this.start.x;
         const az = this.end.z - this.start.z;
@@ -23,12 +23,13 @@ export class Segment
             const cz = this.start.z - other.start.z;
             const s = (ax*cz - az*cx) / det;
 
-            if (0 <= s && s <= 1)
+            if (isOpenS1 ? (0 < s) : (0 <= s) &&
+                isOpenS2 ? (s < 1) : (s <= 1))
             {
                 const t = (bx*cz - bz*cx) / det;
 
-                // keep half-open for polygons
-                if (0 <= t && t < 1)
+                if (isOpenT1 ? (0 < t) : (0 <= t) &&
+                    isOpenT2 ? (t < 1) : (t <= 1))
                 {
                     return this.intersection.setValues(
                         this.start.x + t * ax,

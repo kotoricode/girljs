@@ -9,6 +9,7 @@ import { Scene } from "../scene";
 import { Buffer } from "./buffer";
 import { HitBox } from "../components/hitbox";
 import { Matrix } from "../math/matrix";
+import { Ground } from "../components/ground";
 
 const bindFb = () =>
 {
@@ -22,48 +23,67 @@ const unbindFb = () =>
     gl.bindFramebuffer($.FRAMEBUFFER, null);
 };
 
-const setDebug = () =>
+const debugGround = () =>
 {
     const debugMesh = debugProgram.getMesh();
+    const [ground] = Scene.one($.ENT_GROUND, Ground);
 
-    let idx = 0;
-    for (const [hitbox] of Scene.all(HitBox))
+    for (let i = 0; i < ground.segments.length; i++)
     {
-        const { x: minX, y: minY, z: minZ } = hitbox.min;
-        const { x: maxX, y: maxY, z: maxZ } = hitbox.max;
+        const segment = ground.segments[i];
+        const nextSegment = ground.segments[(i+1) % ground.segments.length];
 
-        debugMesh.setValuesAtIndex(idx,
-            minX, minY, minZ,
-            maxX, minY, minZ,
-            maxX, minY, minZ,
-            maxX, minY, maxZ,
-            maxX, minY, maxZ,
-            minX, minY, maxZ,
-            minX, minY, maxZ,
-            minX, minY, minZ,
-            minX, maxY, minZ,
-            maxX, maxY, minZ,
-            maxX, maxY, minZ,
-            maxX, maxY, maxZ,
-            maxX, maxY, maxZ,
-            minX, maxY, maxZ,
-            minX, maxY, maxZ,
-            minX, maxY, minZ,
-            minX, minY, minZ,
-            minX, maxY, minZ,
-            maxX, minY, minZ,
-            maxX, maxY, minZ,
-            minX, minY, maxZ,
-            minX, maxY, maxZ,
-            maxX, minY, maxZ,
-            maxX, maxY, maxZ,
+        debugMesh.setValuesAtIndex(i * 6,
+            segment.x, segment.y, segment.z,
+            nextSegment.x, nextSegment.y, nextSegment.z
         );
-
-        idx += 72;
     }
 
     Buffer.setData($.BUF_ARR_DEBUG, debugMesh);
 };
+
+// const setDebug = () =>
+// {
+//     const debugMesh = debugProgram.getMesh();
+
+//     let idx = 0;
+//     for (const [hitbox] of Scene.all(HitBox))
+//     {
+//         const { x: minX, y: minY, z: minZ } = hitbox.min;
+//         const { x: maxX, y: maxY, z: maxZ } = hitbox.max;
+
+//         debugMesh.setValuesAtIndex(idx,
+//             minX, minY, minZ,
+//             maxX, minY, minZ,
+//             maxX, minY, minZ,
+//             maxX, minY, maxZ,
+//             maxX, minY, maxZ,
+//             minX, minY, maxZ,
+//             minX, minY, maxZ,
+//             minX, minY, minZ,
+//             minX, maxY, minZ,
+//             maxX, maxY, minZ,
+//             maxX, maxY, minZ,
+//             maxX, maxY, maxZ,
+//             maxX, maxY, maxZ,
+//             minX, maxY, maxZ,
+//             minX, maxY, maxZ,
+//             minX, maxY, minZ,
+//             minX, minY, minZ,
+//             minX, maxY, minZ,
+//             maxX, minY, minZ,
+//             maxX, maxY, minZ,
+//             minX, minY, maxZ,
+//             minX, maxY, maxZ,
+//             maxX, minY, maxZ,
+//             maxX, maxY, maxZ,
+//         );
+
+//         idx += 72;
+//     }
+
+//     Buffer.setData($.BUF_ARR_DEBUG, debugMesh);
+// };
 
 export const render = () =>
 {
@@ -75,7 +95,8 @@ export const render = () =>
         }
     }
 
-    setDebug();
+    //setDebug();
+    debugGround();
 
     bindFb();
 

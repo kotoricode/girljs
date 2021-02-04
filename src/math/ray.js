@@ -77,6 +77,24 @@ export class Ray
         );
     }
 
+    collideZeroPlane()
+    {
+        // y direction should be down towards the plane,
+        // in front of camera where the cursor is
+
+        // y > 0 -> intersection is behind the camera (opposite of cursor)
+        // y == 0 -> no intersection
+        if (this.direction.y < 0)
+        {
+            const multi = this.start.y / this.direction.y;
+
+            const x = this.start.x - multi*this.direction.x;
+            const z = this.start.z - multi*this.direction.z;
+
+            this.addHit(x, 0, z);
+        }
+    }
+
     fromMouse(ivp, mouse)
     {
         const { x, y } = mouse;

@@ -17,12 +17,13 @@ export const processPlayer = () =>
         //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
         // );
 
-        const [ground] = Scene.one($.ENT_GROUND, HitBox);
+        //const [ground] = Scene.one($.ENT_GROUND, HitBox);
         const ivp = Camera.getInvViewProjection();
 
         ray.numHits = 0;
         ray.fromMouse(ivp, Mouse.clip);
-        ray.collide(ground);
+        ray.collideZeroPlane();
+        //ray.collide(ground);
 
         if (ray.numHits)
         {

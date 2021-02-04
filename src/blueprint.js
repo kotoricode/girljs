@@ -12,6 +12,8 @@ import { processMotion }    from "./processes/process-motion";
 import { processCamera }    from "./processes/process-camera";
 import { processAnimation } from "./processes/process-animation";
 import { processPlayer }    from "./processes/process-player";
+import { Ground } from "./components/ground";
+import { Vector } from "./math/vector";
 
 const createPlayer = () => [$.ENT_PLAYER, new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
@@ -64,7 +66,14 @@ const createTest = () => [Symbol(), new SafeMap([
 const createHome = () => [$.ENT_GROUND, new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
         new Space(),
-        new HitBox(-3, 3, -0.1, 0, 0, -2.4),
+        new Ground([
+            new Vector(-2.93, 0, 0),
+            new Vector(-2.93, 0, -2.25),
+            new Vector(0, 0, -2.25),
+            new Vector(0, 0, -3.9),
+            new Vector(2.93, 0, -3.9),
+            new Vector(2.93, 0, 0)
+        ]),
         new Drawable(
             $.PRG_WORLD,
             $.QUE_BACKGROUND,
