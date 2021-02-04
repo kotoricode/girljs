@@ -139,7 +139,7 @@ export class Model
         return isLoaded;
     }
 
-    static waitLoad()
+    static load()
     {
         if (!loadPromise)
         {

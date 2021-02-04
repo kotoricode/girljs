@@ -30,8 +30,8 @@ export const Mouse = {
         const x = (this.pendingClick.x - canvasRect.left) / canvas.clientWidth;
         const y = (this.pendingClick.y - canvasRect.top) / canvas.clientHeight;
 
-        Mouse.clip.x = 2*x - 1;
-        Mouse.clip.y = 1 - 2*y;
+        this.clip.x = 2*x - 1;
+        this.clip.y = 1 - 2*y;
 
         this.isPendingClick = false;
         this.isClick = true;

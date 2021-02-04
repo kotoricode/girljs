@@ -4,8 +4,17 @@ import { Drawable } from "../components/drawable";
 import { Anim } from "../components/anim";
 import { Scene } from "../scene";
 
+const setModelFromAnim = (anim, drawable) =>
+{
+    const modelId = anim.getModelId();
+    drawable.program.setModel(modelId);
+};
+
 export const processAnimation = (dt) =>
 {
+    /*--------------------------------------------------------------------------
+        Update state IDLE/MOVE based on motion
+    --------------------------------------------------------------------------*/
     for (const [drawable, anim, motion] of Scene.all(Drawable, Anim, Motion))
     {
         if (motion.hasTarget())
@@ -13,36 +22,35 @@ export const processAnimation = (dt) =>
             if (anim.isState($.ANI_IDLE))
             {
                 anim.setState($.ANI_MOVE);
-                const modelId = anim.getModelId();
-                drawable.program.setModel(modelId);
+                setModelFromAnim(anim, drawable);
             }
         }
         else if (anim.isState($.ANI_MOVE))
         {
             anim.setState($.ANI_IDLE);
-            const modelId = anim.getModelId();
-            drawable.program.setModel(modelId);
+            setModelFromAnim(anim, drawable);
         }
     }
 
+    /*--------------------------------------------------------------------------
+        Update frame of current animation
+    --------------------------------------------------------------------------*/
     for (const [drawable, anim] of Scene.all(Drawable, Anim))
     {
         anim.delay -= dt;
 
         if (anim.delay <= 0)
         {
-            const { delays, models } = anim;
+            const { delays, modelIds } = anim;
 
             do
             {
-                anim.frameIdx++;
-                const nextDelay = delays[anim.frameIdx % delays.length];
-                anim.delay += nextDelay;
-            } while (anim.delay <= 0);
+                anim.delay += delays[++anim.frameIdx % delays.length];
+            }
+            while (anim.delay <= 0);
 
-            anim.frameIdx %= models.length;
-            const model = anim.getModelId();
-            drawable.program.setModel(model);
+            anim.frameIdx %= modelIds.length;
+            setModelFromAnim(anim, drawable);
         }
     }
 };

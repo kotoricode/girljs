@@ -100,7 +100,7 @@ export class Program
     {
         if (!Model.isLoaded())
         {
-            await Model.waitLoad();
+            await Model.load();
         }
 
         this.model = Model.get(modelId);

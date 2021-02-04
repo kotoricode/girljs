@@ -28,9 +28,9 @@ const mainLoop = (timestamp) =>
 
 let isReady = false;
 let oldTimestamp = 0;
-mainLoop(0);
+window.requestAnimationFrame(mainLoop);
 
-Model.waitLoad().then(() =>
+Model.load().then(() =>
 {
     Dom.hideLoading();
     Scene.load($.SCN_TEST);

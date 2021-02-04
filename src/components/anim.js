@@ -3,20 +3,18 @@ import { Component } from "./component";
 
 export class Anim extends Component
 {
-    constructor(stateModels, stateDelays)
+    constructor(stateModelIds, stateDelays)
     {
         super();
 
-        this.stateModels = stateModels;
+        this.stateModelIds = stateModelIds;
         this.stateDelays = stateDelays;
-        this.state = $.ANI_IDLE;
-
-        this.setState(this.state);
+        this.setState($.ANI_IDLE);
     }
 
     getModelId()
     {
-        return this.models[this.frameIdx];
+        return this.modelIds[this.frameIdx];
     }
 
     isState(state)
@@ -28,7 +26,7 @@ export class Anim extends Component
     {
         this.state = state;
 
-        this.models = this.stateModels.get(state);
+        this.modelIds = this.stateModelIds.get(state);
         this.delays = this.stateDelays.get(state);
 
         this.frameIdx = 0;
