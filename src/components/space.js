@@ -8,7 +8,6 @@ export class Space extends Component
     {
         super();
         this.children = new Set();
-
         this.matrix = new Matrix();
         this.local = new Transform(tx, ty, tz);
         this.world = new Transform();

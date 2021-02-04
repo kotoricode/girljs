@@ -6,7 +6,6 @@ export class Drawable extends Component
     constructor(programId, priority, modelId, uniforms)
     {
         super();
-
         this.program = new Program(programId, modelId);
         this.priority = priority;
         this.isVisible = true;

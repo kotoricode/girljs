@@ -16,14 +16,11 @@ export const processPlayer = () =>
         //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
         // );
 
-        //const [ground] = Scene.one($.ENT_GROUND, HitBox);
-
         const ray = Camera.getRay();
 
         ray.resetHits();
         ray.fromMouse();
         ray.collideZeroPlane();
-        //ray.collide(ground);
 
         if (ray.hasHits())
         {

@@ -5,10 +5,9 @@ export class Motion extends Component
 {
     constructor(speed)
     {
-        super();
-
         if (!speed) throw speed;
 
+        super();
         this.speed = speed;
         this.direction = new Vector();
         this.waypoints = [new Vector()];

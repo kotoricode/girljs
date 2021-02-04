@@ -6,7 +6,6 @@ export class Anim extends Component
     constructor(stateModelIds, stateDelays)
     {
         super();
-
         this.stateModelIds = stateModelIds;
         this.stateDelays = stateDelays;
         this.setState($.ANI_IDLE);

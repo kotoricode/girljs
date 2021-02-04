@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { gl, Mouse } from "../dom";
+import { gl } from "../dom";
 import { Drawable } from "../components/drawable";
 import { Texture } from "./texture";
 import { Program } from "./program";
@@ -27,19 +27,23 @@ const unbindFb = () =>
 const debugGround = () =>
 {
     const debugMesh = debugProgram.getMesh();
-    const [ground] = Scene.one($.ENT_GROUND, Ground);
+    const [{ segments }] = Scene.one($.ENT_GROUND, Ground);
 
     let i = 0;
+    let currentSegment = segments[i];
+    let nextSegment;
 
-    for (; i < ground.segments.length; i++)
+    while (i < segments.length)
     {
-        const segment = ground.segments[i];
-        const nextSegment = ground.segments[(i+1) % ground.segments.length];
+        nextSegment = segments[(i+1) % segments.length];
 
         debugMesh.setValuesAtIndex(i * 6,
-            segment.x, segment.y, segment.z,
-            nextSegment.x, nextSegment.y, nextSegment.z
+            ...currentSegment,
+            ...nextSegment
         );
+
+        currentSegment = nextSegment;
+        i++;
     }
 
     const ray = Camera.getRay();
