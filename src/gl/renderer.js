@@ -57,14 +57,14 @@ const debugGround = () =>
             ...space.world.translation
         );
 
-        const isPointWithin = ground.isCollision(
+        const isCollision = ground.isCollision(
             ray.hitPoint,
             space.world.translation
         );
 
-        if (!isPointWithin)
+        if (isCollision)
         {
-            console.log(isPointWithin);
+            console.log(isCollision);
         }
     }
 

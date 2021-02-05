@@ -17,22 +17,22 @@ export const Scene = {
             }
         }
 
-        if (entity.hasComponent(Space))
+        if (entity.has(Space))
         {
             const parent = Scene.getEntity(parentId);
 
-            if (!parent.hasComponent(Space)) throw parentId;
+            if (!parent.has(Space)) throw parentId;
 
-            const parentSpace = parent.getComponent(Space);
-            const space = entity.getComponent(Space);
+            const parentSpace = parent.get(Space);
+            const space = entity.get(Space);
 
             space.attachTo(parentSpace);
 
             entities.set(entity.id, entity);
 
-            if (entity.hasComponent(Drawable))
+            if (entity.has(Drawable))
             {
-                const drawable = entity.getComponent(Drawable);
+                const drawable = entity.get(Drawable);
 
                 const { program } = drawable;
 
@@ -209,7 +209,8 @@ const createBlueprintEntities = (bpEntities, parentId) =>
     for (const [entityId, entityBp] of bpEntities)
     {
         const components = entityBp.get($.BLU_COMPONENTS);
-        const entity = new Entity(entityId, ...components);
+        const entity = new Entity(entityId);
+        entity.set(...components);
         Scene.addEntity(entity, parentId);
 
         if (entityBp.has($.BLU_CHILDREN))
@@ -228,7 +229,7 @@ function* yieldComponents(entity, components)
 {
     for (const comp of components)
     {
-        yield entity.components.get(comp);
+        yield entity.get(comp);
     }
 }
 
@@ -239,4 +240,5 @@ const entities = new SafeMap();
 const processes = new SafeSet();
 
 const rootSpace = new Space();
-const root = new Entity($.ENT_ROOT, rootSpace);
+const root = new Entity($.ENT_ROOT);
+root.set(rootSpace);

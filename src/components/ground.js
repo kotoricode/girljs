@@ -14,7 +14,35 @@ export class Ground extends Component
         Object.freeze(this);
     }
 
-    * yieldCollisions(point, origin)
+    isCollision(point, origin)
+    {
+        for (const isCollision of this.yieldCollisionTests(point, origin))
+        {
+            if (isCollision)
+            {
+                return true;
+            }
+        }
+
+        return false;
+    }
+
+    isPointWithin(point, origin)
+    {
+        let numCollisions = 0;
+
+        for (const isCollision of this.yieldCollisionTests(point, origin))
+        {
+            if (isCollision)
+            {
+                numCollisions++;
+            }
+        }
+
+        return numCollisions % 2 === 0;
+    }
+
+    * yieldCollisionTests(point, origin)
     {
         let i = 0;
         this.start.from(this.points[i]);
@@ -59,33 +87,5 @@ export class Ground extends Component
             this.start.from(this.end);
             i++;
         }
-    }
-
-    isCollision(point, reference)
-    {
-        for (const test of this.yieldCollisions(point, reference))
-        {
-            if (test)
-            {
-                return true;
-            }
-        }
-
-        return false;
-    }
-
-    isPointWithin(point, reference)
-    {
-        let numCollisions = 0;
-
-        for (const test of this.yieldCollisions(point, reference))
-        {
-            if (test)
-            {
-                numCollisions++;
-            }
-        }
-
-        return numCollisions % 2 === 0;
     }
 }
