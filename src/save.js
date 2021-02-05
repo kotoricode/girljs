@@ -1,5 +1,5 @@
 import * as $ from "./const";
-import { isNotSet, Storage } from "./utility";
+import { isSet, Storage } from "./utility";
 
 export const Prefs = {
     get(prefId)
@@ -14,7 +14,7 @@ export const Prefs = {
         {
             const stored = Storage.get(key);
 
-            if (!isNotSet(stored))
+            if (isSet(stored))
             {
                 prefs[key] = stored;
             }

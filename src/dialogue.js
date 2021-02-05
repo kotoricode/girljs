@@ -4,7 +4,7 @@ import { Program } from "./gl/program";
 import { Texture } from "./gl/texture";
 import { Bezier } from "./math/bezier";
 import { Matrix } from "./math/matrix";
-import { isNotSet, isString } from "./utility";
+import { isSet, isString } from "./utility";
 
 class UiCanvas
 {
@@ -174,7 +174,7 @@ const drawDialogueText = (str) =>
 
 const fillText = (str, yPos) =>
 {
-    if (isNotSet(yPos)) throw yPos;
+    if (!isSet(yPos)) throw yPos;
 
     text.ctx.fillText(str, xPx, yPos);
 };

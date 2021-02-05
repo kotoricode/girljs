@@ -3,82 +3,74 @@ import { Prefs } from "./save";
 import { SafeMap, LISTENER_ONCE } from "./utility";
 
 export const AudioPlayer = {
-    play(audioId, url)
+    play(audioId, src)
     {
-        if (!url) throw url;
+        if (!src) throw Error;
 
-        const audioObj = audio.get(audioId);
-        audioObj.url = url;
-
-        if (ctx)
-        {
-            audioObj.element.src = PATH + url;
-        }
+        const elem = audio.get(audioId);
+        elem.setSrc(src);
     },
     setGain(gainId, value)
     {
         if (value < 0 || 1 < value) throw value;
 
+        Prefs.set(gainId, value);
+
         if (ctx)
         {
-            gains.get(gainId).gain.value = value;
+            getGain(gainId).gain.value = value;
         }
-        //Prefs.set(gainId, value);
     },
     stop(audioId)
     {
-        const audioObj = audio.get(audioId);
-        audioObj.pause();
+        const elem = audio.get(audioId);
+        elem.pause();
     }
 };
 
 const getGain = (gainId, parent) =>
 {
-    if (gains.has(gainId))
+    if (!gains.has(gainId))
     {
-        return gains.get(gainId);
+        const gain = ctx.createGain();
+        gain.connect(parent);
+        gains.set(gainId, gain);
+
+        const volume = Prefs.get(gainId);
+        AudioPlayer.setGain(gainId, volume);
     }
 
-    const gain = ctx.createGain();
-    gain.connect(parent);
-    gains.set(gainId, gain);
-
-    const volume = Prefs.get(gainId);
-    AudioPlayer.setGain(gainId, volume);
-
-    return gain;
+    return gains.get(gainId);
 };
 
-const PATH = "./snd/";
+class AudioElement
+{
+    constructor(gainId, isLoop, src)
+    {
+        this.element = new Audio();
+        this.element.loop = isLoop;
+        this.element.addEventListener("canplaythrough", this.element.play);
+
+        this.src = src;
+        this.gainId = gainId;
+    }
+
+    setSrc(src)
+    {
+        this.src = src;
+
+        if (ctx)
+        {
+            this.element.src = "./snd/" + src;
+        }
+    }
+}
 
 const audio = new SafeMap([
-    [$.AUD_MUSIC, {
-        element: null,
-        url: $.URL_AUD_OMOIDE,
-        gainId: $.PREF_MUSIC,
-        isLoop: true,
-    }],
-    [$.AUD_SOUND, {
-        element: null,
-        url: null,
-        gainId: $.PREF_SOUND,
-        isLoop: false,
-    }],
-    [$.AUD_SOUND_LOOP, {
-        element: null,
-        url: null,
-        gainId: $.PREF_SOUND,
-        isLoop: true,
-    }]
+    [$.AUD_MUSIC, new AudioElement($.PREF_MUSIC, true, $.AUD_OMOIDE)],
+    [$.AUD_SOUND, new AudioElement($.PREF_SOUND, false)],
+    [$.AUD_SOUND_LOOP, new AudioElement($.PREF_SOUND, true)],
 ]);
-
-for (const audioObj of audio.values())
-{
-    const element = new Audio();
-    element.loop = audioObj.isLoop;
-    element.addEventListener("canplaythrough", element.play);
-    audioObj.element = element;
-}
 
 window.addEventListener("mousedown", () =>
 {
@@ -90,9 +82,9 @@ window.addEventListener("mousedown", () =>
         const gain = getGain(audioObj.gainId, master);
         ctx.createMediaElementSource(audioObj.element).connect(gain);
 
-        if (audioObj.url)
+        if (audioObj.src)
         {
-            AudioPlayer.play(audioId, audioObj.url);
+            AudioPlayer.play(audioId, audioObj.src);
         }
     }
 }, LISTENER_ONCE);

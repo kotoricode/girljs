@@ -31,11 +31,10 @@ export class Segment
                 if (isOpenT1 ? (0 < t) : (0 <= t) &&
                     isOpenT2 ? (t < 1) : (t <= 1))
                 {
-                    return this.intersection.setValues(
-                        this.start.x + t * ax,
-                        0,
-                        this.start.z + t * az
-                    );
+                    this.intersection.x = this.start.x + t * ax;
+                    this.intersection.z = this.start.z + t * az;
+
+                    return this.intersection;
                 }
             }
         }

@@ -1,6 +1,6 @@
 import * as $ from "../const";
 import { gl } from "../dom";
-import { isNotSet, SafeMap, SafeSet } from "../utility";
+import { isSet, SafeMap, SafeSet } from "../utility";
 import { Model } from "./model";
 import { Buffer } from "./buffer";
 import { Matrix } from "../math/matrix";
@@ -93,7 +93,7 @@ export class Program
 
     isTextured()
     {
-        return !isNotSet(this.model.textureId);
+        return isSet(this.model.textureId);
     }
 
     async setModel(modelId)

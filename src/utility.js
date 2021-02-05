@@ -8,7 +8,7 @@ export const getElement = (elemId) => window.document.getElementById(elemId);
 
 export const isString = (value) => typeof value === "string";
 
-export const isNotSet = (value) => value === null || value === undefined;
+export const isSet = (value) => value !== null && value !== undefined;
 
 export class SettableFloat32Array extends Float32Array
 {
@@ -53,13 +53,13 @@ export class SafeMap extends Map
 
     delete(key)
     {
-        if (isNotSet(key)) throw key;
+        if (!isSet(key)) throw key;
         if (!super.delete(key)) throw key;
     }
 
     get(key)
     {
-        if (isNotSet(key)) throw key;
+        if (!isSet(key)) throw key;
         if (!this.has(key)) throw key;
 
         return super.get(key);
@@ -67,8 +67,8 @@ export class SafeMap extends Map
 
     set(key, value)
     {
-        if (isNotSet(key)) throw key;
-        if (isNotSet(value)) throw value;
+        if (!isSet(key)) throw key;
+        if (!isSet(value)) throw value;
         if (this.has(key)) throw key;
 
         return super.set(key, value);
@@ -76,8 +76,8 @@ export class SafeMap extends Map
 
     update(key, value)
     {
-        if (isNotSet(key)) throw key;
-        if (isNotSet(value)) throw value;
+        if (!isSet(key)) throw key;
+        if (!isSet(value)) throw value;
         if (!this.has(key)) throw key;
 
         return super.set(key, value);
@@ -94,7 +94,7 @@ export class SafeSet extends Set
 
     add(value)
     {
-        if (isNotSet(value)) throw value;
+        if (!isSet(value)) throw value;
         if (this.has(value)) throw value;
 
         return super.add(value);
@@ -102,7 +102,7 @@ export class SafeSet extends Set
 
     delete(value)
     {
-        if (isNotSet(value)) throw value;
+        if (!isSet(value)) throw value;
         if (!super.delete(value)) throw value;
     }
 }
