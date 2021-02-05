@@ -1,7 +1,5 @@
 export const LISTENER_ONCE = { once: true };
 
-export const lerp = (start, end, amount) => start*(1-amount) + end*amount;
-
 export const DEG_TO_RAD = Math.PI / 180;
 
 export const getElement = (elemId) => window.document.getElementById(elemId);
@@ -9,6 +7,8 @@ export const getElement = (elemId) => window.document.getElementById(elemId);
 export const isString = (value) => typeof value === "string";
 
 export const isSet = (value) => value !== null && value !== undefined;
+
+export const lerp = (start, end, amount) => start*(1-amount) + end*amount;
 
 export class SettableFloat32Array extends Float32Array
 {

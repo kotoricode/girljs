@@ -13,4 +13,8 @@ export const processCamera = () =>
 
         Camera.setPosition(space.world.translation);
     }
+
+    const ray = Camera.getRay();
+    ray.fromMouse();
+    ray.collideZeroPlane();
 };

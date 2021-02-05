@@ -10,20 +10,8 @@ export class Ray
         this.direction = new Vector(ex - sx, ey - sy, ez - sz);
         this.direction.normalize();
 
-        this.numHits = 0;
-        this.hits = [];
-    }
-
-    addHit(x, y, z)
-    {
-        if (this.numHits === this.hits.length)
-        {
-            const newVec = new Vector();
-            this.hits.push(newVec);
-        }
-
-        const vec = this.hits[this.numHits++];
-        vec.setValues(x, y, z);
+        this.isHit = false;
+        this.hitPoint = new Vector();
     }
 
     // https://www.scratchapixel.com/lessons/3d-basic-rendering/minimal-ray-tracer-rendering-simple-shapes/ray-box-intersection
@@ -91,7 +79,12 @@ export class Ray
             const x = this.start.x - multi*this.direction.x;
             const z = this.start.z - multi*this.direction.z;
 
-            this.addHit(x, 0, z);
+            this.isHit = true;
+            this.hitPoint.setValues(x, 0, z);
+        }
+        else
+        {
+            this.isHit = false;
         }
     }
 
@@ -117,15 +110,5 @@ export class Ray
         }
 
         this.direction.normalize();
-    }
-
-    hasHits()
-    {
-        return this.numHits > 0;
-    }
-
-    resetHits()
-    {
-        this.numHits = 0;
     }
 }

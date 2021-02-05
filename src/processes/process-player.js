@@ -18,16 +18,10 @@ export const processPlayer = () =>
 
         const ray = Camera.getRay();
 
-        ray.resetHits();
-        ray.fromMouse();
-        ray.collideZeroPlane();
-
-        if (ray.hasHits())
+        if (ray.isHit)
         {
             const [plMotion] = Scene.one($.ENT_PLAYER, Motion);
-
-            const hit = ray.hits[0];
-            plMotion.setMainTarget(hit);
+            plMotion.setMainTarget(ray.hitPoint);
         }
     }
 };

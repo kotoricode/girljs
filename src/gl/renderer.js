@@ -27,40 +27,45 @@ const unbindFb = () =>
 const debugGround = () =>
 {
     const debugMesh = debugProgram.getMesh();
-    const [{ segments }] = Scene.one($.ENT_GROUND, Ground);
+    const [ground] = Scene.one($.ENT_GROUND, Ground);
 
     let i = 0;
-    let currentSegment = segments[i];
-    let nextSegment;
+    let currentPoint = ground.points[i];
+    let nextPoint;
 
-    while (i < segments.length)
+    while (i < ground.points.length)
     {
-        nextSegment = segments[(i+1) % segments.length];
+        nextPoint = ground.points[(i+1) % ground.points.length];
 
         debugMesh.setValuesAtIndex(i * 6,
-            ...currentSegment,
-            ...nextSegment
+            ...currentPoint,
+            ...nextPoint
         );
 
-        currentSegment = nextSegment;
+        currentPoint = nextPoint;
         i++;
     }
 
     const ray = Camera.getRay();
-    ray.resetHits();
-    ray.fromMouse();
-    ray.collideZeroPlane();
 
-    if (ray.hasHits())
+    if (ray.isHit)
     {
         const [space] = Scene.one($.ENT_PLAYER, Space);
 
-        const hit = ray.hits[0];
-
         debugMesh.setValuesAtIndex(i * 6,
-            ...hit,
+            ...ray.hitPoint,
             ...space.world.translation
         );
+
+        const isPointWithin = ground.isCollision(
+            ray.hitPoint,
+            space.world.translation
+        );
+
+        if (!isPointWithin)
+        {
+            console.log(isPointWithin);
+        }
     }
 
     Buffer.setData($.BUF_ARR_DEBUG, debugMesh);

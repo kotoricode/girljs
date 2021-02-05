@@ -17,7 +17,7 @@ import { Vector } from "./math/vector";
 
 const createPlayer = () => [$.ENT_PLAYER, new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
-        new Space(),
+        new Space(0, 0, -1),
         new Motion(3),
         new Player(),
         new Drawable(
