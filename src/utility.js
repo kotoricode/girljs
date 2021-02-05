@@ -6,6 +6,8 @@ export const getElement = (elemId) => window.document.getElementById(elemId);
 
 export const isString = (value) => typeof value === "string";
 
+export const isNumber = (value) => typeof value === "number";
+
 export const isSet = (value) => value !== null && value !== undefined;
 
 export const lerp = (start, end, amount) => start*(1-amount) + end*amount;

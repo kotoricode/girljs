@@ -16,20 +16,9 @@ const MSH_HOME = "MSH_HOME";
 const UV_TEST = "UV_TEST";
 const UV_HOME = "UV_HOME";
 const UV_SCREEN = "UV_SCREEN";
-const UV_BRAID_00 = "UV_BRAID_00";
-const UV_BRAID_02 = "UV_BRAID_02";
-const UV_BRAID_04 = "UV_BRAID_04";
-const UV_BRAID_06 = "UV_BRAID_06";
-const UV_BRAID_08 = "UV_BRAID_08";
-const UV_BRAID_10 = "UV_BRAID_10";
-const UV_BRAID_12 = "UV_BRAID_12";
-const UV_BRAID_14 = "UV_BRAID_14";
-const UV_BRAID_16 = "UV_BRAID_16";
-const UV_BRAID_18 = "UV_BRAID_18";
-const UV_BRAID_20 = "UV_BRAID_20";
-const UV_BRAID_22 = "UV_BRAID_22";
-const UV_BRAID_24 = "UV_BRAID_24";
-const UV_BRAID_26 = "UV_BRAID_26";
+const UV_GIRL_IDLE_00 = "UB_GIRL_IDLE_00";
+const UV_GIRL_MOVE_00 = "UB_GIRL_MOVE_00";
+const UV_GIRL_MOVE_01 = "UB_GIRL_MOVE_01";
 const UV_MONKEY = "UV_MONKEY";
 
 /*------------------------------------------------------------------------------
@@ -80,20 +69,9 @@ const meshes = new SafeMap([
 ]);
 
 const uvs = new SafeMap([
-    [UV_BRAID_00, uvRect1024(0, 10, 136, 136)],
-    [UV_BRAID_02, uvRect1024(256, 10, 136, 136)],
-    [UV_BRAID_04, uvRect1024(512, 10, 136, 136)],
-    [UV_BRAID_06, uvRect1024(768, 10, 136, 136)],
-    [UV_BRAID_08, uvRect1024(128, 158, 136, 136)],
-    [UV_BRAID_10, uvRect1024(384, 158, 136, 136)],
-    [UV_BRAID_12, uvRect1024(640, 158, 136, 136)],
-    [UV_BRAID_14, uvRect1024(0, 309, 136, 136)],
-    [UV_BRAID_16, uvRect1024(256, 309, 136, 136)],
-    [UV_BRAID_18, uvRect1024(512, 309, 136, 136)],
-    [UV_BRAID_20, uvRect1024(768, 309, 136, 136)],
-    [UV_BRAID_22, uvRect1024(128, 461, 136, 136)],
-    [UV_BRAID_24, uvRect1024(384, 461, 136, 136)],
-    [UV_BRAID_26, uvRect1024(640, 461, 136, 136)],
+    [UV_GIRL_IDLE_00, uvRect1024(0, 0, 123, 286)],
+    [UV_GIRL_MOVE_00, uvRect1024(123, 0, 123, 286)],
+    [UV_GIRL_MOVE_01, uvRect1024(246, 0, 123, 286)],
     [UV_SCREEN, [0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]],
 ]);
 
@@ -191,27 +169,16 @@ const buildModels = async() =>
     const modelData = [];
 
     const modelDef = [
-    //  MODEL ID         MESH ID        UV ID        TEXTURE ID
-        $.MDL_BRAID_00,  MSH_PLAYER,    UV_BRAID_00, $.TEX_BRAID,
-        $.MDL_BRAID_02,  MSH_PLAYER,    UV_BRAID_02, $.TEX_BRAID,
-        $.MDL_BRAID_04,  MSH_PLAYER,    UV_BRAID_04, $.TEX_BRAID,
-        $.MDL_BRAID_06,  MSH_PLAYER,    UV_BRAID_06, $.TEX_BRAID,
-        $.MDL_BRAID_08,  MSH_PLAYER,    UV_BRAID_08, $.TEX_BRAID,
-        $.MDL_BRAID_10,  MSH_PLAYER,    UV_BRAID_10, $.TEX_BRAID,
-        $.MDL_BRAID_12,  MSH_PLAYER,    UV_BRAID_12, $.TEX_BRAID,
-        $.MDL_BRAID_14,  MSH_PLAYER,    UV_BRAID_14, $.TEX_BRAID,
-        $.MDL_BRAID_16,  MSH_PLAYER,    UV_BRAID_16, $.TEX_BRAID,
-        $.MDL_BRAID_18,  MSH_PLAYER,    UV_BRAID_18, $.TEX_BRAID,
-        $.MDL_BRAID_20,  MSH_PLAYER,    UV_BRAID_20, $.TEX_BRAID,
-        $.MDL_BRAID_22,  MSH_PLAYER,    UV_BRAID_22, $.TEX_BRAID,
-        $.MDL_BRAID_24,  MSH_PLAYER,    UV_BRAID_24, $.TEX_BRAID,
-        $.MDL_BRAID_26,  MSH_PLAYER,    UV_BRAID_26, $.TEX_BRAID,
-        $.MDL_TEST,      MSH_TEST,      UV_TEST,     $.TEX_WORLD,
-        $.MDL_MONKEY,    MSH_MONKEY,    UV_MONKEY,   $.TEX_WOOD,
-        $.MDL_FB,        MSH_SCREEN,    UV_SCREEN,   $.TEX_FB,
-        $.MDL_TEXT,      MSH_SCREEN,    UV_SCREEN,   $.TEX_UI_TEXT,
-        $.MDL_BUBBLE,    MSH_SCREEN,    UV_SCREEN,   $.TEX_UI_BUBBLE,
-        $.MDL_HOME,      MSH_HOME,      UV_HOME,     $.TEX_HOME
+    //  MODEL ID            MESH ID     UV ID            TEXTURE ID
+        $.MDL_GIRL_IDLE_00, MSH_PLAYER, UV_GIRL_IDLE_00, $.TEX_GIRL,
+        $.MDL_GIRL_MOVE_00, MSH_PLAYER, UV_GIRL_MOVE_00, $.TEX_GIRL,
+        $.MDL_GIRL_MOVE_01, MSH_PLAYER, UV_GIRL_MOVE_01, $.TEX_GIRL,
+        $.MDL_TEST,         MSH_TEST,   UV_TEST,         $.TEX_WORLD,
+        $.MDL_MONKEY,       MSH_MONKEY, UV_MONKEY,       $.TEX_WOOD,
+        $.MDL_FB,           MSH_SCREEN, UV_SCREEN,       $.TEX_FB,
+        $.MDL_TEXT,         MSH_SCREEN, UV_SCREEN,       $.TEX_UI_TEXT,
+        $.MDL_BUBBLE,       MSH_SCREEN, UV_SCREEN,       $.TEX_UI_BUBBLE,
+        $.MDL_HOME,         MSH_HOME,   UV_HOME,         $.TEX_HOME
     ];
 
     // Push data to modelData and return the offset

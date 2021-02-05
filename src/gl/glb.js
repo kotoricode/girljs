@@ -24,8 +24,8 @@ class Glb
         {
             const offset = byteOffset + i * increment;
 
-            // easiest way to turn raw 4 bytes into float is to read them as
-            // uint32 here, then write to float32array using setUint32
+            // easiest way to turn raw 4 bytes into float is to read them
+            // as uint32 here, then write to float32array using setUint32
             this.data[i] = range.map(j => toUint(
                 bin.subarray(
                     offset + j * sizeOf,

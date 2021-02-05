@@ -92,7 +92,7 @@ let activeTexture;
 const imageTextures = new SafeMap();
 
 const textures = new SafeMap([
-    [$.TEX_BRAID, createImageTexture("braid.png")],
+    [$.TEX_GIRL, createImageTexture("girl.png")],
     [$.TEX_WORLD, createImageTexture("monkey.png")],
     [$.TEX_HOME, createImageTexture("home.png")],
     [$.TEX_WOOD, createImageTexture("wood.jpg")],

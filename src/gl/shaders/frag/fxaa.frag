@@ -1,9 +1,7 @@
 #version 300 es
+// https://www.geeks3d.com/20110405/fxaa-fast-approximate-anti-aliasing-demo-glsl-opengl-test-radeon-geforce/3/
+
 precision mediump float;
-/*
-edited from
-https://www.geeks3d.com/20110405/fxaa-fast-approximate-anti-aliasing-demo-glsl-opengl-test-radeon-geforce/3/
-*/
 
 const ivec2 SE = ivec2(1, 1);
 const ivec2 NE = ivec2(1, -1);
