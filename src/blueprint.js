@@ -18,30 +18,16 @@ import { Vector } from "./math/vector";
 const createPlayer = () => [$.ENT_PLAYER, new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
         new Space(0, 0, -1),
+        new Drawable($.PRG_WORLD, $.QUE_SPRITE, $.MDL_BRAID_00),
         new Motion(3),
         new Player(),
-        new Drawable(
-            $.PRG_WORLD,
-            $.QUE_SPRITE,
-            $.MDL_BRAID_00
-        ),
         new Anim(new SafeMap([
             [$.ANI_IDLE, [$.MDL_BRAID_00]],
             [$.ANI_MOVE, [
-                $.MDL_BRAID_00,
-                $.MDL_BRAID_02,
-                $.MDL_BRAID_04,
-                $.MDL_BRAID_06,
-                $.MDL_BRAID_08,
-                $.MDL_BRAID_10,
-                $.MDL_BRAID_12,
-                $.MDL_BRAID_14,
-                $.MDL_BRAID_16,
-                $.MDL_BRAID_18,
-                $.MDL_BRAID_20,
-                $.MDL_BRAID_22,
-                $.MDL_BRAID_24,
-                $.MDL_BRAID_26,
+                $.MDL_BRAID_00, $.MDL_BRAID_02, $.MDL_BRAID_04, $.MDL_BRAID_06,
+                $.MDL_BRAID_08, $.MDL_BRAID_10, $.MDL_BRAID_12, $.MDL_BRAID_14,
+                $.MDL_BRAID_16, $.MDL_BRAID_18, $.MDL_BRAID_20, $.MDL_BRAID_22,
+                $.MDL_BRAID_24, $.MDL_BRAID_26,
             ]],
         ]), new SafeMap([
             [$.ANI_IDLE, [Infinity]],
@@ -54,11 +40,7 @@ const createPlayer = () => [$.ENT_PLAYER, new SafeMap([
 const createTest = () => [Symbol(), new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
         new Space(),
-        new Drawable(
-            $.PRG_WORLD,
-            $.QUE_BACKGROUND,
-            $.MDL_TEST
-        )
+        new Drawable($.PRG_WORLD, $.QUE_BACKGROUND, $.MDL_TEST)
     ])],
     [$.BLU_CHILDREN, new SafeSet()]
 ])];
@@ -66,6 +48,7 @@ const createTest = () => [Symbol(), new SafeMap([
 const createHome = () => [$.ENT_GROUND, new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
         new Space(),
+        new Drawable($.PRG_WORLD, $.QUE_BACKGROUND, $.MDL_HOME),
         new Ground([
             new Vector(-2.93, 0, 0),
             new Vector(-2.93, 0, -2.25),
@@ -74,11 +57,6 @@ const createHome = () => [$.ENT_GROUND, new SafeMap([
             new Vector(2.93, 0, -3.9),
             new Vector(2.93, 0, 0)
         ]),
-        new Drawable(
-            $.PRG_WORLD,
-            $.QUE_BACKGROUND,
-            $.MDL_HOME
-        )
     ])],
     [$.BLU_CHILDREN, new SafeSet()]
 ])];
@@ -86,11 +64,7 @@ const createHome = () => [$.ENT_GROUND, new SafeMap([
 const createMonkey = () => [Symbol(), new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
         new Space(3, 0, 0),
-        new Drawable(
-            $.PRG_WORLD,
-            $.QUE_BACKGROUND,
-            $.MDL_MONKEY
-        )
+        new Drawable($.PRG_WORLD, $.QUE_BACKGROUND, $.MDL_MONKEY)
     ])],
     [$.BLU_CHILDREN, new SafeSet()]
 ])];

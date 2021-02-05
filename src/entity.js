@@ -1,3 +1,4 @@
+import { Component } from "./components/component";
 import { SafeMap } from "./utility";
 
 export class Entity extends SafeMap
@@ -14,6 +15,8 @@ export class Entity extends SafeMap
     {
         for (const comp of components)
         {
+            if (!(comp instanceof Component)) throw Error;
+
             const ctor = comp.constructor;
             super.set(ctor, comp);
             this.flags |= ctor.flag;

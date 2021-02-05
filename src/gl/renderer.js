@@ -56,16 +56,6 @@ const debugGround = () =>
             ...ray.hitPoint,
             ...space.world.translation
         );
-
-        const isCollision = ground.isCollision(
-            ray.hitPoint,
-            space.world.translation
-        );
-
-        if (isCollision)
-        {
-            console.log(isCollision);
-        }
     }
 
     Buffer.setData($.BUF_ARR_DEBUG, debugMesh);
