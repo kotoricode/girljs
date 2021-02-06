@@ -44,9 +44,11 @@ const toUnindexedArray = (obj, idx) =>
 
     for (const i of idx.data)
     {
+        const triStart = i * obj.range;
+
         for (let j = 0; j < obj.range; j++)
         {
-            view.setUint32(byteOffset, obj.data[i*obj.range+j], true);
+            view.setUint32(byteOffset, obj.data[triStart+j], true);
             byteOffset += FLOAT32_BYTES;
         }
     }
