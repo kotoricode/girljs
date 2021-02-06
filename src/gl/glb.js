@@ -1,12 +1,15 @@
 // https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md
 
-// These seem to be a good 20% faster than Array.reduce
-const toUint16 = (bytes) => bytes[1] * 256 + bytes[0];
+const toUint16 = (array, offset) => (
+    array[offset] +
+    array[offset+1] * 256
+);
 
-const toUint32 = (bytes) => (
-    bytes[3] * 16777216 +
-    bytes[2] * 65536 +
-    toUint16(bytes)
+const toUint32 = (array, offset) => (
+    array[offset] +
+    array[offset+1] * 256 +
+    array[offset+2] * 65536 +
+    array[offset+3] * 16777216
 );
 
 const decoder = new TextDecoder();
@@ -26,21 +29,32 @@ class Glb
         this.rangeLen = range.length;
         const increment = this.rangeLen * sizeOf;
         this.data = new Array(byteLength / increment);
+        const uint = sizeOf === FLOAT32_BYTES ? toUint32 : toUint16;
 
-        const toUint = (sizeOf === 4) ? toUint32 : toUint16;
-
-        for (let i = 0; i < this.data.length; i++)
+        if (range === RANGE_3)
         {
-            const offset = byteOffset + i * increment;
+            for (let i = 0; i < this.data.length; i++)
+            {
+                const offset = byteOffset + i * increment;
 
-            // easiest way to turn raw 4 bytes into float is to read them
-            // as uint32 here, then write to float32array using setUint32
-            this.data[i] = range.map(j => toUint(
-                bin.subarray(
-                    offset + j * sizeOf,
-                    offset + (j+1) * sizeOf
-                )
-            ));
+                this.data[i] = [
+                    uint(bin, offset),
+                    uint(bin, offset+sizeOf),
+                    uint(bin, offset+sizeOf*2)
+                ];
+            }
+        }
+        else
+        {
+            for (let i = 0; i < this.data.length; i++)
+            {
+                const offset = byteOffset + i * increment;
+
+                this.data[i] = [
+                    uint(bin, offset),
+                    uint(bin, offset+sizeOf),
+                ];
+            }
         }
 
         Object.freeze(this);
@@ -93,8 +107,7 @@ export const parseGlb = async(blob) =>
     /*--------------------------------------------------------------------------
         Get JSON
     --------------------------------------------------------------------------*/
-    const jsonLenBytes = data.subarray(12, 16); // skip header 12 bytes
-    const jsonLen = toUint32(jsonLenBytes);
+    const jsonLen = toUint32(data, 12);
 
     const jsonStart = 20; // skip header 4 bytes
     const jsonEnd = jsonStart + jsonLen;
@@ -106,8 +119,7 @@ export const parseGlb = async(blob) =>
     /*--------------------------------------------------------------------------
         Get binary
     --------------------------------------------------------------------------*/
-    const binLenBytes = data.subarray(jsonEnd, jsonEnd + 4);
-    const binLen = toUint32(binLenBytes);
+    const binLen = toUint32(data, jsonEnd);
 
     const binStart = jsonEnd + 8; // skip header 4 bytes
     const binEnd = binStart + binLen;
