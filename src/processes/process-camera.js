@@ -30,7 +30,7 @@ export const processCamera = () =>
 
         if (isCollision)
         {
-            console.log(isCollision);
+            //
         }
     }
 };

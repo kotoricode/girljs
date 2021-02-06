@@ -71,19 +71,14 @@ export class Program
         gl.deleteVertexArray(this.vao);
     }
 
-    getMesh()
+    getDynamicMesh()
     {
-        return Model.getMesh(this.model.meshId);
+        return Model.getDynamicMesh(this.model.meshId);
     }
 
     getTexture()
     {
         return Texture.get(this.model.textureId);
-    }
-
-    getUv()
-    {
-        return Model.getUv(this.model.uvId);
     }
 
     hasStaging(uId)

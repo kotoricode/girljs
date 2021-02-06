@@ -62,25 +62,12 @@ const uvRect = (x, y, width, height, baseWidth, baseHeight) =>
     ];
 };
 
-const meshes = new SafeMap([
-    [MSH_DEBUG, new SettableFloat32Array(3 * 2 * 12 * 10)],
-    [MSH_PLAYER, meshXy(-0.375, 0.375, 0, 1.5)],
-    [MSH_SCREEN, meshXyScreen($.RES_WIDTH, $.RES_HEIGHT)],
-]);
-
-const uvs = new SafeMap([
-    [UV_GIRL_IDLE_00, uvRect1024(0, 0, 123, 286)],
-    [UV_GIRL_MOVE_00, uvRect1024(123, 0, 123, 286)],
-    [UV_GIRL_MOVE_01, uvRect1024(246, 0, 123, 286)],
-    [UV_SCREEN, [0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]],
-]);
-
 /*------------------------------------------------------------------------------
     Model
 ------------------------------------------------------------------------------*/
 export class Model
 {
-    constructor(attributes, bufferId, drawMode, meshId, uvId, textureId)
+    constructor(attributes, bufferId, drawMode, drawSize, meshId, uvId, textureId)
     {
         this.attributes = attributes;
         this.bufferId = bufferId;
@@ -89,7 +76,7 @@ export class Model
         this.uvId = uvId;
         this.textureId = textureId;
 
-        this.drawSize = Model.getMesh(meshId).length / 3;
+        this.drawSize = drawSize;
         if (!Number.isInteger(this.drawSize)) throw this.drawSize;
 
         Object.freeze(this);
@@ -102,14 +89,9 @@ export class Model
         return models.get(modelId);
     }
 
-    static getMesh(meshId)
+    static getDynamicMesh(meshId)
     {
-        return meshes.get(meshId);
-    }
-
-    static getUv(uvId)
-    {
-        return uvs.get(uvId);
+        return dynamicMeshes.get(meshId);
     }
 
     static isLoaded()
@@ -128,8 +110,25 @@ export class Model
     }
 }
 
+const dynamicMeshes = new SafeMap([
+    [MSH_DEBUG, new SettableFloat32Array(3 * 2 * 12 * 10)],
+]);
+
 const buildModels = async() =>
 {
+    const meshes = new SafeMap([
+        [MSH_DEBUG, new SettableFloat32Array(3 * 2 * 12 * 10)],
+        [MSH_PLAYER, meshXy(-0.375, 0.375, 0, 1.5)],
+        [MSH_SCREEN, meshXyScreen($.RES_WIDTH, $.RES_HEIGHT)],
+    ]);
+
+    const uvs = new SafeMap([
+        [UV_GIRL_IDLE_00, uvRect1024(0, 0, 123, 286)],
+        [UV_GIRL_MOVE_00, uvRect1024(123, 0, 123, 286)],
+        [UV_GIRL_MOVE_01, uvRect1024(246, 0, 123, 286)],
+        [UV_SCREEN, [0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]],
+    ]);
+
     /*--------------------------------------------------------------------------
         Download external models
     --------------------------------------------------------------------------*/
@@ -147,7 +146,7 @@ const buildModels = async() =>
 
     const externalModels = [
         new ExternalModelInfo("mesh", MSH_TEST, UV_TEST),
-        new ExternalModelInfo("monkey", MSH_MONKEY, UV_MONKEY),
+        new ExternalModelInfo("big_monkey", MSH_MONKEY, UV_MONKEY),
         new ExternalModelInfo("home", MSH_HOME, UV_HOME)
     ];
 
@@ -236,6 +235,7 @@ const buildModels = async() =>
             attributes,
             $.BUF_ARR_MODEL,
             $.TRIANGLES,
+            meshes.get(meshId).length / 3,
             meshId,
             uvId,
             textureId,
@@ -253,6 +253,7 @@ const buildModels = async() =>
         debugAttrib,
         $.BUF_ARR_DEBUG,
         $.LINES,
+        dynamicMeshes.get(MSH_DEBUG).length / 3,
         MSH_DEBUG
     ));
 

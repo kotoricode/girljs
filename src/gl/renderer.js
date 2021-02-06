@@ -26,7 +26,7 @@ const unbindFb = () =>
 
 const debugGround = () =>
 {
-    const debugMesh = debugProgram.getMesh();
+    const debugMesh = debugProgram.getDynamicMesh();
     const [ground] = Scene.one($.ENT_GROUND, Ground);
 
     let i = 0;
@@ -71,7 +71,7 @@ export const render = () =>
         }
     }
 
-    //debugGround();
+    debugGround();
 
     bindFb();
 

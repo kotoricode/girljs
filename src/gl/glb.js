@@ -62,6 +62,8 @@ const toUnindexedArray = (obj, idx) =>
 
 export const parseGlb = async(blob) =>
 {
+    console.log(blob);
+    const t1 = window.performance.now();
     /*--------------------------------------------------------------------------
         Read glb
     --------------------------------------------------------------------------*/
@@ -110,6 +112,8 @@ export const parseGlb = async(blob) =>
     const mesh = new Glb(bin, viewMesh, RANGE_3, FLOAT32_BYTES);
     const uv = new Glb(bin, viewUv, RANGE_2, FLOAT32_BYTES);
     const idx = new Glb(bin, viewIdx, RANGE_3, USHORT_BYTES);
+
+    console.log(window.performance.now() - t1);
 
     return {
         mesh: toUnindexedArray(mesh, idx),
