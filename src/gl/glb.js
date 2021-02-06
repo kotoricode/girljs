@@ -1,6 +1,13 @@
 // https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md
 
-const toUint = (bytes) => bytes.reduce((a, b, i) => a + (b << i*8)) >>> 0;
+// These seem to be a good 20% faster than Array.reduce
+const toUint16 = (bytes) => bytes[1] * 256 + bytes[0];
+
+const toUint32 = (bytes) => (
+    bytes[3] * 16777216 +
+    bytes[2] * 65536 +
+    toUint16(bytes)
+);
 
 const decoder = new TextDecoder();
 
@@ -19,6 +26,8 @@ class Glb
         this.rangeLen = range.length;
         const increment = this.rangeLen * sizeOf;
         this.data = new Array(byteLength / increment);
+
+        const toUint = (sizeOf === 4) ? toUint32 : toUint16;
 
         for (let i = 0; i < this.data.length; i++)
         {
@@ -85,7 +94,7 @@ export const parseGlb = async(blob) =>
         Get JSON
     --------------------------------------------------------------------------*/
     const jsonLenBytes = data.subarray(12, 16); // skip header 12 bytes
-    const jsonLen = toUint(jsonLenBytes);
+    const jsonLen = toUint32(jsonLenBytes);
 
     const jsonStart = 20; // skip header 4 bytes
     const jsonEnd = jsonStart + jsonLen;
@@ -98,7 +107,7 @@ export const parseGlb = async(blob) =>
         Get binary
     --------------------------------------------------------------------------*/
     const binLenBytes = data.subarray(jsonEnd, jsonEnd + 4);
-    const binLen = toUint(binLenBytes);
+    const binLen = toUint32(binLenBytes);
 
     const binStart = jsonEnd + 8; // skip header 4 bytes
     const binEnd = binStart + binLen;

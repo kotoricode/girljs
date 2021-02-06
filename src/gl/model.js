@@ -116,8 +116,10 @@ const dynamicMeshes = new SafeMap([
 
 const buildModels = async() =>
 {
+    /*--------------------------------------------------------------------------
+        Internal meshes, UVs
+    --------------------------------------------------------------------------*/
     const meshes = new SafeMap([
-        [MSH_DEBUG, new SettableFloat32Array(3 * 2 * 12 * 10)],
         [MSH_PLAYER, meshXy(-0.375, 0.375, 0, 1.5)],
         [MSH_SCREEN, meshXyScreen($.RES_WIDTH, $.RES_HEIGHT)],
     ]);
