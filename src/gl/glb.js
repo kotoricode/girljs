@@ -14,33 +14,31 @@ const toUint32 = (array, offset) => (
 
 const decoder = new TextDecoder();
 
-const RANGE_2 = [0, 1];
-const RANGE_3 = [0, 1, 2];
 const USHORT_BYTES = Uint16Array.BYTES_PER_ELEMENT;
 const FLOAT32_BYTES = Float32Array.BYTES_PER_ELEMENT;
 const VEC3 = 3;
 
 class Glb
 {
-    constructor(bin, view, range, sizeOf)
+    constructor(data, binOffset, view, range, sizeOf)
     {
-        const { byteLength, byteOffset } = view;
+        const viewOffset = binOffset + view.byteOffset;
 
-        this.rangeLen = range.length;
-        const increment = this.rangeLen * sizeOf;
-        this.data = new Array(byteLength / increment);
+        this.range = range;
+        const increment = range * sizeOf;
+        this.data = new Array(view.byteLength / increment);
         const uint = sizeOf === FLOAT32_BYTES ? toUint32 : toUint16;
 
-        if (range === RANGE_3)
+        if (range === 3)
         {
             for (let i = 0; i < this.data.length; i++)
             {
-                const offset = byteOffset + i * increment;
+                const offset = viewOffset + i * increment;
 
                 this.data[i] = [
-                    uint(bin, offset),
-                    uint(bin, offset+sizeOf),
-                    uint(bin, offset+sizeOf*2)
+                    uint(data, offset),
+                    uint(data, offset+sizeOf),
+                    uint(data, offset+sizeOf*2)
                 ];
             }
         }
@@ -48,11 +46,11 @@ class Glb
         {
             for (let i = 0; i < this.data.length; i++)
             {
-                const offset = byteOffset + i * increment;
+                const offset = viewOffset + i * increment;
 
                 this.data[i] = [
-                    uint(bin, offset),
-                    uint(bin, offset+sizeOf),
+                    uint(data, offset),
+                    uint(data, offset+sizeOf),
                 ];
             }
         }
@@ -64,7 +62,7 @@ class Glb
 const toUnindexedArray = (obj, idx) =>
 {
     let byteOffset = 0;
-    const f32 = new Float32Array(idx.data.length * VEC3 * obj.rangeLen);
+    const f32 = new Float32Array(idx.data.length * VEC3 * obj.range);
     const view = new DataView(f32.buffer);
 
     for (const triangle of idx.data)
@@ -117,22 +115,14 @@ export const parseGlb = async(blob) =>
     const meta = JSON.parse(jsonString);
 
     /*--------------------------------------------------------------------------
-        Get binary
-    --------------------------------------------------------------------------*/
-    const binLen = toUint32(data, jsonEnd);
-
-    const binStart = jsonEnd + 8; // skip header 4 bytes
-    const binEnd = binStart + binLen;
-    const bin = data.subarray(binStart, binEnd);
-
-    /*--------------------------------------------------------------------------
         Process binary
     --------------------------------------------------------------------------*/
+    const binStart = jsonEnd + 8; // skip header 4 bytes
     const [viewMesh, viewUv, viewIdx] = meta.bufferViews;
 
-    const mesh = new Glb(bin, viewMesh, RANGE_3, FLOAT32_BYTES);
-    const uv = new Glb(bin, viewUv, RANGE_2, FLOAT32_BYTES);
-    const idx = new Glb(bin, viewIdx, RANGE_3, USHORT_BYTES);
+    const mesh = new Glb(data, binStart, viewMesh, 3, FLOAT32_BYTES);
+    const uv = new Glb(data, binStart, viewUv, 2, FLOAT32_BYTES);
+    const idx = new Glb(data, binStart, viewIdx, 3, USHORT_BYTES);
 
     console.log(window.performance.now() - t1);
 
