@@ -16,7 +16,6 @@ const decoder = new TextDecoder();
 
 const USHORT_BYTES = Uint16Array.BYTES_PER_ELEMENT;
 const FLOAT32_BYTES = Float32Array.BYTES_PER_ELEMENT;
-const VEC3 = 3;
 
 class Glb
 {
@@ -25,34 +24,12 @@ class Glb
         const viewOffset = binOffset + view.byteOffset;
 
         this.range = range;
-        const increment = range * sizeOf;
-        this.data = new Array(view.byteLength / increment);
+        this.data = new Array(view.byteLength / sizeOf);
         const uint = sizeOf === FLOAT32_BYTES ? toUint32 : toUint16;
 
-        if (range === 3)
+        for (let i = 0; i < this.data.length; i++)
         {
-            for (let i = 0; i < this.data.length; i++)
-            {
-                const offset = viewOffset + i * increment;
-
-                this.data[i] = [
-                    uint(data, offset),
-                    uint(data, offset+sizeOf),
-                    uint(data, offset+sizeOf*2)
-                ];
-            }
-        }
-        else
-        {
-            for (let i = 0; i < this.data.length; i++)
-            {
-                const offset = viewOffset + i * increment;
-
-                this.data[i] = [
-                    uint(data, offset),
-                    uint(data, offset+sizeOf),
-                ];
-            }
+            this.data[i] = uint(data, viewOffset + i * sizeOf);
         }
 
         Object.freeze(this);
@@ -62,29 +39,26 @@ class Glb
 const toUnindexedArray = (obj, idx) =>
 {
     let byteOffset = 0;
-    const f32 = new Float32Array(idx.data.length * VEC3 * obj.range);
+    const f32 = new Float32Array(idx.data.length * idx.range * obj.range);
     const view = new DataView(f32.buffer);
 
-    for (const triangle of idx.data)
+    for (const i of idx.data)
     {
-        for (const vertexIdx of triangle)
+        for (let j = 0; j < obj.range; j++)
         {
-            for (const coord of obj.data[vertexIdx])
-            {
-                view.setUint32(byteOffset, coord, true);
-                byteOffset += FLOAT32_BYTES;
-            }
+            view.setUint32(byteOffset, obj.data[i*obj.range+j], true);
+            byteOffset += FLOAT32_BYTES;
         }
     }
 
     return Array.from(f32);
 };
 
-
 export const parseGlb = async(blob) =>
 {
     console.log(blob);
     const t1 = window.performance.now();
+
     /*--------------------------------------------------------------------------
         Read glb
     --------------------------------------------------------------------------*/
