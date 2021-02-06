@@ -63,7 +63,6 @@ export const Dialogue = {
 
         // Bubble
         drawBubble(bezierSpeech);
-        drawArrow();
 
         // Text
         drawSpeakerText(speaker);
@@ -100,18 +99,6 @@ const drawBubble = (beziers) =>
         start = end;
     }
 
-    ctx.closePath();
-    ctx.fill();
-};
-
-const drawArrow = () =>
-{
-    const { ctx } = bubble;
-
-    ctx.beginPath();
-    ctx.moveTo(arrow[0], arrow[1]);
-    ctx.quadraticCurveTo(arrow[2], arrow[3], arrow[4], arrow[5]);
-    ctx.quadraticCurveTo(arrow[6], arrow[7], arrow[8], arrow[9]);
     ctx.closePath();
     ctx.fill();
 };
@@ -198,19 +185,6 @@ const midLineY = 0.7 + (1.5 * fontSize + fontMargin) / $.RES_HEIGHT;
 const bezierSpeech = [
     new Bezier(0.2, midLineY, 180, 180, 90),
     new Bezier(0.8, midLineY, 180, 180, -90),
-];
-
-const arrow = [
-    $.RES_WIDTH * 0.686,
-    $.RES_HEIGHT * 0.6375,
-    $.RES_WIDTH * 0.734,
-    $.RES_HEIGHT * 0.63,
-    $.RES_WIDTH * 0.775,
-    $.RES_HEIGHT * 0.565,
-    $.RES_WIDTH * 0.765,
-    $.RES_HEIGHT * 0.63,
-    $.RES_WIDTH * 0.742,
-    $.RES_HEIGHT * 0.674
 ];
 
 const text = new UiCanvas($.MDL_TEXT, [0.2, 0.2, 0.2, 1]);

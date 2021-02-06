@@ -71,8 +71,7 @@ export const render = () =>
         }
     }
 
-    //setDebug();
-    debugGround();
+    //debugGround();
 
     bindFb();
 

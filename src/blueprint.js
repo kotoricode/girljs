@@ -70,8 +70,8 @@ export const blueprint = new SafeMap([
     [$.SCN_TEST, () => new SafeMap([
         [$.BLU_ENTITIES, new SafeMap([
             createPlayer(),
-            createTest(),
-            createMonkey(),
+            //createTest(),
+            //createMonkey(),
             createHome()
         ])],
         [$.BLU_PROCESSES, new SafeSet([
