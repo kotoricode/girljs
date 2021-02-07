@@ -67,16 +67,7 @@ const uvRect = (x, y, width, height, baseWidth, baseHeight) =>
 ------------------------------------------------------------------------------*/
 export class Model
 {
-    // TODO: some of these are probably not needed
-    constructor(
-        attributes,
-        bufferId,
-        drawMode,
-        drawSize,
-        meshId,
-        uvId,
-        textureId
-    )
+    constructor(attributes, bufferId, drawMode, drawSize)
     {
         if (!Number.isInteger(drawSize)) throw drawSize;
 
@@ -84,11 +75,6 @@ export class Model
         this.bufferId = bufferId;
         this.drawMode = drawMode;
         this.drawSize = drawSize;
-        this.meshId = meshId;
-        this.uvId = uvId;
-        this.textureId = textureId;
-
-        Object.freeze(this);
     }
 
     static get(modelId)
@@ -116,6 +102,27 @@ export class Model
         }
 
         return loadPromise;
+    }
+}
+
+class TexturedModel extends Model
+{
+    constructor(attributes, bufferId, drawMode, drawSize, textureId)
+    {
+        super(attributes, bufferId, drawMode, drawSize);
+        this.textureId = textureId;
+
+        Object.freeze(this);
+    }
+}
+
+class DynamicModel extends Model
+{
+    constructor(attributes, bufferId, drawMode, drawSize, meshId)
+    {
+        super(attributes, bufferId, drawMode, drawSize);
+        this.meshId = meshId;
+        Object.freeze(this);
     }
 }
 
@@ -242,13 +249,11 @@ const buildModels = async() =>
             [$.A_TEXCOORD, uvOffsets.get(uvId)]
         ]);
 
-        models.set(modelId, new Model(
+        models.set(modelId, new TexturedModel(
             attributes,
             $.BUF_ARR_MODEL,
             $.TRIANGLES,
             meshes.get(meshId).length / 3,
-            meshId,
-            uvId,
             textureId,
         ));
     }
@@ -260,7 +265,7 @@ const buildModels = async() =>
         [$.A_POSITION, 0]
     ]);
 
-    models.set($.MDL_DEBUG, new Model(
+    models.set($.MDL_DEBUG, new DynamicModel(
         debugAttrib,
         $.BUF_ARR_DEBUG,
         $.LINES,
