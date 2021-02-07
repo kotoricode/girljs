@@ -2,9 +2,6 @@
 
 export const parseGlb = async(blob) =>
 {
-    console.log(blob);
-    const t1 = window.performance.now();
-
     /*--------------------------------------------------------------------------
         Read glb
     --------------------------------------------------------------------------*/
@@ -39,58 +36,43 @@ export const parseGlb = async(blob) =>
     /*--------------------------------------------------------------------------
         Process binary
     --------------------------------------------------------------------------*/
-    const UINT16_BYTES = 2;
-    const FLOAT32_BYTES = 4;
-    const VEC2 = 2;
-    const VEC3 = 3;
-
     const binStart = jsonEnd + 8; // skip header 4 bytes
     const [viewMesh, viewUv, viewIdx] = meta.bufferViews;
 
-    const indices = viewIdx.byteLength / UINT16_BYTES;
-    const mesh = new Array(indices * VEC3);
-    const uv = new Array(indices * VEC2);
+    const numIdx = viewIdx.byteLength / UINT16_BYTES;
+    const mesh = new Array(numIdx * VEC3);
+    const uv = new Array(numIdx * VEC2);
 
     const viewIdxStart = binStart + viewIdx.byteOffset;
     const viewMeshStart = binStart + viewMesh.byteOffset;
     const viewUvStart = binStart + viewUv.byteOffset;
 
-    for (let i = 0; i < indices; i++)
+    for (let i = 0; i < numIdx; i++)
     {
         const idx = dataView.getUint16(viewIdxStart + i * UINT16_BYTES, true);
-
         const idxF32 = idx * FLOAT32_BYTES;
-        const iVec3 = i * VEC3;
-        const iVec2 = i * VEC2;
-
-        /*----------------------------------------------------------------------
-            Mesh
-        ----------------------------------------------------------------------*/
-        const mByteOff = viewMeshStart + VEC3 * idxF32;
-
-        for (let j = 0; j < VEC3; j++)
-        {
-            mesh[iVec3 + j] = dataView.getFloat32(
-                mByteOff + FLOAT32_BYTES * j,
-                true
-            );
-        }
-
-        /*----------------------------------------------------------------------
-            UV
-        ----------------------------------------------------------------------*/
-        const uByteOff = viewUvStart + VEC2 * idxF32;
-
-        for (let j = 0; j < VEC2; j++)
-        {
-            uv[iVec2 + j] = dataView.getFloat32(
-                uByteOff + FLOAT32_BYTES * j,
-                true
-            );
-        }
+        readFloat(dataView, viewMeshStart, mesh, VEC3, i, idxF32);
+        readFloat(dataView, viewUvStart, uv, VEC2, i, idxF32);
     }
-
-    console.log(window.performance.now() - t1);
 
     return { mesh, uv };
 };
+
+const readFloat = (dataView, viewOffset, dstArray, dataType, i, idxF32) =>
+{
+    const viewByteOffset = viewOffset + idxF32 * dataType;
+    const dstIdx = i * dataType;
+
+    for (let j = 0; j < dataType; j++)
+    {
+        dstArray[dstIdx + j] = dataView.getFloat32(
+            viewByteOffset + j * FLOAT32_BYTES,
+            true
+        );
+    }
+};
+
+const UINT16_BYTES = 2;
+const FLOAT32_BYTES = 4;
+const VEC2 = 2;
+const VEC3 = 3;
