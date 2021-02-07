@@ -148,7 +148,7 @@ const buildModels = async() =>
 
     const externalModels = [
         new ExternalModelInfo("mesh", MSH_TEST, UV_TEST),
-        new ExternalModelInfo("monkey", MSH_MONKEY, UV_MONKEY),
+        new ExternalModelInfo("big_monkey", MSH_MONKEY, UV_MONKEY),
         new ExternalModelInfo("home", MSH_HOME, UV_HOME)
     ];
 
