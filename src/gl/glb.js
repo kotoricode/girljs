@@ -1,17 +1,5 @@
 // https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md
 
-const toUint16 = (array, offset) => (
-    array[offset] +
-    array[offset+1] * 256
-);
-
-const toUint32 = (array, offset) => (
-    array[offset] +
-    array[offset+1] * 256 +
-    array[offset+2] * 65536 +
-    array[offset+3] * 16777216
-);
-
 export const parseGlb = async(blob) =>
 {
     console.log(blob);
@@ -23,6 +11,7 @@ export const parseGlb = async(blob) =>
     const stream = blob.stream();
     const reader = stream.getReader();
     const data = new Uint8Array(blob.size);
+    const dataView = new DataView(data.buffer);
     let offset = 0;
 
     while (offset !== blob.size)
@@ -37,7 +26,7 @@ export const parseGlb = async(blob) =>
     /*--------------------------------------------------------------------------
         Get JSON
     --------------------------------------------------------------------------*/
-    const jsonLen = toUint32(data, 12);
+    const jsonLen = dataView.getUint32(12, true);
 
     const jsonStart = 20; // skip header 4 bytes
     const jsonEnd = jsonStart + jsonLen;
@@ -50,27 +39,25 @@ export const parseGlb = async(blob) =>
     /*--------------------------------------------------------------------------
         Process binary
     --------------------------------------------------------------------------*/
-    const USHORT_BYTES = Uint16Array.BYTES_PER_ELEMENT;
-    const FLOAT32_BYTES = Float32Array.BYTES_PER_ELEMENT;
+    const UINT16_BYTES = 2;
+    const FLOAT32_BYTES = 4;
     const VEC2 = 2;
     const VEC3 = 3;
 
     const binStart = jsonEnd + 8; // skip header 4 bytes
     const [viewMesh, viewUv, viewIdx] = meta.bufferViews;
 
-    const f32 = new Float32Array(1);
-    const dataView = new DataView(f32.buffer);
-
-    const indices = viewIdx.byteLength / USHORT_BYTES;
+    const indices = viewIdx.byteLength / UINT16_BYTES;
     const mesh = new Array(indices * VEC3);
     const uv = new Array(indices * VEC2);
 
+    const viewIdxStart = binStart + viewIdx.byteOffset;
+    const viewMeshStart = binStart + viewMesh.byteOffset;
+    const viewUvStart = binStart + viewUv.byteOffset;
+
     for (let i = 0; i < indices; i++)
     {
-        const idx = toUint16(
-            data,
-            binStart + viewIdx.byteOffset + i * USHORT_BYTES
-        );
+        const idx = dataView.getUint16(viewIdxStart + i * UINT16_BYTES, true);
 
         const idxF32 = idx * FLOAT32_BYTES;
         const iVec3 = i * VEC3;
@@ -79,27 +66,27 @@ export const parseGlb = async(blob) =>
         /*----------------------------------------------------------------------
             Mesh
         ----------------------------------------------------------------------*/
-        let mByteOff = binStart + viewMesh.byteOffset + VEC3 * idxF32;
+        const mByteOff = viewMeshStart + VEC3 * idxF32;
 
         for (let j = 0; j < VEC3; j++)
         {
-            const value = toUint32(data, mByteOff);
-            dataView.setUint32(0, value, true);
-            mesh[iVec3 + j] = f32[0];
-            mByteOff += FLOAT32_BYTES;
+            mesh[iVec3 + j] = dataView.getFloat32(
+                mByteOff + FLOAT32_BYTES * j,
+                true
+            );
         }
 
         /*----------------------------------------------------------------------
             UV
         ----------------------------------------------------------------------*/
-        let uByteOff = binStart + viewUv.byteOffset + VEC2 * idxF32;
+        const uByteOff = viewUvStart + VEC2 * idxF32;
 
         for (let j = 0; j < VEC2; j++)
         {
-            const value = toUint32(data, uByteOff);
-            dataView.setUint32(0, value, true);
-            uv[iVec2 + j] = f32[0];
-            uByteOff += FLOAT32_BYTES;
+            uv[iVec2 + j] = dataView.getFloat32(
+                uByteOff + FLOAT32_BYTES * j,
+                true
+            );
         }
     }
 
