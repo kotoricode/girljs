@@ -1,3 +1,4 @@
+/* eslint-disable max-len */
 export const
     RES_WIDTH = 1280,
     RES_HEIGHT = 720,
@@ -126,7 +127,10 @@ export const
     Dialogue --- DO NOT MODIFY
 ------------------------------------------------------------------------------*/
 export const
-    TXT_HELLO = "Hello world!";
+    TXT_HELLO = "Hello world!",
+    TXT_CATCALL_00 = "Nice ass, baby!",
+    TXT_CATCALL_01 = "milk truk just arive",
+    TXT_CATCALL_02 = "if man peinis smell....scented peins....smlely penis this excite you smelly sweat penis juicy this eroitc to you?";
 
 /*------------------------------------------------------------------------------
     GL enums --- DO NOT MODIFY
