@@ -111,7 +111,6 @@ class TexturedModel extends Model
     {
         super(attributes, bufferId, drawMode, drawSize);
         this.textureId = textureId;
-
         Object.freeze(this);
     }
 }
@@ -125,10 +124,6 @@ class DynamicModel extends Model
         Object.freeze(this);
     }
 }
-
-const dynamicMeshes = new SafeMap([
-    [MSH_DEBUG, new SettableFloat32Array(3 * 2 * 12 * 10)],
-]);
 
 const buildModels = async() =>
 {
@@ -286,3 +281,7 @@ const buildModels = async() =>
 const models = new SafeMap();
 let isLoaded = false;
 let loadPromise;
+
+const dynamicMeshes = new SafeMap([
+    [MSH_DEBUG, new SettableFloat32Array(3 * 2 * 12 * 10)],
+]);

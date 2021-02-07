@@ -106,7 +106,7 @@ export class Ray
             const start = (coord - zcoord) / iwNear;
 
             this.start[i] = start;
-            this.direction[i] = ((coord + zcoord) / iwFar) - start;
+            this.direction[i] = (coord + zcoord) / iwFar - start;
         }
 
         this.direction.normalize();

@@ -35,11 +35,11 @@ export class MinHeap
 
     pop()
     {
-        this.heapSize--;
-        const value = this.heap[this.heapSize];
+        const popped = this.heap[0];
 
-        const retVal = this.heap[0];
-        this.heap[0] = value;
+        this.heapSize--;
+        const parent = this.heap[this.heapSize];
+        this.heap[0] = parent;
 
         let idx = 0;
 
@@ -55,15 +55,15 @@ export class MinHeap
 
                 if (left.value > right.value)
                 {
-                    if (value.value > right.value)
+                    if (parent.value > right.value)
                     {
-                        idx = this.swap(idx, rightIdx, value, right);
+                        idx = this.swap(idx, rightIdx, parent, right);
                         continue;
                     }
                 }
-                else if (value.value > left.value)
+                else if (parent.value > left.value)
                 {
-                    idx = this.swap(idx, leftIdx, value, left);
+                    idx = this.swap(idx, leftIdx, parent, left);
                     continue;
                 }
             }
@@ -71,14 +71,14 @@ export class MinHeap
             {
                 const left = this.heap[leftIdx];
 
-                if (value.value > left.value)
+                if (parent.value > left.value)
                 {
-                    idx = this.swap(idx, leftIdx, value, left);
+                    idx = this.swap(idx, leftIdx, parent, left);
                     continue;
                 }
             }
 
-            return retVal;
+            return popped;
         }
     }
 

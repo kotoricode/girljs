@@ -35,6 +35,7 @@ export class Transform
 
         /*----------------------------------------------------------------------
             Rotation
+            https://www.euclideanspace.com/maths/geometry/rotations/conversions/matrixToQuaternion/
         ----------------------------------------------------------------------*/
         const R0 = M0 / sx;
         const R1 = M1 / sx;
@@ -52,7 +53,7 @@ export class Transform
 
         if (trace > 0)
         {
-            const s = 0.5 / (trace + 1) ** 0.5;
+            const s = 0.5 / (trace + 1)**0.5;
 
             x = (R6 - R9) * s;
             y = (R8 - R2) * s;
@@ -61,7 +62,7 @@ export class Transform
         }
         else if (R0 > R5 && R0 > RA)
         {
-            const s = 2 * (1 + R0 - R5 - RA) ** 0.5;
+            const s = 2 * (1 + R0 - R5 - RA)**0.5;
             x = 0.25 * s;
             y = (R4 + R1) / s;
             z = (R8 + R2) / s;
@@ -69,7 +70,7 @@ export class Transform
         }
         else if (R5 > RA)
         {
-            const s = 2 * (1 + R5 - R0 - RA) ** 0.5;
+            const s = 2 * (1 + R5 - R0 - RA)**0.5;
             x = (R4 + R1) / s;
             y = 0.25 * s;
             z = (R9 + R6) / s;
@@ -77,7 +78,7 @@ export class Transform
         }
         else
         {
-            const s = 2 * (1 + RA - R0 - R5) ** 0.5;
+            const s = 2 * (1 + RA - R0 - R5)**0.5;
             x = (R8 + R2) / s;
             y = (R9 + R6) / s;
             z = 0.25 * s;
