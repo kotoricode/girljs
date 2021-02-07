@@ -38,17 +38,19 @@ class Glb
 
 const toUnindexedArray = (obj, idx) =>
 {
+    const { range, data } = obj;
+
     let byteOffset = 0;
-    const f32 = new Float32Array(idx.data.length * idx.range * obj.range);
+    const f32 = new Float32Array(idx.data.length * idx.range * range);
     const view = new DataView(f32.buffer);
 
     for (const i of idx.data)
     {
-        const triStart = i * obj.range;
+        const triStart = i * range;
 
-        for (let j = 0; j < obj.range; j++)
+        for (let j = 0; j < range; j++)
         {
-            view.setUint32(byteOffset, obj.data[triStart+j], true);
+            view.setUint32(byteOffset, data[triStart+j], true);
             byteOffset += FLOAT32_BYTES;
         }
     }
