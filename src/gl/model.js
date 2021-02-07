@@ -67,17 +67,26 @@ const uvRect = (x, y, width, height, baseWidth, baseHeight) =>
 ------------------------------------------------------------------------------*/
 export class Model
 {
-    constructor(attributes, bufferId, drawMode, drawSize, meshId, uvId, textureId)
+    // TODO: some of these are probably not needed
+    constructor(
+        attributes,
+        bufferId,
+        drawMode,
+        drawSize,
+        meshId,
+        uvId,
+        textureId
+    )
     {
+        if (!Number.isInteger(drawSize)) throw drawSize;
+
         this.attributes = attributes;
         this.bufferId = bufferId;
         this.drawMode = drawMode;
+        this.drawSize = drawSize;
         this.meshId = meshId;
         this.uvId = uvId;
         this.textureId = textureId;
-
-        this.drawSize = drawSize;
-        if (!Number.isInteger(this.drawSize)) throw this.drawSize;
 
         Object.freeze(this);
     }

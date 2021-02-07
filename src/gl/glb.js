@@ -12,13 +12,6 @@ const toUint32 = (array, offset) => (
     array[offset+3] * 16777216
 );
 
-const decoder = new TextDecoder();
-
-const USHORT_BYTES = Uint16Array.BYTES_PER_ELEMENT;
-const FLOAT32_BYTES = Float32Array.BYTES_PER_ELEMENT;
-const VEC2 = 2;
-const VEC3 = 3;
-
 export const parseGlb = async(blob) =>
 {
     console.log(blob);
@@ -50,12 +43,18 @@ export const parseGlb = async(blob) =>
     const jsonEnd = jsonStart + jsonLen;
     const json = data.subarray(jsonStart, jsonEnd);
 
+    const decoder = new TextDecoder();
     const jsonString = decoder.decode(json);
     const meta = JSON.parse(jsonString);
 
     /*--------------------------------------------------------------------------
         Process binary
     --------------------------------------------------------------------------*/
+    const USHORT_BYTES = Uint16Array.BYTES_PER_ELEMENT;
+    const FLOAT32_BYTES = Float32Array.BYTES_PER_ELEMENT;
+    const VEC2 = 2;
+    const VEC3 = 3;
+
     const binStart = jsonEnd + 8; // skip header 4 bytes
     const [viewMesh, viewUv, viewIdx] = meta.bufferViews;
 
