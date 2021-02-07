@@ -12,9 +12,9 @@ export const processPlayer = () =>
     {
         Mouse.consumeClick();
 
-        Dialogue.setText(
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-        );
+        // Dialogue.setText(
+        //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
+        // );
 
         const ray = Camera.getRay();
 

@@ -1,67 +1,72 @@
 #version 300 es
-// https://www.geeks3d.com/20110405/fxaa-fast-approximate-anti-aliasing-demo-glsl-opengl-test-radeon-geforce/3/
-
 precision mediump float;
+// https://catlikecoding.com/unity/tutorials/advanced-rendering/fxaa/
 
-const ivec2 SE = ivec2(1, 1);
-const ivec2 NE = ivec2(1, -1);
+#define ABSOLUTE_CONTRAST_THRESHOLD 0.0312
+#define RELATIVE_CONTRAST_THRESHOLD 0.125
 
 const vec3 luma = vec3(0.299, 0.587, 0.114);
-
-const vec2 spanMax = vec2(8, 8);
-const float quarterReduceMul = 0.25 / 8.0;
-const float reduceMin = 1.0 / 128.0;
+const ivec2 N = ivec2(0, 1);
+const ivec2 E = ivec2(1, 0);
+const ivec2 NE = N + E;
+const ivec2 SE = E - N;
 
 uniform sampler2D u_texture;
 in vec2 v_texcoord;
 out vec4 outColor;
 
-void main() 
+void main()
 {
-    float lumaNW = dot(textureOffset(u_texture, v_texcoord, -SE).rgb, luma);
+    vec3 rgb = texture(u_texture, v_texcoord).rgb;
+
+    /*--------------------------------------------------------------------------
+        Sample luminance
+    --------------------------------------------------------------------------*/
+    float lumaN = dot(textureOffset(u_texture, v_texcoord, N).rgb, luma);
+    float lumaS = dot(textureOffset(u_texture, v_texcoord, -N).rgb, luma);
+    float lumaE = dot(textureOffset(u_texture, v_texcoord, E).rgb, luma);
+    float lumaW = dot(textureOffset(u_texture, v_texcoord, -E).rgb, luma);
+
     float lumaNE = dot(textureOffset(u_texture, v_texcoord, NE).rgb, luma);
-    float lumaSW = dot(textureOffset(u_texture, v_texcoord, -NE).rgb, luma);
+    float lumaNW = dot(textureOffset(u_texture, v_texcoord, -SE).rgb, luma);
     float lumaSE = dot(textureOffset(u_texture, v_texcoord, SE).rgb, luma);
+    float lumaSW = dot(textureOffset(u_texture, v_texcoord, -NE).rgb, luma);
+
     float lumaM = dot(texture(u_texture, v_texcoord).rgb, luma);
 
-    vec2 dir = vec2(
-        lumaSW + lumaSE - lumaNW - lumaNE,
-        lumaNW + lumaSW - lumaNE - lumaSE
-    );
-    
-    vec2 halfNewDir = min(
-        spanMax, 
-        max(
-            -spanMax,
-            dir / (
-                min(
-                    abs(dir.x),
-                    abs(dir.y)
-                ) + max(
-                    (lumaNW + lumaNE + lumaSW + lumaSE) * quarterReduceMul,
-                    reduceMin
-                )
-            )
-        )
-    ) / (2.0 * vec2(textureSize(u_texture, 0)));
+    /*--------------------------------------------------------------------------
+        Contrast
+    --------------------------------------------------------------------------*/
+    float lumaMax = max(max(max(max(lumaN, lumaS), lumaE), lumaW), lumaM);
+    float lumaMin = min(min(min(min(lumaN, lumaS), lumaE), lumaW), lumaM);
 
-    vec2 sixthNewDir = halfNewDir / 3.0;
+    float contrast = lumaMax - lumaMin;
 
-    vec3 rgbA = 0.5 * (
-        texture(u_texture, v_texcoord - sixthNewDir).rgb +
-        texture(u_texture, v_texcoord + sixthNewDir).rgb
-    );
-    
-    vec3 rgbB = rgbA * 0.5 + 0.25 * (
-        texture(u_texture, v_texcoord - halfNewDir).rgb +
-        texture(u_texture, v_texcoord + halfNewDir).rgb
-    );
+    /*--------------------------------------------------------------------------
+        Blend factor
+    --------------------------------------------------------------------------*/
+    float blendFilter = 2.0 * (lumaN + lumaS + lumaE + lumaW);
+    blendFilter += lumaNE + lumaNW + lumaSE + lumaSW;
+    blendFilter *= 1.0 / 12.0;
+    blendFilter = abs(blendFilter - lumaMin);
+    blendFilter = clamp(blendFilter / contrast, 0.0, 1.0);
 
-    float lumaB = dot(rgbB, luma);
+    float blendFactor = smoothstep(0.0, 1.0, blendFilter);
+    blendFactor *= blendFactor;
 
-    outColor = vec4(
-        lumaB < min(lumaM, min(min(lumaNW, lumaNE), min(lumaSW, lumaSE))) ||
-        lumaB > max(lumaM, max(max(lumaNW, lumaNE), max(lumaSW, lumaSE)))
-        ? rgbA : rgbB, 1
-    );
+    /*--------------------------------------------------------------------------
+        Continue from 3.4
+    --------------------------------------------------------------------------*/
+
+    if (contrast < ABSOLUTE_CONTRAST_THRESHOLD ||
+        contrast < RELATIVE_CONTRAST_THRESHOLD * lumaMax
+    )
+    {
+        // SKIP
+        outColor = vec4(0, 0, 0, 1);
+    }
+    else
+    {
+        outColor = vec4(blendFactor, blendFactor, blendFactor, 1);
+    }
 }
