@@ -57,6 +57,21 @@ export const Dialogue = {
     {
         return bubble.program;
     },
+    init()
+    {
+        text = new UiCanvas($.MDL_TEXT, [0.2, 0.2, 0.2, 1]);
+        bubble = new UiCanvas($.MDL_BUBBLE, [0.95, 0.95, 0.95, 1]);
+
+        text.ctx.textAlign = "left";
+        text.ctx.textBaseline = "top";
+        text.ctx.font = `${fontSize}px Cuprum`;
+
+        // These are tints for the shaders, not the actual colors
+        text.ctx.fillStyle = bubble.ctx.fillStyle = "#fff";
+        text.ctx.shadowColor = "#000";
+
+        Model.load().then(canvasToTexture);
+    },
     setText(dialogue, speaker)
     {
         Dialogue.clear();
@@ -187,15 +202,5 @@ const bezierSpeech = [
     new Bezier(0.8, midLineY, 180, 180, -90),
 ];
 
-const text = new UiCanvas($.MDL_TEXT, [0.2, 0.2, 0.2, 1]);
-const bubble = new UiCanvas($.MDL_BUBBLE, [0.95, 0.95, 0.95, 1]);
-
-text.ctx.textAlign = "left";
-text.ctx.textBaseline = "top";
-text.ctx.font = `${fontSize}px Cuprum`;
-
-// These are tints for the shaders, not the actual colors
-text.ctx.fillStyle = bubble.ctx.fillStyle = "#fff";
-text.ctx.shadowColor = "#000";
-
-Model.load().then(canvasToTexture);
+let text;
+let bubble;

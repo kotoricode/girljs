@@ -76,5 +76,3 @@ const blockBuffers = new SafeMap([
 ]);
 
 const uBufferBindings = new SafeMap();
-
-Buffer.init();

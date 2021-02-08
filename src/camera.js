@@ -1,4 +1,5 @@
 import * as $ from "./const";
+
 import { Buffer } from "./gl/buffer";
 import { SettableFloat32Array, DEG_TO_RAD } from "./utility";
 import { Matrix } from "./math/matrix";
@@ -17,6 +18,10 @@ export const Camera = {
     getRay()
     {
         return ray;
+    },
+    init()
+    {
+        updateViewProjection();
     },
     setFocusEntityId(entityId)
     {
@@ -71,4 +76,3 @@ transform.rotation.fromEuler(-11.5, 0, 0);
 const viewProjectionData = new SettableFloat32Array(16);
 
 Camera.setFocusEntityId($.ENT_PLAYER);
-updateViewProjection();

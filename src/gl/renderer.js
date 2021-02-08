@@ -1,16 +1,20 @@
 import * as $ from "../const";
 import { gl } from "../dom";
-import { Drawable } from "../components/drawable";
+
+import { SafeMap, SafeSet } from "../utility";
+import { Matrix } from "../math/matrix";
+
+import { Buffer } from "./buffer";
 import { Texture } from "./texture";
 import { Program } from "./program";
-import { SafeMap, SafeSet } from "../utility";
+
+import { Space } from "../components/space";
+import { Drawable } from "../components/drawable";
+import { Ground } from "../components/ground";
+
+import { Camera } from "../camera";
 import { Dialogue } from "../dialogue";
 import { Scene } from "../scene";
-import { Buffer } from "./buffer";
-import { Matrix } from "../math/matrix";
-import { Ground } from "../components/ground";
-import { Camera } from "../camera";
-import { Space } from "../components/space";
 
 export const Renderer = {
     init()
@@ -194,5 +198,3 @@ const queues = new SafeMap([
 const uiPrograms = new SafeSet();
 
 let debugProgram;
-
-Renderer.init();

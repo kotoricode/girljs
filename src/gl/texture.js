@@ -21,6 +21,7 @@ export const Texture = {
     },
     init()
     {
+        imageTextures.clear();
         textures.clear();
 
         const data = [
@@ -116,4 +117,3 @@ let activeTexture;
 const imageTextures = new SafeMap();
 const textures = new SafeMap();
 const toFetch = [];
-Texture.init();

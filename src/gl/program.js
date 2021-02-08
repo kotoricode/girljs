@@ -420,5 +420,3 @@ class PreparedProgram
 }
 
 const preparedPrograms = new SafeMap();
-
-Program.init();
