@@ -17,12 +17,11 @@ import fsTexturedSrc from "./shaders/frag/textured.frag";
 
 export class Program
 {
+    // TODO: detach from gl resources
     constructor(programId, modelId)
     {
-        const prepared = preparedPrograms.get(programId);
-
-        // Program
-        this.glProgram = prepared.glProgram;
+        this.programId = programId;
+        const prepared = this.getPreparedProgram();
 
         // Attributes
         this.aLayout = prepared.aLayout;
@@ -125,9 +124,11 @@ export class Program
 
     activate()
     {
-        if (activeProgram !== this.glProgram)
+        const glProgram = this.getGlProgram();
+
+        if (activeProgram !== glProgram)
         {
-            activeProgram = this.glProgram;
+            activeProgram = glProgram;
             gl.useProgram(activeProgram);
 
             for (const blockId of this.uBlocks)
@@ -148,6 +149,16 @@ export class Program
     delete()
     {
         gl.deleteVertexArray(this.vao);
+    }
+
+    getPreparedProgram()
+    {
+        return preparedPrograms.get(this.programId);
+    }
+
+    getGlProgram()
+    {
+        return this.getPreparedProgram().glProgram;
     }
 
     getDynamicMesh()
@@ -182,9 +193,11 @@ export class Program
         this.bindVao();
         Buffer.bind(this.model.bufferId);
 
+        const glProgram = this.getGlProgram();
+
         for (const [name, attribSize] of this.aLayout)
         {
-            const pos = gl.getAttribLocation(this.glProgram, name);
+            const pos = gl.getAttribLocation(glProgram, name);
             gl.enableVertexAttribArray(pos);
             gl.vertexAttribPointer(
                 pos,
