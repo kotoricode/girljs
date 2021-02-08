@@ -44,6 +44,85 @@ export class Program
         Object.seal(this);
     }
 
+    static init()
+    {
+        preparedPrograms.clear();
+
+        for (let i = 0; i < programDef.length;)
+        {
+            const programId = programDef[i++];
+            const vert = vertDef.get(programDef[i++]);
+            const frag = fragDef.get(programDef[i++]);
+
+            const aLayout = vert.layout;
+
+            /*------------------------------------------------------------------
+                Program
+            ------------------------------------------------------------------*/
+            const program = gl.createProgram();
+            const vs = createAttachShader(program, $.VERTEX_SHADER, vert);
+            const fs = createAttachShader(program, $.FRAGMENT_SHADER, frag);
+            gl.linkProgram(program);
+
+            if (!gl.getProgramParameter(program, $.LINK_STATUS)) throw program;
+
+            detachDeleteShader(program, vs);
+            detachDeleteShader(program, fs);
+
+            /*------------------------------------------------------------------
+                Uniform blocks
+            ------------------------------------------------------------------*/
+            const uBlocks = new SafeSet();
+
+            if (vert.uBlocks)
+            {
+                for (const block of vert.uBlocks)
+                {
+                    uBlocks.add(block);
+                }
+            }
+
+            if (frag.uBlocks)
+            {
+                for (const block of frag.uBlocks)
+                {
+                    uBlocks.add(block);
+                }
+            }
+
+            /*------------------------------------------------------------------
+                Uniforms
+            ------------------------------------------------------------------*/
+            const uSetters = new SafeMap();
+            const uDefaults = new SafeMap();
+
+            for (const shader of [vert, frag])
+            {
+                if (shader.uniforms)
+                {
+                    for (const [type, map] of shader.uniforms)
+                    {
+                        for (const [name, values] of map)
+                        {
+                            const pos = gl.getUniformLocation(program, name);
+                            const setter = createUniSetter(type, pos);
+                            uSetters.set(name, setter);
+                            uDefaults.set(name, values);
+                        }
+                    }
+                }
+            }
+
+            preparedPrograms.set(programId, new PreparedProgram(
+                program,
+                aLayout,
+                uBlocks,
+                uDefaults,
+                uSetters
+            ));
+        }
+    }
+
     activate()
     {
         if (activeProgram !== this.glProgram)
@@ -342,76 +421,4 @@ class PreparedProgram
 
 const preparedPrograms = new SafeMap();
 
-for (let i = 0; i < programDef.length;)
-{
-    const programId = programDef[i++];
-    const vert = vertDef.get(programDef[i++]);
-    const frag = fragDef.get(programDef[i++]);
-
-    const aLayout = vert.layout;
-
-    /*--------------------------------------------------------------------------
-        Program
-    --------------------------------------------------------------------------*/
-    const program = gl.createProgram();
-    const vs = createAttachShader(program, $.VERTEX_SHADER, vert);
-    const fs = createAttachShader(program, $.FRAGMENT_SHADER, frag);
-    gl.linkProgram(program);
-
-    if (!gl.getProgramParameter(program, $.LINK_STATUS)) throw program;
-
-    detachDeleteShader(program, vs);
-    detachDeleteShader(program, fs);
-
-    /*--------------------------------------------------------------------------
-        Uniform blocks
-    --------------------------------------------------------------------------*/
-    const uBlocks = new SafeSet();
-
-    if (vert.uBlocks)
-    {
-        for (const block of vert.uBlocks)
-        {
-            uBlocks.add(block);
-        }
-    }
-
-    if (frag.uBlocks)
-    {
-        for (const block of frag.uBlocks)
-        {
-            uBlocks.add(block);
-        }
-    }
-
-    /*--------------------------------------------------------------------------
-        Uniforms
-    --------------------------------------------------------------------------*/
-    const uSetters = new SafeMap();
-    const uDefaults = new SafeMap();
-
-    for (const shader of [vert, frag])
-    {
-        if (shader.uniforms)
-        {
-            for (const [type, map] of shader.uniforms)
-            {
-                for (const [name, values] of map)
-                {
-                    const pos = gl.getUniformLocation(program, name);
-                    const setter = createUniSetter(type, pos);
-                    uSetters.set(name, setter);
-                    uDefaults.set(name, values);
-                }
-            }
-        }
-    }
-
-    preparedPrograms.set(programId, new PreparedProgram(
-        program,
-        aLayout,
-        uBlocks,
-        uDefaults,
-        uSetters
-    ));
-}
+Program.init();

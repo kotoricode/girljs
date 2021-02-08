@@ -2,7 +2,7 @@ import * as $ from "./const";
 import { Drawable } from "./components/drawable";
 import { Space } from "./components/space";
 import { Entity } from "./entity";
-import { render } from "./gl/renderer";
+import { Renderer } from "./gl/renderer";
 import { isSet, SafeMap, SafeSet } from "./utility";
 import { blueprint } from "./blueprint";
 import { Mouse } from "./dom";
@@ -201,7 +201,7 @@ export const Scene = {
 
         // TODO: check for lost context
         // https://www.khronos.org/webgl/wiki/HandlingContextLost
-        render();
+        Renderer.render();
     }
 };
 

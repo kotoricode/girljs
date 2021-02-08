@@ -19,6 +19,29 @@ export const Texture = {
     {
         gl.texImage2D($.TEXTURE_2D, 0, $.RGBA, $.RGBA, $.UNSIGNED_BYTE, src);
     },
+    init()
+    {
+        textures.clear();
+
+        const data = [
+            $.TEX_GIRL, createImageTexture("girl.png"),
+            $.TEX_WORLD, createImageTexture("monkey.png"),
+            $.TEX_HOME, createImageTexture("home.png"),
+            $.TEX_WOOD, createImageTexture("wood.jpg"),
+            $.TEX_FB, createFbTexture(),
+            $.TEX_UI_TEXT, createTexture(),
+            $.TEX_UI_BUBBLE, createTexture()
+        ];
+
+        let i = 0;
+
+        while (i < data.length)
+        {
+            textures.set(data[i++], data[i++]);
+        }
+
+        fetchNextImage();
+    },
     get(textureId)
     {
         return textures.get(textureId);
@@ -71,6 +94,7 @@ const createImageTexture = (src) =>
 {
     const texture = createTexture();
     imageTextures.set(src, texture);
+    toFetch.push(src);
 
     return texture;
 };
@@ -90,16 +114,6 @@ const createFbTexture = () =>
 ------------------------------------------------------------------------------*/
 let activeTexture;
 const imageTextures = new SafeMap();
-
-const textures = new SafeMap([
-    [$.TEX_GIRL, createImageTexture("girl.png")],
-    [$.TEX_WORLD, createImageTexture("monkey.png")],
-    [$.TEX_HOME, createImageTexture("home.png")],
-    [$.TEX_WOOD, createImageTexture("wood.jpg")],
-    [$.TEX_FB, createFbTexture()],
-    [$.TEX_UI_TEXT, createTexture()],
-    [$.TEX_UI_BUBBLE, createTexture()]
-]);
-
-const toFetch = [...imageTextures.keys()];
-fetchNextImage();
+const textures = new SafeMap();
+const toFetch = [];
+Texture.init();

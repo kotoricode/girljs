@@ -12,6 +12,97 @@ import { Ground } from "../components/ground";
 import { Camera } from "../camera";
 import { Space } from "../components/space";
 
+export const Renderer = {
+    init()
+    {
+        gl.enable($.BLEND);
+        gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
+
+        const imageProgram = new Program($.PRG_IMAGE, $.MDL_FB);
+        debugProgram = new Program($.PRG_DEBUG, $.MDL_DEBUG);
+
+        imageProgram.stageUniformAtIndex($.U_TRANSFORM, 1, Matrix.identity());
+
+        uiPrograms.clear();
+
+        uiPrograms.add(imageProgram);
+        uiPrograms.add(Dialogue.getBubbleProgram());
+        uiPrograms.add(Dialogue.getTextProgram());
+        uiPrograms.add(debugProgram);
+
+        /*----------------------------------------------------------------------
+            Framebuffer
+        ----------------------------------------------------------------------*/
+        fbo = gl.createFramebuffer();
+        rboDepth = gl.createRenderbuffer();
+        fbTexture = Texture.get($.TEX_FB);
+
+        bindFb();
+
+        gl.framebufferTexture2D(
+            $.FRAMEBUFFER,
+            $.COLOR_ATTACHMENT0,
+            $.TEXTURE_2D,
+            fbTexture,
+            0
+        );
+
+        gl.renderbufferStorage(
+            $.RENDERBUFFER,
+            $.DEPTH_COMPONENT16,
+            gl.canvas.width,
+            gl.canvas.height
+        );
+
+        gl.framebufferRenderbuffer(
+            $.FRAMEBUFFER,
+            $.DEPTH_ATTACHMENT,
+            $.RENDERBUFFER,
+            rboDepth
+        );
+
+        unbindFb();
+    },
+    render()
+    {
+        for (const [drawable] of Scene.all(Drawable))
+        {
+            if (drawable.isVisible)
+            {
+                queues.get(drawable.priority).add(drawable);
+            }
+        }
+
+        debugGround();
+
+        bindFb();
+
+        gl.clear($.COLOR_BUFFER_BIT | $.DEPTH_BUFFER_BIT);
+        gl.clearColor(0.15, 0.15, 0.15, 1);
+
+        gl.enable($.DEPTH_TEST);
+        gl.enable($.CULL_FACE);
+        drawQueue($.QUE_BACKGROUND);
+
+        gl.disable($.DEPTH_TEST);
+        gl.disable($.CULL_FACE);
+        drawQueue($.QUE_SPRITE);
+        drawQueue($.QUE_UI);
+
+        unbindFb();
+
+        for (const program of uiPrograms)
+        {
+            draw(program);
+        }
+
+        for (const queue of queues.values())
+        {
+            queue.clear();
+        }
+    }
+};
+
 const bindFb = () =>
 {
     gl.bindFramebuffer($.FRAMEBUFFER, fbo);
@@ -61,45 +152,6 @@ const debugGround = () =>
     Buffer.setData($.BUF_ARR_DEBUG, debugMesh);
 };
 
-export const render = () =>
-{
-    for (const [drawable] of Scene.all(Drawable))
-    {
-        if (drawable.isVisible)
-        {
-            queues.get(drawable.priority).add(drawable);
-        }
-    }
-
-    debugGround();
-
-    bindFb();
-
-    gl.clear($.COLOR_BUFFER_BIT | $.DEPTH_BUFFER_BIT);
-    gl.clearColor(0.15, 0.15, 0.15, 1);
-
-    gl.enable($.DEPTH_TEST);
-    gl.enable($.CULL_FACE);
-    drawQueue($.QUE_BACKGROUND);
-
-    gl.disable($.DEPTH_TEST);
-    gl.disable($.CULL_FACE);
-    drawQueue($.QUE_SPRITE);
-    drawQueue($.QUE_UI);
-
-    unbindFb();
-
-    for (const program of uiPrograms)
-    {
-        draw(program);
-    }
-
-    for (const queue of queues.values())
-    {
-        queue.clear();
-    }
-};
-
 const drawQueue = (queueId) =>
 {
     const queue = queues.get(queueId);
@@ -129,23 +181,9 @@ const draw = (program) =>
     program.unbindVao();
 };
 
-/*------------------------------------------------------------------------------
-    Init
-------------------------------------------------------------------------------*/
-gl.enable($.BLEND);
-gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
-
-const imageProgram = new Program($.PRG_IMAGE, $.MDL_FB);
-const debugProgram = new Program($.PRG_DEBUG, $.MDL_DEBUG);
-
-imageProgram.stageUniformAtIndex($.U_TRANSFORM, 1, Matrix.identity());
-
-const uiPrograms = new SafeSet([
-    imageProgram,
-    Dialogue.getBubbleProgram(),
-    Dialogue.getTextProgram(),
-    debugProgram
-]);
+let fbo;
+let rboDepth;
+let fbTexture;
 
 const queues = new SafeMap([
     [$.QUE_BACKGROUND, new SafeSet()],
@@ -153,35 +191,8 @@ const queues = new SafeMap([
     [$.QUE_UI, new SafeSet()]
 ]);
 
-/*------------------------------------------------------------------------------
-    Framebuffer
-------------------------------------------------------------------------------*/
-const fbo = gl.createFramebuffer();
-const rboDepth = gl.createRenderbuffer();
-const fbTexture = Texture.get($.TEX_FB);
+const uiPrograms = new SafeSet();
 
-bindFb();
+let debugProgram;
 
-gl.framebufferTexture2D(
-    $.FRAMEBUFFER,
-    $.COLOR_ATTACHMENT0,
-    $.TEXTURE_2D,
-    fbTexture,
-    0
-);
-
-gl.renderbufferStorage(
-    $.RENDERBUFFER,
-    $.DEPTH_COMPONENT16,
-    gl.canvas.width,
-    gl.canvas.height
-);
-
-gl.framebufferRenderbuffer(
-    $.FRAMEBUFFER,
-    $.DEPTH_ATTACHMENT,
-    $.RENDERBUFFER,
-    rboDepth
-);
-
-unbindFb();
+Renderer.init();
