@@ -12,6 +12,8 @@ export const processPlayer = () =>
     {
         Mouse.consumeClick();
 
+        //Scene.load($.SCN_HOME);
+
         // Dialogue.setText(
         //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
         // );

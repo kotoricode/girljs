@@ -13,7 +13,8 @@ export const
     ENT_ROOT = "root";
 
 export const
-    SCN_TEST = i++;
+    SCN_TEST = i++,
+    SCN_HOME = i++;
 
 export const
     BLU_CHILDREN = i++,

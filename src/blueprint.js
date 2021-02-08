@@ -60,7 +60,7 @@ const createHome = () => [$.ENT_GROUND, new SafeMap([
 
 const createMonkey = () => [Symbol(), new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
-        new Space(3, 0, 0),
+        new Space(0, 0, 0),
         new Drawable($.PRG_WORLD, $.QUE_BACKGROUND, $.MDL_MONKEY)
     ])],
     [$.BLU_CHILDREN, new SafeSet()]
@@ -70,8 +70,22 @@ export const blueprint = new SafeMap([
     [$.SCN_TEST, () => new SafeMap([
         [$.BLU_ENTITIES, new SafeMap([
             createPlayer(),
-            //createTest(),
-            //createMonkey(),
+            createTest(),
+            createMonkey(),
+            createHome()
+        ])],
+        [$.BLU_PROCESSES, new SafeSet([
+            processMotion,
+            processAnimation,
+            processCamera,
+            processPlayer
+        ])]
+    ])],
+    [$.SCN_HOME, () => new SafeMap([
+        [$.BLU_ENTITIES, new SafeMap([
+            createPlayer(),
+            createTest(),
+            createMonkey(),
             createHome()
         ])],
         [$.BLU_PROCESSES, new SafeSet([

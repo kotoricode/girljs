@@ -1,5 +1,5 @@
 import * as $ from "./const";
-import { Dom, Mouse } from "./dom";
+import { Dom } from "./dom";
 import { Scene } from "./scene";
 import "./audio-player";
 import { Model } from "./gl/model";
@@ -8,18 +8,8 @@ const mainLoop = (timestamp) =>
 {
     if (isReady)
     {
-        if (Mouse.isClickPending())
-        {
-            Mouse.setClick();
-        }
-
         const dt = (timestamp - oldTimestamp) * 0.001;
         Scene.update(dt);
-
-        if (Mouse.isClick())
-        {
-            Mouse.consumeClick();
-        }
     }
 
     oldTimestamp = timestamp;
@@ -33,6 +23,6 @@ window.requestAnimationFrame(mainLoop);
 Model.load().then(() =>
 {
     Dom.hideLoading();
-    Scene.load($.SCN_TEST);
+    Scene.setPendingLoad($.SCN_TEST);
     isReady = true;
 });

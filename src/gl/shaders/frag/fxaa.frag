@@ -51,8 +51,7 @@ void main()
     blendFilter = abs(blendFilter - lumaMin);
     blendFilter = clamp(blendFilter / contrast, 0.0, 1.0);
 
-    float blendFactor = smoothstep(0.0, 1.0, blendFilter);
-    blendFactor *= blendFactor;
+    float blendFactor = pow(smoothstep(0.0, 1.0, blendFilter), 2.0);
 
     /*--------------------------------------------------------------------------
         Continue from 3.4

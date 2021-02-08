@@ -3,8 +3,9 @@ import { Drawable } from "./components/drawable";
 import { Space } from "./components/space";
 import { Entity } from "./entity";
 import { render } from "./gl/renderer";
-import { SafeMap, SafeSet } from "./utility";
+import { isSet, SafeMap, SafeSet } from "./utility";
 import { blueprint } from "./blueprint";
+import { Mouse } from "./dom";
 
 export const Scene = {
     addEntity(entity, parentId)
@@ -111,6 +112,10 @@ export const Scene = {
     {
         return entities.get(entityId);
     },
+    getPreviousScene()
+    {
+        return previousScene;
+    },
     hasEntity(entityId)
     {
         return entities.has(entityId);
@@ -164,11 +169,34 @@ export const Scene = {
 
         return yieldComponents(entity, components);
     },
+    setPendingLoad(sceneId)
+    {
+        nextScene = sceneId;
+    },
     update(dt)
     {
+        if (Mouse.isClickPending())
+        {
+            Mouse.setClick();
+        }
+
+        if (isSet(nextScene))
+        {
+            previousScene = currentScene;
+            currentScene = nextScene;
+            nextScene = null;
+
+            this.load(currentScene);
+        }
+
         for (const process of processes)
         {
             process(dt);
+        }
+
+        if (Mouse.isClick())
+        {
+            Mouse.consumeClick();
         }
 
         // TODO: check for lost context
@@ -232,6 +260,10 @@ function* yieldComponents(entity, components)
         yield entity.get(comp);
     }
 }
+
+let nextScene;
+let currentScene;
+let previousScene;
 
 const cached = new SafeMap();
 const dirty = new SafeSet();
