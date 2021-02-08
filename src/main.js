@@ -26,6 +26,9 @@ const mainLoop = (timestamp) =>
 
 const init = () =>
 {
+    // These all depend on gl resources in some way. This function
+    // can be used to reinitialize everything in case of lost context
+    // https://www.khronos.org/webgl/wiki/HandlingContextLost
     Buffer.init();
     Texture.init();
     Program.init();

@@ -97,6 +97,7 @@ window.addEventListener("resize", onResize);
 const canvas = getElement("canvas");
 let canvasRect = canvas.getBoundingClientRect();
 
+// TODO: this should have a getter in case context loss
 export const gl = canvas.getContext("webgl2", { alpha: false });
 
 let canvasWidth = $.RES_WIDTH;
