@@ -10,7 +10,9 @@ out vec4 outColor;
 void main()
 {
     outColor = vec4(
-        vec3(dot(texture(u_texture, v_texcoord).rgb, luma)),
+        vec3(
+            dot(texture(u_texture, v_texcoord).rgb, luma)
+        ),
         1
     );
 }

@@ -12,7 +12,7 @@ import vsUiSrc     from "./shaders/vert/ui.vert";
 import vsWorldSrc  from "./shaders/vert/world.vert";
 
 import fsDebugSrc    from "./shaders/frag/debug.frag";
-import fsFxaaSrc     from "./shaders/frag/fxaa.frag";
+import fsLumaSrc     from "./shaders/frag/luma.frag";
 //import fsGraySrc     from "./shaders/frag/gray.frag";
 import fsTexturedSrc from "./shaders/frag/textured.frag";
 
@@ -286,7 +286,7 @@ const VS_UI = "VS_UI";
 const VS_WORLD = "VS_WORLD";
 
 const FS_DEBUG = "FS_DEBUG";
-const FS_FXAA = "FS_IMAGE";
+const FS_LUMA = "FS_LUMA";
 const FS_TEXTURED = "FS_TEX";
 
 const U_TYPE_2F = "U_TYPE_2F";
@@ -340,7 +340,7 @@ const vertDef = new SafeMap([
 const fragDef = new SafeMap([
     [FS_DEBUG, new FShader(fsDebugSrc)],
 
-    [FS_FXAA, new FShader(fsFxaaSrc)],
+    [FS_LUMA, new FShader(fsLumaSrc)],
 
     [FS_TEXTURED, new FShader(
         fsTexturedSrc,
@@ -358,7 +358,7 @@ const fragDef = new SafeMap([
 ------------------------------------------------------------------------------*/
 const programDef = [
     $.PRG_DEBUG, VS_DEBUG, FS_DEBUG,
-    $.PRG_IMAGE, VS_UI,    FS_FXAA,
+    $.PRG_IMAGE, VS_UI,    FS_LUMA,
     $.PRG_UI,    VS_UI,    FS_TEXTURED,
     $.PRG_WORLD, VS_WORLD, FS_TEXTURED,
 ];
