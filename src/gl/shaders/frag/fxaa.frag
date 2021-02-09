@@ -3,9 +3,9 @@ precision mediump float;
 // https://catlikecoding.com/unity/tutorials/advanced-rendering/fxaa/
 
 #define ABSOLUTE_CONTRAST_THRESHOLD 1.0/32.0
-#define RELATIVE_CONTRAST_THRESHOLD 1.0/32.0
-#define SUBPIXEL_BLENDING 1.0
-#define EDGE_STEP_COUNT 8
+#define RELATIVE_CONTRAST_THRESHOLD 1.0/8.0
+#define SUBPIXEL_BLENDING 4.0/4.0
+#define EDGE_STEP_COUNT 32
 
 const vec3 luma = vec3(0.299, 0.587, 0.114);
 const ivec2 N = ivec2(0, 1);
@@ -16,6 +16,11 @@ const ivec2 SE = E - N;
 uniform sampler2D u_texture;
 in vec2 v_texcoord;
 out vec4 outColor;
+
+float sampleLuma(vec4 src)
+{
+    return dot(src.rgb, luma);
+}
 
 void main()
 {
@@ -34,7 +39,7 @@ void main()
     float lumaSE = dot(textureOffset(u_texture, v_texcoord, SE).rgb, luma);
     float lumaSW = dot(textureOffset(u_texture, v_texcoord, -NE).rgb, luma);
 
-    float lumaM = dot(color.rgb, luma);
+    float lumaM = sampleLuma(color);
 
     /*--------------------------------------------------------------------------
         Contrast
@@ -44,8 +49,9 @@ void main()
 
     float contrast = lumaMax - lumaMin;
 
-    if (contrast < ABSOLUTE_CONTRAST_THRESHOLD ||
-        contrast < RELATIVE_CONTRAST_THRESHOLD * lumaMax
+    if (contrast < min(
+        ABSOLUTE_CONTRAST_THRESHOLD,
+        RELATIVE_CONTRAST_THRESHOLD * lumaMax)
     )
     {
         outColor = color;
@@ -60,7 +66,7 @@ void main()
         float blendFilter = 2.0 * (lumaN + lumaS + lumaE + lumaW);
         blendFilter += lumaNE + lumaNW + lumaSE + lumaSW;
         blendFilter *= 1.0 / 12.0;
-        blendFilter = abs(blendFilter - lumaMin);
+        blendFilter = abs(blendFilter - lumaM);
         blendFilter = clamp(blendFilter / contrast, 0.0, 1.0);
 
         float pixelBlendFactor = pow(smoothstep(0.0, 1.0, blendFilter), 2.0) * SUBPIXEL_BLENDING;
