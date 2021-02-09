@@ -12,7 +12,7 @@ import vsUiSrc     from "./shaders/vert/ui.vert";
 import vsWorldSrc  from "./shaders/vert/world.vert";
 
 import fsDebugSrc    from "./shaders/frag/debug.frag";
-import fsFxaaSrc     from "./shaders/frag/luma.frag";
+import fsFxaaSrc     from "./shaders/frag/fxaa.frag";
 //import fsGraySrc     from "./shaders/frag/gray.frag";
 import fsTexturedSrc from "./shaders/frag/textured.frag";
 
