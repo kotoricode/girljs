@@ -4,6 +4,7 @@ import { gl } from "../dom";
 import { SafeMap, SafeSet } from "../utility";
 import { Matrix } from "../math/matrix";
 
+import { Vao } from "./vao";
 import { Buffer } from "./buffer";
 import { Texture } from "./texture";
 import { Program } from "./program";
@@ -180,9 +181,10 @@ const draw = (program) =>
 
     const { drawMode, drawSize } = program.model;
 
-    program.bindVao();
+    const vao = Vao.get(program);
+    Vao.bind(vao);
     gl.drawArrays(drawMode, 0, drawSize);
-    program.unbindVao();
+    Vao.unbind();
 };
 
 let fbo;

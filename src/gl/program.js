@@ -5,6 +5,7 @@ import { Model } from "./model";
 import { Buffer } from "./buffer";
 import { Matrix } from "../math/matrix";
 import { Texture } from "./texture";
+import { Vao } from "./vao";
 
 import vsDebugSrc  from "./shaders/vert/debug.vert";
 import vsUiSrc     from "./shaders/vert/ui.vert";
@@ -21,17 +22,9 @@ export class Program
     constructor(programId, modelId)
     {
         this.programId = programId;
-        const prepared = this.getPreparedProgram();
-
-        // Attributes
-        this.aLayout = prepared.aLayout;
-        this.vao = gl.createVertexArray();
-
-        // Uniforms
-        this.uSetters = prepared.uSetters;
-        this.uBlocks = prepared.uBlocks;
         this.uStaging = new SafeMap();
-        const uDefaults = prepared.uDefaults;
+
+        const uDefaults = this.getPreparedProgram().uDefaults;
 
         for (const [name, values] of uDefaults)
         {
@@ -124,41 +117,23 @@ export class Program
 
     activate()
     {
-        const glProgram = this.getGlProgram();
+        const { glProgram, uBlocks } = this.getPreparedProgram();
 
         if (activeProgram !== glProgram)
         {
             activeProgram = glProgram;
             gl.useProgram(activeProgram);
 
-            for (const blockId of this.uBlocks)
+            for (const blockId of uBlocks)
             {
                 Buffer.prepareBlock(activeProgram, blockId);
             }
         }
     }
 
-    bindVao()
-    {
-        if (activeVao === this.vao) throw activeVao;
-
-        activeVao = this.vao;
-        gl.bindVertexArray(activeVao);
-    }
-
-    delete()
-    {
-        gl.deleteVertexArray(this.vao);
-    }
-
     getPreparedProgram()
     {
         return preparedPrograms.get(this.programId);
-    }
-
-    getGlProgram()
-    {
-        return this.getPreparedProgram().glProgram;
     }
 
     getDynamicMesh()
@@ -189,35 +164,16 @@ export class Program
         }
 
         this.model = Model.get(modelId);
-
-        this.bindVao();
-        Buffer.bind(this.model.bufferId);
-
-        const glProgram = this.getGlProgram();
-
-        for (const [name, attribSize] of this.aLayout)
-        {
-            const pos = gl.getAttribLocation(glProgram, name);
-            gl.enableVertexAttribArray(pos);
-            gl.vertexAttribPointer(
-                pos,
-                attribSize,
-                $.FLOAT,
-                false,
-                0,
-                this.model.attributes.get(name)
-            );
-        }
-
-        Buffer.unbind(this.model.bufferId);
-        this.unbindVao();
+        Vao.prepareModel(this);
     }
 
     setUniforms()
     {
+        const setters = this.getPreparedProgram().uSetters;
+
         for (const [key, value] of this.uStaging)
         {
-            this.uSetters.get(key)(value);
+            setters.get(key)(value);
         }
     }
 
@@ -236,18 +192,9 @@ export class Program
 
         staged[idx] = value;
     }
-
-    unbindVao()
-    {
-        if (activeVao !== this.vao) throw activeVao;
-
-        activeVao = null;
-        gl.bindVertexArray(activeVao);
-    }
 }
 
 let activeProgram;
-let activeVao;
 
 /*------------------------------------------------------------------------------
     Program creation
