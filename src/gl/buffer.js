@@ -79,8 +79,8 @@ export const Buffer = {
 
 const buffers = new SafeMap();
 
-const blockBuffers = Object.freeze(new SafeMap([
+const blockBuffers = new SafeMap([
     [$.UB_CAMERA, $.BUF_UNI_CAMERA]
-]));
+]);
 
 const uBufferBindings = new SafeMap();
