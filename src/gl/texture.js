@@ -21,25 +21,23 @@ export const Texture = {
     },
     init()
     {
+        this.unbind();
+
+        for (const texture of textures.values())
+        {
+            gl.deleteTexture(texture);
+        }
+
         imageTextures.clear();
         textures.clear();
 
-        const data = [
-            $.TEX_GIRL, createImageTexture("girl.png"),
-            $.TEX_WORLD, createImageTexture("monkey.png"),
-            $.TEX_HOME, createImageTexture("home.png"),
-            $.TEX_WOOD, createImageTexture("wood.jpg"),
-            $.TEX_FB, createFbTexture(),
-            $.TEX_UI_TEXT, createTexture(),
-            $.TEX_UI_BUBBLE, createTexture()
-        ];
-
-        let i = 0;
-
-        while (i < data.length)
-        {
-            textures.set(data[i++], data[i++]);
-        }
+        textures.set($.TEX_GIRL, createImageTexture("girl.png"));
+        textures.set($.TEX_WORLD, createImageTexture("monkey.png"));
+        textures.set($.TEX_HOME, createImageTexture("home.png"));
+        textures.set($.TEX_WOOD, createImageTexture("wood.jpg"));
+        textures.set($.TEX_FB, createFbTexture());
+        textures.set($.TEX_UI_TEXT, createTexture());
+        textures.set($.TEX_UI_BUBBLE, createTexture());
 
         fetchNextImage();
     },

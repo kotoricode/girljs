@@ -21,21 +21,29 @@ export const Buffer = {
     },
     init()
     {
+        for (const { type, buffer } of buffers.values())
+        {
+            gl.bindBuffer(type, null);
+            gl.deleteBuffer(buffer);
+        }
+
         buffers.clear();
         uBufferBindings.clear();
 
-        const data = [
-            $.BUF_ARR_MODEL, new BufferData($.ARRAY_BUFFER, $.STATIC_DRAW),
-            $.BUF_ARR_DEBUG, new BufferData($.ARRAY_BUFFER, $.DYNAMIC_DRAW),
-            $.BUF_UNI_CAMERA, new BufferData($.UNIFORM_BUFFER, $.DYNAMIC_DRAW)
-        ];
+        buffers.set(
+            $.BUF_ARR_MODEL,
+            new BufferData($.ARRAY_BUFFER, $.STATIC_DRAW)
+        );
 
-        let i = 0;
+        buffers.set(
+            $.BUF_ARR_DEBUG,
+            new BufferData($.ARRAY_BUFFER, $.DYNAMIC_DRAW)
+        );
 
-        while (i < data.length)
-        {
-            buffers.set(data[i++], data[i++]);
-        }
+        buffers.set(
+            $.BUF_UNI_CAMERA,
+            new BufferData($.UNIFORM_BUFFER, $.DYNAMIC_DRAW)
+        );
 
         for (const [bufferId, bufferData] of buffers)
         {
@@ -71,8 +79,8 @@ export const Buffer = {
 
 const buffers = new SafeMap();
 
-const blockBuffers = new SafeMap([
+const blockBuffers = Object.freeze(new SafeMap([
     [$.UB_CAMERA, $.BUF_UNI_CAMERA]
-]);
+]));
 
 const uBufferBindings = new SafeMap();

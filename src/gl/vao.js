@@ -45,9 +45,12 @@ export const Vao = {
     },
     prepareModel(obj)
     {
+        const { model } = obj;
+        const { bufferId } = model;
+
         const vao = this.get(obj);
         this.bind(vao);
-        Buffer.bind(obj.model.bufferId);
+        Buffer.bind(bufferId);
 
         const { glProgram, aLayout } = obj.getPreparedProgram();
 
@@ -61,11 +64,11 @@ export const Vao = {
                 $.FLOAT,
                 false,
                 0,
-                obj.model.attributes.get(name)
+                model.attributes.get(name)
             );
         }
 
-        Buffer.unbind(obj.model.bufferId);
+        Buffer.unbind(bufferId);
         this.unbind();
     }
 };
