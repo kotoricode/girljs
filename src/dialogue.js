@@ -101,9 +101,9 @@ const drawBubble = (beziers) =>
     let start = beziers[0];
     ctx.moveTo(start.x, start.y);
 
-    for (let i = 0; i < beziers.length; i++)
+    for (let i = 0; i < beziers.length;)
     {
-        const end = beziers[(i + 1) % beziers.length];
+        const end = beziers[++i % beziers.length];
 
         ctx.bezierCurveTo(
             start.cp2x, start.cp2y,

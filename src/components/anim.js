@@ -5,6 +5,14 @@ export class Anim extends Component
 {
     constructor(stateModelIds, stateDelays)
     {
+        for (const delay of stateDelays.values())
+        {
+            if (delay <= 0)
+            {
+                throw delay;
+            }
+        }
+
         super();
         this.stateModelIds = stateModelIds;
         this.stateDelays = stateDelays;

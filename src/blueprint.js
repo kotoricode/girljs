@@ -21,15 +21,18 @@ const createPlayer = () => [$.ENT_PLAYER, new SafeMap([
         new Drawable($.PRG_WORLD, $.QUE_SPRITE, $.MDL_GIRL_IDLE_00),
         new Motion(3),
         new Player(),
-        new Anim(new SafeMap([
-            [$.ANI_IDLE, [$.MDL_GIRL_IDLE_00]],
-            [$.ANI_MOVE, [
-                $.MDL_GIRL_MOVE_00, $.MDL_GIRL_MOVE_01
-            ]],
-        ]), new SafeMap([
-            [$.ANI_IDLE, [Infinity]],
-            [$.ANI_MOVE, [0.07]],
-        ]))
+        new Anim(
+            new SafeMap([
+                [$.ANI_IDLE, [$.MDL_GIRL_IDLE_00]],
+                [$.ANI_MOVE, [
+                    $.MDL_GIRL_MOVE_00, $.MDL_GIRL_MOVE_01
+                ]],
+            ]),
+            new SafeMap([
+                [$.ANI_IDLE, [Infinity]],
+                [$.ANI_MOVE, [0.07]],
+            ])
+        )
     ])],
     [$.BLU_CHILDREN, new SafeSet()]
 ])];

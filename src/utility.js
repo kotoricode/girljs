@@ -66,20 +66,20 @@ export class SafeMap extends Map
         return super.get(key);
     }
 
+    replace(key, value)
+    {
+        if (!isSet(key)) throw key;
+        if (!isSet(value)) throw value;
+        if (!this.has(key)) throw key;
+
+        return super.set(key, value);
+    }
+
     set(key, value)
     {
         if (!isSet(key)) throw key;
         if (!isSet(value)) throw value;
         if (this.has(key)) throw key;
-
-        return super.set(key, value);
-    }
-
-    update(key, value)
-    {
-        if (!isSet(key)) throw key;
-        if (!isSet(value)) throw value;
-        if (!this.has(key)) throw key;
 
         return super.set(key, value);
     }

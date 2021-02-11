@@ -52,7 +52,7 @@ export class Ground extends Component
 
         while (i < this.points.length)
         {
-            this.end.from(this.points[(i+1) % this.points.length]);
+            this.end.from(this.points[++i % this.points.length]);
 
             const bx = this.end.x - this.start.x;
             const bz = this.end.z - this.start.z;
@@ -85,7 +85,6 @@ export class Ground extends Component
             }
 
             this.start.from(this.end);
-            i++;
         }
     }
 }

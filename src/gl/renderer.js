@@ -124,22 +124,23 @@ const debugGround = () =>
 {
     const debugMesh = debugProgram.getDynamicMesh();
     const [ground] = Scene.one($.ENT_GROUND, Ground);
+    const { points } = ground;
 
     let i = 0;
-    let currentPoint = ground.points[i];
+    let currentPoint = points[i];
     let nextPoint;
 
-    while (i < ground.points.length)
+    while (i < points.length)
     {
-        nextPoint = ground.points[(i+1) % ground.points.length];
+        const meshIdx = i * 6;
+        nextPoint = points[++i % points.length];
 
-        debugMesh.setValuesAtIndex(i * 6,
+        debugMesh.setValuesAtIndex(meshIdx,
             ...currentPoint,
             ...nextPoint
         );
 
         currentPoint = nextPoint;
-        i++;
     }
 
     const ray = Camera.getRay();

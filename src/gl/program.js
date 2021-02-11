@@ -31,6 +31,8 @@ export class Program
             this.uStaging.set(name, values.slice());
         }
 
+        Vao.create(this);
+
         this.model = null;
         this.setModel(modelId);
         Object.seal(this);
@@ -181,7 +183,7 @@ export class Program
     {
         if (!Array.isArray(value)) throw value;
 
-        this.uStaging.update(key, value);
+        this.uStaging.replace(key, value);
     }
 
     stageUniformAtIndex(key, idx, value)

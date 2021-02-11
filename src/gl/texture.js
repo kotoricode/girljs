@@ -19,6 +19,10 @@ export const Texture = {
     {
         gl.texImage2D($.TEXTURE_2D, 0, $.RGBA, $.RGBA, $.UNSIGNED_BYTE, src);
     },
+    get(textureId)
+    {
+        return textures.get(textureId);
+    },
     init()
     {
         this.unbind();
@@ -40,10 +44,6 @@ export const Texture = {
         textures.set($.TEX_UI_BUBBLE, createTexture());
 
         fetchNextImage();
-    },
-    get(textureId)
-    {
-        return textures.get(textureId);
     },
     parami(key, value)
     {
