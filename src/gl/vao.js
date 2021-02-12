@@ -12,28 +12,28 @@ export const Vao = {
             gl.bindVertexArray(activeVao);
         }
     },
-    create(progObj)
+    create(program)
     {
-        vaos.set(progObj, create());
+        vaos.set(program, create());
     },
-    get(progObj)
+    get(program)
     {
-        return vaos.get(progObj);
+        return vaos.get(program);
     },
-    delete(progObj)
+    delete(program)
     {
-        const vao = vaos.get(progObj);
+        const vao = vaos.get(program);
         gl.deleteVertexArray(vao);
-        vaos.delete(progObj);
+        vaos.delete(program);
     },
     init()
     {
-        for (const [progObj, vao] of vaos)
+        for (const [program, vao] of vaos)
         {
             if (!isSet(vao))
             {
-                vaos.replace(progObj, create());
-                this.prepareModel(progObj);
+                vaos.replace(program, create());
+                this.prepareModel(program);
             }
         }
     },
@@ -42,16 +42,16 @@ export const Vao = {
         gl.bindVertexArray(null);
         activeVao = null;
     },
-    prepareModel(progObj)
+    prepareModel(program)
     {
-        const { model } = progObj;
+        const model = program.getModel();
         const { bufferId } = model;
 
-        const vao = this.get(progObj);
+        const vao = this.get(program);
         this.bind(vao);
         Buffer.bind(bufferId);
 
-        const { glProgram, aLayout } = progObj.getPreparedProgram();
+        const { glProgram, aLayout } = program.getPreparedProgram();
 
         for (const [name, attribSize] of aLayout)
         {

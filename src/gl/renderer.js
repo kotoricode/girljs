@@ -180,7 +180,7 @@ const draw = (program) =>
 
     program.setUniforms();
 
-    const { drawMode, drawSize } = program.model;
+    const { drawMode, drawSize } = program.getModel();
 
     const vao = Vao.get(program);
     Vao.bind(vao);

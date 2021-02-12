@@ -21,6 +21,7 @@ export class Program
     // TODO: detach from gl resources
     constructor(programId, modelId)
     {
+        this.modelId = modelId;
         this.programId = programId;
         this.uStaging = new SafeMap();
 
@@ -32,8 +33,6 @@ export class Program
         }
 
         Vao.create(this);
-
-        this.model = null;
         this.setModel(modelId);
         Object.seal(this);
     }
@@ -140,12 +139,21 @@ export class Program
 
     getDynamicMesh()
     {
-        return Model.getDynamicMesh(this.model.meshId);
+        const model = this.getModel();
+
+        return Model.getDynamicMesh(model.meshId);
+    }
+
+    getModel()
+    {
+        return Model.get(this.modelId);
     }
 
     getTexture()
     {
-        return Texture.get(this.model.textureId);
+        const model = this.getModel();
+
+        return Texture.get(model.textureId);
     }
 
     hasStaging(uId)
@@ -155,7 +163,9 @@ export class Program
 
     isTextured()
     {
-        return isSet(this.model.textureId);
+        const model = this.getModel();
+
+        return isSet(model.textureId);
     }
 
     async setModel(modelId)
@@ -165,7 +175,7 @@ export class Program
             await Model.load();
         }
 
-        this.model = Model.get(modelId);
+        this.modelId = modelId;
         Vao.prepareModel(this);
     }
 
