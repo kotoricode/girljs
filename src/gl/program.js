@@ -89,11 +89,11 @@ export class Program
             const uSetters = new SafeMap();
             const uDefaults = new SafeMap();
 
-            for (const shader of [vert, frag])
+            for (const { uniforms } of [vert, frag])
             {
-                if (shader.uniforms)
+                if (uniforms)
                 {
-                    for (const [type, map] of shader.uniforms)
+                    for (const [type, map] of uniforms)
                     {
                         for (const [name, values] of map)
                         {
@@ -181,11 +181,11 @@ export class Program
 
     setUniforms()
     {
-        const setters = this.getPreparedProgram().uSetters;
+        const { uSetters } = this.getPreparedProgram();
 
         for (const [key, value] of this.uStaging)
         {
-            setters.get(key)(value);
+            uSetters.get(key)(value);
         }
     }
 
