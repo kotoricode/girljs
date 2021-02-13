@@ -16,21 +16,7 @@ export const processCamera = () =>
 
     const ray = Camera.getRay();
     ray.fromMouse();
-    ray.collideZeroPlane();
 
-    if (ray.isHit)
-    {
-        const [space] = Scene.one($.ENT_PLAYER, Space);
-        const [ground] = Scene.one($.ENT_GROUND, Ground);
-
-        const isCollision = ground.isCollision(
-            ray.hitPoint,
-            space.world.translation
-        );
-
-        if (isCollision)
-        {
-            //
-        }
-    }
+    const [ground] = Scene.one($.ENT_GROUND, Ground);
+    ray.collideGround(ground);
 };

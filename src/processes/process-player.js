@@ -1,7 +1,6 @@
 import * as $ from "../const";
 import { Mouse } from "../dom";
 import { Camera } from "../camera";
-import { HitBox } from "../components/hitbox";
 import { Dialogue } from "../dialogue";
 import { Motion } from "../components/motion";
 import { Scene } from "../scene";
@@ -11,8 +10,6 @@ export const processPlayer = () =>
     if (Mouse.isClick())
     {
         Mouse.consumeClick();
-
-        //Scene.load($.SCN_HOME);
 
         // Dialogue.setText(
         //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit"

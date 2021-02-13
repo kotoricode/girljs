@@ -9,11 +9,9 @@ import { Buffer } from "./buffer";
 import { Texture } from "./texture";
 import { Program } from "./program";
 
-import { Space } from "../components/space";
 import { Drawable } from "../components/drawable";
 import { Ground } from "../components/ground";
 
-import { Camera } from "../camera";
 import { Dialogue } from "../dialogue";
 import { Scene } from "../scene";
 
@@ -124,36 +122,20 @@ const debugGround = () =>
 {
     const debugMesh = debugProgram.getDynamicMesh();
     const [ground] = Scene.one($.ENT_GROUND, Ground);
-    const { points } = ground;
 
-    let i = 0;
-    let currentPoint = points[i];
-    let nextPoint;
+    debugMesh.setValuesAtIndex(0,
+        ground.minx, 0, ground.minz,
+        ground.maxx, 0, ground.minz,
 
-    while (i < points.length)
-    {
-        const meshIdx = i * 6;
-        nextPoint = points[++i % points.length];
+        ground.maxx, 0, ground.minz,
+        ground.maxx, 0, ground.maxz,
 
-        debugMesh.setValuesAtIndex(meshIdx,
-            ...currentPoint,
-            ...nextPoint
-        );
+        ground.maxx, 0, ground.maxz,
+        ground.minx, 0, ground.maxz,
 
-        currentPoint = nextPoint;
-    }
-
-    const ray = Camera.getRay();
-
-    if (ray.isHit)
-    {
-        const [space] = Scene.one($.ENT_PLAYER, Space);
-
-        debugMesh.setValuesAtIndex(i * 6,
-            ...ray.hitPoint,
-            ...space.world.translation
-        );
-    }
+        ground.minx, 0, ground.maxz,
+        ground.minx, 0, ground.minz,
+    );
 
     Buffer.setData($.BUF_ARR_DEBUG, debugMesh);
 };

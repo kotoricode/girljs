@@ -21,8 +21,8 @@ export class Program
     // TODO: detach from gl resources
     constructor(programId, modelId)
     {
-        this.modelId = modelId;
         this.programId = programId;
+        this.modelId = modelId;
         this.uStaging = new SafeMap();
 
         const uDefaults = this.getPreparedProgram().uDefaults;

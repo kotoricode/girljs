@@ -65,27 +65,28 @@ export class Ray
         );
     }
 
-    collideZeroPlane()
+    collideGround(ground)
     {
-        // y direction should be down towards the plane,
-        // in front of camera where the cursor is
-
-        // y > 0 -> intersection is behind the camera (opposite of cursor)
-        // y == 0 -> no intersection
         if (this.direction.y < 0)
         {
             const multi = this.start.y / this.direction.y;
-
             const x = this.start.x - multi*this.direction.x;
-            const z = this.start.z - multi*this.direction.z;
 
-            this.isHit = true;
-            this.hitPoint.setValues(x, 0, z);
+            if (ground.minx <= x && x <= ground.maxx)
+            {
+                const z = this.start.z - multi*this.direction.z;
+
+                if (ground.minz <= z && z <= ground.maxz)
+                {
+                    this.isHit = true;
+                    this.hitPoint.setValues(x, 0, z);
+
+                    return;
+                }
+            }
         }
-        else
-        {
-            this.isHit = false;
-        }
+
+        this.isHit = false;
     }
 
     fromMouse()
