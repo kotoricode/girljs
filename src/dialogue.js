@@ -2,7 +2,7 @@ import * as $ from "./const";
 import { Model } from "./gl/model";
 import { Program } from "./gl/program";
 import { Texture } from "./gl/texture";
-import { Bezier } from "./math/bezier";
+import { SmoothBezier } from "./math/smooth-bezier";
 import { Matrix } from "./math/matrix";
 import { isSet, isString } from "./utility";
 
@@ -198,8 +198,8 @@ const width = $.RES_WIDTH - 2*xPx;
 const midLineY = 0.7 + (1.5 * fontSize + fontMargin) / $.RES_HEIGHT;
 
 const bezierSpeech = [
-    new Bezier(0.2, midLineY, 180, 180, 90),
-    new Bezier(0.8, midLineY, 180, 180, -90),
+    new SmoothBezier(0.2, midLineY, 180, 180, 90),
+    new SmoothBezier(0.8, midLineY, 180, 180, -90),
 ];
 
 let text;

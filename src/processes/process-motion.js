@@ -25,7 +25,7 @@ export const processMotion = (dt) =>
             {
                 space.local.rotation.fromEuler(
                     0,
-                    Math.sign(direction.x) > 0 ? 180 : 0,
+                    90 + Math.sign(direction.x) * 90,
                     0
                 );
             }
@@ -37,17 +37,11 @@ export const processMotion = (dt) =>
                 // Can't reach target yet, step towards it
                 distance.normalize(moveDistance);
             }
-            else
+            else if (++motion.idx > motion.maxIdx)
             {
-                // Reaches target, switch to next target
-                motion.idx++;
-
-                if (motion.idx > motion.maxIdx)
-                {
-                    // No more targets, stop moving
-                    direction.setValues(0, 0, 0);
-                    motion.resetTargets();
-                }
+                // No more targets, stop moving
+                direction.setValues(0, 0, 0);
+                motion.resetTargets();
             }
 
             // Step to or towards target

@@ -1,7 +1,7 @@
 import * as $ from "../const";
 import { DEG_TO_RAD } from "../utility";
 
-export class Bezier
+export class SmoothBezier
 {
     constructor(x, y, cp1dist, cp2dist, angle)
     {
