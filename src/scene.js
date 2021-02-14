@@ -20,7 +20,7 @@ export const Scene = {
 
         if (entity.has(Space))
         {
-            const parent = Scene.getEntity(parentId);
+            const parent = this.getEntity(parentId);
 
             if (!parent.has(Space)) throw parentId;
 
@@ -48,7 +48,7 @@ export const Scene = {
             }
 
             dirty.add(space);
-            this.cleanAll();
+            this.cleanSpace(space, true);
         }
     },
     * all(...components)
@@ -58,30 +58,38 @@ export const Scene = {
             yield yieldComponents(entity, components);
         }
     },
-    cleanAll()
+    // TODO: make this cleanup smarter
+    cleanTopDown()
     {
-        console.log("clean all");
-        for (const child of rootSpace.children)
+        if (dirty.size)
         {
-            Scene.cleanSpace(child);
+            for (const child of rootSpace.children)
+            {
+                this.cleanSpace(child);
+            }
+
+            if (dirty.size) throw Error("Failed to clean all spaces");
         }
     },
-    cleanSpace(space, isAncestorDirty, parentMatrix)
+    cleanSpace(space, isWorldUpdate)
     {
+        const { matrix, local, world, parent, children } = space;
+
+        if (dirty.has(parent)) throw Error("Parent is dirty");
+
         const isSelfDirty = dirty.has(space);
-        const isDirty = isAncestorDirty || isSelfDirty;
-        const { matrix } = space;
+        const isDirty = isWorldUpdate || isSelfDirty;
 
         if (isDirty)
         {
-            matrix.composeFrom(space.local);
+            matrix.composeFrom(local);
 
-            if (parentMatrix)
+            if (isWorldUpdate)
             {
-                matrix.multiplyTransform(parentMatrix);
+                matrix.multiplyTransform(parent.matrix);
             }
 
-            space.world.decomposeFrom(matrix);
+            world.decomposeFrom(matrix);
 
             if (isSelfDirty)
             {
@@ -89,9 +97,9 @@ export const Scene = {
             }
         }
 
-        for (const childSpace of space.children)
+        for (const child of children)
         {
-            Scene.cleanSpace(childSpace, isDirty, matrix);
+            this.cleanSpace(child, isDirty);
         }
     },
     deleteEntity(entityId)
@@ -150,7 +158,7 @@ export const Scene = {
 
         const bp = blueprint.get(sceneId)();
         const bpProcesses = bp.get($.BLU_PROCESSES);
-        const bpEntities = bp.get($.BLU_ENTITIES);
+        const bpEntities = bp.get($.BLU_CHILD_ENTITIES);
 
         for (const process of bpProcesses)
         {
@@ -165,7 +173,7 @@ export const Scene = {
     },
     one(entityId, ...components)
     {
-        const entity = Scene.getEntity(entityId);
+        const entity = this.getEntity(entityId);
 
         return yieldComponents(entity, components);
     },
@@ -237,10 +245,9 @@ const createBlueprintEntities = (bpEntities, parentId) =>
         const components = entityBp.get($.BLU_COMPONENTS);
         const entity = new Entity(entityId);
         entity.set(...components);
-        console.log(`${parentId} > ${entity.id}`);
         Scene.addEntity(entity, parentId);
 
-        const children = entityBp.get($.BLU_CHILDREN);
+        const children = entityBp.get($.BLU_CHILD_ENTITIES);
 
         if (children.size)
         {

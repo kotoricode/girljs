@@ -17,9 +17,8 @@ export const
     SCN_HOME = i++;
 
 export const
-    BLU_CHILDREN = i++,
+    BLU_CHILD_ENTITIES = i++,
     BLU_COMPONENTS = i++,
-    BLU_ENTITIES = i++,
     BLU_PROCESSES = i++;
 
 export const
