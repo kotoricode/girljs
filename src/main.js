@@ -3,7 +3,7 @@ import { Dom } from "./dom";
 
 import { Buffer } from "./gl/buffer";
 import { Texture } from "./gl/texture";
-import { Program } from "./gl/program";
+import { ShaderProgram } from "./gl/shader-program";
 import { Renderer } from "./gl/renderer";
 import { Camera } from "./camera";
 import { Dialogue } from "./dialogue";
@@ -31,7 +31,7 @@ const init = () =>
     // https://www.khronos.org/webgl/wiki/HandlingContextLost
     Buffer.init();
     Texture.init();
-    Program.init();
+    ShaderProgram.init();
     Dialogue.init();
     Renderer.init();
     Camera.init();

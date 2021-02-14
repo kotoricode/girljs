@@ -16,16 +16,15 @@ import fsLumaSrc     from "./shaders/frag/luma.frag";
 //import fsGraySrc     from "./shaders/frag/gray.frag";
 import fsTexturedSrc from "./shaders/frag/textured.frag";
 
-export class Program
+export class ShaderProgram
 {
-    // TODO: detach from gl resources
     constructor(programId, modelId)
     {
         this.programId = programId;
         this.modelId = modelId;
         this.uStaging = new SafeMap();
 
-        const uDefaults = this.getPreparedProgram().uDefaults;
+        const { uDefaults } = this.getPrepared();
 
         for (const [name, values] of uDefaults)
         {
@@ -47,7 +46,7 @@ export class Program
             const vert = vertDef.get(programDef[i++]);
             const frag = fragDef.get(programDef[i++]);
 
-            const aLayout = vert.layout;
+            const { aLayout } = vert;
 
             /*------------------------------------------------------------------
                 Program
@@ -57,43 +56,35 @@ export class Program
             const fs = createAttachShader(program, $.FRAGMENT_SHADER, frag);
             gl.linkProgram(program);
 
-            if (!gl.getProgramParameter(program, $.LINK_STATUS)) throw program;
+            if (!gl.getProgramParameter(program, $.LINK_STATUS))
+            {
+                console.log(gl.getError());
+                throw program;
+            }
 
             detachDeleteShader(program, vs);
             detachDeleteShader(program, fs);
 
             /*------------------------------------------------------------------
-                Uniform blocks
-            ------------------------------------------------------------------*/
-            const uBlocks = new SafeSet();
-
-            if (vert.uBlocks)
-            {
-                for (const block of vert.uBlocks)
-                {
-                    uBlocks.add(block);
-                }
-            }
-
-            if (frag.uBlocks)
-            {
-                for (const block of frag.uBlocks)
-                {
-                    uBlocks.add(block);
-                }
-            }
-
-            /*------------------------------------------------------------------
                 Uniforms
             ------------------------------------------------------------------*/
+            const uBlocks = new SafeSet();
             const uSetters = new SafeMap();
             const uDefaults = new SafeMap();
 
-            for (const { uniforms } of [vert, frag])
+            for (const shader of [vert, frag])
             {
-                if (uniforms)
+                if (shader.uBlocks)
                 {
-                    for (const [type, map] of uniforms)
+                    for (const block of shader.uBlocks)
+                    {
+                        uBlocks.add(block);
+                    }
+                }
+
+                if (shader.uniforms)
+                {
+                    for (const [type, map] of shader.uniforms)
                     {
                         for (const [name, values] of map)
                         {
@@ -106,7 +97,7 @@ export class Program
                 }
             }
 
-            preparedPrograms.set(programId, new PreparedProgram(
+            preparedPrograms.set(programId, new PreparedShaderProgram(
                 program,
                 aLayout,
                 uBlocks,
@@ -118,11 +109,11 @@ export class Program
 
     activate()
     {
-        const { glProgram, uBlocks } = this.getPreparedProgram();
+        const { program, uBlocks } = this.getPrepared();
 
-        if (activeProgram !== glProgram)
+        if (activeProgram !== program)
         {
-            activeProgram = glProgram;
+            activeProgram = program;
             gl.useProgram(activeProgram);
 
             for (const blockId of uBlocks)
@@ -132,7 +123,7 @@ export class Program
         }
     }
 
-    getPreparedProgram()
+    getPrepared()
     {
         return preparedPrograms.get(this.programId);
     }
@@ -156,7 +147,7 @@ export class Program
         return Texture.get(model.textureId);
     }
 
-    hasStaging(uId)
+    hasStagingUniform(uId)
     {
         return this.uStaging.has(uId);
     }
@@ -181,7 +172,7 @@ export class Program
 
     setUniforms()
     {
-        const { uSetters } = this.getPreparedProgram();
+        const { uSetters } = this.getPrepared();
 
         for (const [key, value] of this.uStaging)
         {
@@ -282,10 +273,10 @@ class FShader extends Shader
 
 class VShader extends Shader
 {
-    constructor(src, layout, uBlocks, uniforms)
+    constructor(src, aLayout, uBlocks, uniforms)
     {
         super(src, uBlocks, uniforms);
-        this.layout = layout;
+        this.aLayout = aLayout;
         Object.freeze(this);
     }
 }
@@ -378,11 +369,11 @@ const programDef = [
 /*------------------------------------------------------------------------------
     Create and prepare programs
 ------------------------------------------------------------------------------*/
-class PreparedProgram
+class PreparedShaderProgram
 {
-    constructor(glProgram, aLayout, uBlocks, uDefaults, uSetters)
+    constructor(program, aLayout, uBlocks, uDefaults, uSetters)
     {
-        this.glProgram = glProgram;
+        this.program = program;
         this.aLayout = aLayout;
         this.uBlocks = uBlocks;
         this.uDefaults = uDefaults;

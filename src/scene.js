@@ -36,7 +36,7 @@ export const Scene = {
 
                 const { program } = drawable;
 
-                if (program.hasStaging($.U_TRANSFORM))
+                if (program.hasStagingUniform($.U_TRANSFORM))
                 {
                     program.stageUniformAtIndex(
                         $.U_TRANSFORM,

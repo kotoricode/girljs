@@ -1,6 +1,6 @@
 import * as $ from "./const";
 import { Model } from "./gl/model";
-import { Program } from "./gl/program";
+import { ShaderProgram } from "./gl/shader-program";
 import { Texture } from "./gl/texture";
 import { SmoothBezier } from "./math/smooth-bezier";
 import { Matrix } from "./math/matrix";
@@ -10,7 +10,7 @@ class UiCanvas
 {
     constructor(modelId, color)
     {
-        this.program = new Program($.PRG_UI, modelId);
+        this.program = new ShaderProgram($.PRG_UI, modelId);
         this.program.stageUniform($.U_COLOR, color);
         this.program.stageUniformAtIndex(
             $.U_TRANSFORM,
