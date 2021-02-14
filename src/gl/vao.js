@@ -42,20 +42,20 @@ export const Vao = {
         gl.bindVertexArray(null);
         activeVao = null;
     },
-    prepareModel(shaderProgram)
+    prepareModel(program)
     {
-        const model = shaderProgram.getModel();
+        const model = program.getModel();
         const { bufferId } = model;
 
-        const vao = this.get(shaderProgram);
+        const vao = this.get(program);
         this.bind(vao);
         Buffer.bind(bufferId);
 
-        const { program, aLayout } = shaderProgram.getPrepared();
+        const { glProgram, aLayout } = program.getPrepared();
 
         for (const [name, attribSize] of aLayout)
         {
-            const pos = gl.getAttribLocation(program, name);
+            const pos = gl.getAttribLocation(glProgram, name);
             gl.enableVertexAttribArray(pos);
             gl.vertexAttribPointer(
                 pos,

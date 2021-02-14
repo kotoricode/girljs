@@ -16,7 +16,7 @@ import fsLumaSrc     from "./shaders/frag/luma.frag";
 //import fsGraySrc     from "./shaders/frag/gray.frag";
 import fsTexturedSrc from "./shaders/frag/textured.frag";
 
-export class ShaderProgram
+export class Program
 {
     constructor(programId, modelId)
     {
@@ -51,19 +51,19 @@ export class ShaderProgram
             /*------------------------------------------------------------------
                 Program
             ------------------------------------------------------------------*/
-            const program = gl.createProgram();
-            const vs = createAttachShader(program, $.VERTEX_SHADER, vert);
-            const fs = createAttachShader(program, $.FRAGMENT_SHADER, frag);
-            gl.linkProgram(program);
+            const glProgram = gl.createProgram();
+            const vs = createAttachShader(glProgram, $.VERTEX_SHADER, vert);
+            const fs = createAttachShader(glProgram, $.FRAGMENT_SHADER, frag);
+            gl.linkProgram(glProgram);
 
-            if (!gl.getProgramParameter(program, $.LINK_STATUS))
+            if (!gl.getProgramParameter(glProgram, $.LINK_STATUS))
             {
                 console.log(gl.getError());
-                throw program;
+                throw glProgram;
             }
 
-            detachDeleteShader(program, vs);
-            detachDeleteShader(program, fs);
+            detachDeleteShader(glProgram, vs);
+            detachDeleteShader(glProgram, fs);
 
             /*------------------------------------------------------------------
                 Uniforms
@@ -88,7 +88,7 @@ export class ShaderProgram
                     {
                         for (const [name, values] of map)
                         {
-                            const pos = gl.getUniformLocation(program, name);
+                            const pos = gl.getUniformLocation(glProgram, name);
                             const setter = createUniSetter(type, pos);
                             uSetters.set(name, setter);
                             uDefaults.set(name, values);
@@ -97,8 +97,8 @@ export class ShaderProgram
                 }
             }
 
-            preparedPrograms.set(programId, new PreparedShaderProgram(
-                program,
+            preparedPrograms.set(programId, new PreparedProgram(
+                glProgram,
                 aLayout,
                 uBlocks,
                 uDefaults,
@@ -109,16 +109,16 @@ export class ShaderProgram
 
     activate()
     {
-        const { program, uBlocks } = this.getPrepared();
+        const { glProgram, uBlocks } = this.getPrepared();
 
-        if (activeProgram !== program)
+        if (activeGlProgram !== glProgram)
         {
-            activeProgram = program;
-            gl.useProgram(activeProgram);
+            activeGlProgram = glProgram;
+            gl.useProgram(activeGlProgram);
 
             for (const blockId of uBlocks)
             {
-                Buffer.prepareBlock(activeProgram, blockId);
+                Buffer.prepareBlock(activeGlProgram, blockId);
             }
         }
     }
@@ -197,7 +197,7 @@ export class ShaderProgram
     }
 }
 
-let activeProgram;
+let activeGlProgram;
 
 /*------------------------------------------------------------------------------
     Program creation
@@ -369,11 +369,11 @@ const programDef = [
 /*------------------------------------------------------------------------------
     Create and prepare programs
 ------------------------------------------------------------------------------*/
-class PreparedShaderProgram
+class PreparedProgram
 {
-    constructor(program, aLayout, uBlocks, uDefaults, uSetters)
+    constructor(glProgram, aLayout, uBlocks, uDefaults, uSetters)
     {
-        this.program = program;
+        this.glProgram = glProgram;
         this.aLayout = aLayout;
         this.uBlocks = uBlocks;
         this.uDefaults = uDefaults;
