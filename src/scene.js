@@ -28,7 +28,6 @@ export const Scene = {
             const space = entity.get(Space);
 
             space.attachTo(parentSpace);
-
             entities.set(entity.id, entity);
 
             if (entity.has(Drawable))
@@ -48,7 +47,7 @@ export const Scene = {
             }
 
             dirty.add(space);
-            this.cleanSpace(space, true);
+            cleanSpace(space, true);
         }
     },
     * all(...components)
@@ -58,48 +57,21 @@ export const Scene = {
             yield yieldComponents(entity, components);
         }
     },
-    // TODO: make this cleanup smarter
-    cleanTopDown()
+    clean()
     {
         if (dirty.size)
         {
-            for (const child of rootSpace.children)
+            for (const space of dirty)
             {
-                this.cleanSpace(child);
+                filterNontopDirty(space);
+            }
+
+            for (const space of dirty)
+            {
+                cleanSpace(space);
             }
 
             if (dirty.size) throw Error("Failed to clean all spaces");
-        }
-    },
-    cleanSpace(space, isWorldUpdate)
-    {
-        const { matrix, local, world, parent, children } = space;
-
-        if (dirty.has(parent)) throw Error("Parent is dirty");
-
-        const isSelfDirty = dirty.has(space);
-        const isDirty = isWorldUpdate || isSelfDirty;
-
-        if (isDirty)
-        {
-            matrix.composeFrom(local);
-
-            if (isWorldUpdate)
-            {
-                matrix.multiplyTransform(parent.matrix);
-            }
-
-            world.decomposeFrom(matrix);
-
-            if (isSelfDirty)
-            {
-                dirty.delete(space);
-            }
-        }
-
-        for (const child of children)
-        {
-            this.cleanSpace(child, isDirty);
         }
     },
     deleteEntity(entityId)
@@ -115,6 +87,17 @@ export const Scene = {
         }
 
         entities.delete(entityId);
+
+        if (entity.has(Space))
+        {
+            const space = entity.get(Space);
+            space.detach();
+
+            if (dirty.has(space))
+            {
+                dirty.delete(space);
+            }
+        }
     },
     getEntity(entityId)
     {
@@ -127,45 +110,6 @@ export const Scene = {
     hasEntity(entityId)
     {
         return entities.has(entityId);
-    },
-    load(sceneId)
-    {
-        /*----------------------------------------------------------------------
-            Unload
-        ----------------------------------------------------------------------*/
-        dirty.clear();
-        entities.clear();
-        processes.clear();
-
-        for (const cache of cached.values())
-        {
-            cache.clear();
-        }
-
-        cached.clear();
-
-        for (const entity of entities.values())
-        {
-            entity.childIds.clear();
-            entity.parent = null;
-            entity.components.clear();
-        }
-
-        /*----------------------------------------------------------------------
-            Load
-        ----------------------------------------------------------------------*/
-        entities.set(root.id, root);
-
-        const bp = blueprint.get(sceneId)();
-        const bpProcesses = bp.get($.BLU_PROCESSES);
-        const bpEntities = bp.get($.BLU_CHILD_ENTITIES);
-
-        for (const process of bpProcesses)
-        {
-            processes.add(process);
-        }
-
-        createBlueprintEntities(bpEntities, root.id);
     },
     markDirty(space)
     {
@@ -194,7 +138,7 @@ export const Scene = {
             currentScene = nextScene;
             nextScene = null;
 
-            this.load(currentScene);
+            load(currentScene);
         }
 
         for (const process of processes)
@@ -238,6 +182,38 @@ const getEntitiesWith = (components) =>
     return cached.get(flags);
 };
 
+const cleanSpace = (space, isWorldUpdate) =>
+{
+    const { matrix, local, world, parent, children } = space;
+
+    if (dirty.has(parent)) throw Error("Parent is dirty");
+
+    const isSelfDirty = dirty.has(space);
+    const isDirty = isWorldUpdate || isSelfDirty;
+
+    if (isDirty)
+    {
+        matrix.composeFrom(local);
+
+        if (isWorldUpdate)
+        {
+            matrix.multiplyTransform(parent.matrix);
+        }
+
+        world.decomposeFrom(matrix);
+
+        if (isSelfDirty)
+        {
+            dirty.delete(space);
+        }
+    }
+
+    for (const child of children)
+    {
+        cleanSpace(child, isDirty);
+    }
+};
+
 const createBlueprintEntities = (bpEntities, parentId) =>
 {
     for (const [entityId, entityBp] of bpEntities)
@@ -254,6 +230,63 @@ const createBlueprintEntities = (bpEntities, parentId) =>
             createBlueprintEntities(children, entityId);
         }
     }
+};
+
+const filterNontopDirty = (space) =>
+{
+    let currentDirty = space;
+    let currentSpace = space;
+
+    while (currentSpace !== rootSpace)
+    {
+        if (dirty.has(currentSpace.parent))
+        {
+            dirty.delete(currentDirty);
+            currentDirty = currentSpace.parent;
+        }
+
+        currentSpace = currentSpace.parent;
+    }
+};
+
+const load = (sceneId) =>
+{
+    /*----------------------------------------------------------------------
+        Unload
+    ----------------------------------------------------------------------*/
+    dirty.clear();
+    entities.clear();
+    processes.clear();
+
+    for (const cache of cached.values())
+    {
+        cache.clear();
+    }
+
+    cached.clear();
+
+    for (const entity of entities.values())
+    {
+        entity.childIds.clear();
+        entity.parent = null;
+        entity.components.clear();
+    }
+
+    /*----------------------------------------------------------------------
+        Load
+    ----------------------------------------------------------------------*/
+    entities.set(root.id, root);
+
+    const bp = blueprint.get(sceneId)();
+    const bpProcesses = bp.get($.BLU_PROCESSES);
+    const bpEntities = bp.get($.BLU_CHILD_ENTITIES);
+
+    for (const process of bpProcesses)
+    {
+        processes.add(process);
+    }
+
+    createBlueprintEntities(bpEntities, root.id);
 };
 
 function* yieldComponents(entity, components)

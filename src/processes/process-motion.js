@@ -5,8 +5,6 @@ import { Scene } from "../scene";
 
 export const processMotion = (dt) =>
 {
-    Scene.cleanTopDown();
-
     for (const [motion, space] of Scene.all(Motion, Space))
     {
         if (motion.hasTarget())
@@ -58,7 +56,7 @@ export const processMotion = (dt) =>
         }
     }
 
-    Scene.cleanTopDown();
+    Scene.clean();
 };
 
 const distance = new Vector();

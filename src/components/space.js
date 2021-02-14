@@ -18,4 +18,12 @@ export class Space extends Component
         this.parent = parent;
         parent.children.add(this);
     }
+
+    detach()
+    {
+        if (!this.parent) throw Error("Missing parent");
+
+        this.parent.children.delete(this);
+        this.parent = null;
+    }
 }
