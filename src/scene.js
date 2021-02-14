@@ -60,6 +60,7 @@ export const Scene = {
     },
     cleanAll()
     {
+        console.log("clean all");
         for (const child of rootSpace.children)
         {
             Scene.cleanSpace(child);
@@ -69,11 +70,10 @@ export const Scene = {
     {
         const isSelfDirty = dirty.has(space);
         const isDirty = isAncestorDirty || isSelfDirty;
+        const { matrix } = space;
 
         if (isDirty)
         {
-            const { matrix } = space;
-
             matrix.composeFrom(space.local);
 
             if (parentMatrix)
@@ -91,7 +91,7 @@ export const Scene = {
 
         for (const childSpace of space.children)
         {
-            Scene.cleanSpace(childSpace, isDirty, parentMatrix);
+            Scene.cleanSpace(childSpace, isDirty, matrix);
         }
     },
     deleteEntity(entityId)
@@ -237,16 +237,14 @@ const createBlueprintEntities = (bpEntities, parentId) =>
         const components = entityBp.get($.BLU_COMPONENTS);
         const entity = new Entity(entityId);
         entity.set(...components);
+        console.log(`${parentId} > ${entity.id}`);
         Scene.addEntity(entity, parentId);
 
-        if (entityBp.has($.BLU_CHILDREN))
-        {
-            const children = entityBp.get($.BLU_CHILDREN);
+        const children = entityBp.get($.BLU_CHILDREN);
 
-            if (children)
-            {
-                createBlueprintEntities(children, entityId);
-            }
+        if (children.size)
+        {
+            createBlueprintEntities(children, entityId);
         }
     }
 };

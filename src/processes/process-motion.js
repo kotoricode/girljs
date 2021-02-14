@@ -5,7 +5,7 @@ import { Scene } from "../scene";
 
 export const processMotion = (dt) =>
 {
-    Scene.cleanAll();
+    //Scene.cleanAll();
 
     for (const [motion, space] of Scene.all(Motion, Space))
     {
