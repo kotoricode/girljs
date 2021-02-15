@@ -4,7 +4,7 @@
         "build-prod": "node build-prod.js"
     },
     "devDependencies": {
-        "esbuild": "^0.8.30",
+        "esbuild": "^0.8.46",
         "eslint": "^7.4.0"
     }
 }

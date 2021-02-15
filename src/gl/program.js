@@ -23,7 +23,7 @@ export class Program
         this.modelId = modelId;
         this.uStaging = new SafeMap();
 
-        const { uDefaults } = this.getPrepared();
+        const { uDefaults } = this.getCompiled();
 
         for (const [name, values] of uDefaults)
         {
@@ -37,7 +37,7 @@ export class Program
 
     static init()
     {
-        preparedPrograms.clear();
+        compiledPrograms.clear();
 
         for (let i = 0; i < programDef.length;)
         {
@@ -100,7 +100,7 @@ export class Program
                 }
             }
 
-            preparedPrograms.set(programId, new PreparedProgram(
+            compiledPrograms.set(programId, new CompiledProgram(
                 glProgram,
                 aLayout,
                 uBlocks,
@@ -112,7 +112,7 @@ export class Program
 
     activate()
     {
-        const { glProgram, uBlocks } = this.getPrepared();
+        const { glProgram, uBlocks } = this.getCompiled();
 
         if (activeGlProgram !== glProgram)
         {
@@ -126,9 +126,9 @@ export class Program
         }
     }
 
-    getPrepared()
+    getCompiled()
     {
-        return preparedPrograms.get(this.programId);
+        return compiledPrograms.get(this.programId);
     }
 
     getDynamicMesh()
@@ -175,7 +175,7 @@ export class Program
 
     setUniforms()
     {
-        const { uSetters } = this.getPrepared();
+        const { uSetters } = this.getCompiled();
 
         for (const [key, value] of this.uStaging)
         {
@@ -372,7 +372,7 @@ const programDef = [
 /*------------------------------------------------------------------------------
     Create and prepare programs
 ------------------------------------------------------------------------------*/
-class PreparedProgram
+class CompiledProgram
 {
     constructor(glProgram, aLayout, uBlocks, uDefaults, uSetters)
     {
@@ -385,4 +385,4 @@ class PreparedProgram
     }
 }
 
-const preparedPrograms = new SafeMap();
+const compiledPrograms = new SafeMap();

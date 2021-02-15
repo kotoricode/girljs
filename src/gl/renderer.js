@@ -125,14 +125,16 @@ const debugGround = () =>
 
     const { minx, maxx, minz, maxz } = ground;
 
-    debugMesh.setValuesAtIndex(0, minx, 0, minz);
-    debugMesh.setValuesAtIndex(3, maxx, 0, minz);
-    debugMesh.setValuesAtIndex(6, maxx, 0, minz);
-    debugMesh.setValuesAtIndex(9, maxx, 0, maxz);
-    debugMesh.setValuesAtIndex(12, maxx, 0, maxz);
-    debugMesh.setValuesAtIndex(15, minx, 0, maxz);
-    debugMesh.setValuesAtIndex(18, minx, 0, maxz);
-    debugMesh.setValuesAtIndex(21, minx, 0, minz);
+    debugMesh.setValuesAtIndex(0,
+        minx, 0, minz,
+        maxx, 0, minz,
+        maxx, 0, minz,
+        maxx, 0, maxz,
+        maxx, 0, maxz,
+        minx, 0, maxz,
+        minx, 0, maxz,
+        minx, 0, minz
+    );
 
     Buffer.setData($.BUF_ARR_DEBUG, debugMesh);
 };

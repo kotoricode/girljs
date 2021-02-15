@@ -51,7 +51,7 @@ export const Vao = {
         this.bind(vao);
         Buffer.bind(bufferId);
 
-        const { glProgram, aLayout } = program.getPrepared();
+        const { glProgram, aLayout } = program.getCompiled();
 
         for (const [name, attribSize] of aLayout)
         {

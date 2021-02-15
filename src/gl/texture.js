@@ -32,6 +32,7 @@ export const Texture = {
             gl.deleteTexture(texture);
         }
 
+        imagesToFetch.clear();
         imageTextures.clear();
         textures.clear();
 
@@ -58,13 +59,13 @@ export const Texture = {
 /*------------------------------------------------------------------------------
     Image
 ------------------------------------------------------------------------------*/
-const fetchNextImage = () => image.src = "./img/" + toFetch[0];
+const fetchNextImage = () => image.src = "./img/" + imagesToFetch[0];
 
 const image = new Image();
 
 image.addEventListener("load", () =>
 {
-    const src = toFetch.shift();
+    const src = imagesToFetch.shift();
     const texture = imageTextures.get(src);
 
     Texture.bind(texture);
@@ -76,7 +77,7 @@ image.addEventListener("load", () =>
 
     imageTextures.delete(src);
 
-    if (toFetch.length)
+    if (imagesToFetch.length)
     {
         fetchNextImage();
     }
@@ -93,7 +94,7 @@ const createImageTexture = (src) =>
 {
     const texture = createTexture();
     imageTextures.set(src, texture);
-    toFetch.push(src);
+    imagesToFetch.push(src);
 
     return texture;
 };
@@ -114,4 +115,4 @@ const createFbTexture = () =>
 let activeTexture;
 const imageTextures = new SafeMap();
 const textures = new SafeMap();
-const toFetch = [];
+const imagesToFetch = [];
