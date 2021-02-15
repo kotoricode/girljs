@@ -2,6 +2,8 @@ export const LISTENER_ONCE = { once: true };
 
 export const DEG_TO_RAD = Math.PI / 180;
 
+export const EPSILON = 2 ** -24;
+
 export const getElement = (elemId) => window.document.getElementById(elemId);
 
 export const isString = (value) => typeof value === "string";
@@ -21,16 +23,11 @@ export class SettableFloat32Array extends Float32Array
 
     from(array)
     {
-        this.setValues(...array);
-    }
+        if (this.length !== array.length) throw array;
 
-    setValues(...values)
-    {
-        if (this.length !== values.length) throw values;
-
-        for (let i = 0; i < values.length; i++)
+        for (let i = 0; i < array.length; i++)
         {
-            this[i] = values[i];
+            this[i] = array[i];
         }
     }
 

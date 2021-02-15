@@ -123,19 +123,16 @@ const debugGround = () =>
     const debugMesh = debugProgram.getDynamicMesh();
     const [ground] = Scene.one($.ENT_GROUND, Ground);
 
-    debugMesh.setValuesAtIndex(0,
-        ground.minx, 0, ground.minz,
-        ground.maxx, 0, ground.minz,
+    const { minx, maxx, minz, maxz } = ground;
 
-        ground.maxx, 0, ground.minz,
-        ground.maxx, 0, ground.maxz,
-
-        ground.maxx, 0, ground.maxz,
-        ground.minx, 0, ground.maxz,
-
-        ground.minx, 0, ground.maxz,
-        ground.minx, 0, ground.minz,
-    );
+    debugMesh.setValuesAtIndex(0, minx, 0, minz);
+    debugMesh.setValuesAtIndex(3, maxx, 0, minz);
+    debugMesh.setValuesAtIndex(6, maxx, 0, minz);
+    debugMesh.setValuesAtIndex(9, maxx, 0, maxz);
+    debugMesh.setValuesAtIndex(12, maxx, 0, maxz);
+    debugMesh.setValuesAtIndex(15, minx, 0, maxz);
+    debugMesh.setValuesAtIndex(18, minx, 0, maxz);
+    debugMesh.setValuesAtIndex(21, minx, 0, minz);
 
     Buffer.setData($.BUF_ARR_DEBUG, debugMesh);
 };

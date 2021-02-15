@@ -13,7 +13,6 @@ import vsWorldSrc  from "./shaders/vert/world.vert";
 
 import fsDebugSrc    from "./shaders/frag/debug.frag";
 import fsLumaSrc     from "./shaders/frag/luma.frag";
-//import fsGraySrc     from "./shaders/frag/gray.frag";
 import fsTexturedSrc from "./shaders/frag/textured.frag";
 
 export class Program
@@ -88,8 +87,12 @@ export class Program
                     {
                         for (const [name, values] of map)
                         {
-                            const pos = gl.getUniformLocation(glProgram, name);
-                            const setter = createUniSetter(type, pos);
+                            const location = gl.getUniformLocation(
+                                glProgram,
+                                name
+                            );
+
+                            const setter = createUniSetter(type, location);
                             uSetters.set(name, setter);
                             uDefaults.set(name, values);
                         }
@@ -221,31 +224,31 @@ const detachDeleteShader = (program, shader) =>
 /*------------------------------------------------------------------------------
     Uniform setter
 ------------------------------------------------------------------------------*/
-const createUniSetter = (pos, loc) =>
+const createUniSetter = (type, location) =>
 {
-    switch (pos)
+    switch (type)
     {
         case U_TYPE_2F:
             return (values) =>
             {
                 if (values.length !== 2) throw values;
-                gl.uniform2f(loc, ...values);
+                gl.uniform2f(location, ...values);
             };
         case U_TYPE_4F:
             return (values) =>
             {
                 if (values.length !== 4) throw values;
-                gl.uniform4f(loc, ...values);
+                gl.uniform4f(location, ...values);
             };
         case U_TYPE_M4FV:
             return (values) =>
             {
                 if (values.length !== 2) throw values;
                 if (!(values[1] instanceof Matrix)) throw values;
-                gl.uniformMatrix4fv(loc, ...values);
+                gl.uniformMatrix4fv(location, ...values);
             };
         default:
-            throw pos;
+            throw type;
     }
 };
 
