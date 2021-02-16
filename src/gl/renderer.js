@@ -31,7 +31,7 @@ export const Renderer = {
         uiPrograms.add(imageProgram);
         uiPrograms.add(Dialogue.getBubbleProgram());
         uiPrograms.add(Dialogue.getTextProgram());
-        uiPrograms.add(debugProgram);
+        //uiPrograms.add(debugProgram);
 
         /*----------------------------------------------------------------------
             Framebuffer
@@ -76,7 +76,7 @@ export const Renderer = {
             }
         }
 
-        debugGround();
+        //updateDebugData();
 
         bindFb();
 
@@ -90,7 +90,8 @@ export const Renderer = {
         gl.disable($.DEPTH_TEST);
         gl.disable($.CULL_FACE);
         drawQueue($.QUE_SPRITE);
-        drawQueue($.QUE_UI);
+        //drawQueue($.QUE_UI);
+        drawTest();
 
         unbindFb();
 
@@ -118,36 +119,26 @@ const unbindFb = () =>
     gl.bindFramebuffer($.FRAMEBUFFER, null);
 };
 
-const debugGround = () =>
-{
-    const debugMesh = debugProgram.getDynamicMesh();
-    const [ground] = Scene.one($.ENT_GROUND, Ground);
+// const updateDebugData = () =>
+// {
+//     const debugMesh = debugProgram.getDynamicMesh();
+//     const [ground] = Scene.one($.ENT_GROUND, Ground);
 
-    const { minx, maxx, minz, maxz } = ground;
+//     const { minx, maxx, minz, maxz } = ground;
 
-    debugMesh.setValuesAtIndex(0,
-        minx, 0, minz,
-        maxx, 0, minz,
-        maxx, 0, minz,
-        maxx, 0, maxz,
-        maxx, 0, maxz,
-        minx, 0, maxz,
-        minx, 0, maxz,
-        minx, 0, minz
-    );
+//     debugMesh.setValuesAtIndex(0,
+//         minx, 0, minz,
+//         maxx, 0, minz,
+//         maxx, 0, minz,
+//         maxx, 0, maxz,
+//         maxx, 0, maxz,
+//         minx, 0, maxz,
+//         minx, 0, maxz,
+//         minx, 0, minz
+//     );
 
-    Buffer.setData($.BUF_ARR_DEBUG, debugMesh);
-};
-
-const drawQueue = (queueId) =>
-{
-    const queue = queues.get(queueId);
-
-    for (const drawable of queue)
-    {
-        draw(drawable.program);
-    }
-};
+//     Buffer.setData($.BUF_ARR_DEBUG, debugMesh);
+// };
 
 const draw = (program) =>
 {
@@ -166,6 +157,71 @@ const draw = (program) =>
     const vao = Vao.get(program);
     Vao.bind(vao);
     gl.drawArrays(drawMode, 0, drawSize);
+    Vao.unbind();
+};
+
+const drawQueue = (queueId) =>
+{
+    const queue = queues.get(queueId);
+
+    for (const drawable of queue)
+    {
+        draw(drawable.program);
+    }
+};
+
+const drawTest = () =>
+{
+    const program = debugProgram;
+    const debugMesh = debugProgram.getDynamicMesh();
+    const [ground] = Scene.one($.ENT_GROUND, Ground);
+
+    const { minx, maxx, minz, maxz } = ground;
+
+    // debugMesh.setValuesAtIndex(0,
+    //     minx, 0, minz,
+    //     maxx, 0, minz,
+    //     maxx, 0, minz,
+    //     maxx, 0, maxz,
+    //     maxx, 0, maxz,
+    //     minx, 0, maxz,
+    //     minx, 0, maxz,
+    //     minx, 0, minz
+    // );
+
+    debugMesh.setValuesAtIndex(0,
+        minx, 0, maxz,
+        maxx, 0, maxz,
+        maxx, 0, minz,
+        minx, 0, minz,
+    );
+
+    Buffer.setData($.BUF_ARR_DEBUG, debugMesh);
+
+    program.activate();
+    program.setUniforms();
+
+    const vao = Vao.get(program);
+    Vao.bind(vao);
+
+    const buf = [
+        0, 1,
+        1, 2,
+        2, 3,
+        3, 0
+    ];
+
+    Buffer.setData($.BUF_ELEM_ARRAY_INDEX, new Uint8Array(buf));
+    Buffer.bind($.BUF_ELEM_ARRAY_INDEX);
+
+    gl.drawElements(
+        $.LINES,
+        buf.length * Uint8Array.BYTES_PER_ELEMENT,
+        $.UNSIGNED_BYTE,
+        0
+    );
+
+    Buffer.unbind($.BUF_ELEM_ARRAY_INDEX);
     Vao.unbind();
 };
 

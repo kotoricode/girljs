@@ -41,8 +41,18 @@ export const Buffer = {
         );
 
         buffers.set(
+            $.BUF_ARR_TEST,
+            new BufferData($.ARRAY_BUFFER, $.STATIC_DRAW)
+        );
+
+        buffers.set(
             $.BUF_UNI_CAMERA,
             new BufferData($.UNIFORM_BUFFER, $.DYNAMIC_DRAW)
+        );
+
+        buffers.set(
+            $.BUF_ELEM_ARRAY_INDEX,
+            new BufferData($.ELEMENT_ARRAY_BUFFER, $.STATIC_DRAW)
         );
 
         for (const [bufferId, bufferData] of buffers)

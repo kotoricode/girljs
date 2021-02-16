@@ -32,7 +32,7 @@ export const Texture = {
             gl.deleteTexture(texture);
         }
 
-        imagesToFetch.clear();
+        imagesToFetch.length = 0;
         imageTextures.clear();
         textures.clear();
 
