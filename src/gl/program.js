@@ -45,68 +45,7 @@ export class Program
             const vert = vertDef.get(programDef[i++]);
             const frag = fragDef.get(programDef[i++]);
 
-            const { aLayout } = vert;
-
-            /*------------------------------------------------------------------
-                Program
-            ------------------------------------------------------------------*/
-            const glProgram = gl.createProgram();
-            const vs = createAttachShader(glProgram, $.VERTEX_SHADER, vert);
-            const fs = createAttachShader(glProgram, $.FRAGMENT_SHADER, frag);
-            gl.linkProgram(glProgram);
-
-            if (!gl.getProgramParameter(glProgram, $.LINK_STATUS))
-            {
-                console.log(gl.getError());
-                throw glProgram;
-            }
-
-            detachDeleteShader(glProgram, vs);
-            detachDeleteShader(glProgram, fs);
-
-            /*------------------------------------------------------------------
-                Uniforms
-            ------------------------------------------------------------------*/
-            const uBlocks = new SafeSet();
-            const uSetters = new SafeMap();
-            const uDefaults = new SafeMap();
-
-            for (const shader of [vert, frag])
-            {
-                if (shader.uBlocks)
-                {
-                    for (const block of shader.uBlocks)
-                    {
-                        uBlocks.add(block);
-                    }
-                }
-
-                if (shader.uniforms)
-                {
-                    for (const [type, map] of shader.uniforms)
-                    {
-                        for (const [name, values] of map)
-                        {
-                            const location = gl.getUniformLocation(
-                                glProgram,
-                                name
-                            );
-
-                            const setter = createUniSetter(type, location);
-                            uSetters.set(name, setter);
-                            uDefaults.set(name, values);
-                        }
-                    }
-                }
-            }
-
-            compiledPrograms.set(programId, new CompiledProgram(
-                glProgram,
-                aLayout,
-                uBlocks,
-                uDefaults,
-                uSetters
-            ));
+            compiledPrograms.set(programId, new CompiledProgram(vert, frag));
         }
     }
 
@@ -219,37 +158,6 @@ const detachDeleteShader = (program, shader) =>
 {
     gl.detachShader(program, shader);
     gl.deleteShader(shader);
-};
-
-/*------------------------------------------------------------------------------
-    Uniform setter
-------------------------------------------------------------------------------*/
-const createUniSetter = (type, location) =>
-{
-    switch (type)
-    {
-        case U_TYPE_2F:
-            return (values) =>
-            {
-                if (values.length !== 2) throw values;
-                gl.uniform2f(location, ...values);
-            };
-        case U_TYPE_4F:
-            return (values) =>
-            {
-                if (values.length !== 4) throw values;
-                gl.uniform4f(location, ...values);
-            };
-        case U_TYPE_M4FV:
-            return (values) =>
-            {
-                if (values.length !== 2) throw values;
-                if (!(values[1] instanceof Matrix)) throw values;
-                gl.uniformMatrix4fv(location, ...values);
-            };
-        default:
-            throw type;
-    }
 };
 
 /*------------------------------------------------------------------------------
@@ -374,14 +282,106 @@ const programDef = [
 ------------------------------------------------------------------------------*/
 class CompiledProgram
 {
-    constructor(glProgram, aLayout, uBlocks, uDefaults, uSetters)
+    constructor(vert, frag)
     {
-        this.glProgram = glProgram;
-        this.aLayout = aLayout;
-        this.uBlocks = uBlocks;
-        this.uDefaults = uDefaults;
-        this.uSetters = uSetters;
+        this.uBlocks = new SafeSet();
+        this.uSetters = new SafeMap();
+        this.uDefaults = new SafeMap();
+
+        this.createGlProgram(vert, frag);
+
+        for (const shader of [vert, frag])
+        {
+            this.createUniformBlocks(shader);
+            this.createUniformSetters(shader);
+        }
+
+        this.aLayout = vert.aLayout;
+
         Object.freeze(this);
+    }
+
+    createGlProgram(vert, frag)
+    {
+        const glProgram = gl.createProgram();
+        const vs = createAttachShader(glProgram, $.VERTEX_SHADER, vert);
+        const fs = createAttachShader(glProgram, $.FRAGMENT_SHADER, frag);
+        gl.linkProgram(glProgram);
+
+        if (!gl.getProgramParameter(glProgram, $.LINK_STATUS))
+        {
+            console.log(gl.getError());
+            throw glProgram;
+        }
+
+        detachDeleteShader(glProgram, vs);
+        detachDeleteShader(glProgram, fs);
+
+        this.glProgram = glProgram;
+    }
+
+    createUniformBlocks(shader)
+    {
+        if (shader.uBlocks)
+        {
+            for (const block of shader.uBlocks)
+            {
+                this.uBlocks.add(block);
+            }
+        }
+    }
+
+    createUniformSetters(shader)
+    {
+        if (shader.uniforms)
+        {
+            for (const [type, map] of shader.uniforms)
+            {
+                for (const [name, values] of map)
+                {
+                    const location = gl.getUniformLocation(
+                        this.glProgram,
+                        name
+                    );
+
+                    const setter = CompiledProgram.createUniformSetterGl(
+                        type,
+                        location
+                    );
+
+                    this.uSetters.set(name, setter);
+                    this.uDefaults.set(name, values);
+                }
+            }
+        }
+    }
+
+    static createUniformSetterGl(type, location)
+    {
+        switch (type)
+        {
+            case U_TYPE_2F:
+                return (values) =>
+                {
+                    if (values.length !== 2) throw values;
+                    gl.uniform2f(location, ...values);
+                };
+            case U_TYPE_4F:
+                return (values) =>
+                {
+                    if (values.length !== 4) throw values;
+                    gl.uniform4f(location, ...values);
+                };
+            case U_TYPE_M4FV:
+                return (values) =>
+                {
+                    if (values.length !== 2) throw values;
+                    if (!(values[1] instanceof Matrix)) throw values;
+                    gl.uniformMatrix4fv(location, ...values);
+                };
+            default:
+                throw type;
+        }
     }
 }
 

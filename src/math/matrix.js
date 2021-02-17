@@ -14,7 +14,7 @@ export class Matrix extends SettableArray
                 super(...params);
                 break;
             default:
-                throw Error(params);
+                throw params;
         }
     }
 

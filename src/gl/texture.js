@@ -85,7 +85,7 @@ image.addEventListener("load", () =>
 
 image.addEventListener("error", (e) =>
 {
-    throw Error(e);
+    throw e;
 }, LISTENER_ONCE);
 
 const createTexture = () => gl.createTexture();

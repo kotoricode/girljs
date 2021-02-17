@@ -5,7 +5,7 @@ import { Space }    from "./components/space";
 import { Motion }   from "./components/motion";
 import { Player }   from "./components/player";
 import { Drawable } from "./components/drawable";
-import { HitBox }   from "./components/hitbox";
+//import { HitBox }   from "./components/hitbox";
 import { Anim }     from "./components/anim";
 
 import { processMotion }    from "./processes/process-motion";
@@ -38,13 +38,13 @@ const createPlayer = () => [$.ENT_PLAYER, new SafeMap([
     ])]
 ])];
 
-const createTest = () => ["Test", new SafeMap([
-    [$.BLU_COMPONENTS, new SafeSet([
-        new Space(),
-        new Drawable($.PRG_WORLD, $.QUE_BACKGROUND, $.MDL_TEST)
-    ])],
-    [$.BLU_CHILD_ENTITIES, new SafeMap()]
-])];
+// const createTest = () => ["Test", new SafeMap([
+//     [$.BLU_COMPONENTS, new SafeSet([
+//         new Space(),
+//         new Drawable($.PRG_WORLD, $.QUE_BACKGROUND, $.MDL_TEST)
+//     ])],
+//     [$.BLU_CHILD_ENTITIES, new SafeMap()]
+// ])];
 
 const createHome = () => [$.ENT_GROUND, new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
