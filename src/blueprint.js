@@ -34,34 +34,34 @@ const createPlayer = () => [$.ENT_PLAYER, new SafeMap([
         )
     ])],
     [$.BLU_CHILD_ENTITIES, new SafeMap([
-        createMonkey()
+        //createMonkey()
     ])]
 ])];
 
-const createTest = () => ["Test", new SafeMap([
-    [$.BLU_COMPONENTS, new SafeSet([
-        new Space(),
-        new Drawable($.PRG_WORLD, $.QUE_BACKGROUND, $.MDL_TEST)
-    ])],
-    [$.BLU_CHILD_ENTITIES, new SafeMap()]
-])];
+// const createTest = () => ["Test", new SafeMap([
+//     [$.BLU_COMPONENTS, new SafeSet([
+//         new Space(),
+//         new Drawable($.PRG_WORLD, $.QUE_BACKGROUND, $.MDL_TEST)
+//     ])],
+//     [$.BLU_CHILD_ENTITIES, new SafeMap()]
+// ])];
 
 const createHome = () => [$.ENT_GROUND, new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
         new Space(),
-        new Drawable($.PRG_WORLD, $.QUE_BACKGROUND, $.MDL_HOME),
+        //new Drawable($.PRG_WORLD, $.QUE_BACKGROUND, $.MDL_HOME),
         new Ground(-3, 3, -2.6, 0),
     ])],
     [$.BLU_CHILD_ENTITIES, new SafeMap()]
 ])];
 
-const createMonkey = () => ["Monkey", new SafeMap([
-    [$.BLU_COMPONENTS, new SafeSet([
-        new Space(0, 0, 0),
-        new Drawable($.PRG_WORLD, $.QUE_BACKGROUND, $.MDL_MONKEY)
-    ])],
-    [$.BLU_CHILD_ENTITIES, new SafeMap()]
-])];
+// const createMonkey = () => ["Monkey", new SafeMap([
+//     [$.BLU_COMPONENTS, new SafeSet([
+//         new Space(0, 0, 0),
+//         new Drawable($.PRG_WORLD, $.QUE_BACKGROUND, $.MDL_MONKEY)
+//     ])],
+//     [$.BLU_CHILD_ENTITIES, new SafeMap()]
+// ])];
 
 export const blueprint = new SafeMap([
     [$.SCN_TEST, () => new SafeMap([

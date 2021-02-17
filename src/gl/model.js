@@ -21,6 +21,9 @@ const UV_GIRL_MOVE_00 = "UB_GIRL_MOVE_00";
 const UV_GIRL_MOVE_01 = "UB_GIRL_MOVE_01";
 const UV_MONKEY = "UV_MONKEY";
 
+const IDX_SPRITE = "IDX_SPRITE";
+const IDX_LINE_BOX = "IDX_LINE_BOX";
+
 /*------------------------------------------------------------------------------
     Internal meshes & UVs
 ------------------------------------------------------------------------------*/
@@ -28,8 +31,6 @@ const meshXy = (minX, maxX, minY, maxY) => [
     minX, minY, 0,
     maxX, minY, 0,
     minX, maxY, 0,
-    minX, maxY, 0,
-    maxX, minY, 0,
     maxX, maxY, 0,
 ];
 
@@ -56,8 +57,6 @@ const uvRect = (x, y, width, height, baseWidth, baseHeight) =>
         minX, maxY,
         maxX, maxY,
         minX, minY,
-        minX, minY,
-        maxX, maxY,
         maxX, minY,
     ];
 };
@@ -67,14 +66,27 @@ const uvRect = (x, y, width, height, baseWidth, baseHeight) =>
 ------------------------------------------------------------------------------*/
 export class Model
 {
-    constructor(attributes, bufferId, drawMode, drawSize)
+    constructor(attributes, bufferId, drawMode, indices)
     {
-        if (!Number.isInteger(drawSize)) throw drawSize;
-
         this.attributes = attributes;
         this.bufferId = bufferId;
         this.drawMode = drawMode;
-        this.drawSize = drawSize;
+        this.indices = indices;
+
+        const byteSize = indices.BYTES_PER_ELEMENT;
+        this.idxDrawSize = indices.length * byteSize;
+
+        switch (byteSize)
+        {
+            case Uint8Array.BYTES_PER_ELEMENT:
+                this.idxDrawType = $.UNSIGNED_BYTE;
+                break;
+            case Uint16Array.BYTES_PER_ELEMENT:
+                this.idxDrawType = $.UNSIGNED_SHORT;
+                break;
+            default:
+                throw Error;
+        }
     }
 
     static get(modelId)
@@ -107,20 +119,22 @@ export class Model
 
 class TexturedModel extends Model
 {
-    constructor(attributes, bufferId, drawMode, drawSize, textureId)
+    constructor(attributes, bufferId, drawMode, textureId, indices)
     {
-        super(attributes, bufferId, drawMode, drawSize);
+        super(attributes, bufferId, drawMode, indices);
         this.textureId = textureId;
+
         Object.freeze(this);
     }
 }
 
 class DynamicModel extends Model
 {
-    constructor(attributes, bufferId, drawMode, drawSize, meshId)
+    constructor(attributes, bufferId, drawMode, meshId, indices)
     {
-        super(attributes, bufferId, drawMode, drawSize);
+        super(attributes, bufferId, drawMode, indices);
         this.meshId = meshId;
+
         Object.freeze(this);
     }
 }
@@ -139,41 +153,51 @@ const buildModels = async() =>
         [UV_GIRL_IDLE_00, uvRect1024(0, 0, 123, 286)],
         [UV_GIRL_MOVE_00, uvRect1024(123, 0, 123, 286)],
         [UV_GIRL_MOVE_01, uvRect1024(246, 0, 123, 286)],
-        [UV_SCREEN, [0, 0, 1, 0, 0, 1, 0, 1, 1, 0, 1, 1]],
+        [UV_SCREEN, [
+            0, 0,
+            1, 0,
+            0, 1,
+            1, 1
+        ]],
+    ]);
+
+    const idxs = new SafeMap([
+        [IDX_SPRITE, new Uint8Array([0, 1, 2, 2, 1, 3])],
+        [IDX_LINE_BOX, new Uint8Array([0, 1, 1, 2, 2, 3, 3, 0])]
     ]);
 
     /*--------------------------------------------------------------------------
         Download external models
     --------------------------------------------------------------------------*/
-    class ExternalModelInfo
-    {
-        constructor(fileName, meshId, uvId)
-        {
-            this.url = `/mdl/${fileName}.glb`;
-            this.meshId = meshId;
-            this.uvId = uvId;
+    // class ExternalModelInfo
+    // {
+    //     constructor(fileName, meshId, uvId)
+    //     {
+    //         this.url = `/mdl/${fileName}.glb`;
+    //         this.meshId = meshId;
+    //         this.uvId = uvId;
 
-            Object.freeze(this);
-        }
-    }
+    //         Object.freeze(this);
+    //     }
+    // }
 
-    const externalModels = [
-        new ExternalModelInfo("mesh", MSH_TEST, UV_TEST),
-        new ExternalModelInfo("monkey", MSH_MONKEY, UV_MONKEY),
-        new ExternalModelInfo("home", MSH_HOME, UV_HOME)
-    ];
+    // const externalModels = [
+    //     new ExternalModelInfo("mesh", MSH_TEST, UV_TEST),
+    //     new ExternalModelInfo("monkey", MSH_MONKEY, UV_MONKEY),
+    //     new ExternalModelInfo("home", MSH_HOME, UV_HOME)
+    // ];
 
-    await Promise.all(
-        externalModels.map(extModel => (async() =>
-        {
-            const response = await window.fetch(extModel.url);
-            const blob = await response.blob();
-            const { mesh, uv } = await parseGlb(blob);
+    // await Promise.all(
+    //     externalModels.map(extModel => (async() =>
+    //     {
+    //         const response = await window.fetch(extModel.url);
+    //         const blob = await response.blob();
+    //         const { mesh, uv } = await parseGlb(blob);
 
-            meshes.set(extModel.meshId, mesh);
-            uvs.set(extModel.uvId, uv);
-        })())
-    );
+    //         meshes.set(extModel.meshId, mesh);
+    //         uvs.set(extModel.uvId, uv);
+    //     })())
+    // );
 
     /*--------------------------------------------------------------------------
         Build models from mesh + UV + texture information
@@ -182,15 +206,15 @@ const buildModels = async() =>
 
     const modelDef = [
     //  MODEL ID            MESH ID     UV ID            TEXTURE ID
-        $.MDL_GIRL_IDLE_00, MSH_PLAYER, UV_GIRL_IDLE_00, $.TEX_GIRL,
-        $.MDL_GIRL_MOVE_00, MSH_PLAYER, UV_GIRL_MOVE_00, $.TEX_GIRL,
-        $.MDL_GIRL_MOVE_01, MSH_PLAYER, UV_GIRL_MOVE_01, $.TEX_GIRL,
-        $.MDL_TEST,         MSH_TEST,   UV_TEST,         $.TEX_WORLD,
-        $.MDL_MONKEY,       MSH_MONKEY, UV_MONKEY,       $.TEX_WOOD,
-        $.MDL_FB,           MSH_SCREEN, UV_SCREEN,       $.TEX_FB,
-        $.MDL_TEXT,         MSH_SCREEN, UV_SCREEN,       $.TEX_UI_TEXT,
-        $.MDL_BUBBLE,       MSH_SCREEN, UV_SCREEN,       $.TEX_UI_BUBBLE,
-        $.MDL_HOME,         MSH_HOME,   UV_HOME,         $.TEX_HOME
+        $.MDL_GIRL_IDLE_00, MSH_PLAYER, UV_GIRL_IDLE_00, IDX_SPRITE, $.TEX_GIRL,
+        $.MDL_GIRL_MOVE_00, MSH_PLAYER, UV_GIRL_MOVE_00, IDX_SPRITE, $.TEX_GIRL,
+        $.MDL_GIRL_MOVE_01, MSH_PLAYER, UV_GIRL_MOVE_01, IDX_SPRITE, $.TEX_GIRL,
+        //$.MDL_TEST,         MSH_TEST,   UV_TEST,         $.TEX_WORLD,
+        //$.MDL_MONKEY,       MSH_MONKEY, UV_MONKEY,       $.TEX_WOOD,
+        $.MDL_FB,           MSH_SCREEN, UV_SCREEN,       IDX_SPRITE, $.TEX_FB,
+        $.MDL_TEXT,         MSH_SCREEN, UV_SCREEN,       IDX_SPRITE, $.TEX_UI_TEXT,
+        $.MDL_BUBBLE,       MSH_SCREEN, UV_SCREEN,       IDX_SPRITE, $.TEX_UI_BUBBLE,
+        //$.MDL_HOME,         MSH_HOME,   UV_HOME,         $.TEX_HOME
     ];
 
     // Push data to modelData and return the offset
@@ -221,6 +245,7 @@ const buildModels = async() =>
         const modelId = modelDef[i++];
         const meshId = modelDef[i++];
         const uvId = modelDef[i++];
+        const idxId = modelDef[i++];
         const textureId = modelDef[i++];
 
         if (!meshOffsets.has(meshId))
@@ -248,8 +273,8 @@ const buildModels = async() =>
             attributes,
             $.BUF_ARR_MODEL,
             $.TRIANGLES,
-            meshes.get(meshId).length / 3,
             textureId,
+            idxs.get(idxId)
         ));
     }
 
@@ -264,8 +289,8 @@ const buildModels = async() =>
         debugAttrib,
         $.BUF_ARR_DEBUG,
         $.LINES,
-        dynamicMeshes.get(MSH_DEBUG).length / 3,
-        MSH_DEBUG
+        MSH_DEBUG,
+        idxs.get(IDX_LINE_BOX)
     ));
 
     /*--------------------------------------------------------------------------
