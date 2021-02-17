@@ -133,25 +133,23 @@ const draw = (program) =>
     const {
         drawMode,
         indices,
-        idxDrawSize,
-        idxDrawType
+        drawType
     } = program.getModel();
 
     const vao = Vao.get(program);
     Vao.bind(vao);
 
-    Buffer.setData($.BUF_ELEM_ARRAY_INDEX, indices);
     Buffer.bind($.BUF_ELEM_ARRAY_INDEX);
+    Buffer.setData($.BUF_ELEM_ARRAY_INDEX, indices);
 
     gl.drawElements(
         drawMode,
         indices.length,
-        idxDrawType,
+        drawType,
         0
     );
 
     Buffer.unbind($.BUF_ELEM_ARRAY_INDEX);
-
     Vao.unbind();
 };
 
@@ -179,7 +177,9 @@ const debugSetGroundBuffer = () =>
         minx, 0, minz,
     );
 
+    Buffer.bind($.BUF_ARR_DEBUG);
     Buffer.setData($.BUF_ARR_DEBUG, debugMesh);
+    Buffer.unbind($.BUF_ARR_DEBUG);
 };
 
 let fbo;

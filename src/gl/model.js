@@ -6,26 +6,26 @@ import { parseGlb } from "./glb";
 /*------------------------------------------------------------------------------
     Consts
 ------------------------------------------------------------------------------*/
-const MSH_DEBUG = "MSH_DEBUG";
-const MSH_PLAYER = "MSH_PLAYER";
-const MSH_SCREEN = "MSH_SCREEN";
-const MSH_TEST = "MSH_TEST";
-const MSH_MONKEY = "MSH_MONKEY";
-const MSH_HOME = "MSH_HOME";
+const MSH_DEBUG = Symbol();
+const MSH_PLAYER = Symbol();
+const MSH_SCREEN = Symbol();
+const MSH_TEST = Symbol();
+const MSH_MONKEY = Symbol();
+const MSH_HOME = Symbol();
 
-const UV_TEST = "UV_TEST";
-const UV_HOME = "UV_HOME";
-const UV_SCREEN = "UV_SCREEN";
-const UV_GIRL_IDLE_00 = "UB_GIRL_IDLE_00";
-const UV_GIRL_MOVE_00 = "UB_GIRL_MOVE_00";
-const UV_GIRL_MOVE_01 = "UB_GIRL_MOVE_01";
-const UV_MONKEY = "UV_MONKEY";
+const UV_TEST = Symbol();
+const UV_HOME = Symbol();
+const UV_SCREEN = Symbol();
+const UV_GIRL_IDLE_00 = Symbol();
+const UV_GIRL_MOVE_00 = Symbol();
+const UV_GIRL_MOVE_01 = Symbol();
+const UV_MONKEY = Symbol();
 
-const IDX_SPRITE = "IDX_SPRITE";
-const IDX_LINE_BOX = "IDX_LINE_BOX";
-const IDX_TEST = "IDX_TEST";
-const IDX_MONKEY = "IDX_MONKEY";
-const IDX_HOME = "IDX_HOME";
+const IDX_SPRITE = Symbol();
+const IDX_LINE_BOX = Symbol();
+const IDX_TEST = Symbol();
+const IDX_MONKEY = Symbol();
+const IDX_HOME = Symbol();
 
 /*------------------------------------------------------------------------------
     Internal meshes & UVs
@@ -77,19 +77,19 @@ export class Model
         this.indices = indices;
 
         const byteSize = indices.BYTES_PER_ELEMENT;
-        this.idxDrawSize = indices.length;
+        this.drawType = Model.getDrawType(byteSize);
+    }
 
+    static getDrawType(byteSize)
+    {
         switch (byteSize)
         {
             case Uint8Array.BYTES_PER_ELEMENT:
-                this.idxDrawType = $.UNSIGNED_BYTE;
-                break;
+                return $.UNSIGNED_BYTE;
             case Uint16Array.BYTES_PER_ELEMENT:
-                this.idxDrawType = $.UNSIGNED_SHORT;
-                break;
+                return $.UNSIGNED_SHORT;
             default:
-                console.error(indices);
-                throw Error(byteSize);
+                throw Error("Invalid array");
         }
     }
 
@@ -157,12 +157,7 @@ const buildModels = async() =>
         [UV_GIRL_IDLE_00, uvRect1024(0, 0, 123, 286)],
         [UV_GIRL_MOVE_00, uvRect1024(123, 0, 123, 286)],
         [UV_GIRL_MOVE_01, uvRect1024(246, 0, 123, 286)],
-        [UV_SCREEN, [
-            0, 0,
-            1, 0,
-            0, 1,
-            1, 1
-        ]],
+        [UV_SCREEN, [0, 0, 1, 0, 0, 1, 1, 1]],
     ]);
 
     const idxs = new SafeMap([
@@ -210,8 +205,9 @@ const buildModels = async() =>
     --------------------------------------------------------------------------*/
     const modelData = [];
 
+    /* eslint-disable max-len */
     const modelDef = [
-    //  MODEL ID            MESH ID     UV ID            TEXTURE ID
+    //  MODEL ID            MESH ID     UV ID            INDEX IDX   TEXTURE ID
         $.MDL_GIRL_IDLE_00, MSH_PLAYER, UV_GIRL_IDLE_00, IDX_SPRITE, $.TEX_GIRL,
         $.MDL_GIRL_MOVE_00, MSH_PLAYER, UV_GIRL_MOVE_00, IDX_SPRITE, $.TEX_GIRL,
         $.MDL_GIRL_MOVE_01, MSH_PLAYER, UV_GIRL_MOVE_01, IDX_SPRITE, $.TEX_GIRL,
@@ -222,6 +218,7 @@ const buildModels = async() =>
         $.MDL_TEST,         MSH_TEST,   UV_TEST,         IDX_TEST,   $.TEX_WORLD,
         $.MDL_MONKEY,       MSH_MONKEY, UV_MONKEY,       IDX_MONKEY, $.TEX_WOOD,
     ];
+    /* eslint-enable max-len */
 
     // Push data to modelData and return the offset
     const pushModelData = (data) =>
@@ -304,7 +301,9 @@ const buildModels = async() =>
     /*--------------------------------------------------------------------------
         Push to buffer and finish
     --------------------------------------------------------------------------*/
+    Buffer.bind($.BUF_ARR_MODEL);
     Buffer.setData($.BUF_ARR_MODEL, new SettableFloat32Array(modelData));
+    Buffer.unbind($.BUF_ARR_MODEL);
     isLoaded = true;
 };
 

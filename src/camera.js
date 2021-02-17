@@ -46,7 +46,9 @@ const updateViewProjection = () =>
 
     viewProjectionData.from(viewProjection);
 
+    Buffer.bind($.BUF_UNI_CAMERA);
     Buffer.setData($.BUF_UNI_CAMERA, viewProjectionData);
+    Buffer.unbind($.BUF_UNI_CAMERA);
 };
 
 let focus;
