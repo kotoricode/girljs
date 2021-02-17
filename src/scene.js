@@ -127,6 +127,11 @@ export const Scene = {
     },
     update(dt)
     {
+        if (Mouse.isMovePending())
+        {
+            Mouse.setMove();
+        }
+
         if (Mouse.isClickPending())
         {
             Mouse.setClick();

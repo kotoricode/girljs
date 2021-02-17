@@ -1,6 +1,6 @@
 // https://github.com/KhronosGroup/glTF/blob/master/specification/2.0/README.md
 
-import { FLOAT32_BYTES, UINT16_BYTES } from "../utility";
+import { SIZEOF_FLOAT32, SIZEOF_UINT16 } from "../utility";
 
 export const parseGlb = async(blob) =>
 {
@@ -43,9 +43,9 @@ export const parseGlb = async(blob) =>
 
     const isLittleEndian = true;
 
-    const mesh = new Array(viewMesh.byteLength / FLOAT32_BYTES);
-    const uv = new Array(viewUv.byteLength / FLOAT32_BYTES);
-    const idx = new Array(viewIdx.byteLength / UINT16_BYTES);
+    const mesh = new Array(viewMesh.byteLength / SIZEOF_FLOAT32);
+    const uv = new Array(viewUv.byteLength / SIZEOF_FLOAT32);
+    const idx = new Array(viewIdx.byteLength / SIZEOF_UINT16);
 
     const viewMeshStart = binStart + viewMesh.byteOffset;
     const viewUvStart = binStart + viewUv.byteOffset;
@@ -54,7 +54,7 @@ export const parseGlb = async(blob) =>
     for (let i = 0; i < mesh.length; i++)
     {
         mesh[i] = dataView.getFloat32(
-            viewMeshStart + i * FLOAT32_BYTES,
+            viewMeshStart + i * SIZEOF_FLOAT32,
             isLittleEndian
         );
     }
@@ -62,7 +62,7 @@ export const parseGlb = async(blob) =>
     for (let i = 0; i < uv.length; i++)
     {
         uv[i] = dataView.getFloat32(
-            viewUvStart + i * FLOAT32_BYTES,
+            viewUvStart + i * SIZEOF_FLOAT32,
             isLittleEndian
         );
     }
@@ -70,7 +70,7 @@ export const parseGlb = async(blob) =>
     for (let i = 0; i < idx.length; i++)
     {
         idx[i] = dataView.getUint16(
-            viewIdxStart + i * UINT16_BYTES,
+            viewIdxStart + i * SIZEOF_UINT16,
             isLittleEndian
         );
     }

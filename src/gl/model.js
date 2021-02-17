@@ -1,5 +1,10 @@
 import * as $ from "../const";
-import { FLOAT32_BYTES, SafeMap, SettableFloat32Array, UINT16_BYTES } from "../utility";
+import {
+    SIZEOF_FLOAT32,
+    SIZEOF_UINT16,
+    SafeMap,
+    SettableFloat32Array
+} from "../utility";
 import { Buffer } from "./buffer";
 import { parseGlb } from "./glb";
 
@@ -237,7 +242,7 @@ const buildModels = async() =>
             const meshOffset = pushData(
                 meshes.get(meshId),
                 modelData,
-                FLOAT32_BYTES
+                SIZEOF_FLOAT32
             );
 
             meshOffsets.set(meshId, meshOffset);
@@ -248,7 +253,7 @@ const buildModels = async() =>
             const uvOffset = pushData(
                 uvs.get(uvId),
                 modelData,
-                FLOAT32_BYTES
+                SIZEOF_FLOAT32
             );
 
             uvOffsets.set(uvId, uvOffset);
@@ -259,7 +264,7 @@ const buildModels = async() =>
             const idxOffset = pushData(
                 idxs.get(idxId),
                 indexData,
-                UINT16_BYTES
+                SIZEOF_UINT16
             );
 
             idxOffsets.set(idxId, idxOffset);
@@ -294,7 +299,7 @@ const buildModels = async() =>
     const debugIdxOffset = pushData(
         debugIdx,
         indexData,
-        UINT16_BYTES
+        SIZEOF_UINT16
     );
 
     models.set($.MDL_DEBUG, new DynamicModel(

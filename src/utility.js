@@ -2,11 +2,11 @@ export const LISTENER_ONCE = { once: true };
 
 export const DEG_TO_RAD = Math.PI / 180;
 
-export const EPSILON = 2 ** -24;
+export const FLOAT32_EPSILON = 2 ** -23;
 
-export const FLOAT32_BYTES = 4;
+export const SIZEOF_FLOAT32 = 4;
 
-export const UINT16_BYTES = 2;
+export const SIZEOF_UINT16 = 2;
 
 export const getElement = (elemId) => window.document.getElementById(elemId);
 
