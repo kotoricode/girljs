@@ -69,28 +69,13 @@ const uvRect = (x, y, width, height, baseWidth, baseHeight) =>
 ------------------------------------------------------------------------------*/
 export class Model
 {
-    constructor(attributes, bufferId, drawMode, indices)
+    constructor(attributes, bufferId, drawMode, drawOffset, drawSize)
     {
         this.attributes = attributes;
         this.bufferId = bufferId;
         this.drawMode = drawMode;
-        this.indices = indices;
-
-        const byteSize = indices.BYTES_PER_ELEMENT;
-        this.drawType = Model.getDrawType(byteSize);
-    }
-
-    static getDrawType(byteSize)
-    {
-        switch (byteSize)
-        {
-            case Uint8Array.BYTES_PER_ELEMENT:
-                return $.UNSIGNED_BYTE;
-            case Uint16Array.BYTES_PER_ELEMENT:
-                return $.UNSIGNED_SHORT;
-            default:
-                throw Error("Invalid array");
-        }
+        this.drawOffset = drawOffset;
+        this.drawSize = drawSize;
     }
 
     static get(modelId)
@@ -123,9 +108,9 @@ export class Model
 
 class TexturedModel extends Model
 {
-    constructor(attributes, bufferId, drawMode, textureId, indices)
+    constructor(attributes, bufferId, drawMode, textureId, drawOffset, drawSize)
     {
-        super(attributes, bufferId, drawMode, indices);
+        super(attributes, bufferId, drawMode, drawOffset, drawSize);
         this.textureId = textureId;
 
         Object.freeze(this);
@@ -134,9 +119,9 @@ class TexturedModel extends Model
 
 class DynamicModel extends Model
 {
-    constructor(attributes, bufferId, drawMode, meshId, indices)
+    constructor(attributes, bufferId, drawMode, meshId, drawOffset, drawSize)
     {
-        super(attributes, bufferId, drawMode, indices);
+        super(attributes, bufferId, drawMode, drawOffset, drawSize);
         this.meshId = meshId;
 
         Object.freeze(this);
@@ -204,6 +189,7 @@ const buildModels = async() =>
         Build models from mesh + UV + texture information
     --------------------------------------------------------------------------*/
     const modelData = [];
+    const indexData = [];
 
     /* eslint-disable max-len */
     const modelDef = [
@@ -220,28 +206,23 @@ const buildModels = async() =>
     ];
     /* eslint-enable max-len */
 
-    // Push data to modelData and return the offset
-    const pushModelData = (data) =>
+    const pushData = (data, destination, byteSize) =>
     {
-        if (!Array.isArray(data) && !(data instanceof Float32Array))
-        {
-            throw Error("Not an array");
-        }
-
-        const offset = modelData.length;
-        modelData.length += data.length;
+        const offset = destination.length;
+        destination.length += data.length;
 
         for (let i = 0; i < data.length; i++)
         {
-            modelData[offset + i] = data[i];
+            destination[offset + i] = data[i];
         }
 
-        return offset * Float32Array.BYTES_PER_ELEMENT;
+        return offset * byteSize;
     };
 
     // Local build caches
     const meshOffsets = new SafeMap();
     const uvOffsets = new SafeMap();
+    const idxOffsets = new SafeMap();
 
     for (let i = 0; i < modelDef.length;)
     {
@@ -253,18 +234,35 @@ const buildModels = async() =>
 
         if (!meshOffsets.has(meshId))
         {
-            const mesh = meshes.get(meshId);
-            const meshOffset = pushModelData(mesh);
+            const meshOffset = pushData(
+                meshes.get(meshId),
+                modelData,
+                Float32Array.BYTES_PER_ELEMENT
+            );
 
             meshOffsets.set(meshId, meshOffset);
         }
 
         if (!uvOffsets.has(uvId))
         {
-            const uv = uvs.get(uvId);
-            const uvOffset = pushModelData(uv);
+            const uvOffset = pushData(
+                uvs.get(uvId),
+                modelData,
+                Float32Array.BYTES_PER_ELEMENT
+            );
 
             uvOffsets.set(uvId, uvOffset);
+        }
+
+        if (!idxOffsets.has(idxId))
+        {
+            const idxOffset = pushData(
+                idxs.get(idxId),
+                indexData,
+                Uint16Array.BYTES_PER_ELEMENT
+            );
+
+            idxOffsets.set(idxId, idxOffset);
         }
 
         const attributes = new SafeMap([
@@ -272,15 +270,17 @@ const buildModels = async() =>
             [$.A_TEXCOORD, uvOffsets.get(uvId)]
         ]);
 
-        const idx = idxs.get(idxId);
-
-        models.set(modelId, new TexturedModel(
-            attributes,
-            $.BUF_ARR_MODEL,
-            $.TRIANGLES,
-            textureId,
-            idx
-        ));
+        models.set(
+            modelId,
+            new TexturedModel(
+                attributes,
+                $.BUF_ARR_MODEL,
+                $.TRIANGLES,
+                textureId,
+                idxOffsets.get(idxId),
+                idxs.get(idxId).length
+            )
+        );
     }
 
     /*--------------------------------------------------------------------------
@@ -290,21 +290,33 @@ const buildModels = async() =>
         [$.A_POSITION, 0]
     ]);
 
+    const debugIdx = idxs.get(IDX_LINE_BOX);
+    const debugIdxOffset = pushData(
+        debugIdx,
+        indexData,
+        Uint16Array.BYTES_PER_ELEMENT
+    );
+
     models.set($.MDL_DEBUG, new DynamicModel(
         debugAttrib,
         $.BUF_ARR_DEBUG,
         $.LINES,
         MSH_DEBUG,
-        idxs.get(IDX_LINE_BOX)
+        debugIdxOffset,
+        debugIdx.length
     ));
 
     /*--------------------------------------------------------------------------
         Push to buffer and finish
     --------------------------------------------------------------------------*/
     Buffer.bind($.BUF_ARR_MODEL);
-    Buffer.setData($.BUF_ARR_MODEL, new SettableFloat32Array(modelData));
+    Buffer.setData($.BUF_ARR_MODEL, new Float32Array(modelData));
     Buffer.unbind($.BUF_ARR_MODEL);
     isLoaded = true;
+
+    Buffer.bind($.BUF_ELEM_ARRAY_INDEX);
+    Buffer.setData($.BUF_ELEM_ARRAY_INDEX, new Uint16Array(indexData));
+    Buffer.unbind($.BUF_ELEM_ARRAY_INDEX);
 };
 
 /*------------------------------------------------------------------------------

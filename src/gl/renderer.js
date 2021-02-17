@@ -132,21 +132,19 @@ const draw = (program) =>
 
     const {
         drawMode,
-        indices,
-        drawType
+        drawSize,
+        drawOffset
     } = program.getModel();
 
     const vao = Vao.get(program);
     Vao.bind(vao);
-
     Buffer.bind($.BUF_ELEM_ARRAY_INDEX);
-    Buffer.setData($.BUF_ELEM_ARRAY_INDEX, indices);
 
     gl.drawElements(
         drawMode,
-        indices.length,
-        drawType,
-        0
+        drawSize,
+        $.UNSIGNED_SHORT,
+        drawOffset
     );
 
     Buffer.unbind($.BUF_ELEM_ARRAY_INDEX);

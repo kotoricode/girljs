@@ -11,6 +11,8 @@ export const Dom = {
     }
 };
 
+const loading = getElement("loading");
+
 /*------------------------------------------------------------------------------
     Mouse
 ------------------------------------------------------------------------------*/
@@ -97,7 +99,6 @@ window.addEventListener("resize", onResize);
 const canvas = getElement("canvas");
 let canvasRect = canvas.getBoundingClientRect();
 
-// TODO: this should have a getter in case context loss
 export const gl = canvas.getContext("webgl2", { alpha: false });
 
 let canvasWidth = $.RES_WIDTH;
@@ -105,5 +106,3 @@ let canvasHeight = $.RES_HEIGHT;
 canvas.width = canvasWidth;
 canvas.height = canvasHeight;
 gl.viewport(0, 0, canvasWidth, canvasHeight);
-
-const loading = getElement("loading");

@@ -66,85 +66,75 @@ export class Program
             }
         }
 
-        const VS_DEBUG = "VS_DEBUG";
-        const VS_UI = "VS_UI";
-        const VS_WORLD = "VS_WORLD";
+        const VS_DEBUG = new VShader(
+            vsDebugSrc,
+            new SafeMap([
+                [$.A_POSITION, 3]
+            ]),
+            [$.UB_CAMERA]
+        );
 
-        const FS_DEBUG = "FS_DEBUG";
-        const FS_LUMA = "FS_LUMA";
-        const FS_TEXTURED = "FS_TEX";
+        const VS_UI = new VShader(
+            vsUiSrc,
+            new SafeMap([
+                [$.A_POSITION, 3],
+                [$.A_TEXCOORD, 2]
+            ]),
+            null,
+            new Map([
+                [U_TYPE_M4FV, new SafeMap([
+                    [$.U_TRANSFORM, [0, 0]]
+                ])]
+            ])
+        );
 
-        const vertDef = new SafeMap([
-            [VS_DEBUG, new VShader(
-                vsDebugSrc,
-                new SafeMap([
-                    [$.A_POSITION, 3]
-                ]),
-                [$.UB_CAMERA]
-            )],
+        const VS_WORLD = new VShader(
+            vsWorldSrc,
+            new SafeMap([
+                [$.A_POSITION, 3],
+                [$.A_TEXCOORD, 2]
+            ]),
+            [$.UB_CAMERA],
+            new Map([
+                [U_TYPE_M4FV, new SafeMap([
+                    [$.U_TRANSFORM, [0, 0]]
+                ])]
+            ])
+        );
 
-            [VS_UI, new VShader(
-                vsUiSrc,
-                new SafeMap([
-                    [$.A_POSITION, 3],
-                    [$.A_TEXCOORD, 2]
-                ]),
-                null,
-                new Map([
-                    [U_TYPE_M4FV, new SafeMap([
-                        [$.U_TRANSFORM, [0, 0]]
-                    ])]
-                ])
-            )],
-
-            [VS_WORLD, new VShader(
-                vsWorldSrc,
-                new SafeMap([
-                    [$.A_POSITION, 3],
-                    [$.A_TEXCOORD, 2]
-                ]),
-                [$.UB_CAMERA],
-                new Map([
-                    [U_TYPE_M4FV, new SafeMap([
-                        [$.U_TRANSFORM, [0, 0]]
-                    ])]
-                ])
-            )]
-        ]);
-
-        const fragDef = new SafeMap([
-            [FS_DEBUG, new FShader(fsDebugSrc)],
-
-            [FS_LUMA, new FShader(fsLumaSrc)],
-
-            [FS_TEXTURED, new FShader(
-                fsTexturedSrc,
-                null,
-                new Map([
-                    [U_TYPE_4F, new SafeMap([
-                        [$.U_COLOR, [1, 1, 1, 1]]
-                    ])]
-                ])
-            )]
-        ]);
-
-        const programDef = [
-            $.PRG_DEBUG, VS_DEBUG, FS_DEBUG,
-            $.PRG_IMAGE, VS_UI,    FS_LUMA,
-            $.PRG_UI,    VS_UI,    FS_TEXTURED,
-            $.PRG_WORLD, VS_WORLD, FS_TEXTURED,
-        ];
+        const FS_DEBUG = new FShader(fsDebugSrc);
+        const FS_LUMA = new FShader(fsLumaSrc);
+        const FS_TEXTURED = new FShader(
+            fsTexturedSrc,
+            null,
+            new Map([
+                [U_TYPE_4F, new SafeMap([
+                    [$.U_COLOR, [1, 1, 1, 1]]
+                ])]
+            ])
+        );
 
         compiledPrograms.clear();
 
-        for (let i = 0; i < programDef.length;)
-        {
-            const programId = programDef[i++];
-            const vert = vertDef.get(programDef[i++]);
-            const frag = fragDef.get(programDef[i++]);
+        compiledPrograms.set(
+            $.PRG_DEBUG,
+            new CompiledProgram(VS_DEBUG, FS_DEBUG)
+        );
 
-            compiledPrograms.set(programId, new CompiledProgram(vert, frag));
-        }
+        compiledPrograms.set(
+            $.PRG_IMAGE,
+            new CompiledProgram(VS_UI, FS_LUMA)
+        );
+
+        compiledPrograms.set(
+            $.PRG_UI,
+            new CompiledProgram(VS_UI, FS_TEXTURED)
+        );
+
+        compiledPrograms.set(
+            $.PRG_WORLD,
+            new CompiledProgram(VS_WORLD, FS_TEXTURED)
+        );
     }
 
     activate()
@@ -258,6 +248,44 @@ class CompiledProgram
         Object.freeze(this);
     }
 
+    static createUniformSetterGl(type, location)
+    {
+        switch (type)
+        {
+            case U_TYPE_2F:
+                return (values) =>
+                {
+                    if (values.length !== 2) throw values;
+                    gl.uniform2f(location, ...values);
+                };
+            case U_TYPE_4F:
+                return (values) =>
+                {
+                    if (values.length !== 4) throw values;
+                    gl.uniform4f(location, ...values);
+                };
+            case U_TYPE_M4FV:
+                return (values) =>
+                {
+                    if (values.length !== 2) throw values;
+                    if (!(values[1] instanceof Matrix)) throw values;
+                    gl.uniformMatrix4fv(location, ...values);
+                };
+            default:
+                throw type;
+        }
+    }
+
+    createAttachShader(shaderId, shaderDef)
+    {
+        const shader = gl.createShader(shaderId);
+        gl.shaderSource(shader, shaderDef.src);
+        gl.compileShader(shader);
+        gl.attachShader(this.glProgram, shader);
+
+        return shader;
+    }
+
     createGlProgram(vert, frag)
     {
         this.glProgram = gl.createProgram();
@@ -273,22 +301,6 @@ class CompiledProgram
 
         this.detachDeleteShader(vs);
         this.detachDeleteShader(fs);
-    }
-
-    createAttachShader(shaderId, shaderDef)
-    {
-        const shader = gl.createShader(shaderId);
-        gl.shaderSource(shader, shaderDef.src);
-        gl.compileShader(shader);
-        gl.attachShader(this.glProgram, shader);
-
-        return shader;
-    }
-
-    detachDeleteShader(shader)
-    {
-        gl.detachShader(this.glProgram, shader);
-        gl.deleteShader(shader);
     }
 
     createUniformBlocks(shader)
@@ -327,32 +339,10 @@ class CompiledProgram
         }
     }
 
-    static createUniformSetterGl(type, location)
+    detachDeleteShader(shader)
     {
-        switch (type)
-        {
-            case U_TYPE_2F:
-                return (values) =>
-                {
-                    if (values.length !== 2) throw values;
-                    gl.uniform2f(location, ...values);
-                };
-            case U_TYPE_4F:
-                return (values) =>
-                {
-                    if (values.length !== 4) throw values;
-                    gl.uniform4f(location, ...values);
-                };
-            case U_TYPE_M4FV:
-                return (values) =>
-                {
-                    if (values.length !== 2) throw values;
-                    if (!(values[1] instanceof Matrix)) throw values;
-                    gl.uniformMatrix4fv(location, ...values);
-                };
-            default:
-                throw type;
-        }
+        gl.detachShader(this.glProgram, shader);
+        gl.deleteShader(shader);
     }
 }
 
