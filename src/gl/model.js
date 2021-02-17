@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { SafeMap, SettableFloat32Array } from "../utility";
+import { FLOAT32_BYTES, SafeMap, SettableFloat32Array, UINT16_BYTES } from "../utility";
 import { Buffer } from "./buffer";
 import { parseGlb } from "./glb";
 
@@ -146,8 +146,8 @@ const buildModels = async() =>
     ]);
 
     const idxs = new SafeMap([
-        [IDX_SPRITE, new Uint16Array([0, 1, 2, 2, 1, 3])],
-        [IDX_LINE_BOX, new Uint16Array([0, 1, 1, 2, 2, 3, 3, 0])]
+        [IDX_SPRITE, [0, 1, 2, 2, 1, 3]],
+        [IDX_LINE_BOX, [0, 1, 1, 2, 2, 3, 3, 0]]
     ]);
 
     /*--------------------------------------------------------------------------
@@ -181,7 +181,7 @@ const buildModels = async() =>
 
             meshes.set(extModel.meshId, mesh);
             uvs.set(extModel.uvId, uv);
-            idxs.set(extModel.idxId, new Uint16Array(idx));
+            idxs.set(extModel.idxId, idx);
         })())
     );
 
@@ -237,7 +237,7 @@ const buildModels = async() =>
             const meshOffset = pushData(
                 meshes.get(meshId),
                 modelData,
-                Float32Array.BYTES_PER_ELEMENT
+                FLOAT32_BYTES
             );
 
             meshOffsets.set(meshId, meshOffset);
@@ -248,7 +248,7 @@ const buildModels = async() =>
             const uvOffset = pushData(
                 uvs.get(uvId),
                 modelData,
-                Float32Array.BYTES_PER_ELEMENT
+                FLOAT32_BYTES
             );
 
             uvOffsets.set(uvId, uvOffset);
@@ -259,7 +259,7 @@ const buildModels = async() =>
             const idxOffset = pushData(
                 idxs.get(idxId),
                 indexData,
-                Uint16Array.BYTES_PER_ELEMENT
+                UINT16_BYTES
             );
 
             idxOffsets.set(idxId, idxOffset);
@@ -294,7 +294,7 @@ const buildModels = async() =>
     const debugIdxOffset = pushData(
         debugIdx,
         indexData,
-        Uint16Array.BYTES_PER_ELEMENT
+        UINT16_BYTES
     );
 
     models.set($.MDL_DEBUG, new DynamicModel(

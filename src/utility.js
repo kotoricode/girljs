@@ -4,6 +4,10 @@ export const DEG_TO_RAD = Math.PI / 180;
 
 export const EPSILON = 2 ** -24;
 
+export const FLOAT32_BYTES = 4;
+
+export const UINT16_BYTES = 2;
+
 export const getElement = (elemId) => window.document.getElementById(elemId);
 
 export const isString = (value) => typeof value === "string";
