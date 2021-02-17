@@ -145,10 +145,12 @@ const draw = (program) =>
 
     gl.drawElements(
         drawMode,
-        idxDrawSize,
+        indices.length,
         idxDrawType,
         0
     );
+
+    Buffer.unbind($.BUF_ELEM_ARRAY_INDEX);
 
     Vao.unbind();
 };

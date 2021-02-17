@@ -23,6 +23,9 @@ const UV_MONKEY = "UV_MONKEY";
 
 const IDX_SPRITE = "IDX_SPRITE";
 const IDX_LINE_BOX = "IDX_LINE_BOX";
+const IDX_TEST = "IDX_TEST";
+const IDX_MONKEY = "IDX_MONKEY";
+const IDX_HOME = "IDX_HOME";
 
 /*------------------------------------------------------------------------------
     Internal meshes & UVs
@@ -74,7 +77,7 @@ export class Model
         this.indices = indices;
 
         const byteSize = indices.BYTES_PER_ELEMENT;
-        this.idxDrawSize = indices.length * byteSize;
+        this.idxDrawSize = indices.length;
 
         switch (byteSize)
         {
@@ -85,7 +88,8 @@ export class Model
                 this.idxDrawType = $.UNSIGNED_SHORT;
                 break;
             default:
-                throw Error;
+                console.error(indices);
+                throw Error(byteSize);
         }
     }
 
@@ -162,42 +166,44 @@ const buildModels = async() =>
     ]);
 
     const idxs = new SafeMap([
-        [IDX_SPRITE, new Uint8Array([0, 1, 2, 2, 1, 3])],
-        [IDX_LINE_BOX, new Uint8Array([0, 1, 1, 2, 2, 3, 3, 0])]
+        [IDX_SPRITE, new Uint16Array([0, 1, 2, 2, 1, 3])],
+        [IDX_LINE_BOX, new Uint16Array([0, 1, 1, 2, 2, 3, 3, 0])]
     ]);
 
     /*--------------------------------------------------------------------------
         Download external models
     --------------------------------------------------------------------------*/
-    // class ExternalModelInfo
-    // {
-    //     constructor(fileName, meshId, uvId)
-    //     {
-    //         this.url = `/mdl/${fileName}.glb`;
-    //         this.meshId = meshId;
-    //         this.uvId = uvId;
+    class ExternalModelInfo
+    {
+        constructor(fileName, meshId, uvId, idxId)
+        {
+            this.url = `/mdl/${fileName}.glb`;
+            this.meshId = meshId;
+            this.uvId = uvId;
+            this.idxId = idxId;
 
-    //         Object.freeze(this);
-    //     }
-    // }
+            Object.freeze(this);
+        }
+    }
 
-    // const externalModels = [
-    //     new ExternalModelInfo("mesh", MSH_TEST, UV_TEST),
-    //     new ExternalModelInfo("monkey", MSH_MONKEY, UV_MONKEY),
-    //     new ExternalModelInfo("home", MSH_HOME, UV_HOME)
-    // ];
+    const externalModels = [
+        new ExternalModelInfo("mesh", MSH_TEST, UV_TEST, IDX_TEST),
+        new ExternalModelInfo("monkey", MSH_MONKEY, UV_MONKEY, IDX_MONKEY),
+        new ExternalModelInfo("home", MSH_HOME, UV_HOME, IDX_HOME)
+    ];
 
-    // await Promise.all(
-    //     externalModels.map(extModel => (async() =>
-    //     {
-    //         const response = await window.fetch(extModel.url);
-    //         const blob = await response.blob();
-    //         const { mesh, uv } = await parseGlb(blob);
+    await Promise.all(
+        externalModels.map(extModel => (async() =>
+        {
+            const response = await window.fetch(extModel.url);
+            const blob = await response.blob();
+            const { mesh, uv, idx } = await parseGlb(blob);
 
-    //         meshes.set(extModel.meshId, mesh);
-    //         uvs.set(extModel.uvId, uv);
-    //     })())
-    // );
+            meshes.set(extModel.meshId, mesh);
+            uvs.set(extModel.uvId, uv);
+            idxs.set(extModel.idxId, new Uint16Array(idx));
+        })())
+    );
 
     /*--------------------------------------------------------------------------
         Build models from mesh + UV + texture information
@@ -209,12 +215,12 @@ const buildModels = async() =>
         $.MDL_GIRL_IDLE_00, MSH_PLAYER, UV_GIRL_IDLE_00, IDX_SPRITE, $.TEX_GIRL,
         $.MDL_GIRL_MOVE_00, MSH_PLAYER, UV_GIRL_MOVE_00, IDX_SPRITE, $.TEX_GIRL,
         $.MDL_GIRL_MOVE_01, MSH_PLAYER, UV_GIRL_MOVE_01, IDX_SPRITE, $.TEX_GIRL,
-        //$.MDL_TEST,         MSH_TEST,   UV_TEST,         $.TEX_WORLD,
-        //$.MDL_MONKEY,       MSH_MONKEY, UV_MONKEY,       $.TEX_WOOD,
         $.MDL_FB,           MSH_SCREEN, UV_SCREEN,       IDX_SPRITE, $.TEX_FB,
         $.MDL_TEXT,         MSH_SCREEN, UV_SCREEN,       IDX_SPRITE, $.TEX_UI_TEXT,
         $.MDL_BUBBLE,       MSH_SCREEN, UV_SCREEN,       IDX_SPRITE, $.TEX_UI_BUBBLE,
-        //$.MDL_HOME,         MSH_HOME,   UV_HOME,         $.TEX_HOME
+        $.MDL_HOME,         MSH_HOME,   UV_HOME,         IDX_HOME,   $.TEX_HOME,
+        $.MDL_TEST,         MSH_TEST,   UV_TEST,         IDX_TEST,   $.TEX_WORLD,
+        $.MDL_MONKEY,       MSH_MONKEY, UV_MONKEY,       IDX_MONKEY, $.TEX_WOOD,
     ];
 
     // Push data to modelData and return the offset
@@ -269,12 +275,14 @@ const buildModels = async() =>
             [$.A_TEXCOORD, uvOffsets.get(uvId)]
         ]);
 
+        const idx = idxs.get(idxId);
+
         models.set(modelId, new TexturedModel(
             attributes,
             $.BUF_ARR_MODEL,
             $.TRIANGLES,
             textureId,
-            idxs.get(idxId)
+            idx
         ));
     }
 
