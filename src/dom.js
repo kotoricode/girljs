@@ -1,12 +1,16 @@
 import * as $ from "./const";
 import { Vector } from "./math/vector";
-import { getElement, isSet, LISTENER_ONCE } from "./utility";
+import { getElement, LISTENER_ONCE } from "./utility";
 
 export const Dom = {
     hideLoading()
     {
-        canvas.addEventListener("click", (e) => clickEvent = e);
-        canvas.addEventListener("mousemove", (e) => moveEvent = e);
+        canvas.addEventListener("click", (e) =>
+        {
+            mouseEvent = e;
+            isClickPending = true;
+        });
+        canvas.addEventListener("mousemove", (e) => mouseEvent = e);
         loading.style.visibility = "hidden";
     }
 };
@@ -29,40 +33,32 @@ export const Mouse = {
     {
         return isMouseClick;
     },
-    isClickPending()
+    update()
     {
-        return isSet(clickEvent);
-    },
-    isMovePending()
-    {
-        return isSet(moveEvent);
-    },
-    setClick()
-    {
-        setMousePos(clickEvent);
-        isMouseClick = true;
-        clickEvent = null;
-    },
-    setMove()
-    {
-        setMousePos(moveEvent);
-        moveEvent = null;
-    }
-};
+        isMouseClick = false;
 
-const setMousePos = (event) =>
-{
-    const x = (event.clientX - canvasRect.left) / canvas.clientWidth;
-    const y = (event.clientY - canvasRect.top) / canvas.clientHeight;
+        if (isClickPending || mouseEvent)
+        {
+            const x = (mouseEvent.clientX-canvasRect.left) / canvas.clientWidth;
+            const y = (mouseEvent.clientY-canvasRect.top) / canvas.clientHeight;
 
-    mouseClip.x = 2*x - 1;
-    mouseClip.y = 1 - 2*y;
+            mouseClip.x = 2 * x - 1;
+            mouseClip.y = 1 - 2 * y;
+            mouseEvent = null;
+
+            if (isClickPending)
+            {
+                isMouseClick = true;
+                isClickPending = false;
+            }
+        }
+    },
 };
 
 let isMouseClick = false;
+let isClickPending = false;
 const mouseClip = new Vector();
-let moveEvent;
-let clickEvent;
+let mouseEvent;
 
 /*------------------------------------------------------------------------------
     Resize

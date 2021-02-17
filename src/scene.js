@@ -127,15 +127,7 @@ export const Scene = {
     },
     update(dt)
     {
-        if (Mouse.isMovePending())
-        {
-            Mouse.setMove();
-        }
-
-        if (Mouse.isClickPending())
-        {
-            Mouse.setClick();
-        }
+        Mouse.update();
 
         if (isSet(nextScene))
         {
@@ -149,11 +141,6 @@ export const Scene = {
         for (const process of processes)
         {
             process(dt);
-        }
-
-        if (Mouse.isClick())
-        {
-            Mouse.consumeClick();
         }
 
         Renderer.render();
