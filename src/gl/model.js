@@ -150,7 +150,7 @@ const buildModels = async() =>
         [UV_SCREEN, [0, 0, 1, 0, 0, 1, 1, 1]],
     ]);
 
-    const idxs = new SafeMap([
+    const indices = new SafeMap([
         [IDX_SPRITE, [0, 1, 2, 2, 1, 3]],
         [IDX_LINE_BOX, [0, 1, 1, 2, 2, 3, 3, 0]]
     ]);
@@ -160,12 +160,12 @@ const buildModels = async() =>
     --------------------------------------------------------------------------*/
     class ExternalModelInfo
     {
-        constructor(fileName, meshId, uvId, idxId)
+        constructor(fileName, meshId, uvId, indexId)
         {
             this.url = `/mdl/${fileName}.glb`;
             this.meshId = meshId;
             this.uvId = uvId;
-            this.idxId = idxId;
+            this.indexId = indexId;
 
             Object.freeze(this);
         }
@@ -186,7 +186,7 @@ const buildModels = async() =>
 
             meshes.set(extModel.meshId, mesh);
             uvs.set(extModel.uvId, uv);
-            idxs.set(extModel.idxId, idx);
+            indices.set(extModel.indexId, idx);
         })())
     );
 
@@ -227,14 +227,14 @@ const buildModels = async() =>
     // Local build caches
     const meshOffsets = new SafeMap();
     const uvOffsets = new SafeMap();
-    const idxOffsets = new SafeMap();
+    const indexOffsets = new SafeMap();
 
     for (let i = 0; i < modelDef.length;)
     {
         const modelId = modelDef[i++];
         const meshId = modelDef[i++];
         const uvId = modelDef[i++];
-        const idxId = modelDef[i++];
+        const indexId = modelDef[i++];
         const textureId = modelDef[i++];
 
         if (!meshOffsets.has(meshId))
@@ -259,15 +259,15 @@ const buildModels = async() =>
             uvOffsets.set(uvId, uvOffset);
         }
 
-        if (!idxOffsets.has(idxId))
+        if (!indexOffsets.has(indexId))
         {
             const idxOffset = pushData(
-                idxs.get(idxId),
+                indices.get(indexId),
                 indexData,
                 SIZEOF_UINT16
             );
 
-            idxOffsets.set(idxId, idxOffset);
+            indexOffsets.set(indexId, idxOffset);
         }
 
         const attributes = new SafeMap([
@@ -282,8 +282,8 @@ const buildModels = async() =>
                 $.BUF_ARR_MODEL,
                 $.TRIANGLES,
                 textureId,
-                idxOffsets.get(idxId),
-                idxs.get(idxId).length
+                indexOffsets.get(indexId),
+                indices.get(indexId).length
             )
         );
     }
@@ -295,7 +295,7 @@ const buildModels = async() =>
         [$.A_POSITION, 0]
     ]);
 
-    const debugIdx = idxs.get(IDX_LINE_BOX);
+    const debugIdx = indices.get(IDX_LINE_BOX);
     const debugIdxOffset = pushData(
         debugIdx,
         indexData,
@@ -332,5 +332,5 @@ let isLoaded = false;
 let loadPromise;
 
 const dynamicMeshes = new SafeMap([
-    [MSH_DEBUG, new SettableFloat32Array(3 * 2 * 12 * 10)],
+    [MSH_DEBUG, new SettableFloat32Array(1000)],
 ]);

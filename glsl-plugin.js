@@ -1,4 +1,3 @@
-/* eslint-disable max-len */
 /* eslint-env node */
 const fs = require("fs");
 const path = require("path");
