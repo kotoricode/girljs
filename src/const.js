@@ -48,7 +48,6 @@ export const
     BUF_UNI_CAMERA = i++,
     BUF_ARR_DEBUG = i++,
     BUF_ARR_MODEL = i++,
-    BUF_ARR_TEST = i++,
     BUF_ELEM_ARRAY_INDEX = i++;
 
 export const

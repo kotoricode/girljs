@@ -8,30 +8,6 @@ import {
 import { Buffer } from "./buffer";
 
 /*------------------------------------------------------------------------------
-    Consts
-------------------------------------------------------------------------------*/
-const MSH_DEBUG = Symbol();
-const MSH_PLAYER = Symbol();
-const MSH_SCREEN = Symbol();
-const MSH_TEST = Symbol();
-const MSH_MONKEY = Symbol();
-const MSH_HOME = Symbol();
-
-const UV_TEST = Symbol();
-const UV_HOME = Symbol();
-const UV_SCREEN = Symbol();
-const UV_GIRL_IDLE_00 = Symbol();
-const UV_GIRL_MOVE_00 = Symbol();
-const UV_GIRL_MOVE_01 = Symbol();
-const UV_MONKEY = Symbol();
-
-const IDX_SPRITE = Symbol();
-const IDX_LINE_BOX = Symbol();
-const IDX_TEST = Symbol();
-const IDX_MONKEY = Symbol();
-const IDX_HOME = Symbol();
-
-/*------------------------------------------------------------------------------
     Internal meshes & UVs
 ------------------------------------------------------------------------------*/
 const meshXy = (minX, maxX, minY, maxY) => [
@@ -207,6 +183,26 @@ const glbRead = (func, view, binStart, sizeOf) =>
 
 const buildModels = async() =>
 {
+    const MSH_PLAYER = Symbol();
+    const MSH_SCREEN = Symbol();
+    const MSH_TEST = Symbol();
+    const MSH_MONKEY = Symbol();
+    const MSH_HOME = Symbol();
+
+    const UV_TEST = Symbol();
+    const UV_HOME = Symbol();
+    const UV_SCREEN = Symbol();
+    const UV_GIRL_IDLE_00 = Symbol();
+    const UV_GIRL_MOVE_00 = Symbol();
+    const UV_GIRL_MOVE_01 = Symbol();
+    const UV_MONKEY = Symbol();
+
+    const IDX_SPRITE = Symbol();
+    const IDX_LINE_BOX = Symbol();
+    const IDX_TEST = Symbol();
+    const IDX_MONKEY = Symbol();
+    const IDX_HOME = Symbol();
+
     /*--------------------------------------------------------------------------
         Internal meshes, UVs
     --------------------------------------------------------------------------*/
@@ -382,11 +378,12 @@ const buildModels = async() =>
     Buffer.bind($.BUF_ARR_MODEL);
     Buffer.setData($.BUF_ARR_MODEL, new Float32Array(modelData));
     Buffer.unbind($.BUF_ARR_MODEL);
-    isLoaded = true;
 
     Buffer.bind($.BUF_ELEM_ARRAY_INDEX);
     Buffer.setData($.BUF_ELEM_ARRAY_INDEX, new Uint16Array(indexData));
     Buffer.unbind($.BUF_ELEM_ARRAY_INDEX);
+
+    isLoaded = true;
 };
 
 /*------------------------------------------------------------------------------
@@ -396,6 +393,13 @@ const models = new SafeMap();
 let isLoaded = false;
 let loadPromise;
 
+const MSH_DEBUG = Symbol();
+const IDX_DEBUG = Symbol();
+
 const dynamicMeshes = new SafeMap([
     [MSH_DEBUG, new SettableFloat32Array(1000)],
+]);
+
+const dynamicIndices= new SafeMap([
+    [IDX_DEBUG, new SettableFloat32Array(1000)],
 ]);
