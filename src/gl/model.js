@@ -25,10 +25,6 @@ const meshXyScreen = (width, height) =>
     return meshXy(-x, x, -y, y);
 };
 
-const uvRect1024 = (x, y, width, height) => uvRect(
-    x, y, width, height, 1024, 1024
-);
-
 const uvRect = (x, y, width, height, baseWidth, baseHeight) =>
 {
     const minX = x / baseWidth;
