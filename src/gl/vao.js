@@ -49,7 +49,7 @@ export const Vao = {
 
         const vao = this.get(program);
         this.bind(vao);
-        Buffer.bind(model.bufferId);
+        Buffer.bind(model.aBufferId);
 
         for (const [name, attribSize] of aLayout)
         {
@@ -67,7 +67,7 @@ export const Vao = {
             );
         }
 
-        Buffer.unbind(model.bufferId);
+        Buffer.unbind(model.aBufferId);
         this.unbind();
     }
 };

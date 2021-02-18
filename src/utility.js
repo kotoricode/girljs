@@ -167,9 +167,7 @@ export const Storage = {
 
         try
         {
-            const parsed = JSON.parse(data);
-
-            return parsed;
+            return JSON.parse(data);
         }
         catch
         {

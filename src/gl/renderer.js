@@ -1,7 +1,7 @@
 import * as $ from "../const";
 import { gl } from "../dom";
 
-import { SafeMap, SafeSet, setArrayIndexed as setArrayIndexed } from "../utility";
+import { SafeMap, SafeSet, setArrayIndexed } from "../utility";
 import { Matrix } from "../math/matrix";
 
 import { Vao } from "./vao";
@@ -176,11 +176,12 @@ const debugSetGroundBuffer = () =>
         minx, 0, minz,
     );
 
-    const { bufferId, indexBufferId } = debugProgram.getModel();
+    const model = debugProgram.getModel();
+    const { aBufferId, indexBufferId } = model;
 
-    Buffer.bind(bufferId);
-    Buffer.setData(bufferId, debugMesh);
-    Buffer.unbind(bufferId);
+    Buffer.bind(aBufferId);
+    Buffer.setData(aBufferId, debugMesh);
+    Buffer.unbind(aBufferId);
 
     const debugIndex = debugProgram.getDynamicIndex();
 
@@ -190,6 +191,8 @@ const debugSetGroundBuffer = () =>
         2, 3,
         3, 0
     );
+
+    model.drawSize = 8;
 
     Buffer.bind(indexBufferId);
     Buffer.setData(indexBufferId, debugIndex);

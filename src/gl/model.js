@@ -2,8 +2,7 @@ import * as $ from "../const";
 import {
     SIZEOF_FLOAT32,
     SIZEOF_UINT16,
-    SafeMap,
-    setArrayIndexed
+    SafeMap
 } from "../utility";
 import { Buffer } from "./buffer";
 
@@ -47,7 +46,7 @@ export class Model
 {
     constructor(
         aOffsets,
-        bufferId,
+        aBufferId,
         indexBufferId,
         drawMode,
         drawOffset,
@@ -55,7 +54,7 @@ export class Model
     )
     {
         this.aOffsets = aOffsets;
-        this.bufferId = bufferId;
+        this.aBufferId = aBufferId;
         this.indexBufferId = indexBufferId;
         this.drawMode = drawMode;
         this.drawOffset = drawOffset;
@@ -97,55 +96,36 @@ export class Model
 
 class TexturedModel extends Model
 {
-    constructor(
-        aOffsets,
-        bufferId,
-        indexBufferId,
-        drawMode,
-        textureId,
-        drawOffset,
-        drawSize
-    )
+    constructor(aOffsets, textureId, drawOffset, drawSize)
     {
         super(
             aOffsets,
-            bufferId,
-            indexBufferId,
-            drawMode,
+            $.BUF_ARR_MODEL,
+            $.BUF_ELEM_ARRAY_INDEX,
+            $.TRIANGLES,
             drawOffset,
             drawSize
         );
 
         this.textureId = textureId;
-        Object.freeze(this);
     }
 }
 
 class DynamicModel extends Model
 {
-    constructor(
-        aOffsets,
-        bufferId,
-        indexBufferId,
-        drawMode,
-        meshId,
-        indexId,
-        drawOffset,
-        drawSize
-    )
+    constructor(aOffsets, meshId, indexId)
     {
         super(
             aOffsets,
-            bufferId,
-            indexBufferId,
-            drawMode,
-            drawOffset,
-            drawSize
+            $.BUF_ARR_DEBUG,
+            $.BUF_ELEM_ARRAY_INDEX_DEBUG,
+            $.LINES,
+            0,
+            -1
         );
 
         this.meshId = meshId;
         this.indexId = indexId;
-        Object.freeze(this);
     }
 }
 
@@ -379,9 +359,6 @@ const buildModels = async() =>
             modelId,
             new TexturedModel(
                 aOffsets,
-                $.BUF_ARR_MODEL,
-                $.BUF_ELEM_ARRAY_INDEX,
-                $.TRIANGLES,
                 textureId,
                 indexOffsets.get(indexId),
                 indices.get(indexId).length
@@ -396,23 +373,12 @@ const buildModels = async() =>
         [$.A_POSITION, 0]
     ]);
 
-    // const debugIdxOffset = pushData(
-    //     debugIdx,
-    //     indexData,
-    //     SIZEOF_UINT16
-    // );
-
     models.set(
         $.MDL_DEBUG,
         new DynamicModel(
             debugAttrib,
-            $.BUF_ARR_DEBUG,
-            $.BUF_ELEM_ARRAY_INDEX_DEBUG,
-            $.LINES,
             MSH_DEBUG,
-            IDX_DEBUG,
-            0,
-            8
+            IDX_DEBUG
         )
     );
 
