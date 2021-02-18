@@ -158,6 +158,13 @@ export class Program
         return compiledPrograms.get(this.programId);
     }
 
+    getDynamicIndex()
+    {
+        const model = this.getModel();
+
+        return Model.getDynamicIndex(model.indexId);
+    }
+
     getDynamicMesh()
     {
         const model = this.getModel();

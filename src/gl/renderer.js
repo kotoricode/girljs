@@ -76,6 +76,8 @@ export const Renderer = {
             }
         }
 
+        debugSetGroundBuffer();
+
         bindFb();
 
         gl.clear($.COLOR_BUFFER_BIT | $.DEPTH_BUFFER_BIT);
@@ -89,8 +91,6 @@ export const Renderer = {
         gl.disable($.CULL_FACE);
         drawQueue($.QUE_SPRITE);
         drawQueue($.QUE_UI);
-
-        debugSetGroundBuffer();
 
         unbindFb();
 
@@ -133,12 +133,13 @@ const draw = (program) =>
     const {
         drawMode,
         drawSize,
-        drawOffset
+        drawOffset,
+        indexBufferId
     } = program.getModel();
 
     const vao = Vao.get(program);
     Vao.bind(vao);
-    Buffer.bind($.BUF_ELEM_ARRAY_INDEX);
+    Buffer.bind(indexBufferId);
 
     gl.drawElements(
         drawMode,
@@ -147,7 +148,7 @@ const draw = (program) =>
         drawOffset
     );
 
-    Buffer.unbind($.BUF_ELEM_ARRAY_INDEX);
+    Buffer.unbind(indexBufferId);
     Vao.unbind();
 };
 
@@ -175,9 +176,24 @@ const debugSetGroundBuffer = () =>
         minx, 0, minz,
     );
 
-    Buffer.bind($.BUF_ARR_DEBUG);
-    Buffer.setData($.BUF_ARR_DEBUG, debugMesh);
-    Buffer.unbind($.BUF_ARR_DEBUG);
+    const { bufferId, indexBufferId } = debugProgram.getModel();
+
+    Buffer.bind(bufferId);
+    Buffer.setData(bufferId, debugMesh);
+    Buffer.unbind(bufferId);
+
+    const debugIndex = debugProgram.getDynamicIndex();
+
+    debugIndex.setValuesAtIndex(0,
+        0, 1,
+        1, 2,
+        2, 3,
+        3, 0
+    );
+
+    Buffer.bind(indexBufferId);
+    Buffer.setData(indexBufferId, debugIndex);
+    Buffer.unbind(indexBufferId);
 };
 
 let fbo;

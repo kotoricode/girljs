@@ -46,6 +46,11 @@ export const Buffer = {
         );
 
         buffers.set(
+            $.BUF_ELEM_ARRAY_INDEX_DEBUG,
+            new BufferData($.ELEMENT_ARRAY_BUFFER, $.DYNAMIC_DRAW)
+        );
+
+        buffers.set(
             $.BUF_UNI_CAMERA,
             new BufferData($.UNIFORM_BUFFER, $.DYNAMIC_DRAW)
         );

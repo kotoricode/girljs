@@ -3,7 +3,8 @@ import {
     SIZEOF_FLOAT32,
     SIZEOF_UINT16,
     SafeMap,
-    SettableFloat32Array
+    SettableFloat32Array,
+    SettableUint16Array
 } from "../utility";
 import { Buffer } from "./buffer";
 
@@ -45,10 +46,18 @@ const uvRect = (x, y, width, height, baseWidth, baseHeight) =>
 ------------------------------------------------------------------------------*/
 export class Model
 {
-    constructor(aOffsets, bufferId, drawMode, drawOffset, drawSize)
+    constructor(
+        aOffsets,
+        bufferId,
+        indexBufferId,
+        drawMode,
+        drawOffset,
+        drawSize
+    )
     {
         this.aOffsets = aOffsets;
         this.bufferId = bufferId;
+        this.indexBufferId = indexBufferId;
         this.drawMode = drawMode;
         this.drawOffset = drawOffset;
         this.drawSize = drawSize;
@@ -64,6 +73,11 @@ export class Model
     static getDynamicMesh(meshId)
     {
         return dynamicMeshes.get(meshId);
+    }
+
+    static getDynamicIndex(indexId)
+    {
+        return dynamicIndices.get(indexId);
     }
 
     static isLoaded()
@@ -84,22 +98,54 @@ export class Model
 
 class TexturedModel extends Model
 {
-    constructor(aOffsets, bufferId, drawMode, textureId, drawOffset, drawSize)
+    constructor(
+        aOffsets,
+        bufferId,
+        indexBufferId,
+        drawMode,
+        textureId,
+        drawOffset,
+        drawSize
+    )
     {
-        super(aOffsets, bufferId, drawMode, drawOffset, drawSize);
-        this.textureId = textureId;
+        super(
+            aOffsets,
+            bufferId,
+            indexBufferId,
+            drawMode,
+            drawOffset,
+            drawSize
+        );
 
+        this.textureId = textureId;
         Object.freeze(this);
     }
 }
 
 class DynamicModel extends Model
 {
-    constructor(aOffsets, bufferId, drawMode, meshId, drawOffset, drawSize)
+    constructor(
+        aOffsets,
+        bufferId,
+        indexBufferId,
+        drawMode,
+        meshId,
+        indexId,
+        drawOffset,
+        drawSize
+    )
     {
-        super(aOffsets, bufferId, drawMode, drawOffset, drawSize);
-        this.meshId = meshId;
+        super(
+            aOffsets,
+            bufferId,
+            indexBufferId,
+            drawMode,
+            drawOffset,
+            drawSize
+        );
 
+        this.meshId = meshId;
+        this.indexId = indexId;
         Object.freeze(this);
     }
 }
@@ -194,7 +240,6 @@ const buildModels = async() =>
     const UV_MONKEY = Symbol();
 
     const IDX_SPRITE = Symbol();
-    const IDX_LINE_BOX = Symbol();
     const IDX_TEST = Symbol();
     const IDX_MONKEY = Symbol();
     const IDX_HOME = Symbol();
@@ -216,7 +261,6 @@ const buildModels = async() =>
 
     const indices = new SafeMap([
         [IDX_SPRITE, [0, 1, 2, 2, 1, 3]],
-        [IDX_LINE_BOX, [0, 1, 1, 2, 2, 3, 3, 0]]
     ]);
 
     /*--------------------------------------------------------------------------
@@ -337,6 +381,7 @@ const buildModels = async() =>
             new TexturedModel(
                 aOffsets,
                 $.BUF_ARR_MODEL,
+                $.BUF_ELEM_ARRAY_INDEX,
                 $.TRIANGLES,
                 textureId,
                 indexOffsets.get(indexId),
@@ -352,23 +397,23 @@ const buildModels = async() =>
         [$.A_POSITION, 0]
     ]);
 
-    const debugIdx = indices.get(IDX_LINE_BOX);
-
-    const debugIdxOffset = pushData(
-        debugIdx,
-        indexData,
-        SIZEOF_UINT16
-    );
+    // const debugIdxOffset = pushData(
+    //     debugIdx,
+    //     indexData,
+    //     SIZEOF_UINT16
+    // );
 
     models.set(
         $.MDL_DEBUG,
         new DynamicModel(
             debugAttrib,
             $.BUF_ARR_DEBUG,
+            $.BUF_ELEM_ARRAY_INDEX_DEBUG,
             $.LINES,
             MSH_DEBUG,
-            debugIdxOffset,
-            debugIdx.length
+            IDX_DEBUG,
+            0,
+            8
         )
     );
 
@@ -400,6 +445,6 @@ const dynamicMeshes = new SafeMap([
     [MSH_DEBUG, new SettableFloat32Array(1000)],
 ]);
 
-const dynamicIndices= new SafeMap([
-    [IDX_DEBUG, new SettableFloat32Array(1000)],
+const dynamicIndices = new SafeMap([
+    [IDX_DEBUG, new SettableUint16Array(8)],
 ]);
