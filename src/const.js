@@ -7,10 +7,10 @@ export const
 let i = 0;
 
 export const
-    ENT_AV_PLAYER = "av_player",
-    ENT_GROUND = "ground",
-    ENT_PLAYER = "player",
-    ENT_ROOT = "root";
+    ENT_AV_PLAYER = Symbol(),
+    ENT_GROUND = Symbol(),
+    ENT_PLAYER = Symbol(),
+    ENT_ROOT = Symbol();
 
 export const
     SCN_TEST = i++,
@@ -46,34 +46,32 @@ export const
 
 export const
     BUF_UNI_CAMERA = i++,
-    BUF_ARR_DEBUG = i++,
-    BUF_ARR_MODEL = i++,
-    BUF_ELEM_ARRAY_INDEX = i++,
-    BUF_ELEM_ARRAY_INDEX_DEBUG = i++;
+    BUF_ARR_DYNAMIC = i++,
+    BUF_ARR_TEXTURED = i++,
+    BUF_ELEM_ARR_IDX = i++,
+    BUF_ELEM_ARR_IDX_DYNAMIC = i++;
 
 export const
-    MDL_MONKEY = "MDL_MONKEY",
-    MDL_BUBBLE = "MDL_BUBBLE",
-    MDL_TEXT = "MDL_TEXT",
-    MDL_TEST = "MDL_TEST",
-    MDL_DEBUG = "MDL_DEBUG",
-    MDL_GROUND = "MDL_GROUND",
-    MDL_FB = "MDL_SCREEN",
-    MDL_PLAYER = "MDL_PLAYER",
-    MDL_HOME = "MDL_HOME",
-    MDL_GIRL_IDLE_00 = "MDL_GIRL_IDLE_00",
-    MDL_GIRL_MOVE_00 = "MDL_GIRL_MOVE_00",
-    MDL_GIRL_MOVE_01 = "MDL_GIRL_MOVE_01";
+    MDL_MONKEY = Symbol(),
+    MDL_BUBBLE = Symbol(),
+    MDL_TEXT = Symbol(),
+    MDL_DEBUG = Symbol(),
+    MDL_GROUND = Symbol(),
+    MDL_FB = Symbol(),
+    MDL_PLAYER = Symbol(),
+    MDL_HOME = Symbol(),
+    MDL_GIRL_IDLE_00 = Symbol(),
+    MDL_GIRL_MOVE_00 = Symbol(),
+    MDL_GIRL_MOVE_01 = Symbol();
 
 export const
-    TEX_GIRL = "TEX_GIRL",
-    TEX_GROUND = "TEX_GROUND",
-    TEX_FB = "TEX_FB",
-    TEX_HOME = "TEX_HOME",
-    TEX_UI_TEXT = "TEX_UI_TEXT",
-    TEX_UI_BUBBLE = "TEX_UI_BUBBLE",
-    TEX_WOOD = "TEX_WOOD",
-    TEX_WORLD = "TEX_WORLD";
+    TEX_GIRL = Symbol(),
+    TEX_GROUND = Symbol(),
+    TEX_FB = Symbol(),
+    TEX_HOME = Symbol(),
+    TEX_UI_TEXT = Symbol(),
+    TEX_UI_BUBBLE = Symbol(),
+    TEX_WOOD = Symbol();
 
 export const
     DLG_LEFT_AVATAR = i++,

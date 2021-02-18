@@ -31,22 +31,22 @@ export const Buffer = {
         uBufferBindings.clear();
 
         buffers.set(
-            $.BUF_ARR_MODEL,
+            $.BUF_ARR_TEXTURED,
             new BufferData($.ARRAY_BUFFER, $.STATIC_DRAW)
         );
 
         buffers.set(
-            $.BUF_ARR_DEBUG,
+            $.BUF_ARR_DYNAMIC,
             new BufferData($.ARRAY_BUFFER, $.DYNAMIC_DRAW)
         );
 
         buffers.set(
-            $.BUF_ELEM_ARRAY_INDEX,
+            $.BUF_ELEM_ARR_IDX,
             new BufferData($.ELEMENT_ARRAY_BUFFER, $.STATIC_DRAW)
         );
 
         buffers.set(
-            $.BUF_ELEM_ARRAY_INDEX_DEBUG,
+            $.BUF_ELEM_ARR_IDX_DYNAMIC,
             new BufferData($.ELEMENT_ARRAY_BUFFER, $.DYNAMIC_DRAW)
         );
 

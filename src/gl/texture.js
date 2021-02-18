@@ -37,7 +37,6 @@ export const Texture = {
         textures.clear();
 
         textures.set($.TEX_GIRL, createImageTexture("girl.png"));
-        textures.set($.TEX_WORLD, createImageTexture("monkey.png"));
         textures.set($.TEX_HOME, createImageTexture("home.png"));
         textures.set($.TEX_WOOD, createImageTexture("wood.jpg"));
         textures.set($.TEX_FB, createFbTexture());

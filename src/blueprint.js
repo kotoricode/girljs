@@ -38,14 +38,6 @@ const createPlayer = () => [$.ENT_PLAYER, new SafeMap([
     ])]
 ])];
 
-// const createTest = () => ["Test", new SafeMap([
-//     [$.BLU_COMPONENTS, new SafeSet([
-//         new Space(),
-//         new Drawable($.PRG_WORLD, $.QUE_BACKGROUND, $.MDL_TEST)
-//     ])],
-//     [$.BLU_CHILD_ENTITIES, new SafeMap()]
-// ])];
-
 const createHome = () => [$.ENT_GROUND, new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
         new Space(),
@@ -55,7 +47,7 @@ const createHome = () => [$.ENT_GROUND, new SafeMap([
     [$.BLU_CHILD_ENTITIES, new SafeMap()]
 ])];
 
-const createMonkey = () => ["Monkey", new SafeMap([
+const createMonkey = () => [Symbol(), new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
         new Space(0, 0, 0),
         new Drawable($.PRG_WORLD, $.QUE_BACKGROUND, $.MDL_MONKEY)

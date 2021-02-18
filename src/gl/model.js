@@ -100,8 +100,8 @@ class TexturedModel extends Model
     {
         super(
             aOffsets,
-            $.BUF_ARR_MODEL,
-            $.BUF_ELEM_ARRAY_INDEX,
+            $.BUF_ARR_TEXTURED,
+            $.BUF_ELEM_ARR_IDX,
             $.TRIANGLES,
             drawOffset,
             drawSize
@@ -117,8 +117,8 @@ class DynamicModel extends Model
     {
         super(
             aOffsets,
-            $.BUF_ARR_DEBUG,
-            $.BUF_ELEM_ARRAY_INDEX_DEBUG,
+            $.BUF_ARR_DYNAMIC,
+            $.BUF_ELEM_ARR_IDX_DYNAMIC,
             $.LINES,
             0,
             -1
@@ -206,11 +206,9 @@ const buildModels = async() =>
 {
     const MSH_PLAYER = Symbol();
     const MSH_SCREEN = Symbol();
-    const MSH_TEST = Symbol();
     const MSH_MONKEY = Symbol();
     const MSH_HOME = Symbol();
 
-    const UV_TEST = Symbol();
     const UV_HOME = Symbol();
     const UV_SCREEN = Symbol();
     const UV_GIRL_IDLE_00 = Symbol();
@@ -219,7 +217,6 @@ const buildModels = async() =>
     const UV_MONKEY = Symbol();
 
     const IDX_SPRITE = Symbol();
-    const IDX_TEST = Symbol();
     const IDX_MONKEY = Symbol();
     const IDX_HOME = Symbol();
 
@@ -259,7 +256,6 @@ const buildModels = async() =>
     }
 
     const externalModels = [
-        new ExternalModel("mesh", MSH_TEST, UV_TEST, IDX_TEST),
         new ExternalModel("monkey", MSH_MONKEY, UV_MONKEY, IDX_MONKEY),
         new ExternalModel("home", MSH_HOME, UV_HOME, IDX_HOME)
     ];
@@ -286,7 +282,6 @@ const buildModels = async() =>
         $.MDL_TEXT,         MSH_SCREEN, UV_SCREEN,       IDX_SPRITE, $.TEX_UI_TEXT,
         $.MDL_BUBBLE,       MSH_SCREEN, UV_SCREEN,       IDX_SPRITE, $.TEX_UI_BUBBLE,
         $.MDL_HOME,         MSH_HOME,   UV_HOME,         IDX_HOME,   $.TEX_HOME,
-        $.MDL_TEST,         MSH_TEST,   UV_TEST,         IDX_TEST,   $.TEX_WORLD,
         $.MDL_MONKEY,       MSH_MONKEY, UV_MONKEY,       IDX_MONKEY, $.TEX_WOOD,
     ];
     /* eslint-enable max-len */
@@ -385,13 +380,13 @@ const buildModels = async() =>
     /*--------------------------------------------------------------------------
         Push to buffer and finish
     --------------------------------------------------------------------------*/
-    Buffer.bind($.BUF_ARR_MODEL);
-    Buffer.setData($.BUF_ARR_MODEL, new Float32Array(modelData));
-    Buffer.unbind($.BUF_ARR_MODEL);
+    Buffer.bind($.BUF_ARR_TEXTURED);
+    Buffer.setData($.BUF_ARR_TEXTURED, new Float32Array(modelData));
+    Buffer.unbind($.BUF_ARR_TEXTURED);
 
-    Buffer.bind($.BUF_ELEM_ARRAY_INDEX);
-    Buffer.setData($.BUF_ELEM_ARRAY_INDEX, new Uint16Array(indexData));
-    Buffer.unbind($.BUF_ELEM_ARRAY_INDEX);
+    Buffer.bind($.BUF_ELEM_ARR_IDX);
+    Buffer.setData($.BUF_ELEM_ARR_IDX, new Uint16Array(indexData));
+    Buffer.unbind($.BUF_ELEM_ARR_IDX);
 
     isLoaded = true;
 };
