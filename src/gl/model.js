@@ -212,9 +212,9 @@ const buildModels = async() =>
     ]);
 
     const uvs = new SafeMap([
-        [UV_GIRL_IDLE_00, uvRect1024(0, 0, 123, 286)],
-        [UV_GIRL_MOVE_00, uvRect1024(123, 0, 123, 286)],
-        [UV_GIRL_MOVE_01, uvRect1024(246, 0, 123, 286)],
+        [UV_GIRL_IDLE_00, uvRect(0, 0, 123, 286, 1024, 1024)],
+        [UV_GIRL_MOVE_00, uvRect(123, 0, 123, 286, 1024, 1024)],
+        [UV_GIRL_MOVE_01, uvRect(246, 0, 123, 286, 1024, 1024)],
         [UV_SCREEN, [0, 0, 1, 0, 0, 1, 1, 1]],
     ]);
 
@@ -357,20 +357,24 @@ const buildModels = async() =>
     ]);
 
     const debugIdx = indices.get(IDX_LINE_BOX);
+
     const debugIdxOffset = pushData(
         debugIdx,
         indexData,
         SIZEOF_UINT16
     );
 
-    models.set($.MDL_DEBUG, new DynamicModel(
-        debugAttrib,
-        $.BUF_ARR_DEBUG,
-        $.LINES,
-        MSH_DEBUG,
-        debugIdxOffset,
-        debugIdx.length
-    ));
+    models.set(
+        $.MDL_DEBUG,
+        new DynamicModel(
+            debugAttrib,
+            $.BUF_ARR_DEBUG,
+            $.LINES,
+            MSH_DEBUG,
+            debugIdxOffset,
+            debugIdx.length
+        )
+    );
 
     /*--------------------------------------------------------------------------
         Push to buffer and finish
