@@ -9,5 +9,6 @@ export class Ground extends Component
         this.maxx = maxx;
         this.minz = minz;
         this.maxz = maxz;
+        Object.freeze(this);
     }
 }

@@ -41,39 +41,25 @@ export const parseGlb = async(blob) =>
     const binStart = jsonEnd + 8; // skip header 4 bytes
     const [viewMesh, viewUv, viewIdx] = meta.bufferViews;
 
-    const isLittleEndian = true;
+    const readFloat32 = (binOffset) => dataView.getFloat32(binOffset, true);
+    const readUint16 = (binOffset) => dataView.getUint16(binOffset, true);
 
-    const mesh = new Array(viewMesh.byteLength / SIZEOF_FLOAT32);
-    const uv = new Array(viewUv.byteLength / SIZEOF_FLOAT32);
-    const idx = new Array(viewIdx.byteLength / SIZEOF_UINT16);
+    return {
+        mesh: readBin(readFloat32, viewMesh, binStart, SIZEOF_FLOAT32),
+        uv: readBin(readFloat32, viewUv, binStart, SIZEOF_FLOAT32),
+        idx: readBin(readUint16, viewIdx, binStart, SIZEOF_UINT16)
+    };
+};
 
-    const viewMeshStart = binStart + viewMesh.byteOffset;
-    const viewUvStart = binStart + viewUv.byteOffset;
-    const viewIdxStart = binStart + viewIdx.byteOffset;
+const readBin = (func, view, binStart, sizeOf) =>
+{
+    const array = new Array(view.byteLength / sizeOf);
+    const viewStart = binStart + view.byteOffset;
 
-    for (let i = 0; i < mesh.length; i++)
+    for (let i = 0; i < array.length; i++)
     {
-        mesh[i] = dataView.getFloat32(
-            viewMeshStart + i * SIZEOF_FLOAT32,
-            isLittleEndian
-        );
+        array[i] = func(viewStart + i * sizeOf);
     }
 
-    for (let i = 0; i < uv.length; i++)
-    {
-        uv[i] = dataView.getFloat32(
-            viewUvStart + i * SIZEOF_FLOAT32,
-            isLittleEndian
-        );
-    }
-
-    for (let i = 0; i < idx.length; i++)
-    {
-        idx[i] = dataView.getUint16(
-            viewIdxStart + i * SIZEOF_UINT16,
-            isLittleEndian
-        );
-    }
-
-    return { mesh, uv, idx };
+    return array;
 };

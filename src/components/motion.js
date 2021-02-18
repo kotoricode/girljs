@@ -14,16 +14,16 @@ export class Motion extends Component
         this.resetTargets();
     }
 
-    hasTarget()
-    {
-        return this.idx > -1;
-    }
-
     getTarget()
     {
         if (this.idx < 0 || this.waypoints.length <= this.idx) throw this.idx;
 
         return this.waypoints[this.idx];
+    }
+
+    hasTarget()
+    {
+        return this.idx > -1;
     }
 
     resetTargets()
