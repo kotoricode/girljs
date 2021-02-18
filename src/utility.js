@@ -18,61 +18,25 @@ export const isSet = (value) => value !== null && value !== undefined;
 
 export const lerp = (start, end, amount) => start*(1-amount) + end*amount;
 
-export class SettableFloat32Array extends Float32Array
+export const copyArray = (src, dst) =>
 {
-    constructor(...params)
+    if (dst.length !== src.length) throw src;
+
+    for (let i = 0; i < src.length; i++)
     {
-        super(...params);
+        dst[i] = src[i];
     }
+};
 
-    from(array)
-    {
-        if (this.length !== array.length) throw array;
-
-        for (let i = 0; i < array.length; i++)
-        {
-            this[i] = array[i];
-        }
-    }
-
-    setValuesAtIndex(idx, ...values)
-    {
-        if (this.length < (idx + values.length)) throw values;
-
-        for (let i = 0; i < values.length; i++)
-        {
-            this[idx + i] = values[i];
-        }
-    }
-}
-
-export class SettableUint16Array extends Uint16Array
+export const setArrayIndexed = (dst, idx, ...src) =>
 {
-    constructor(...params)
+    if (dst.length < (idx + src.length)) throw src;
+
+    for (let i = 0; i < src.length; i++)
     {
-        super(...params);
+        dst[idx + i] = src[i];
     }
-
-    from(array)
-    {
-        if (this.length !== array.length) throw array;
-
-        for (let i = 0; i < array.length; i++)
-        {
-            this[i] = array[i];
-        }
-    }
-
-    setValuesAtIndex(idx, ...values)
-    {
-        if (this.length < (idx + values.length)) throw values;
-
-        for (let i = 0; i < values.length; i++)
-        {
-            this[idx + i] = values[i];
-        }
-    }
-}
+};
 
 export class SafeMap extends Map
 {

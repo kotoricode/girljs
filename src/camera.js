@@ -1,7 +1,7 @@
 import * as $ from "./const";
 
 import { Buffer } from "./gl/buffer";
-import { SettableFloat32Array, DEG_TO_RAD } from "./utility";
+import { DEG_TO_RAD, copyArray } from "./utility";
 import { Matrix } from "./math/matrix";
 import { Transform } from "./math/transform";
 import { Ray } from "./math/ray";
@@ -44,7 +44,7 @@ const updateViewProjection = () =>
     viewProjection.multiply(projection);
     invViewProjection.invertFrom(viewProjection);
 
-    viewProjectionData.from(viewProjection);
+    copyArray(viewProjection, viewProjectionData);
 
     Buffer.bind($.BUF_UNI_CAMERA);
     Buffer.setData($.BUF_UNI_CAMERA, viewProjectionData);
@@ -75,6 +75,6 @@ const projection = new Matrix(
 
 transform.rotation.fromEuler(-11.5, 0, 0);
 
-const viewProjectionData = new SettableFloat32Array(16);
+const viewProjectionData = new Float32Array(16);
 
 Camera.setFocusEntityId($.ENT_PLAYER);

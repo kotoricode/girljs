@@ -224,7 +224,7 @@ export class Program
         this.uStaging.replace(key, value);
     }
 
-    stageUniformAtIndex(key, idx, value)
+    stageUniformIndexed(key, idx, value)
     {
         const staged = this.uStaging.get(key);
 

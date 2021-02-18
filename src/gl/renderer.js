@@ -1,7 +1,7 @@
 import * as $ from "../const";
 import { gl } from "../dom";
 
-import { SafeMap, SafeSet } from "../utility";
+import { SafeMap, SafeSet, setArrayIndexed as setArrayIndexed } from "../utility";
 import { Matrix } from "../math/matrix";
 
 import { Vao } from "./vao";
@@ -24,7 +24,7 @@ export const Renderer = {
         const imageProgram = new Program($.PRG_IMAGE, $.MDL_FB);
         debugProgram = new Program($.PRG_DEBUG, $.MDL_DEBUG);
 
-        imageProgram.stageUniformAtIndex($.U_TRANSFORM, 1, Matrix.identity());
+        imageProgram.stageUniformIndexed($.U_TRANSFORM, 1, Matrix.identity());
 
         uiPrograms.clear();
 
@@ -169,7 +169,7 @@ const debugSetGroundBuffer = () =>
 
     const { minx, maxx, minz, maxz } = ground;
 
-    debugMesh.setValuesAtIndex(0,
+    setArrayIndexed(debugMesh, 0,
         minx, 0, maxz,
         maxx, 0, maxz,
         maxx, 0, minz,
@@ -184,7 +184,7 @@ const debugSetGroundBuffer = () =>
 
     const debugIndex = debugProgram.getDynamicIndex();
 
-    debugIndex.setValuesAtIndex(0,
+    setArrayIndexed(debugIndex, 0,
         0, 1,
         1, 2,
         2, 3,

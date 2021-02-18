@@ -3,8 +3,7 @@ import {
     SIZEOF_FLOAT32,
     SIZEOF_UINT16,
     SafeMap,
-    SettableFloat32Array,
-    SettableUint16Array
+    setArrayIndexed
 } from "../utility";
 import { Buffer } from "./buffer";
 
@@ -312,14 +311,14 @@ const buildModels = async() =>
     ];
     /* eslint-enable max-len */
 
-    const pushData = (data, destination, byteSize) =>
+    const pushData = (data, dst, byteSize) =>
     {
-        const offset = destination.length;
-        destination.length += data.length;
+        const offset = dst.length;
+        dst.length += data.length;
 
         for (let i = 0; i < data.length; i++)
         {
-            destination[offset + i] = data[i];
+            dst[offset + i] = data[i];
         }
 
         return offset * byteSize;
@@ -442,9 +441,9 @@ const MSH_DEBUG = Symbol();
 const IDX_DEBUG = Symbol();
 
 const dynamicMeshes = new SafeMap([
-    [MSH_DEBUG, new SettableFloat32Array(1000)],
+    [MSH_DEBUG, new Float32Array(1000)],
 ]);
 
 const dynamicIndices = new SafeMap([
-    [IDX_DEBUG, new SettableUint16Array(8)],
+    [IDX_DEBUG, new Uint16Array(8)],
 ]);

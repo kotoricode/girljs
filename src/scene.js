@@ -38,7 +38,7 @@ export const Scene = {
 
                 if (program.hasStagingUniform($.U_TRANSFORM))
                 {
-                    program.stageUniformAtIndex(
+                    program.stageUniformIndexed(
                         $.U_TRANSFORM,
                         1,
                         space.matrix

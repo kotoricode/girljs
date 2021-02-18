@@ -12,7 +12,7 @@ class UiCanvas
     {
         this.program = new Program($.PRG_UI, modelId);
         this.program.stageUniform($.U_COLOR, color);
-        this.program.stageUniformAtIndex(
+        this.program.stageUniformIndexed(
             $.U_TRANSFORM,
             1,
             Matrix.identity()
