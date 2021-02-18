@@ -6,7 +6,6 @@ import {
     SettableFloat32Array
 } from "../utility";
 import { Buffer } from "./buffer";
-import { parseGlb } from "./glb";
 
 /*------------------------------------------------------------------------------
     Consts
@@ -74,9 +73,9 @@ const uvRect = (x, y, width, height, baseWidth, baseHeight) =>
 ------------------------------------------------------------------------------*/
 export class Model
 {
-    constructor(attributes, bufferId, drawMode, drawOffset, drawSize)
+    constructor(aOffsets, bufferId, drawMode, drawOffset, drawSize)
     {
-        this.attributes = attributes;
+        this.aOffsets = aOffsets;
         this.bufferId = bufferId;
         this.drawMode = drawMode;
         this.drawOffset = drawOffset;
@@ -113,9 +112,9 @@ export class Model
 
 class TexturedModel extends Model
 {
-    constructor(attributes, bufferId, drawMode, textureId, drawOffset, drawSize)
+    constructor(aOffsets, bufferId, drawMode, textureId, drawOffset, drawSize)
     {
-        super(attributes, bufferId, drawMode, drawOffset, drawSize);
+        super(aOffsets, bufferId, drawMode, drawOffset, drawSize);
         this.textureId = textureId;
 
         Object.freeze(this);
@@ -124,14 +123,87 @@ class TexturedModel extends Model
 
 class DynamicModel extends Model
 {
-    constructor(attributes, bufferId, drawMode, meshId, drawOffset, drawSize)
+    constructor(aOffsets, bufferId, drawMode, meshId, drawOffset, drawSize)
     {
-        super(attributes, bufferId, drawMode, drawOffset, drawSize);
+        super(aOffsets, bufferId, drawMode, drawOffset, drawSize);
         this.meshId = meshId;
 
         Object.freeze(this);
     }
 }
+
+const glbFetch = async(extModel, meshes, uvs, indices) =>
+{
+    /*--------------------------------------------------------------------------
+        Download glb
+    --------------------------------------------------------------------------*/
+    const response = await window.fetch(extModel.url);
+    const blob = await response.blob();
+    const stream = blob.stream();
+    const reader = stream.getReader();
+    const data = new Uint8Array(blob.size);
+    const dataView = new DataView(data.buffer);
+    let offset = 0;
+
+    while (offset !== blob.size)
+    {
+        const { value } = await reader.read();
+        data.set(value, offset);
+        offset += value.byteLength;
+    }
+
+    reader.cancel();
+
+    /*--------------------------------------------------------------------------
+        Get JSON
+    --------------------------------------------------------------------------*/
+    const jsonLen = dataView.getUint32(12, true);
+
+    const jsonStart = 20; // skip header 4 bytes
+    const jsonEnd = jsonStart + jsonLen;
+    const json = data.subarray(jsonStart, jsonEnd);
+
+    const decoder = new TextDecoder();
+    const jsonString = decoder.decode(json);
+    const meta = JSON.parse(jsonString);
+
+    /*--------------------------------------------------------------------------
+        Process binary
+    --------------------------------------------------------------------------*/
+    const binStart = jsonEnd + 8; // skip header 4 bytes
+    const [viewMesh, viewUv, viewIdx] = meta.bufferViews;
+
+    const readFloat32 = (binOffset) => dataView.getFloat32(binOffset, true);
+    const readUint16 = (binOffset) => dataView.getUint16(binOffset, true);
+
+    meshes.set(
+        extModel.meshId,
+        glbRead(readFloat32, viewMesh, binStart, SIZEOF_FLOAT32)
+    );
+
+    uvs.set(
+        extModel.uvId,
+        glbRead(readFloat32, viewUv, binStart, SIZEOF_FLOAT32)
+    );
+
+    indices.set(
+        extModel.indexId,
+        glbRead(readUint16, viewIdx, binStart, SIZEOF_UINT16)
+    );
+};
+
+const glbRead = (func, view, binStart, sizeOf) =>
+{
+    const array = new Array(view.byteLength / sizeOf);
+    const viewStart = binStart + view.byteOffset;
+
+    for (let i = 0; i < array.length; i++)
+    {
+        array[i] = func(viewStart + i * sizeOf);
+    }
+
+    return array;
+};
 
 const buildModels = async() =>
 {
@@ -158,7 +230,7 @@ const buildModels = async() =>
     /*--------------------------------------------------------------------------
         Download external models
     --------------------------------------------------------------------------*/
-    class ExternalModelInfo
+    class ExternalModel
     {
         constructor(fileName, meshId, uvId, indexId)
         {
@@ -172,22 +244,15 @@ const buildModels = async() =>
     }
 
     const externalModels = [
-        new ExternalModelInfo("mesh", MSH_TEST, UV_TEST, IDX_TEST),
-        new ExternalModelInfo("monkey", MSH_MONKEY, UV_MONKEY, IDX_MONKEY),
-        new ExternalModelInfo("home", MSH_HOME, UV_HOME, IDX_HOME)
+        new ExternalModel("mesh", MSH_TEST, UV_TEST, IDX_TEST),
+        new ExternalModel("monkey", MSH_MONKEY, UV_MONKEY, IDX_MONKEY),
+        new ExternalModel("home", MSH_HOME, UV_HOME, IDX_HOME)
     ];
 
     await Promise.all(
-        externalModels.map(extModel => (async() =>
-        {
-            const response = await window.fetch(extModel.url);
-            const blob = await response.blob();
-            const { mesh, uv, idx } = await parseGlb(blob);
-
-            meshes.set(extModel.meshId, mesh);
-            uvs.set(extModel.uvId, uv);
-            indices.set(extModel.indexId, idx);
-        })())
+        externalModels.map(
+            extModel => glbFetch(extModel, meshes, uvs, indices)
+        )
     );
 
     /*--------------------------------------------------------------------------
@@ -270,7 +335,7 @@ const buildModels = async() =>
             indexOffsets.set(indexId, idxOffset);
         }
 
-        const attributes = new SafeMap([
+        const aOffsets = new SafeMap([
             [$.A_POSITION, meshOffsets.get(meshId)],
             [$.A_TEXCOORD, uvOffsets.get(uvId)]
         ]);
@@ -278,7 +343,7 @@ const buildModels = async() =>
         models.set(
             modelId,
             new TexturedModel(
-                attributes,
+                aOffsets,
                 $.BUF_ARR_MODEL,
                 $.TRIANGLES,
                 textureId,

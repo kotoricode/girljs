@@ -45,16 +45,16 @@ export const Vao = {
     prepareModel(program)
     {
         const model = program.getModel();
-        const { bufferId } = model;
+        const { glProgram, aLayout } = program.getCompiled();
 
         const vao = this.get(program);
         this.bind(vao);
-        Buffer.bind(bufferId);
-
-        const { glProgram, aLayout } = program.getCompiled();
+        Buffer.bind(model.bufferId);
 
         for (const [name, attribSize] of aLayout)
         {
+            const offset = model.aOffsets.get(name);
+
             const pos = gl.getAttribLocation(glProgram, name);
             gl.enableVertexAttribArray(pos);
             gl.vertexAttribPointer(
@@ -63,11 +63,11 @@ export const Vao = {
                 $.FLOAT,
                 false,
                 0,
-                model.attributes.get(name)
+                offset
             );
         }
 
-        Buffer.unbind(bufferId);
+        Buffer.unbind(model.bufferId);
         this.unbind();
     }
 };
