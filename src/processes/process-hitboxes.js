@@ -1,5 +1,3 @@
-import * as $ from "../const";
-
 import { HitBox } from "../components/hitbox";
 import { Space } from "../components/space";
 

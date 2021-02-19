@@ -10,6 +10,57 @@ export const SIZEOF_UINT16 = 2;
 
 export const getElement = (elemId) => window.document.getElementById(elemId);
 
+export const hslToRgb = (h, s, l, rgbArray) =>
+{
+    const c = s * (1 - Math.abs(2 * l - 1));
+    const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+
+    let r, g, b;
+
+    if (h >= 300)
+    {
+        r = c;
+        g = 0;
+        b = x;
+    }
+    else if (h >= 240)
+    {
+        r = x;
+        g = 0;
+        b = c;
+    }
+    else if (h >= 180)
+    {
+        r = 0;
+        g = x;
+        b = c;
+    }
+    else if (h >= 120)
+    {
+        r = 0;
+        g = c;
+        b = x;
+    }
+    else if (h >= 60)
+    {
+        r = x;
+        g = c;
+        b = 0;
+    }
+    else
+    {
+        r = c;
+        g = x;
+        b = 0;
+    }
+
+    const m = l - c / 2;
+
+    rgbArray[0] = r + m;
+    rgbArray[1] = g + m;
+    rgbArray[2] = b + m;
+};
+
 export const isString = (value) => typeof value === "string";
 
 export const isNumber = (value) => typeof value === "number";

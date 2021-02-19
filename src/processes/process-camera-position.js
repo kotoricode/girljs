@@ -1,4 +1,3 @@
-import * as $ from "../const";
 import { Space } from "../components/space";
 import { Camera } from "../camera";
 import { Scene } from "../scene";

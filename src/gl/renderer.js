@@ -24,6 +24,7 @@ export const Renderer = {
 
         const imageProgram = new Program($.PRG_IMAGE, $.MDL_FB);
         debugProgram = new Program($.PRG_DEBUG, $.MDL_DEBUG);
+        debugProgram.stageUniform($.U_COLOR, [1, 0, 0, 1]);
 
         imageProgram.stageUniformIndexed($.U_TRANSFORM, 1, Matrix.identity());
 

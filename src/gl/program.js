@@ -102,8 +102,18 @@ export class Program
             ])
         );
 
-        const FS_DEBUG = new FShader(fsColorSrc);
+        const FS_DEBUG = new FShader(
+            fsColorSrc,
+            null,
+            new Map([
+                [U_TYPE_4F, new SafeMap([
+                    [$.U_COLOR, [1, 1, 1, 1]]
+                ])]
+            ])
+        );
+
         const FS_LUMA = new FShader(fsLumaSrc);
+
         const FS_TEXTURED = new FShader(
             fsTexturedSrc,
             null,
