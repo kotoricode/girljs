@@ -4,7 +4,7 @@ import { Program } from "./gl/program";
 import { Texture } from "./gl/texture";
 import { SmoothBezier } from "./math/smooth-bezier";
 import { Matrix } from "./math/matrix";
-import { isSet, isString } from "./utility";
+import { isSet } from "./utility";
 
 class UiCanvas
 {
@@ -126,59 +126,39 @@ const drawSpeakerText = (str) =>
 const drawDialogueText = (str) =>
 {
     const words = str.split(/(?=\s)/);
-    let fits;
-    let maybeFits;
-    let yPos = yPx;
 
-    for (let i = 0; i < words.length; i++)
+    const lines = [];
+    let line = null;
+    const STR_EMPTY = "";
+    let testLine = STR_EMPTY;
+
+    for (let i = 0; i < words.length;)
     {
-        const isLastWord = (i === words.length - 1);
-        const word = words[i];
+        testLine += words[i];
 
-        maybeFits = isString(maybeFits) ? maybeFits + word : word.trimStart();
-
-        if (text.ctx.measureText(maybeFits).width <= width)
+        if (text.ctx.measureText(testLine).width <= width)
         {
-            if (isLastWord)
-            {
-                fillText(maybeFits, yPos);
-            }
-            else
-            {
-                fits = maybeFits;
-            }
+            line = testLine;
+            i++;
+        }
+        else if (line)
+        {
+            lines.push(line);
+            line = null;
+            testLine = STR_EMPTY;
         }
         else
         {
-            if (fits)
-            {
-                maybeFits = word.trimStart();
-            }
-            else
-            {
-                console.warn(`Word too long: ${maybeFits}`);
-
-                fits = maybeFits;
-                maybeFits = null;
-            }
-
-            fillText(fits, yPos);
-            fits = null;
-            yPos += fontSize + fontMargin;
-
-            if (isLastWord && maybeFits)
-            {
-                fillText(maybeFits, yPos);
-            }
+            lines.push(testLine);
+            testLine = STR_EMPTY;
+            i++;
         }
     }
-};
 
-const fillText = (str, yPos) =>
-{
-    if (!isSet(yPos)) throw yPos;
-
-    text.ctx.fillText(str, xPx, yPos);
+    for (let i = 0; i < lines.length; i++)
+    {
+        text.ctx.fillText(lines[i].trimStart(), xPx, yPx + fontSize * i);
+    }
 };
 
 /*------------------------------------------------------------------------------

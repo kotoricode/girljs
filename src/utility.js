@@ -37,8 +37,6 @@ export const hsvToRgb = (h, s, v, rgbArray) =>
     rgbArray[2] = b + m;
 };
 
-export const isString = (value) => typeof value === "string";
-
 export const isNumber = (value) => typeof value === "number";
 
 export const isSet = (value) => value !== null && value !== undefined;

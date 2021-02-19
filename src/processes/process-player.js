@@ -1,7 +1,7 @@
 import * as $ from "../const";
 import { Mouse } from "../dom";
 import { Camera } from "../camera";
-//import { Dialogue } from "../dialogue";
+import { Dialogue } from "../dialogue";
 import { Motion } from "../components/motion";
 import { Scene } from "../scene";
 
@@ -10,9 +10,9 @@ export const processPlayer = () =>
     if (Mouse.isClicked())
     {
         Mouse.consumeClick();
-        // Dialogue.setText(
-        //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
-        // );
+        Dialogue.setText(
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+        );
 
         const ray = Camera.getRay();
 
