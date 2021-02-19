@@ -380,13 +380,8 @@ const buildModels = async() =>
     /*--------------------------------------------------------------------------
         Push to buffer and finish
     --------------------------------------------------------------------------*/
-    Buffer.bind($.BUF_ARR_TEXTURED);
-    Buffer.setData($.BUF_ARR_TEXTURED, new Float32Array(modelData));
-    Buffer.unbind($.BUF_ARR_TEXTURED);
-
-    Buffer.bind($.BUF_ELEM_ARR_IDX);
-    Buffer.setData($.BUF_ELEM_ARR_IDX, new Uint16Array(indexData));
-    Buffer.unbind($.BUF_ELEM_ARR_IDX);
+    Buffer.setDataBind($.BUF_ARR_TEXTURED, new Float32Array(modelData));
+    Buffer.setDataBind($.BUF_ELEM_ARR_IDX, new Uint16Array(indexData));
 
     isLoaded = true;
 };

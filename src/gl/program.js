@@ -118,22 +118,22 @@ export class Program
 
         compiledPrograms.set(
             $.PRG_DEBUG,
-            new CompiledProgram(VS_DEBUG, FS_DEBUG)
+            new Compiled(VS_DEBUG, FS_DEBUG)
         );
 
         compiledPrograms.set(
             $.PRG_IMAGE,
-            new CompiledProgram(VS_UI, FS_LUMA)
+            new Compiled(VS_UI, FS_LUMA)
         );
 
         compiledPrograms.set(
             $.PRG_UI,
-            new CompiledProgram(VS_UI, FS_TEXTURED)
+            new Compiled(VS_UI, FS_TEXTURED)
         );
 
         compiledPrograms.set(
             $.PRG_WORLD,
-            new CompiledProgram(VS_WORLD, FS_TEXTURED)
+            new Compiled(VS_WORLD, FS_TEXTURED)
         );
     }
 
@@ -234,7 +234,7 @@ export class Program
     }
 }
 
-class CompiledProgram
+class Compiled
 {
     constructor(vert, frag)
     {
@@ -334,7 +334,7 @@ class CompiledProgram
                         name
                     );
 
-                    const setter = CompiledProgram.createUniformSetterGl(
+                    const setter = Compiled.createUniformSetterGl(
                         type,
                         location
                     );

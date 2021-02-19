@@ -8,7 +8,7 @@ export const Dom = {
         canvas.addEventListener("click", (e) =>
         {
             mouseEvent = e;
-            isClickPending = true;
+            isClickedPending = true;
         });
         canvas.addEventListener("mousemove", (e) => mouseEvent = e);
         loading.style.visibility = "hidden";
@@ -23,21 +23,21 @@ const loading = getElement("loading");
 export const Mouse = {
     consumeClick()
     {
-        isMouseClick = false;
+        isMouseClicked = false;
     },
     getClip()
     {
         return mouseClip;
     },
-    isClick()
+    isClicked()
     {
-        return isMouseClick;
+        return isMouseClicked;
     },
     update()
     {
-        isMouseClick = false;
+        isMouseClicked = false;
 
-        if (mouseEvent || isClickPending)
+        if (mouseEvent || isClickedPending)
         {
             const x = (mouseEvent.clientX-canvasRect.left) / canvas.clientWidth;
             const y = (mouseEvent.clientY-canvasRect.top) / canvas.clientHeight;
@@ -46,17 +46,17 @@ export const Mouse = {
             mouseClip.y = 1 - 2 * y;
             mouseEvent = null;
 
-            if (isClickPending)
+            if (isClickedPending)
             {
-                isMouseClick = true;
-                isClickPending = false;
+                isMouseClicked = true;
+                isClickedPending = false;
             }
         }
     },
 };
 
-let isMouseClick = false;
-let isClickPending = false;
+let isMouseClicked = false;
+let isClickedPending = false;
 const mouseClip = new Vector();
 let mouseEvent;
 

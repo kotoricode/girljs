@@ -179,9 +179,7 @@ const debugSetGroundBuffer = () =>
     const model = debugProgram.getModel();
     const { aBufferId, indexBufferId } = model;
 
-    Buffer.bind(aBufferId);
-    Buffer.setData(aBufferId, debugMesh);
-    Buffer.unbind(aBufferId);
+    Buffer.setDataBind(aBufferId, debugMesh);
 
     const debugIndex = debugProgram.getDynamicIndex();
 
@@ -194,9 +192,7 @@ const debugSetGroundBuffer = () =>
 
     model.drawSize = 8;
 
-    Buffer.bind(indexBufferId);
-    Buffer.setData(indexBufferId, debugIndex);
-    Buffer.unbind(indexBufferId);
+    Buffer.setDataBind(indexBufferId, debugIndex);
 };
 
 let fbo;

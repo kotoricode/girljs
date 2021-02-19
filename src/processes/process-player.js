@@ -7,10 +7,9 @@ import { Scene } from "../scene";
 
 export const processPlayer = () =>
 {
-    if (Mouse.isClick())
+    if (Mouse.isClicked())
     {
         Mouse.consumeClick();
-
         // Dialogue.setText(
         //     "Lorem ipsum dolor sit amet, consectetur adipiscing elit"
         // );

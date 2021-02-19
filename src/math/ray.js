@@ -96,18 +96,18 @@ export class Ray
 
         const w = ivp[3]*x + ivp[7]*y + ivp[15];
         const zw = ivp[11];
-        const iwNear = w - zw;
-        const iwFar = w + zw;
+        const near = w - zw;
+        const far = w + zw;
 
         for (let i = 0; i < 3; i++)
         {
             const coord = ivp[i]*x + ivp[4+i]*y + ivp[12+i];
             const zcoord = ivp[8+i];
 
-            const start = (coord - zcoord) / iwNear;
+            const start = (coord - zcoord) / near;
 
             this.start[i] = start;
-            this.direction[i] = (coord + zcoord) / iwFar - start;
+            this.direction[i] = (coord + zcoord) / far - start;
         }
 
         this.direction.normalize();
