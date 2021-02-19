@@ -1,7 +1,7 @@
 import * as $ from "./const";
 
 import { Buffer } from "./gl/buffer";
-import { DEG_TO_RAD, copyArray } from "./utility";
+import { DEG_TO_RAD } from "./utility";
 import { Matrix } from "./math/matrix";
 import { Transform } from "./math/transform";
 import { Ray } from "./math/ray";
@@ -43,8 +43,7 @@ const updateViewProjection = () =>
     viewProjection.invert();
     viewProjection.multiply(projection);
     invViewProjection.invertFrom(viewProjection);
-
-    copyArray(viewProjection, viewProjectionData);
+    viewProjectionData.set(viewProjection);
 
     Buffer.setDataBind($.BUF_UNI_CAMERA, viewProjectionData);
 };

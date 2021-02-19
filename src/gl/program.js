@@ -11,7 +11,7 @@ import vsDebugSrc  from "./shaders/vert/debug.vert";
 import vsUiSrc     from "./shaders/vert/ui.vert";
 import vsWorldSrc  from "./shaders/vert/world.vert";
 
-import fsDebugSrc    from "./shaders/frag/debug.frag";
+import fsColorSrc    from "./shaders/frag/color.frag";
 import fsLumaSrc     from "./shaders/frag/luma.frag";
 import fsTexturedSrc from "./shaders/frag/textured.frag";
 
@@ -102,7 +102,7 @@ export class Program
             ])
         );
 
-        const FS_DEBUG = new FShader(fsDebugSrc);
+        const FS_DEBUG = new FShader(fsColorSrc);
         const FS_LUMA = new FShader(fsLumaSrc);
         const FS_TEXTURED = new FShader(
             fsTexturedSrc,
@@ -148,7 +148,7 @@ export class Program
 
             for (const blockId of uBlocks)
             {
-                Buffer.prepareBlock(activeGlProgram, blockId);
+                Buffer.setUniformBlockBinding(activeGlProgram, blockId);
             }
         }
     }

@@ -5,19 +5,22 @@ import { Space }    from "./components/space";
 import { Motion }   from "./components/motion";
 import { Player }   from "./components/player";
 import { Drawable } from "./components/drawable";
-//import { HitBox }   from "./components/hitbox";
+import { HitBox }   from "./components/hitbox";
 import { Anim }     from "./components/anim";
 
 import { processMotion }    from "./processes/process-motion";
-import { processCamera }    from "./processes/process-camera";
+import { processCameraPosition }    from "./processes/process-camera-position";
 import { processAnimation } from "./processes/process-animation";
 import { processPlayer }    from "./processes/process-player";
 import { Ground } from "./components/ground";
+import { processHitboxes } from "./processes/process-hitboxes";
+import { processCameraRay } from "./processes/process-camera-ray";
 
 const createPlayer = () => [$.ENT_PLAYER, new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
         new Space(0, 0, -1),
         new Drawable($.PRG_WORLD, $.QUE_SPRITE, $.MDL_GIRL_IDLE_00),
+        new HitBox(-0.5, 0.5, 0, 2, -0.5, 0.5),
         new Motion(3),
         new Player(),
         new Anim(
@@ -42,6 +45,7 @@ const createHome = () => [$.ENT_GROUND, new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
         new Space(),
         new Drawable($.PRG_WORLD, $.QUE_BACKGROUND, $.MDL_HOME),
+        new HitBox(-0.5, 0.5, 0, 2, -0.5, 0.5),
         new Ground(-3, 3, -2.6, 0),
     ])],
     [$.BLU_CHILD_ENTITIES, new SafeMap()]
@@ -63,9 +67,11 @@ export const blueprint = new SafeMap([
         ])],
         [$.BLU_PROCESSES, new SafeSet([
             processMotion,
+            processCameraPosition,
+            processHitboxes,
+            processCameraRay,
             processAnimation,
-            processCamera,
-            processPlayer
+            processPlayer,
         ])]
     ])]
 ]);

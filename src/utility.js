@@ -18,24 +18,18 @@ export const isSet = (value) => value !== null && value !== undefined;
 
 export const lerp = (start, end, amount) => start*(1-amount) + end*amount;
 
-export const copyArray = (src, dst) =>
+export const setArrayValues = (array, offset, ...values) =>
 {
-    if (dst.length !== src.length) throw src;
+    const newOffset = offset + values.length;
 
-    for (let i = 0; i < src.length; i++)
+    if (array.length < newOffset) throw values;
+
+    for (let i = 0; i < values.length; i++)
     {
-        dst[i] = src[i];
+        array[offset + i] = values[i];
     }
-};
 
-export const setArrayIndexed = (dst, idx, ...src) =>
-{
-    if (dst.length < (idx + src.length)) throw src;
-
-    for (let i = 0; i < src.length; i++)
-    {
-        dst[idx + i] = src[i];
-    }
+    return newOffset;
 };
 
 export class SafeMap extends Map

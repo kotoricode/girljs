@@ -397,9 +397,9 @@ const MSH_DEBUG = Symbol();
 const IDX_DEBUG = Symbol();
 
 const dynamicMeshes = new SafeMap([
-    [MSH_DEBUG, new Float32Array(1000)],
+    [MSH_DEBUG, new Float32Array(3 * 100)],
 ]);
 
 const dynamicIndices = new SafeMap([
-    [IDX_DEBUG, new Uint16Array(8)],
+    [IDX_DEBUG, new Uint16Array(3 * 1000)],
 ]);

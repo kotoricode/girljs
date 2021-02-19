@@ -30,6 +30,9 @@ export const Buffer = {
         buffers.clear();
         uBufferBindings.clear();
 
+        /*----------------------------------------------------------------------
+            Create buffers
+        ----------------------------------------------------------------------*/
         buffers.set(
             $.BUF_ARR_TEXTURED,
             new BufferData($.ARRAY_BUFFER, $.STATIC_DRAW)
@@ -55,6 +58,9 @@ export const Buffer = {
             new BufferData($.UNIFORM_BUFFER, $.DYNAMIC_DRAW)
         );
 
+        /*----------------------------------------------------------------------
+            Assign sequential binding points for uniform buffers
+        ----------------------------------------------------------------------*/
         for (const [bufferId, bufferData] of buffers)
         {
             if (bufferData.type === $.UNIFORM_BUFFER)
@@ -64,13 +70,6 @@ export const Buffer = {
                 uBufferBindings.set(bufferId, binding);
             }
         }
-    },
-    prepareBlock(program, blockId)
-    {
-        const bufferId = blockBuffers.get(blockId);
-        const binding = uBufferBindings.get(bufferId);
-        const blockIdx = gl.getUniformBlockIndex(program, blockId);
-        gl.uniformBlockBinding(program, blockIdx, binding);
     },
     setData(bufferId, data)
     {
@@ -83,6 +82,13 @@ export const Buffer = {
         gl.bindBuffer(type, buffer);
         gl.bufferData(type, data, usage);
         gl.bindBuffer(type, null);
+    },
+    setUniformBlockBinding(program, blockId)
+    {
+        const bufferId = blockBuffers.get(blockId);
+        const binding = uBufferBindings.get(bufferId);
+        const blockIdx = gl.getUniformBlockIndex(program, blockId);
+        gl.uniformBlockBinding(program, blockIdx, binding);
     },
     unbind(bufferId)
     {

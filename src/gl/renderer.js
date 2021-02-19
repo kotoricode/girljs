@@ -1,7 +1,7 @@
 import * as $ from "../const";
 import { gl } from "../dom";
 
-import { SafeMap, SafeSet, setArrayIndexed } from "../utility";
+import { SafeMap, SafeSet, setArrayValues } from "../utility";
 import { Matrix } from "../math/matrix";
 
 import { Vao } from "./vao";
@@ -14,6 +14,7 @@ import { Ground } from "../components/ground";
 
 import { Dialogue } from "../dialogue";
 import { Scene } from "../scene";
+import { HitBox } from "../components/hitbox";
 
 export const Renderer = {
     init()
@@ -165,33 +166,65 @@ const drawQueue = (queueId) =>
 const debugSetGroundBuffer = () =>
 {
     const debugMesh = debugProgram.getDynamicMesh();
-    const [ground] = Scene.one($.ENT_GROUND, Ground);
-
-    const { minx, maxx, minz, maxz } = ground;
-
-    setArrayIndexed(debugMesh, 0,
-        minx, 0, maxz,
-        maxx, 0, maxz,
-        maxx, 0, minz,
-        minx, 0, minz,
-    );
-
+    const debugIndex = debugProgram.getDynamicIndex();
     const model = debugProgram.getModel();
     const { aBufferId, indexBufferId } = model;
+    const [ground] = Scene.one($.ENT_GROUND, Ground);
 
-    Buffer.setDataBind(aBufferId, debugMesh);
+    let meshOffset = 0;
+    let indexOffset = 0;
 
-    const debugIndex = debugProgram.getDynamicIndex();
-
-    setArrayIndexed(debugIndex, 0,
+    indexOffset = setArrayValues(debugIndex, indexOffset,
         0, 1,
         1, 2,
         2, 3,
-        3, 0
+        3, 0,
     );
 
-    model.drawSize = 8;
+    meshOffset = setArrayValues(debugMesh, meshOffset,
+        ground.minx, 0, ground.maxz,
+        ground.maxx, 0, ground.maxz,
+        ground.maxx, 0, ground.minz,
+        ground.minx, 0, ground.minz
+    );
 
+    for (const [hitbox] of Scene.all(HitBox))
+    {
+        const i = meshOffset / 3;
+
+        indexOffset = setArrayValues(debugIndex, indexOffset,
+            i, i + 1,
+            i + 1, i + 2,
+            i + 2, i + 3,
+            i + 3, i,
+
+            i + 4, i + 5,
+            i + 5, i + 6,
+            i + 6, i + 7,
+            i + 7, i + 4,
+
+            i, i + 4,
+            i + 1, i + 5,
+            i + 2, i + 6,
+            i + 3, i + 7
+        );
+
+        meshOffset = setArrayValues(debugMesh, meshOffset,
+            hitbox.min.x, hitbox.min.y, hitbox.min.z,
+            hitbox.min.x, hitbox.min.y, hitbox.max.z,
+            hitbox.max.x, hitbox.min.y, hitbox.max.z,
+            hitbox.max.x, hitbox.min.y, hitbox.min.z,
+
+            hitbox.min.x, hitbox.max.y, hitbox.min.z,
+            hitbox.min.x, hitbox.max.y, hitbox.max.z,
+            hitbox.max.x, hitbox.max.y, hitbox.max.z,
+            hitbox.max.x, hitbox.max.y, hitbox.min.z,
+        );
+    }
+
+    model.drawSize = indexOffset;
+
+    Buffer.setDataBind(aBufferId, debugMesh);
     Buffer.setDataBind(indexBufferId, debugIndex);
 };
 
