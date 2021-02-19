@@ -12,46 +12,22 @@ export const getElement = (elemId) => window.document.getElementById(elemId);
 
 export const hsvToRgb = (h, s, v, rgbArray) =>
 {
+    const h60 = h / 60;
+
     const c = s * v;
-    const x = c * (1 - Math.abs((h / 60) % 2 - 1));
+    const x = c * (1 - Math.abs(h60 % 2 - 1));
 
     let r, g, b;
 
-    if (h >= 300)
+    switch (h60 | 0)
     {
-        r = c;
-        g = 0;
-        b = x;
-    }
-    else if (h >= 240)
-    {
-        r = x;
-        g = 0;
-        b = c;
-    }
-    else if (h >= 180)
-    {
-        r = 0;
-        g = x;
-        b = c;
-    }
-    else if (h >= 120)
-    {
-        r = 0;
-        g = c;
-        b = x;
-    }
-    else if (h >= 60)
-    {
-        r = x;
-        g = c;
-        b = 0;
-    }
-    else
-    {
-        r = c;
-        g = x;
-        b = 0;
+        case 0: r = c; g = x; b = 0; break;
+        case 1: r = x; g = c; b = 0; break;
+        case 2: r = 0; g = c; b = x; break;
+        case 3: r = 0; g = x; b = c; break;
+        case 4: r = x; g = 0; b = c; break;
+        case 5: r = c; g = 0; b = x; break;
+        default: throw h60;
     }
 
     const m = v - c;
