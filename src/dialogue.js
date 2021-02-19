@@ -4,7 +4,6 @@ import { Program } from "./gl/program";
 import { Texture } from "./gl/texture";
 import { SmoothBezier } from "./math/smooth-bezier";
 import { Matrix } from "./math/matrix";
-import { isSet } from "./utility";
 
 class UiCanvas
 {
@@ -120,7 +119,7 @@ const drawBubble = (beziers) =>
 
 const drawSpeakerText = (str) =>
 {
-    // TODO
+    //
 };
 
 const drawDialogueText = (str) =>
