@@ -3,8 +3,10 @@ import { Space } from "../components/space";
 import { Vector } from "../math/vector";
 import { Scene } from "../scene";
 
-export const processMotion = (dt) =>
+export const processMotion = () =>
 {
+    const dt = Scene.getDeltaTime();
+
     for (const [motion, space] of Scene.all(Motion, Space))
     {
         if (motion.hasTarget())

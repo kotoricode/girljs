@@ -10,9 +10,9 @@ export const SIZEOF_UINT16 = 2;
 
 export const getElement = (elemId) => window.document.getElementById(elemId);
 
-export const hslToRgb = (h, s, l, rgbArray) =>
+export const hsvToRgb = (h, s, v, rgbArray) =>
 {
-    const c = s * (1 - Math.abs(2 * l - 1));
+    const c = s * v;
     const x = c * (1 - Math.abs((h / 60) % 2 - 1));
 
     let r, g, b;
@@ -54,7 +54,7 @@ export const hslToRgb = (h, s, l, rgbArray) =>
         b = 0;
     }
 
-    const m = l - c / 2;
+    const m = v - c;
 
     rgbArray[0] = r + m;
     rgbArray[1] = g + m;

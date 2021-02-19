@@ -1,7 +1,7 @@
 import * as $ from "../const";
 import { gl } from "../dom";
 
-import { SafeMap, SafeSet, setArrayValues } from "../utility";
+import { hsvToRgb, SafeMap, SafeSet, setArrayValues } from "../utility";
 import { Matrix } from "../math/matrix";
 
 import { Vao } from "./vao";
@@ -24,7 +24,7 @@ export const Renderer = {
 
         const imageProgram = new Program($.PRG_IMAGE, $.MDL_FB);
         debugProgram = new Program($.PRG_DEBUG, $.MDL_DEBUG);
-        debugProgram.stageUniform($.U_COLOR, [1, 0, 0, 1]);
+        debugProgram.stageUniform($.U_COLOR, debugColor);
 
         imageProgram.stageUniformIndexed($.U_TRANSFORM, 1, Matrix.identity());
 
@@ -70,6 +70,11 @@ export const Renderer = {
     },
     render()
     {
+        const dt = Scene.getDeltaTime();
+
+        debugHue = (debugHue + dt * 120) % 360;
+        hsvToRgb(debugHue, 1, 1, debugColor);
+
         for (const [drawable] of Scene.all(Drawable))
         {
             if (drawable.isVisible)
@@ -242,3 +247,5 @@ const queues = new SafeMap([
 const uiPrograms = new SafeSet();
 
 let debugProgram;
+const debugColor = [0, 0, 0, 1];
+let debugHue = 0;

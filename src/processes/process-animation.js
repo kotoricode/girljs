@@ -10,7 +10,7 @@ const setModelFromAnim = (anim, drawable) =>
     drawable.program.setModel(modelId);
 };
 
-export const processAnimation = (dt) =>
+export const processAnimation = () =>
 {
     /*--------------------------------------------------------------------------
         Update state IDLE/MOVE based on motion
@@ -35,6 +35,8 @@ export const processAnimation = (dt) =>
     /*--------------------------------------------------------------------------
         Update frame of current animation
     --------------------------------------------------------------------------*/
+    const dt = Scene.getDeltaTime();
+
     for (const [drawable, anim] of Scene.all(Drawable, Anim))
     {
         anim.delay -= dt;

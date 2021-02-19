@@ -99,6 +99,10 @@ export const Scene = {
             }
         }
     },
+    getDeltaTime()
+    {
+        return deltaTime;
+    },
     getEntity(entityId)
     {
         return entities.get(entityId);
@@ -127,6 +131,8 @@ export const Scene = {
     },
     update(dt)
     {
+        deltaTime = dt;
+
         Mouse.update();
 
         if (isSet(nextScene))
@@ -140,7 +146,7 @@ export const Scene = {
 
         for (const process of processes)
         {
-            process(dt);
+            process();
         }
 
         Renderer.render();
@@ -288,6 +294,8 @@ function* yieldComponents(entity, components)
         yield entity.get(comp);
     }
 }
+
+let deltaTime;
 
 let nextScene;
 let currentScene;
