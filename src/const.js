@@ -127,10 +127,10 @@ export const
     Dialogue --- DO NOT MODIFY
 ------------------------------------------------------------------------------*/
 export const
+    TXT_LOREM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     TXT_HELLO = "Hello world!",
     TXT_CATCALL_00 = "Nice ass, baby!",
-    TXT_CATCALL_01 = "milk truk just arive",
-    TXT_CATCALL_02 = "if man peinis smell....scented peins....smlely penis this excite you smelly sweat penis juicy this eroitc to you?";
+    TXT_CATCALL_01 = "milk truk just arive";
 
 /*------------------------------------------------------------------------------
     GL enums --- DO NOT MODIFY

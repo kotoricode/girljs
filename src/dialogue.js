@@ -129,29 +129,38 @@ const drawDialogueText = (str) =>
     const lines = [];
     let line = null;
     const STR_EMPTY = "";
+    let word;
     let testLine = STR_EMPTY;
 
     for (let i = 0; i < words.length;)
     {
-        testLine += words[i];
+        word = words[i++];
+        testLine += word;
+        const isFitting = text.ctx.measureText(testLine).width <= width;
 
-        if (text.ctx.measureText(testLine).width <= width)
+        if (isFitting)
         {
             line = testLine;
-            i++;
+
+            if (i < words.length)
+            {
+                continue;
+            }
         }
-        else if (line)
+
+        if (!line)
         {
-            lines.push(line);
-            line = null;
+            console.warn(`Word too long: ${testLine}`);
+            line = testLine;
             testLine = STR_EMPTY;
         }
         else
         {
-            lines.push(testLine);
-            testLine = STR_EMPTY;
-            i++;
+            testLine = word;
         }
+
+        lines.push(line);
+        line = null;
     }
 
     for (let i = 0; i < lines.length; i++)
