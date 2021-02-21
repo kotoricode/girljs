@@ -9,48 +9,46 @@ export const processMotion = () =>
 
     for (const [motion, space] of Scene.all(Motion, Space))
     {
-        if (!motion.hasTarget())
+        if (motion.hasTarget())
         {
-            continue;
-        }
+            Scene.markDirty(space);
 
-        const { direction } = motion;
-        let step = motion.speed * dt;
-        let isMoving = true;
+            const { direction } = motion;
+            let step = motion.speed * dt;
+            let isMoving = true;
 
-        while (isMoving)
-        {
-            const target = motion.getTarget();
-            distance.from(target);
-            distance.subtract(space.world.translation);
-            const distToTarget = distance.magnitude();
-
-            if (distToTarget <= step)
+            while (isMoving)
             {
-                step -= distToTarget;
-                space.local.translation.add(distance);
-                motion.nextTarget();
-                isMoving = motion.hasTarget();
+                const target = motion.getTarget();
+                distance.from(target);
+                distance.subtract(space.world.translation);
+                const distToTarget = distance.magnitude();
+
+                if (distToTarget <= step)
+                {
+                    step -= distToTarget;
+                    space.local.translation.add(distance);
+                    motion.nextTarget();
+                    isMoving = motion.hasTarget();
+                }
+                else
+                {
+                    direction.from(distance);
+                    direction.normalize(step);
+                    space.local.translation.add(direction);
+                    isMoving = false;
+                }
             }
-            else
+
+            if (distance.x)
             {
-                direction.from(distance);
-                direction.normalize(step);
-                space.local.translation.add(direction);
-                isMoving = false;
+                space.local.rotation.fromEuler(
+                    0,
+                    90 + Math.sign(distance.x) * 90,
+                    0
+                );
             }
         }
-
-        if (distance.x)
-        {
-            space.local.rotation.fromEuler(
-                0,
-                90 + Math.sign(distance.x) * 90,
-                0
-            );
-        }
-
-        Scene.markDirty(space);
     }
 
     Scene.clean();
