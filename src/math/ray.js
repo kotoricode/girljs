@@ -1,5 +1,5 @@
 import { Camera } from "../camera";
-import { Mouse } from "../dom";
+import { Mouse } from "../main";
 import { Vector } from "./vector";
 
 export class Ray

@@ -1,8 +1,24 @@
 import * as $ from "./const";
 import { Prefs } from "./save";
-import { SafeMap, LISTENER_ONCE } from "./utility";
+import { SafeMap } from "./utility";
 
 export const AudioPlayer = {
+    init()
+    {
+        ctx = new AudioContext();
+        const master = getGain($.PREF_MASTER, ctx.destination);
+
+        for (const [audioId, audioObj] of audio)
+        {
+            const gain = getGain(audioObj.gainId, master);
+            ctx.createMediaElementSource(audioObj.element).connect(gain);
+
+            if (audioObj.src)
+            {
+                AudioPlayer.play(audioId, audioObj.src);
+            }
+        }
+    },
     play(audioId, src)
     {
         if (!src) throw Error;
@@ -71,23 +87,6 @@ const audio = new SafeMap([
     [$.AUD_SOUND, new AudioElement($.PREF_SOUND, false)],
     [$.AUD_SOUND_LOOP, new AudioElement($.PREF_SOUND, true)],
 ]);
-
-window.addEventListener("mousedown", () =>
-{
-    ctx = new AudioContext();
-    const master = getGain($.PREF_MASTER, ctx.destination);
-
-    for (const [audioId, audioObj] of audio)
-    {
-        const gain = getGain(audioObj.gainId, master);
-        ctx.createMediaElementSource(audioObj.element).connect(gain);
-
-        if (audioObj.src)
-        {
-            AudioPlayer.play(audioId, audioObj.src);
-        }
-    }
-}, LISTENER_ONCE);
 
 const gains = new SafeMap();
 let ctx;

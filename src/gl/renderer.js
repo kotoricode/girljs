@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { gl } from "../dom";
+import { gl } from "../main";
 
 import { hsvToRgb, SafeMap, SafeSet, setArrayValues } from "../utility";
 import { Matrix } from "../math/matrix";

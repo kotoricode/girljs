@@ -5,7 +5,7 @@ import { Entity } from "./entity";
 import { Renderer } from "./gl/renderer";
 import { isSet, SafeMap, SafeSet } from "./utility";
 import { blueprint } from "./blueprint";
-import { Mouse } from "./dom";
+import { Mouse } from "./main";
 
 export const Scene = {
     addEntity(entity, parentId)

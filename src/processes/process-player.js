@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { Mouse } from "../dom";
+import { Mouse } from "../main";
 import { Camera } from "../camera";
 import { Dialogue } from "../dialogue";
 import { Motion } from "../components/motion";

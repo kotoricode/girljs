@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { gl } from "../dom";
+import { gl } from "../main";
 import { SafeMap } from "../utility";
 
 class BufferData
@@ -21,46 +21,33 @@ export const Buffer = {
     },
     init()
     {
-        for (const { type, buffer } of buffers.values())
-        {
-            gl.bindBuffer(type, null);
-            gl.deleteBuffer(buffer);
-        }
-
-        buffers.clear();
-        uBufferBindings.clear();
-
         /*----------------------------------------------------------------------
             Create buffers
         ----------------------------------------------------------------------*/
-        buffers.set(
-            $.BUF_ARR_TEXTURED,
-            new BufferData($.ARRAY_BUFFER, $.STATIC_DRAW)
-        );
+        buffers.clear();
 
-        buffers.set(
-            $.BUF_ARR_DYNAMIC,
-            new BufferData($.ARRAY_BUFFER, $.DYNAMIC_DRAW)
-        );
+        const def = [
+            $.BUF_ARR_TEXTURED,     $.ARRAY_BUFFER,         $.STATIC_DRAW,
+            $.BUF_ARR_DYNAMIC,      $.ARRAY_BUFFER,         $.DYNAMIC_DRAW,
+            $.BUF_ELEM_IDX,         $.ELEMENT_ARRAY_BUFFER, $.STATIC_DRAW,
+            $.BUF_ELEM_IDX_DYNAMIC, $.ELEMENT_ARRAY_BUFFER, $.DYNAMIC_DRAW,
+            $.BUF_UNI_CAMERA,       $.UNIFORM_BUFFER,       $.DYNAMIC_DRAW
+        ];
 
-        buffers.set(
-            $.BUF_ELEM_ARR_IDX,
-            new BufferData($.ELEMENT_ARRAY_BUFFER, $.STATIC_DRAW)
-        );
+        for (let i = 0; i < def.length;)
+        {
+            const bufferId = def[i++];
+            const bufferType = def[i++];
+            const bufferUsage = def[i++];
 
-        buffers.set(
-            $.BUF_ELEM_ARR_IDX_DYNAMIC,
-            new BufferData($.ELEMENT_ARRAY_BUFFER, $.DYNAMIC_DRAW)
-        );
-
-        buffers.set(
-            $.BUF_UNI_CAMERA,
-            new BufferData($.UNIFORM_BUFFER, $.DYNAMIC_DRAW)
-        );
+            buffers.set(bufferId, new BufferData(bufferType, bufferUsage));
+        }
 
         /*----------------------------------------------------------------------
             Assign sequential binding points for uniform buffers
         ----------------------------------------------------------------------*/
+        uBufferBindings.clear();
+
         for (const [bufferId, bufferData] of buffers)
         {
             if (bufferData.type === $.UNIFORM_BUFFER)

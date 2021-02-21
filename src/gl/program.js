@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { gl } from "../dom";
+import { gl } from "../main";
 import { isSet, SafeMap, SafeSet } from "../utility";
 import { Model } from "./model";
 import { Buffer } from "./buffer";

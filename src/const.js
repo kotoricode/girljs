@@ -48,8 +48,8 @@ export const
     BUF_UNI_CAMERA = i++,
     BUF_ARR_DYNAMIC = i++,
     BUF_ARR_TEXTURED = i++,
-    BUF_ELEM_ARR_IDX = i++,
-    BUF_ELEM_ARR_IDX_DYNAMIC = i++;
+    BUF_ELEM_IDX = i++,
+    BUF_ELEM_IDX_DYNAMIC = i++;
 
 export const
     MDL_MONKEY = Symbol(),

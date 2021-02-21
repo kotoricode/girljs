@@ -159,13 +159,13 @@ const drawDialogueText = (str) =>
             testLine = word;
         }
 
-        lines.push(line);
+        lines.push(line.trimStart());
         line = null;
     }
 
     for (let i = 0; i < lines.length; i++)
     {
-        text.ctx.fillText(lines[i].trimStart(), xPx, yPx + fontSize * i);
+        text.ctx.fillText(lines[i], xPx, yPx + fontSize * i);
     }
 };
 

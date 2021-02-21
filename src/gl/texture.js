@@ -1,5 +1,5 @@
 import * as $ from "../const";
-import { gl } from "../dom";
+import { gl } from "../main";
 import { SafeMap, LISTENER_ONCE } from "../utility";
 
 export const Texture = {
@@ -25,13 +25,6 @@ export const Texture = {
     },
     init()
     {
-        this.unbind();
-
-        for (const texture of textures.values())
-        {
-            gl.deleteTexture(texture);
-        }
-
         imagesToFetch.length = 0;
         imageTextures.clear();
         textures.clear();

@@ -23,7 +23,7 @@ html, body
     grid-row: 1;
 }
 
-#loading
+#canvasDiv
 {
     display: flex;
     align-items: center;

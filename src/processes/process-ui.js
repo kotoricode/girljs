@@ -1,4 +1,4 @@
-import { Mouse } from "../dom";
+import { Mouse } from "../main";
 
 
 export const processUi = () =>

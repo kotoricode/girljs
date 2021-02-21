@@ -16,6 +16,7 @@ module.exports = {
         "block-spacing": 2,
         "brace-style": [2, "allman"],
         "class-methods-use-this": 2,
+        "complexity": [1, 10],
         "default-case": 2,
         "default-case-last": 2,
         "default-param-last": [2],
