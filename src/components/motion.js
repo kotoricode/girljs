@@ -11,14 +11,14 @@ export class Motion extends Component
         this.speed = speed;
         this.direction = new Vector();
         this.waypoints = [new Vector()];
-        this.resetTargets();
+        this.index = -1;
+        this.maxIndex = -1;
     }
 
     getTarget()
     {
-        if (this.index < 0 ||
-            this.waypoints.length <= this.index
-        ) throw this.index;
+        if (this.index < 0) throw Error;
+        if (this.waypoints.length <= this.index) throw this.index;
 
         return this.waypoints[this.index];
     }
@@ -28,14 +28,15 @@ export class Motion extends Component
         return this.index > -1;
     }
 
-    resetTargets()
-    {
-        this.index = this.maxIndex = -1;
-    }
-
     setMainTarget(vec)
     {
         this.waypoints[0].from(vec);
         this.index = this.maxIndex = 0;
+    }
+
+    stop()
+    {
+        this.direction.setValues(0, 0, 0);
+        this.index = this.maxIndex = -1;
     }
 }

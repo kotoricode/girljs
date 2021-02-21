@@ -18,6 +18,12 @@ export const processMotion = () =>
             distance.from(target);
             distance.subtract(space.world.translation);
 
+            if (!distance.sqrMagnitude())
+            {
+                motion.stop();
+                continue;
+            }
+
             // Direction
             direction.from(distance);
             direction.normalize();
@@ -42,8 +48,7 @@ export const processMotion = () =>
             else if (++motion.index > motion.maxIndex)
             {
                 // No more targets, stop moving
-                direction.setValues(0, 0, 0);
-                motion.resetTargets();
+                motion.stop();
             }
 
             // Step to or towards target
