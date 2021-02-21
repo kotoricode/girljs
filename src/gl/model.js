@@ -101,7 +101,7 @@ class TexturedModel extends Model
         super(
             aOffsets,
             $.BUF_ARR_TEXTURED,
-            $.BUF_ELEM_ARR_IDX,
+            $.BUF_ELEM_IDX,
             $.TRIANGLES,
             drawOffset,
             drawSize
@@ -118,7 +118,7 @@ class DynamicModel extends Model
         super(
             aOffsets,
             $.BUF_ARR_DYNAMIC,
-            $.BUF_ELEM_ARR_IDX_DYNAMIC,
+            $.BUF_ELEM_IDX_DYNAMIC,
             $.LINES,
             0,
             -1
@@ -381,7 +381,7 @@ const buildModels = async() =>
         Push to buffer and finish
     --------------------------------------------------------------------------*/
     Buffer.setDataBind($.BUF_ARR_TEXTURED, new Float32Array(modelData));
-    Buffer.setDataBind($.BUF_ELEM_ARR_IDX, new Uint16Array(indexData));
+    Buffer.setDataBind($.BUF_ELEM_IDX, new Uint16Array(indexData));
 
     isLoaded = true;
 };
