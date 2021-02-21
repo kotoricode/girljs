@@ -10,11 +10,11 @@ import { Camera } from "./camera";
 import { Dialogue } from "./dialogue";
 
 import { Scene } from "./scene";
-import "./audio-player";
 import { Model } from "./gl/model";
 import { AudioPlayer } from "./audio-player";
 
 const canvasDiv = getElement("canvasDiv");
+canvasDiv.innerText = "Click to start";
 
 canvasDiv.addEventListener("click", () =>
 {
@@ -30,10 +30,10 @@ canvasDiv.addEventListener("click", () =>
             isClickedPending = true;
         });
         canvas.addEventListener("mousemove", (e) => mouseEvent = e);
-        canvasDiv.style.visibility = "hidden";
-
         Scene.setPendingLoad($.SCN_TEST);
         isReady = true;
+
+        canvasDiv.style.display = "none";
     });
 }, LISTENER_ONCE);
 

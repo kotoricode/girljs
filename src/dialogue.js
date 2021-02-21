@@ -63,7 +63,7 @@ export const Dialogue = {
 
         text.ctx.textAlign = "left";
         text.ctx.textBaseline = "top";
-        text.ctx.font = `${fontSize}px Cuprum`;
+        text.ctx.font = `${fontSizePx}px Cuprum`;
 
         // These are tints for the shaders, not the actual colors
         text.ctx.fillStyle = bubble.ctx.fillStyle = "#fff";
@@ -105,8 +105,8 @@ const drawBubble = (beziers) =>
         const end = beziers[++i % beziers.length];
 
         ctx.bezierCurveTo(
-            start.cp2x, start.cp2y,
-            end.cp1x, end.cp1y,
+            start.cpOutX, start.cpOutY,
+            end.cpInX, end.cpInY,
             end.x, end.y
         );
 
@@ -136,7 +136,7 @@ const drawDialogueText = (str) =>
     {
         word = words[i++];
         testLine += word;
-        const isFitting = text.ctx.measureText(testLine).width <= width;
+        const isFitting = text.ctx.measureText(testLine).width <= widthPx;
 
         if (isFitting)
         {
@@ -163,31 +163,39 @@ const drawDialogueText = (str) =>
         line = null;
     }
 
+    const iMod = 0.5 * lines.length;
+
     for (let i = 0; i < lines.length; i++)
     {
-        text.ctx.fillText(lines[i], xPx, yPx + fontSize * i);
+        text.ctx.fillText(
+            lines[i],
+            leftPx,
+            midYPx + fontSizePx * (i - iMod)
+        );
     }
 };
 
 /*------------------------------------------------------------------------------
     Draw area
 ------------------------------------------------------------------------------*/
-const fontSize = 32;
-const fontMargin = 10;
+const fontSizePx = 36;
 
-const x = 0.26;
-const y = 0.7;
+const left = 0.2;
+const right = 0.8;
+const top = 0.7;
+const bottom = 0.95;
 
-const xPx = x * $.RES_WIDTH;
-const yPx = y * $.RES_HEIGHT;
+const leftPx = left * $.RES_WIDTH;
+const widthPx = (right - left) * $.RES_WIDTH;
+const midYPx = (bottom - (bottom - top) / 2) * $.RES_HEIGHT;
 
-const width = $.RES_WIDTH - 2*xPx;
-
-const midLineY = 0.7 + (1.5 * fontSize + fontMargin) / $.RES_HEIGHT;
+const boxCpDist = 100;
 
 const bezierSpeech = [
-    new SmoothBezier(0.2, midLineY, 180, 180, 90),
-    new SmoothBezier(0.8, midLineY, 180, 180, -90),
+    new SmoothBezier(left, top, boxCpDist, boxCpDist, 180),
+    new SmoothBezier(right, top, boxCpDist, boxCpDist, 180),
+    new SmoothBezier(right, bottom, boxCpDist, boxCpDist, 0),
+    new SmoothBezier(left, bottom, boxCpDist, boxCpDist, 0),
 ];
 
 let text;
