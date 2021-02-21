@@ -39,7 +39,7 @@ export const processMotion = () =>
                 // Can't reach target yet, step towards it
                 distance.normalize(moveDistance);
             }
-            else if (++motion.idx > motion.maxIdx)
+            else if (++motion.index > motion.maxIndex)
             {
                 // No more targets, stop moving
                 direction.setValues(0, 0, 0);

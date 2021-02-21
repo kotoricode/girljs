@@ -101,7 +101,7 @@ class TexturedModel extends Model
         super(
             aOffsets,
             $.BUF_ARR_TEXTURED,
-            $.BUF_ELEM_IDX,
+            $.BUF_ELEM_INDEX,
             $.TRIANGLES,
             drawOffset,
             drawSize
@@ -118,7 +118,7 @@ class DynamicModel extends Model
         super(
             aOffsets,
             $.BUF_ARR_DYNAMIC,
-            $.BUF_ELEM_IDX_DYNAMIC,
+            $.BUF_ELEM_INDEX_DYNAMIC,
             $.LINES,
             0,
             -1
@@ -168,7 +168,7 @@ const glbFetch = async(extModel, meshes, uvs, indices) =>
         Process binary
     --------------------------------------------------------------------------*/
     const binStart = jsonEnd + 8; // skip header 4 bytes
-    const [viewMesh, viewUv, viewIdx] = meta.bufferViews;
+    const [viewMesh, viewUv, viewIndex] = meta.bufferViews;
 
     const readFloat32 = (binOffset) => dataView.getFloat32(binOffset, true);
     const readUint16 = (binOffset) => dataView.getUint16(binOffset, true);
@@ -185,7 +185,7 @@ const glbFetch = async(extModel, meshes, uvs, indices) =>
 
     indices.set(
         extModel.indexId,
-        glbRead(readUint16, viewIdx, binStart, SIZEOF_UINT16)
+        glbRead(readUint16, viewIndex, binStart, SIZEOF_UINT16)
     );
 };
 
@@ -336,13 +336,13 @@ const buildModels = async() =>
 
         if (!indexOffsets.has(indexId))
         {
-            const idxOffset = pushData(
+            const indexOffset = pushData(
                 indices.get(indexId),
                 indexData,
                 SIZEOF_UINT16
             );
 
-            indexOffsets.set(indexId, idxOffset);
+            indexOffsets.set(indexId, indexOffset);
         }
 
         const aOffsets = new SafeMap([
@@ -381,7 +381,7 @@ const buildModels = async() =>
         Push to buffer and finish
     --------------------------------------------------------------------------*/
     Buffer.setDataBind($.BUF_ARR_TEXTURED, new Float32Array(modelData));
-    Buffer.setDataBind($.BUF_ELEM_IDX, new Uint16Array(indexData));
+    Buffer.setDataBind($.BUF_ELEM_INDEX, new Uint16Array(indexData));
 
     isLoaded = true;
 };

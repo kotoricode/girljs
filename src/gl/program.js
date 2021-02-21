@@ -234,13 +234,13 @@ export class Program
         this.uStaging.replace(key, value);
     }
 
-    stageUniformIndexed(key, idx, value)
+    stageUniformIndexed(key, index, value)
     {
         const staged = this.uStaging.get(key);
 
-        if (!Array.isArray(staged) || staged.length <= idx) throw staged;
+        if (!Array.isArray(staged) || staged.length <= index) throw staged;
 
-        staged[idx] = value;
+        staged[index] = value;
     }
 }
 

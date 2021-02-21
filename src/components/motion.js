@@ -16,24 +16,26 @@ export class Motion extends Component
 
     getTarget()
     {
-        if (this.idx < 0 || this.waypoints.length <= this.idx) throw this.idx;
+        if (this.index < 0 ||
+            this.waypoints.length <= this.index
+        ) throw this.index;
 
-        return this.waypoints[this.idx];
+        return this.waypoints[this.index];
     }
 
     hasTarget()
     {
-        return this.idx > -1;
+        return this.index > -1;
     }
 
     resetTargets()
     {
-        this.idx = this.maxIdx = -1;
+        this.index = this.maxIndex = -1;
     }
 
     setMainTarget(vec)
     {
         this.waypoints[0].from(vec);
-        this.idx = this.maxIdx = 0;
+        this.index = this.maxIndex = 0;
     }
 }

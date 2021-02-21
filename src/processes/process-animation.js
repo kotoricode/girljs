@@ -47,11 +47,11 @@ export const processAnimation = () =>
 
             do
             {
-                anim.delay += delays[++anim.frameIdx % delays.length];
+                anim.delay += delays[++anim.frameIndex % delays.length];
             }
             while (anim.delay <= 0);
 
-            anim.frameIdx %= modelIds.length;
+            anim.frameIndex %= modelIds.length;
             setModelFromAnim(anim, drawable);
         }
     }

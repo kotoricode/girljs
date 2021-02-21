@@ -21,7 +21,7 @@ export class Anim extends Component
 
     getModelId()
     {
-        return this.modelIds[this.frameIdx];
+        return this.modelIds[this.frameIndex];
     }
 
     isState(state)
@@ -36,7 +36,7 @@ export class Anim extends Component
         this.modelIds = this.stateModelIds.get(state);
         this.delays = this.stateDelays.get(state);
 
-        this.frameIdx = 0;
+        this.frameIndex = 0;
         this.delay = this.delays[0];
     }
 }

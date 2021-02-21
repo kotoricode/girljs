@@ -29,8 +29,8 @@ export const Buffer = {
         const def = [
             $.BUF_ARR_TEXTURED,     $.ARRAY_BUFFER,         $.STATIC_DRAW,
             $.BUF_ARR_DYNAMIC,      $.ARRAY_BUFFER,         $.DYNAMIC_DRAW,
-            $.BUF_ELEM_IDX,         $.ELEMENT_ARRAY_BUFFER, $.STATIC_DRAW,
-            $.BUF_ELEM_IDX_DYNAMIC, $.ELEMENT_ARRAY_BUFFER, $.DYNAMIC_DRAW,
+            $.BUF_ELEM_INDEX,         $.ELEMENT_ARRAY_BUFFER, $.STATIC_DRAW,
+            $.BUF_ELEM_INDEX_DYNAMIC, $.ELEMENT_ARRAY_BUFFER, $.DYNAMIC_DRAW,
             $.BUF_UNI_CAMERA,       $.UNIFORM_BUFFER,       $.DYNAMIC_DRAW
         ];
 
@@ -74,8 +74,8 @@ export const Buffer = {
     {
         const bufferId = blockBuffers.get(blockId);
         const binding = uBufferBindings.get(bufferId);
-        const blockIdx = gl.getUniformBlockIndex(program, blockId);
-        gl.uniformBlockBinding(program, blockIdx, binding);
+        const index = gl.getUniformBlockIndex(program, blockId);
+        gl.uniformBlockBinding(program, index, binding);
     },
     unbind(bufferId)
     {
