@@ -5,7 +5,7 @@ export class Motion extends Component
 {
     constructor(speed)
     {
-        if (!speed) throw speed;
+        if (speed <= 0) throw speed;
 
         super();
         this.speed = speed;

@@ -21,18 +21,18 @@ export const processMotion = () =>
                 const target = motion.getTarget();
                 direction.copy(target);
                 direction.subtract(space.world.translation);
-                const distToTarget = direction.magnitude();
+                const distance = direction.magnitude();
 
-                if (step < distToTarget)
+                if (step < distance)
                 {
                     direction.normalize(step);
                     isMoving = false;
                 }
                 else
                 {
-                    step -= distToTarget;
+                    step -= distance;
                     motion.nextTarget();
-                    isMoving = motion.hasTarget();
+                    isMoving = motion.hasTarget() && step > 0;
                 }
 
                 space.local.translation.add(direction);
@@ -40,7 +40,7 @@ export const processMotion = () =>
 
             if (direction.x)
             {
-                space.local.rotation.fromEuler(
+                space.local.rotation.euler(
                     0,
                     90 + Math.sign(direction.x) * 90,
                     0

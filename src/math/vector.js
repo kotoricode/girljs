@@ -84,9 +84,13 @@ export class Vector extends SettableArray
 
     normalize(toMagnitude=1)
     {
-        const magnitude = this.magnitude();
+        let magnitude = this.magnitude();
 
-        if (!magnitude) throw Error("Vector magnitude must be non-zero");
+        if (!magnitude)
+        {
+            console.warn("Vector magnitude must be non-zero");
+            magnitude = Number.EPSILON;
+        }
 
         const scalar = toMagnitude / magnitude;
 

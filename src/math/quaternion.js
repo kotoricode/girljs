@@ -11,7 +11,7 @@ export class Quaternion extends SettableArray
     // https://www.andre-gaschler.com/rotationconverter/
     // http://www.euclideanspace.com/maths/geometry/rotations/conversions/eulerToQuaternion/index.htm
     // https://quaternions.online/
-    fromEuler(x, y, z)
+    euler(x, y, z)
     {
         const hx = DEG_TO_RAD * x * 0.5;
         const hy = DEG_TO_RAD * y * 0.5;
