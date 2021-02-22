@@ -44,7 +44,7 @@ export class Vector extends SettableArray
         this.z += vec.z;
     }
 
-    from(vec)
+    copy(vec)
     {
         this.x = vec.x;
         this.y = vec.y;
@@ -60,16 +60,14 @@ export class Vector extends SettableArray
         );
     }
 
+    distance(vec)
+    {
+        return this.sqrDistance(vec) ** 0.5;
+    }
+
     dot(vec)
     {
         return this.x*vec.x + this.y*vec.y + this.z*vec.z;
-    }
-
-    multiplyScalar(scalar)
-    {
-        this.x *= scalar;
-        this.y *= scalar;
-        this.z *= scalar;
     }
 
     multiply(vec)
@@ -81,26 +79,20 @@ export class Vector extends SettableArray
 
     magnitude()
     {
-        return this.sqrMagnitude() ** 0.5;
+        return this.dot(this) ** 0.5;
     }
 
     normalize(toMagnitude=1)
     {
         const magnitude = this.magnitude();
 
-        if (!magnitude) throw magnitude;
+        if (!magnitude) throw Error("Vector magnitude must be non-zero");
 
-        this.multiplyScalar(toMagnitude / magnitude);
-    }
+        const scalar = toMagnitude / magnitude;
 
-    sqrDistance(vec)
-    {
-        return (this.x-vec.x)**2 + (this.y-vec.y)**2 + (this.z-vec.z)**2;
-    }
-
-    sqrMagnitude()
-    {
-        return this.dot(this);
+        this.x *= scalar;
+        this.y *= scalar;
+        this.z *= scalar;
     }
 
     subtract(vec)
@@ -108,5 +100,12 @@ export class Vector extends SettableArray
         this.x -= vec.x;
         this.y -= vec.y;
         this.z -= vec.z;
+    }
+
+    sqrDistance(vec)
+    {
+        return (this.x - vec.x) ** 2 +
+               (this.y - vec.y) ** 2 +
+               (this.z - vec.z) ** 2;
     }
 }

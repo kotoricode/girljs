@@ -10,10 +10,10 @@ export const processHitboxes = () =>
         const { min, max } = hitbox;
         const { translation } = space.world;
 
-        min.from(hitbox.minBounds);
+        min.copy(hitbox.minBounds);
         min.add(translation);
 
-        max.from(hitbox.maxBounds);
+        max.copy(hitbox.maxBounds);
         max.add(translation);
     }
 };

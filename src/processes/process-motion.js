@@ -1,6 +1,5 @@
 import { Motion } from "../components/motion";
 import { Space } from "../components/space";
-import { Vector } from "../math/vector";
 import { Scene } from "../scene";
 
 export const processMotion = () =>
@@ -20,31 +19,30 @@ export const processMotion = () =>
             while (isMoving)
             {
                 const target = motion.getTarget();
-                distance.from(target);
-                distance.subtract(space.world.translation);
-                const distToTarget = distance.magnitude();
+                direction.copy(target);
+                direction.subtract(space.world.translation);
+                const distToTarget = direction.magnitude();
 
-                if (distToTarget <= step)
+                if (step < distToTarget)
                 {
-                    step -= distToTarget;
-                    space.local.translation.add(distance);
-                    motion.nextTarget();
-                    isMoving = motion.hasTarget();
+                    direction.normalize(step);
+                    isMoving = false;
                 }
                 else
                 {
-                    direction.from(distance);
-                    direction.normalize(step);
-                    space.local.translation.add(direction);
-                    isMoving = false;
+                    step -= distToTarget;
+                    motion.nextTarget();
+                    isMoving = motion.hasTarget();
                 }
+
+                space.local.translation.add(direction);
             }
 
-            if (distance.x)
+            if (direction.x)
             {
                 space.local.rotation.fromEuler(
                     0,
-                    90 + Math.sign(distance.x) * 90,
+                    90 + Math.sign(direction.x) * 90,
                     0
                 );
             }
@@ -53,5 +51,3 @@ export const processMotion = () =>
 
     Scene.clean();
 };
-
-const distance = new Vector();
