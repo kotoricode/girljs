@@ -72,10 +72,7 @@ export const Vao = {
     }
 };
 
-const create = () =>
-{
-    return gl.createVertexArray();
-};
+const create = () => gl.createVertexArray();
 
 const vaos = new SafeMap();
 let activeVao;

@@ -12,15 +12,14 @@ html, body
     background-color: aquamarine;
 }
 
-#holder
+#group
 {
     display: grid;
 }
 
-#holder *
+#group *
 {
-    grid-column: 1;
-    grid-row: 1;
+    grid-area: 1 / 1;
 }
 
 #canvasDiv
@@ -29,7 +28,7 @@ html, body
     align-items: center;
     justify-content: center;
     z-index: 33;
-    font-size: 48px;
+    font-size: 2vw;
     color: white;
     font-family: "Lucida Console", "Courier New", monospace;
 }

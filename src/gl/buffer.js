@@ -27,11 +27,11 @@ export const Buffer = {
         buffers.clear();
 
         const def = [
-            $.BUF_ARR_TEXTURED,     $.ARRAY_BUFFER,         $.STATIC_DRAW,
-            $.BUF_ARR_DYNAMIC,      $.ARRAY_BUFFER,         $.DYNAMIC_DRAW,
+            $.BUF_ARR_TEXTURED,       $.ARRAY_BUFFER,         $.STATIC_DRAW,
+            $.BUF_ARR_DYNAMIC,        $.ARRAY_BUFFER,         $.DYNAMIC_DRAW,
             $.BUF_ELEM_INDEX,         $.ELEMENT_ARRAY_BUFFER, $.STATIC_DRAW,
             $.BUF_ELEM_INDEX_DYNAMIC, $.ELEMENT_ARRAY_BUFFER, $.DYNAMIC_DRAW,
-            $.BUF_UNI_CAMERA,       $.UNIFORM_BUFFER,       $.DYNAMIC_DRAW
+            $.BUF_UNI_CAMERA,         $.UNIFORM_BUFFER,       $.DYNAMIC_DRAW
         ];
 
         for (let i = 0; i < def.length;)

@@ -8,7 +8,7 @@ module.exports = {
     name: "glsl-plugin",
     setup(build)
     {
-        build.onLoad({ filter: glslFiles }, args =>
+        build.onLoad({ filter: glslFiles }, (args) =>
         {
             const fullPath = path.resolve(__dirname, args.path);
             const str = fs.readFileSync(fullPath).toString();
