@@ -191,22 +191,15 @@ const glbRead = (dataView, binStart, view, sizeOf) =>
     const array = new Array(view.byteLength / sizeOf);
     const viewStart = binStart + view.byteOffset;
 
-    switch (sizeOf)
+    const funcGet = (
+        sizeOf === SIZEOF_FLOAT32
+        ? dataView.getFloat32
+        : dataView.getUint16
+    ).bind(dataView);
+
+    for (let i = 0; i < array.length; i++)
     {
-        case SIZEOF_FLOAT32:
-            for (let i = 0; i < array.length; i++)
-            {
-                array[i] = dataView.getFloat32(viewStart + i * sizeOf, true);
-            }
-            break;
-        case SIZEOF_UINT16:
-            for (let i = 0; i < array.length; i++)
-            {
-                array[i] = dataView.getUint16(viewStart + i * sizeOf, true);
-            }
-            break;
-        default:
-            throw sizeOf;
+        array[i] = funcGet(viewStart + i * sizeOf, true);
     }
 
     return array;
