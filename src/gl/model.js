@@ -170,36 +170,33 @@ const glbFetch = async(extModel, meshes, uvs, indices) =>
     const binStart = jsonEnd + 8; // skip header 4 bytes
     const [viewMesh, viewUv, viewIndex] = meta.bufferViews;
 
+    const getFloat32 = dataView.getFloat32.bind(dataView);
+    const getUint16 = dataView.getUint16.bind(dataView);
+
     meshes.set(
         extModel.meshId,
-        glbRead(dataView, binStart, viewMesh, SIZEOF_FLOAT32)
+        glbRead(getFloat32, binStart, viewMesh, SIZEOF_FLOAT32)
     );
 
     uvs.set(
         extModel.uvId,
-        glbRead(dataView, binStart, viewUv, SIZEOF_FLOAT32)
+        glbRead(getFloat32, binStart, viewUv, SIZEOF_FLOAT32)
     );
 
     indices.set(
         extModel.indexId,
-        glbRead(dataView, binStart, viewIndex, SIZEOF_UINT16)
+        glbRead(getUint16, binStart, viewIndex, SIZEOF_UINT16)
     );
 };
 
-const glbRead = (dataView, binStart, view, sizeOf) =>
+const glbRead = (dataViewGet, binStart, view, sizeOf) =>
 {
     const array = new Array(view.byteLength / sizeOf);
     const viewStart = binStart + view.byteOffset;
 
-    const funcGet = (
-        sizeOf === SIZEOF_FLOAT32
-        ? dataView.getFloat32
-        : dataView.getUint16
-    ).bind(dataView);
-
     for (let i = 0; i < array.length; i++)
     {
-        array[i] = funcGet(viewStart + i * sizeOf, true);
+        array[i] = dataViewGet(viewStart + i * sizeOf, true);
     }
 
     return array;
