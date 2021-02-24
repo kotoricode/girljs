@@ -43,6 +43,7 @@ const updateViewProjection = () =>
     viewProjection.invert();
     viewProjection.multiply(projection);
     invViewProjection.invertFrom(viewProjection);
+
     viewProjectionData.set(viewProjection);
 
     Buffer.setDataBind($.BUF_UNI_CAMERA, viewProjectionData);

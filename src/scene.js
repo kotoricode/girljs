@@ -195,7 +195,7 @@ const cleanSpace = (space, isWorldUpdate) =>
 
         if (isWorldUpdate)
         {
-            matrix.multiplyTransform(parent.matrix);
+            matrix.multiply(parent.matrix);
         }
 
         world.decomposeFrom(matrix);

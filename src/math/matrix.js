@@ -179,47 +179,6 @@ export class Matrix extends SettableArray
             L3*RC + L7*RD + LB*RE + LF*RF
         );
     }
-
-    // Multiply that skips M3,M7,MB (always 0) and MF (always 1)
-    // Used for parent-child transform matrix multiplication
-    multiplyTransform(leftMatrix)
-    {
-        const [
-            L0, L1, L2, ,
-            L4, L5, L6, ,
-            L8, L9, LA, ,
-            LC, LD, LE
-        ] = leftMatrix;
-
-        const [
-            R0, R1, R2, ,
-            R4, R5, R6, ,
-            R8, R9, RA, ,
-            RC, RD, RE
-        ] = this;
-
-        this.setValues(
-            L0*R0 + L4*R1 + L8*R2,
-            L1*R0 + L5*R1 + L9*R2,
-            L2*R0 + L6*R1 + LA*R2,
-            0,
-
-            L0*R4 + L4*R5 + L8*R6,
-            L1*R4 + L5*R5 + L9*R6,
-            L2*R4 + L6*R5 + LA*R6,
-            0,
-
-            L0*R8 + L4*R9 + L8*RA,
-            L1*R8 + L5*R9 + L9*RA,
-            L2*R8 + L6*R9 + LA*RA,
-            0,
-
-            L0*RC + L4*RD + L8*RE + LC,
-            L1*RC + L5*RD + L9*RE + LD,
-            L2*RC + L6*RD + LA*RE + LE,
-            1
-        );
-    }
 }
 
 const identity = new Matrix(
