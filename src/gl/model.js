@@ -140,9 +140,8 @@ const glbFetch = async(extModel, meshes, uvs, indices) =>
     const reader = stream.getReader();
     const data = new Uint8Array(blob.size);
     const dataView = new DataView(data.buffer);
-    let offset = 0;
 
-    while (offset !== blob.size)
+    for (let offset = 0; offset !== blob.size;)
     {
         const { value } = await reader.read();
         data.set(value, offset);
@@ -274,7 +273,7 @@ const buildModels = async() =>
 
     /* eslint-disable max-len */
     const modelDef = [
-    //  MODEL ID            MESH ID     UV ID            INDEX IDX   TEXTURE ID
+    //  MODEL ID            MESH ID     UV ID            INDEX ID    TEXTURE ID
         $.MDL_GIRL_IDLE_00, MSH_PLAYER, UV_GIRL_IDLE_00, IDX_SPRITE, $.TEX_GIRL,
         $.MDL_GIRL_MOVE_00, MSH_PLAYER, UV_GIRL_MOVE_00, IDX_SPRITE, $.TEX_GIRL,
         $.MDL_GIRL_MOVE_01, MSH_PLAYER, UV_GIRL_MOVE_01, IDX_SPRITE, $.TEX_GIRL,
