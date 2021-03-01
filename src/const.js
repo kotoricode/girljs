@@ -112,7 +112,7 @@ export const
     File System --- DO NOT MODIFY
 ------------------------------------------------------------------------------*/
 export const
-    AUD_OMOIDE = "omoide_loft.ogg";
+    AUD_OMOIDE = "omoide_loft.mp3";
 
 /*------------------------------------------------------------------------------
     Dialogue speaker tags --- DO NOT MODIFY

@@ -25,8 +25,6 @@ export const Texture = {
     },
     init()
     {
-        imagesToFetch.length = 0;
-        imageTextures.clear();
         textures.clear();
 
         textures.set($.TEX_GIRL, createImageTexture("girl.png"));
@@ -35,8 +33,6 @@ export const Texture = {
         textures.set($.TEX_FB, createFbTexture());
         textures.set($.TEX_UI_TEXT, createTexture());
         textures.set($.TEX_UI_BUBBLE, createTexture());
-
-        fetchNextImage();
     },
     parami(key, value)
     {
@@ -51,40 +47,22 @@ export const Texture = {
 /*------------------------------------------------------------------------------
     Image
 ------------------------------------------------------------------------------*/
-const fetchNextImage = () => image.src = "./img/" + imagesToFetch[0];
-
-const image = new Image();
-
-image.addEventListener("load", () =>
-{
-    const src = imagesToFetch.shift();
-    const texture = imageTextures.get(src);
-
-    Texture.bind(texture);
-    Texture.from(image);
-    Texture.parami($.TEXTURE_MIN_FILTER, $.LINEAR);
-    Texture.unbind();
-
-    imageTextures.delete(src);
-
-    if (imagesToFetch.length)
-    {
-        fetchNextImage();
-    }
-});
-
-image.addEventListener("error", (e) =>
-{
-    throw e;
-}, LISTENER_ONCE);
-
 const createTexture = () => gl.createTexture();
 
 const createImageTexture = (src) =>
 {
+    const image = new Image();
     const texture = createTexture();
-    imageTextures.set(src, texture);
-    imagesToFetch.push(src);
+
+    image.addEventListener("load", () =>
+    {
+        Texture.bind(texture);
+        Texture.from(image);
+        Texture.parami($.TEXTURE_MIN_FILTER, $.LINEAR);
+        Texture.unbind();
+    }, LISTENER_ONCE);
+
+    image.src = "./img/" + src;
 
     return texture;
 };
@@ -103,6 +81,4 @@ const createFbTexture = () =>
     Textures
 ------------------------------------------------------------------------------*/
 let activeTexture;
-const imageTextures = new SafeMap();
 const textures = new SafeMap();
-const imagesToFetch = [];
