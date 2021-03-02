@@ -68,7 +68,7 @@ export const Dialogue = {
     drawBubble()
     {
         bubble.clear();
-        drawBubble(bezierSpeech);
+        drawBubble();
         bubble.canvasToTexture();
     },
     getTextProgram()
@@ -115,34 +115,12 @@ export const Dialogue = {
     }
 };
 
-const drawBubble = (beziers) =>
+const drawBubble = () =>
 {
     const { ctx } = bubble;
 
-    ctx.beginPath();
-
-    // Bubble
-    let start = beziers[0];
-    ctx.moveTo(start.x, start.y);
-
-    for (let i = 0; i < beziers.length;)
-    {
-        const end = beziers[++i % beziers.length];
-
-        ctx.bezierCurveTo(
-            start.cpOutX, start.cpOutY,
-            end.cpInX, end.cpInY,
-            end.x, end.y
-        );
-
-        start = end;
-    }
-
-    // Arrow
     const arrowTip = Camera.worldToClip(1.09704, 0.76, -3.02629);
     const arrowTipX = arrowTip[0];
-
-    ctx.moveTo(arrowTipX, arrowTopPx);
 
     const arrowLeft = clamp(
         arrowTipX - arrowHalfWidthPx,
@@ -156,8 +134,26 @@ const drawBubble = (beziers) =>
         rightPx
     );
 
-    ctx.lineTo(arrowLeft, topPx);
+    ctx.beginPath();
+    ctx.moveTo(arrowLeft, topPx);
+    ctx.lineTo(arrowTipX, arrowTopPx);
     ctx.lineTo(arrowRight, topPx);
+
+    ctx.lineTo(bezierSpeech0.x, bezierSpeech0.y);
+
+    ctx.bezierCurveTo(
+        bezierSpeech0.cpOutX, bezierSpeech0.cpOutY,
+        bezierSpeech1.cpInX, bezierSpeech1.cpInY,
+        bezierSpeech1.x, bezierSpeech1.y
+    );
+
+    ctx.lineTo(bezierSpeech2.x, bezierSpeech2.y);
+
+    ctx.bezierCurveTo(
+        bezierSpeech2.cpOutX, bezierSpeech2.cpOutY,
+        bezierSpeech3.cpInX, bezierSpeech3.cpInY,
+        bezierSpeech3.x, bezierSpeech3.y
+    );
 
     ctx.closePath();
     ctx.fill();
@@ -223,10 +219,10 @@ const drawDialogueText = (str) =>
 ------------------------------------------------------------------------------*/
 const fontSizePx = 36;
 
-const left = 0.2;
-const right = 0.8;
-const top = 0.72;
-const bottom = 0.97;
+const left = 0.23;
+const right = 0.77;
+const top = 0.73;
+const bottom = 0.98;
 
 const leftPx = left * $.RES_WIDTH;
 const rightPx = right * $.RES_WIDTH;
@@ -244,12 +240,10 @@ const arrowRightMin = leftPx + arrowWidthPx;
 
 const boxCpDist = 100;
 
-const bezierSpeech = [
-    new SmoothBezier(left, top, boxCpDist, boxCpDist, 180),
-    new SmoothBezier(right, top, boxCpDist, boxCpDist, 180),
-    new SmoothBezier(right, bottom, boxCpDist, boxCpDist, 0),
-    new SmoothBezier(left, bottom, boxCpDist, boxCpDist, 0),
-];
+const bezierSpeech0 = new SmoothBezier(right, top, boxCpDist, boxCpDist, 180);
+const bezierSpeech1 = new SmoothBezier(right, bottom, boxCpDist, boxCpDist, 0);
+const bezierSpeech2 = new SmoothBezier(left, bottom, boxCpDist, boxCpDist, 0);
+const bezierSpeech3 = new SmoothBezier(left, top, boxCpDist, boxCpDist, 180);
 
 let text;
 let bubble;
