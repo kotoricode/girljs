@@ -6,6 +6,7 @@ import { SmoothBezier } from "./math/smooth-bezier";
 import { Matrix } from "./math/matrix";
 import { isSet, clamp, lerp } from "./utility";
 import { Camera } from "./camera";
+import { Vector } from "./math/vector";
 
 class UiCanvas
 {
@@ -96,6 +97,7 @@ export const Dialogue = {
         text.ctx.fillStyle = bubble.ctx.fillStyle = "#fff";
         text.ctx.shadowColor = "#000";
         bubble.ctx.strokeStyle = "#333333";
+
         bubble.ctx.lineWidth = 2;
 
         Model.load().then(() =>
@@ -121,25 +123,24 @@ const drawBubble = () =>
 {
     const { ctx } = bubble;
 
-    const point = Camera.worldToClip(1.09704, 0.76, -3.02629);
-    const pointX = point[0];
+    Camera.worldToScreen(1.09704, 0.76, -3.02629, point);
 
     const arrowLeft = clamp(
-        pointX - arrowHalfSize,
+        point.x - arrowHalfSize,
         leftPx,
         arrowLeftMax
     );
 
     const arrowRight = clamp(
-        pointX + arrowHalfSize,
+        point.x + arrowHalfSize,
         arrowRightMin,
         rightPx
     );
 
     const arrowTipX = lerp(
         arrowRight - arrowHalfSize,
-        pointX,
-        Math.min(arrowSize / (topPx - point[1]), 1)
+        point.x,
+        Math.min(arrowSize / (topPx - point.y), 1)
     );
 
     ctx.beginPath();
@@ -231,6 +232,8 @@ const left = 0.23;
 const right = 0.77;
 const top = 0.73;
 const bottom = 0.98;
+
+const point = new Vector();
 
 const leftPx = left * $.RES_WIDTH;
 const rightPx = right * $.RES_WIDTH;

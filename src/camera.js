@@ -35,63 +35,25 @@ export const Camera = {
             updateViewProjection();
         }
     },
-    worldToClip(x, y, z)
+    worldToScreen(x, y, z, vec)
     {
         const [
-            L0, L1, L2, L3,
-            L4, L5, L6, L7,
-            L8, L9, LA, LB,
-            LC, LD, LE, LF
+            L0, L1, , L3,
+            L4, L5, , L7,
+            L8, L9, , LB,
+            LC, LD, , LF
         ] = viewProjection;
 
-        const [
-            , , , ,
-            , , , ,
-            , , , ,
-            RC, RD, RE
-        ] = [
-            1, 0, 0, 0,
-            0, 1, 0, 0,
-            0, 0, 1, 0,
-            x, y, z, 1
-        ];
+        const w = L3*x + L7*y + LB*z + LF;
 
-        const mat = new Matrix();
+        const clipX = (L0*x + L4*y + L8*z + LC) / w;
+        const clipY = (L1*x + L5*y + L9*z + LD) / w;
 
-        mat.setValues(
-            L0,
-            L1,
-            L2,
-            L3,
-
-            L4,
-            L5,
-            L6,
-            L7,
-
-            L8,
-            L9,
-            LA,
-            LB,
-
-            L0*RC + L4*RD + L8*RE + LC,
-            L1*RC + L5*RD + L9*RE + LD,
-            L2*RC + L6*RD + LA*RE + LE,
-            L3*RC + L7*RD + LB*RE + LF
+        vec.setValues(
+            (clipX + 1) / 2 * $.RES_WIDTH,
+            (1 - clipY) / 2 * $.RES_HEIGHT,
+            0
         );
-
-        const w = L3*RC + L7*RD + LB*RE + LF;
-
-        const b = [
-            mat[12] / w,
-            mat[13] / w,
-            mat[14] / w
-        ];
-
-        b[0] = (b[0] + 1) / 2 * $.RES_WIDTH;
-        b[1] = (1 - b[1]) / 2 * $.RES_HEIGHT;
-
-        return b;
     }
 };
 
