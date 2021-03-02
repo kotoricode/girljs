@@ -4,7 +4,7 @@ import { Program } from "./gl/program";
 import { Texture } from "./gl/texture";
 import { SmoothBezier } from "./math/smooth-bezier";
 import { Matrix } from "./math/matrix";
-import { isSet } from "./utility";
+import { isSet, clamp } from "./utility";
 import { Camera } from "./camera";
 
 class UiCanvas
@@ -143,12 +143,27 @@ const drawBubble = (beziers) =>
     const arrowTipX = arrowTip[0];
 
     ctx.moveTo(arrowTipX, arrowTopPx);
-    ctx.lineTo(arrowTipX - arrowHalfWidthPx, topPx);
-    ctx.lineTo(arrowTipX + arrowHalfWidthPx, topPx);
+
+    const arrowLeft = clamp(
+        arrowTipX - arrowHalfWidthPx,
+        leftPx,
+        arrowLeftMax
+    );
+
+    const arrowRight = clamp(
+        arrowTipX + arrowHalfWidthPx,
+        arrowRightMin,
+        rightPx
+    );
+
+    ctx.lineTo(arrowLeft, topPx);
+    ctx.lineTo(arrowRight, topPx);
 
     ctx.closePath();
     ctx.fill();
+    ctx.stroke();
 };
+
 
 const drawDialogueText = (str) =>
 {
@@ -214,13 +229,19 @@ const top = 0.72;
 const bottom = 0.97;
 
 const leftPx = left * $.RES_WIDTH;
-const widthPx = (right - left) * $.RES_WIDTH;
+const rightPx = right * $.RES_WIDTH;
+const widthPx = rightPx - leftPx;
 const topPx = top * $.RES_HEIGHT;
 
 const midYPx = (bottom - (bottom - top) / 2) * $.RES_HEIGHT;
 
-const arrowHalfWidthPx = 20;
+const arrowWidthPx = 50;
+const arrowHalfWidthPx = arrowWidthPx / 2;
 const arrowTopPx = topPx - 50;
+
+const arrowLeftMax = rightPx - arrowWidthPx;
+const arrowRightMin = leftPx + arrowWidthPx;
+
 const boxCpDist = 100;
 
 const bezierSpeech = [
