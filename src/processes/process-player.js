@@ -14,8 +14,8 @@ export const processPlayer = () =>
 
         if (ray.isHit)
         {
-            const [plMotion] = Scene.one($.ENT_PLAYER, Motion);
-            plMotion.setMainTarget(ray.hitPoint);
+            const [playerMotion] = Scene.one($.ENT_PLAYER, Motion);
+            playerMotion.setMainTarget(ray.hitPoint);
         }
     }
 };
