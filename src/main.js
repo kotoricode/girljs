@@ -16,7 +16,7 @@ import { AudioPlayer } from "./audio-player";
 const canvasDiv = getElement("canvasDiv");
 canvasDiv.innerText = "Click to start";
 
-canvasDiv.addEventListener("click", () =>
+canvasDiv.addEventListener("mousedown", () =>
 {
     canvasDiv.innerText = "Loading...";
     AudioPlayer.init();
@@ -24,10 +24,11 @@ canvasDiv.addEventListener("click", () =>
 
     Model.load().then(() =>
     {
-        canvas.addEventListener("click", (e) =>
+        canvas.addEventListener("mousedown", (e) =>
         {
             mouseEvent = e;
             isClickedPending = true;
+            e.preventDefault();
         });
         canvas.addEventListener("mousemove", (e) => mouseEvent = e);
         Scene.setPendingLoad($.SCN_TEST);
