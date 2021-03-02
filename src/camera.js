@@ -34,6 +34,64 @@ export const Camera = {
             transform.translation.x = vec.x;
             updateViewProjection();
         }
+    },
+    worldToClip(x, y, z)
+    {
+        const [
+            L0, L1, L2, L3,
+            L4, L5, L6, L7,
+            L8, L9, LA, LB,
+            LC, LD, LE, LF
+        ] = viewProjection;
+
+        const [
+            , , , ,
+            , , , ,
+            , , , ,
+            RC, RD, RE
+        ] = [
+            1, 0, 0, 0,
+            0, 1, 0, 0,
+            0, 0, 1, 0,
+            x, y, z, 1
+        ];
+
+        const mat = new Matrix();
+
+        mat.setValues(
+            L0,
+            L1,
+            L2,
+            L3,
+
+            L4,
+            L5,
+            L6,
+            L7,
+
+            L8,
+            L9,
+            LA,
+            LB,
+
+            L0*RC + L4*RD + L8*RE + LC,
+            L1*RC + L5*RD + L9*RE + LD,
+            L2*RC + L6*RD + LA*RE + LE,
+            L3*RC + L7*RD + LB*RE + LF
+        );
+
+        const w = L3*RC + L7*RD + LB*RE + LF;
+
+        const b = [
+            mat[12] / w,
+            mat[13] / w,
+            mat[14] / w
+        ];
+
+        b[0] = (b[0] + 1) / 2 * $.RES_WIDTH;
+        b[1] = (1 - b[1]) / 2 * $.RES_HEIGHT;
+
+        return b;
     }
 };
 

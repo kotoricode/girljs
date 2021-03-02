@@ -5,6 +5,7 @@ import { Texture } from "./gl/texture";
 import { SmoothBezier } from "./math/smooth-bezier";
 import { Matrix } from "./math/matrix";
 import { isSet } from "./utility";
+import { Camera } from "./camera";
 
 class UiCanvas
 {
@@ -48,26 +49,27 @@ export const Dialogue = {
     {
         if (!dialogueScript) throw Error;
 
-        Dialogue.clear();
+        text.clear();
 
         if (dialogueScriptIndex === dialogueScript.length)
         {
             dialogueScript = null;
+            bubble.clear();
+            bubble.canvasToTexture();
         }
         else
         {
             const line = dialogueScript[dialogueScriptIndex++];
-
-            drawBubble(bezierSpeech);
             drawDialogueText(line);
         }
 
-        canvasToTexture();
+        text.canvasToTexture();
     },
-    clear()
+    drawBubble()
     {
-        text.clear();
         bubble.clear();
+        drawBubble(bezierSpeech);
+        bubble.canvasToTexture();
     },
     getTextProgram()
     {
@@ -94,7 +96,13 @@ export const Dialogue = {
         text.ctx.fillStyle = bubble.ctx.fillStyle = "#fff";
         text.ctx.shadowColor = "#000";
 
-        Model.load().then(canvasToTexture);
+        Model.load().then(() =>
+        {
+            text.canvasToTexture();
+            bubble.canvasToTexture();
+            this.setScript(["one", "two", "three"]);
+            this.advance();
+        });
     },
     isActive()
     {
@@ -107,17 +115,13 @@ export const Dialogue = {
     }
 };
 
-const canvasToTexture = () =>
-{
-    text.canvasToTexture();
-    bubble.canvasToTexture();
-};
-
 const drawBubble = (beziers) =>
 {
     const { ctx } = bubble;
 
     ctx.beginPath();
+
+    // Bubble
     let start = beziers[0];
     ctx.moveTo(start.x, start.y);
 
@@ -133,6 +137,14 @@ const drawBubble = (beziers) =>
 
         start = end;
     }
+
+    // Arrow
+    const arrowTip = Camera.worldToClip(1.09704, 0.76, -3.02629);
+    const arrowTipX = arrowTip[0];
+
+    ctx.moveTo(arrowTipX, arrowTopPx);
+    ctx.lineTo(arrowTipX - arrowHalfWidthPx, topPx);
+    ctx.lineTo(arrowTipX + arrowHalfWidthPx, topPx);
 
     ctx.closePath();
     ctx.fill();
@@ -198,13 +210,17 @@ const fontSizePx = 36;
 
 const left = 0.2;
 const right = 0.8;
-const top = 0.7;
-const bottom = 0.95;
+const top = 0.72;
+const bottom = 0.97;
 
 const leftPx = left * $.RES_WIDTH;
 const widthPx = (right - left) * $.RES_WIDTH;
+const topPx = top * $.RES_HEIGHT;
+
 const midYPx = (bottom - (bottom - top) / 2) * $.RES_HEIGHT;
 
+const arrowHalfWidthPx = 20;
+const arrowTopPx = topPx - 50;
 const boxCpDist = 100;
 
 const bezierSpeech = [

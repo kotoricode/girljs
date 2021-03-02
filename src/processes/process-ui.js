@@ -8,9 +8,13 @@ export const processUi = () =>
         if (Dialogue.hasScript())
         {
             Dialogue.advance();
-            Mouse.consumeClick();
+            //Mouse.consumeClick();
         }
+    }
+
+    if (Dialogue.hasScript())
+    {
+        Dialogue.drawBubble();
     }
 };
 
-Dialogue.setScript(["one", "two", "three"]);
