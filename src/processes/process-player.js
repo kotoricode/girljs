@@ -1,7 +1,6 @@
 import * as $ from "../const";
 import { Mouse } from "../main";
 import { Camera } from "../camera";
-import { Dialogue } from "../dialogue";
 import { Motion } from "../components/motion";
 import { Scene } from "../scene";
 
@@ -10,7 +9,6 @@ export const processPlayer = () =>
     if (Mouse.isClicked())
     {
         Mouse.consumeClick();
-        Dialogue.setText($.TXT_LOREM);
 
         const ray = Camera.getRay();
 

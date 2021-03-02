@@ -4,6 +4,7 @@ import { Program } from "./gl/program";
 import { Texture } from "./gl/texture";
 import { SmoothBezier } from "./math/smooth-bezier";
 import { Matrix } from "./math/matrix";
+import { isSet } from "./utility";
 
 class UiCanvas
 {
@@ -43,6 +44,26 @@ class UiCanvas
 }
 
 export const Dialogue = {
+    advance()
+    {
+        if (!dialogueScript) throw Error;
+
+        Dialogue.clear();
+
+        if (dialogueScriptIndex === dialogueScript.length)
+        {
+            dialogueScript = null;
+        }
+        else
+        {
+            const line = dialogueScript[dialogueScriptIndex++];
+
+            drawBubble(bezierSpeech);
+            drawDialogueText(line);
+        }
+
+        canvasToTexture();
+    },
     clear()
     {
         text.clear();
@@ -55,6 +76,10 @@ export const Dialogue = {
     getBubbleProgram()
     {
         return bubble.program;
+    },
+    hasScript()
+    {
+        return isSet(dialogueScript);
     },
     init()
     {
@@ -71,18 +96,14 @@ export const Dialogue = {
 
         Model.load().then(canvasToTexture);
     },
-    setText(dialogue, speaker)
+    isActive()
     {
-        Dialogue.clear();
-
-        // Bubble
-        drawBubble(bezierSpeech);
-
-        // Text
-        drawSpeakerText(speaker);
-        drawDialogueText(dialogue);
-
-        canvasToTexture();
+        return isSet(dialogueScript);
+    },
+    setScript(script)
+    {
+        dialogueScript = script;
+        dialogueScriptIndex = 0;
     }
 };
 
@@ -115,11 +136,6 @@ const drawBubble = (beziers) =>
 
     ctx.closePath();
     ctx.fill();
-};
-
-const drawSpeakerText = (str) =>
-{
-    //
 };
 
 const drawDialogueText = (str) =>
@@ -200,3 +216,5 @@ const bezierSpeech = [
 
 let text;
 let bubble;
+let dialogueScript;
+let dialogueScriptIndex;

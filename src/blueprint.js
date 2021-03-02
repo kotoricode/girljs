@@ -15,6 +15,7 @@ import { processPlayer }    from "./processes/process-player";
 import { Ground } from "./components/ground";
 import { processHitboxes } from "./processes/process-hitboxes";
 import { processCameraRay } from "./processes/process-camera-ray";
+import { processUi } from "./processes/process-ui";
 
 const createPlayer = () => [$.ENT_PLAYER, new SafeMap([
     [$.BLU_COMPONENTS, new SafeSet([
@@ -66,6 +67,7 @@ export const blueprint = new SafeMap([
             createHome()
         ])],
         [$.BLU_PROCESSES, new SafeSet([
+            processUi,
             processMotion,
             processCameraPosition,
             processHitboxes,
