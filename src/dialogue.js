@@ -4,7 +4,7 @@ import { Program } from "./gl/program";
 import { Texture } from "./gl/texture";
 import { SmoothBezier } from "./math/smooth-bezier";
 import { Matrix } from "./math/matrix";
-import { isSet, clamp } from "./utility";
+import { isSet, clamp, lerp } from "./utility";
 import { Camera } from "./camera";
 
 class UiCanvas
@@ -95,6 +95,8 @@ export const Dialogue = {
         // These are tints for the shaders, not the actual colors
         text.ctx.fillStyle = bubble.ctx.fillStyle = "#fff";
         text.ctx.shadowColor = "#000";
+        bubble.ctx.strokeStyle = "#333333";
+        bubble.ctx.lineWidth = 2;
 
         Model.load().then(() =>
         {
@@ -119,19 +121,25 @@ const drawBubble = () =>
 {
     const { ctx } = bubble;
 
-    const arrowTip = Camera.worldToClip(1.09704, 0.76, -3.02629);
-    const arrowTipX = arrowTip[0];
+    const point = Camera.worldToClip(1.09704, 0.76, -3.02629);
+    const pointX = point[0];
 
     const arrowLeft = clamp(
-        arrowTipX - arrowHalfWidthPx,
+        pointX - arrowHalfSize,
         leftPx,
         arrowLeftMax
     );
 
     const arrowRight = clamp(
-        arrowTipX + arrowHalfWidthPx,
+        pointX + arrowHalfSize,
         arrowRightMin,
         rightPx
+    );
+
+    const arrowTipX = lerp(
+        arrowRight - arrowHalfSize,
+        pointX,
+        Math.min(arrowSize / (topPx - point[1]), 1)
     );
 
     ctx.beginPath();
@@ -231,12 +239,12 @@ const topPx = top * $.RES_HEIGHT;
 
 const midYPx = (bottom - (bottom - top) / 2) * $.RES_HEIGHT;
 
-const arrowWidthPx = 50;
-const arrowHalfWidthPx = arrowWidthPx / 2;
-const arrowTopPx = topPx - 50;
+const arrowSize = 50;
+const arrowHalfSize = arrowSize / 2;
+const arrowTopPx = topPx - arrowSize;
 
-const arrowLeftMax = rightPx - arrowWidthPx;
-const arrowRightMin = leftPx + arrowWidthPx;
+const arrowLeftMax = rightPx - arrowSize;
+const arrowRightMin = leftPx + arrowSize;
 
 const boxCpDist = 100;
 

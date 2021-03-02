@@ -26,9 +26,12 @@ canvasDiv.addEventListener("mousedown", () =>
     {
         canvas.addEventListener("mousedown", (e) =>
         {
-            mouseEvent = e;
-            isClickedPending = true;
-            e.preventDefault();
+            if (!e.button)
+            {
+                mouseEvent = e;
+                isClickedPending = true;
+                e.preventDefault();
+            }
         });
         canvas.addEventListener("mousemove", (e) => mouseEvent = e);
         Scene.setPendingLoad($.SCN_TEST);
