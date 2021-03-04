@@ -60,53 +60,7 @@ export const Dialogue = {
         }
         else
         {
-            const str = dialogueScript[dialogueScriptIndex++];
-            if (!str) throw Error;
-            const words = str.split(/(?=\s)/);
-
-            lines.length = 0;
-            let line;
-            let testLine = "";
-            const { ctx } = text;
-
-            for (let i = 0; i < words.length; i++)
-            {
-                const word = words[i];
-                testLine += word;
-
-                if (widthPx < ctx.measureText(testLine).width)
-                {
-                    if (!line)
-                    {
-                        console.warn(`Word too long: ${testLine}`);
-                        line = testLine;
-                    }
-
-                    lines.push(line);
-                    line = null;
-                    testLine = word.trimStart();
-                }
-                else
-                {
-                    line = testLine;
-                }
-            }
-
-            if (line)
-            {
-                lines.push(line);
-            }
-
-            const yOffset = 0.5 * lines.length;
-
-            for (let i = 0; i < lines.length; i++)
-            {
-                ctx.fillText(
-                    lines[i],
-                    leftPx,
-                    midYPx + fontSizePx * (i - yOffset)
-                );
-            }
+            printDialogue();
         }
 
         text.canvasToTexture();
@@ -208,6 +162,57 @@ export const Dialogue = {
     {
         dialogueScript = script;
         dialogueScriptIndex = 0;
+    }
+};
+
+const printDialogue = () =>
+{
+    const str = dialogueScript[dialogueScriptIndex++];
+    if (!str) throw Error;
+    const words = str.split(/(?=\s)/);
+
+    lines.length = 0;
+    let line;
+    let testLine = "";
+    const { ctx } = text;
+
+    for (let i = 0; i < words.length; i++)
+    {
+        const word = words[i];
+        testLine += word;
+
+        if (widthPx < ctx.measureText(testLine).width)
+        {
+            if (!line)
+            {
+                console.warn(`Word too long: ${testLine}`);
+                line = testLine;
+            }
+
+            lines.push(line);
+            line = null;
+            testLine = word.trimStart();
+        }
+        else
+        {
+            line = testLine;
+        }
+    }
+
+    if (line)
+    {
+        lines.push(line);
+    }
+
+    const yOffset = 0.5 * lines.length;
+
+    for (let i = 0; i < lines.length; i++)
+    {
+        ctx.fillText(
+            lines[i],
+            leftPx,
+            midYPx + fontSizePx * (i - yOffset)
+        );
     }
 };
 
