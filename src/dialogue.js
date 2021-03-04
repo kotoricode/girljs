@@ -60,8 +60,57 @@ export const Dialogue = {
         }
         else
         {
-            const line = dialogueScript[dialogueScriptIndex++];
-            drawDialogueText(line);
+            const str = dialogueScript[dialogueScriptIndex++];
+            const words = str.split(/(?=\s)/);
+
+            lines.length = 0;
+            let line = null;
+            let word;
+            let testLine = STR_EMPTY;
+            const { ctx } = text;
+
+            for (let i = 0; i < words.length;)
+            {
+                word = words[i++];
+                testLine += word;
+                const isFitting = ctx.measureText(testLine).width <= widthPx;
+
+                if (isFitting)
+                {
+                    line = testLine;
+
+                    if (i < words.length)
+                    {
+                        continue;
+                    }
+                }
+
+                if (!line)
+                {
+                    console.warn(`Word too long: ${testLine}`);
+                    line = testLine;
+                    testLine = STR_EMPTY;
+                }
+                else
+                {
+                    testLine = word;
+                }
+
+                const trimmed = line.trimStart();
+                lines.push(trimmed);
+                line = null;
+            }
+
+            const yOffset = 0.5 * lines.length;
+
+            for (let i = 0; i < lines.length; i++)
+            {
+                ctx.fillText(
+                    lines[i],
+                    leftPx,
+                    midYPx + fontSizePx * (i - yOffset)
+                );
+            }
         }
 
         text.canvasToTexture();
@@ -69,7 +118,54 @@ export const Dialogue = {
     drawBubble()
     {
         bubble.clear();
-        drawBubble();
+
+        const { ctx } = bubble;
+
+        Camera.worldToScreen(1.09704, 0.76, -3.02629, point);
+
+        const arrowLeft = clamp(
+            point.x - arrowHalfSize,
+            leftPx,
+            arrowLeftMax
+        );
+
+        const arrowRight = clamp(
+            point.x + arrowHalfSize,
+            arrowRightMin,
+            rightPx
+        );
+
+        const arrowTipX = lerp(
+            arrowRight - arrowHalfSize,
+            point.x,
+            Math.min(arrowSize / (topPx - point.y), 1)
+        );
+
+        ctx.beginPath();
+        ctx.moveTo(arrowLeft, topPx);
+        ctx.lineTo(arrowTipX, arrowTopPx);
+        ctx.lineTo(arrowRight, topPx);
+
+        ctx.lineTo(bezierSpeech0.x, bezierSpeech0.y);
+
+        ctx.bezierCurveTo(
+            bezierSpeech0.cpOutX, bezierSpeech0.cpOutY,
+            bezierSpeech1.cpInX, bezierSpeech1.cpInY,
+            bezierSpeech1.x, bezierSpeech1.y
+        );
+
+        ctx.lineTo(bezierSpeech2.x, bezierSpeech2.y);
+
+        ctx.bezierCurveTo(
+            bezierSpeech2.cpOutX, bezierSpeech2.cpOutY,
+            bezierSpeech3.cpInX, bezierSpeech3.cpInY,
+            bezierSpeech3.x, bezierSpeech3.y
+        );
+
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+
         bubble.canvasToTexture();
     },
     getTextProgram()
@@ -119,110 +215,6 @@ export const Dialogue = {
     }
 };
 
-const drawBubble = () =>
-{
-    const { ctx } = bubble;
-
-    Camera.worldToScreen(1.09704, 0.76, -3.02629, point);
-
-    const arrowLeft = clamp(
-        point.x - arrowHalfSize,
-        leftPx,
-        arrowLeftMax
-    );
-
-    const arrowRight = clamp(
-        point.x + arrowHalfSize,
-        arrowRightMin,
-        rightPx
-    );
-
-    const arrowTipX = lerp(
-        arrowRight - arrowHalfSize,
-        point.x,
-        Math.min(arrowSize / (topPx - point.y), 1)
-    );
-
-    ctx.beginPath();
-    ctx.moveTo(arrowLeft, topPx);
-    ctx.lineTo(arrowTipX, arrowTopPx);
-    ctx.lineTo(arrowRight, topPx);
-
-    ctx.lineTo(bezierSpeech0.x, bezierSpeech0.y);
-
-    ctx.bezierCurveTo(
-        bezierSpeech0.cpOutX, bezierSpeech0.cpOutY,
-        bezierSpeech1.cpInX, bezierSpeech1.cpInY,
-        bezierSpeech1.x, bezierSpeech1.y
-    );
-
-    ctx.lineTo(bezierSpeech2.x, bezierSpeech2.y);
-
-    ctx.bezierCurveTo(
-        bezierSpeech2.cpOutX, bezierSpeech2.cpOutY,
-        bezierSpeech3.cpInX, bezierSpeech3.cpInY,
-        bezierSpeech3.x, bezierSpeech3.y
-    );
-
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
-};
-
-
-const drawDialogueText = (str) =>
-{
-    const words = str.split(/(?=\s)/);
-
-    const lines = [];
-    let line = null;
-    const STR_EMPTY = "";
-    let word;
-    let testLine = STR_EMPTY;
-
-    for (let i = 0; i < words.length;)
-    {
-        word = words[i++];
-        testLine += word;
-        const isFitting = text.ctx.measureText(testLine).width <= widthPx;
-
-        if (isFitting)
-        {
-            line = testLine;
-
-            if (i < words.length)
-            {
-                continue;
-            }
-        }
-
-        if (!line)
-        {
-            console.warn(`Word too long: ${testLine}`);
-            line = testLine;
-            testLine = STR_EMPTY;
-        }
-        else
-        {
-            testLine = word;
-        }
-
-        lines.push(line.trimStart());
-        line = null;
-    }
-
-    const iMod = 0.5 * lines.length;
-
-    for (let i = 0; i < lines.length; i++)
-    {
-        text.ctx.fillText(
-            lines[i],
-            leftPx,
-            midYPx + fontSizePx * (i - iMod)
-        );
-    }
-};
-
 /*------------------------------------------------------------------------------
     Draw area
 ------------------------------------------------------------------------------*/
@@ -260,3 +252,6 @@ let text;
 let bubble;
 let dialogueScript;
 let dialogueScriptIndex;
+
+const lines = [];
+const STR_EMPTY = "";
