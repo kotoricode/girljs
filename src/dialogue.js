@@ -92,9 +92,9 @@ export const Dialogue = {
                 }
             }
 
-            if (testLine)
+            if (line)
             {
-                lines.push(testLine);
+                lines.push(line);
             }
 
             const yOffset = 0.5 * lines.length;
