@@ -50,8 +50,6 @@ export const Dialogue = {
     {
         if (!dialogueScript) throw Error;
 
-        text.clear();
-
         if (dialogueScriptIndex === dialogueScript.length)
         {
             dialogueScript = null;
@@ -60,10 +58,9 @@ export const Dialogue = {
         }
         else
         {
-            printDialogue();
+            setLines();
+            textTimer = 0;
         }
-
-        text.canvasToTexture();
     },
     drawBubble()
     {
@@ -118,6 +115,52 @@ export const Dialogue = {
 
         bubble.canvasToTexture();
     },
+    drawText(dt)
+    {
+        text.clear();
+        textTimer += dt * textFadeSpeed;
+        let lineFadeStart = 0;
+
+        for (let i = 0; i < lines.length; i++)
+        {
+            if (textTimer < lineFadeStart)
+            {
+                break;
+            }
+
+            const timer = textTimer - lineFadeStart;
+            const widthRatio = linesWidth[i] / widthPx;
+            lineFadeStart += widthRatio;
+
+            const gradient = text.ctx.createLinearGradient(
+                leftPx,
+                0,
+                leftPx + linesWidth[i],
+                0
+            );
+
+            const leftStop = (timer - textFadeWidth) / widthRatio;
+            const rightStop = timer / widthRatio;
+
+            gradient.addColorStop(0, "#FFFFFFFF");
+
+            gradient.addColorStop(
+                Math.min(1, Math.max(0, leftStop)),
+                "#FFFFFFFF"
+            );
+
+            gradient.addColorStop(
+                Math.min(1, Math.max(0, rightStop)),
+                "#FFFFFF00"
+            );
+
+            text.ctx.fillStyle = gradient;
+            const line = lines[i];
+            text.ctx.fillText(line, leftPx, linesY[i]);
+        }
+
+        text.canvasToTexture();
+    },
     getTextProgram()
     {
         return text.program;
@@ -165,10 +208,9 @@ export const Dialogue = {
     }
 };
 
-const printDialogue = () =>
+const setLines = () =>
 {
     const str = dialogueScript[dialogueScriptIndex++];
-    if (!str) throw Error;
     const words = str.split(/(?=\s)/);
 
     lines.length = 0;
@@ -207,15 +249,14 @@ const printDialogue = () =>
         lines.push(line);
     }
 
+    linesY.length = lines.length;
+    linesWidth.length = lines.length;
     const yOffset = 0.5 * lines.length;
 
     for (let i = 0; i < lines.length; i++)
     {
-        ctx.fillText(
-            lines[i],
-            leftPx,
-            midYPx + fontSizePx * (i - yOffset)
-        );
+        linesY[i] = midYPx + fontSizePx * (i - yOffset);
+        linesWidth[i] = text.ctx.measureText(lines[i]).width;
     }
 };
 
@@ -256,5 +297,10 @@ let text;
 let bubble;
 let dialogueScript;
 let dialogueScriptIndex;
+let textTimer = 0;
+const textFadeWidth = 0.05;
+const textFadeSpeed = 1;
 
 const lines = [];
+const linesY = [];
+const linesWidth = [];
