@@ -129,24 +129,23 @@ export const Dialogue = {
             }
 
             const timer = textTimer - lineFadeStart;
-            const widthRatio = linesWidth[i] / widthPx;
+            const lineWidth = linesWidth[i];
+            const widthRatio = lineWidth / widthPx;
             lineFadeStart += widthRatio;
 
             const gradient = text.ctx.createLinearGradient(
                 leftPx,
                 0,
-                leftPx + linesWidth[i],
+                leftPx + lineWidth,
                 0
             );
 
-            const leftStop = (timer - textFadeWidth) / widthRatio;
-            const rightStop = timer / widthRatio;
-
-            gradient.addColorStop(0, "#FFFFFFFF");
+            const leftStop = timer / widthRatio;
+            const rightStop = (timer + textFadeWidth) / widthRatio;
 
             gradient.addColorStop(
                 Math.min(1, Math.max(0, leftStop)),
-                "#FFFFFFFF"
+                "#FFFFFF"
             );
 
             gradient.addColorStop(
@@ -298,8 +297,8 @@ let bubble;
 let dialogueScript;
 let dialogueScriptIndex;
 let textTimer = 0;
-const textFadeWidth = 0.05;
-const textFadeSpeed = 1;
+const textFadeWidth = 0.08;
+const textFadeSpeed = 0.7;
 
 const lines = [];
 const linesY = [];
