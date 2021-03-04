@@ -89,7 +89,7 @@ export const Dialogue = {
         const arrowTipX = lerp(
             arrowRight - arrowHalfSize,
             point.x,
-            Math.min(arrowSize / (topPx - point.y), 1)
+            Math.min(1, arrowSize / (topPx - point.y))
         );
 
         ctx.beginPath();
@@ -122,68 +122,72 @@ export const Dialogue = {
     drawText(dt)
     {
         text.clear();
+
         textTimer += dt * textFadeSpeed;
         let lineFadeStart = 0;
 
-        for (let i = 0; i < lines.length; i++)
+        for (let i = 0; i < lines.length && textTimer >= lineFadeStart; i++)
         {
-            if (textTimer < lineFadeStart)
-            {
-                break;
-            }
-
             const lineTimer = textTimer - lineFadeStart;
             const lineWidth = linesWidth[i];
             const widthRatio = lineWidth / widthPx;
             lineFadeStart += widthRatio;
 
-            const gradient = text.ctx.createLinearGradient(
-                leftPx,
-                0,
-                leftPx + lineWidth,
-                0
-            );
-
             const leftStop = (lineTimer - textFadeWidth) / widthRatio;
-            const rightStop = lineTimer / widthRatio;
-            const gap = rightStop - leftStop;
 
-            let leftAlphaIdx;
-            let rightAlphaIdx;
-
-            if (leftStop < 0)
+            if (leftStop > 1)
             {
-                const t = leftStop / gap + 1;
-                leftAlphaIdx = 255 * t | 0;
+                text.ctx.fillStyle = alpha[255];
             }
             else
             {
-                leftAlphaIdx = 255;
+                const rightStop = lineTimer / widthRatio;
+                const gap = rightStop - leftStop;
+
+                let leftAlpha;
+                let rightAlpha;
+
+                if (leftStop < 0)
+                {
+                    const t = leftStop / gap + 1;
+                    leftAlpha = 255 * t | 0;
+                }
+                else
+                {
+                    leftAlpha = 255;
+                }
+
+                if (rightStop > 1)
+                {
+                    const t = (rightStop - 1) / gap;
+                    rightAlpha = 255 * t | 0;
+                }
+                else
+                {
+                    rightAlpha = 0;
+                }
+
+                const gradient = text.ctx.createLinearGradient(
+                    leftPx,
+                    0,
+                    leftPx + lineWidth,
+                    0
+                );
+
+                gradient.addColorStop(
+                    clamp(leftStop, 0, 1),
+                    alpha[leftAlpha]
+                );
+
+                gradient.addColorStop(
+                    clamp(rightStop, 0, 1),
+                    alpha[rightAlpha]
+                );
+
+                text.ctx.fillStyle = gradient;
             }
 
-            if (leftStop < 1 && 1 < rightStop)
-            {
-                const t = (rightStop - 1) / gap;
-                rightAlphaIdx = 255 * t | 0;
-            }
-            else
-            {
-                rightAlphaIdx = 0;
-            }
-
-            gradient.addColorStop(
-                clamp(leftStop, 0, 1),
-                alpha[leftAlphaIdx]
-            );
-
-            gradient.addColorStop(
-                clamp(rightStop, 0, 1),
-                alpha[rightAlphaIdx]
-            );
-
-            text.ctx.fillStyle = gradient;
-            const line = lines[i];
-            text.ctx.fillText(line, leftPx, linesY[i]);
+            text.ctx.fillText(lines[i], leftPx, linesY[i]);
         }
 
         text.canvasToTexture();
@@ -203,17 +207,14 @@ export const Dialogue = {
     init()
     {
         text = new UiCanvas($.MDL_TEXT, [0.2, 0.2, 0.2, 1]);
-        bubble = new UiCanvas($.MDL_BUBBLE, [0.95, 0.95, 0.95, 1]);
-
         text.ctx.textAlign = "left";
         text.ctx.textBaseline = "top";
         text.ctx.font = `${fontSizePx}px Cuprum`;
+        text.ctx.fillStyle = alpha[255];
 
-        // These are tints for the shaders, not the actual colors
-        text.ctx.fillStyle = bubble.ctx.fillStyle = "#fff";
-        text.ctx.shadowColor = "#000";
+        bubble = new UiCanvas($.MDL_BUBBLE, [0.95, 0.95, 0.95, 1]);
+        bubble.ctx.fillStyle = alpha[255];
         bubble.ctx.strokeStyle = "#333333";
-
         bubble.ctx.lineWidth = 2;
 
         Model.load().then(() =>
@@ -325,7 +326,7 @@ let bubble;
 let dialogueScript;
 let dialogueScriptIndex;
 let textTimer = 0;
-const textFadeWidth = 0.3;
+const textFadeWidth = 0.1;
 const textFadeSpeed = 0.75;
 
 const lines = [];
