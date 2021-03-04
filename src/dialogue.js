@@ -176,9 +176,8 @@ const printDialogue = () =>
     let testLine = "";
     const { ctx } = text;
 
-    for (let i = 0; i < words.length; i++)
+    for (const word of words)
     {
-        const word = words[i];
         testLine += word;
 
         if (widthPx < ctx.measureText(testLine).width)
