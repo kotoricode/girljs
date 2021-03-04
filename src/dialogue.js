@@ -53,8 +53,12 @@ export const Dialogue = {
         if (dialogueScriptIndex === dialogueScript.length)
         {
             dialogueScript = null;
+
             bubble.clear();
+            text.clear();
+
             bubble.canvasToTexture();
+            text.canvasToTexture();
         }
         else
         {
@@ -128,7 +132,7 @@ export const Dialogue = {
                 break;
             }
 
-            const timer = textTimer - lineFadeStart;
+            const lineTimer = textTimer - lineFadeStart;
             const lineWidth = linesWidth[i];
             const widthRatio = lineWidth / widthPx;
             lineFadeStart += widthRatio;
@@ -140,17 +144,41 @@ export const Dialogue = {
                 0
             );
 
-            const leftStop = timer / widthRatio;
-            const rightStop = (timer + textFadeWidth) / widthRatio;
+            const leftStop = (lineTimer - textFadeWidth) / widthRatio;
+            const rightStop = lineTimer / widthRatio;
+            const gap = rightStop - leftStop;
+
+            let leftAlphaIdx;
+            let rightAlphaIdx;
+
+            if (leftStop < 0)
+            {
+                const t = leftStop / gap + 1;
+                leftAlphaIdx = 255 * t | 0;
+            }
+            else
+            {
+                leftAlphaIdx = 255;
+            }
+
+            if (leftStop < 1 && 1 < rightStop)
+            {
+                const t = (rightStop - 1) / gap;
+                rightAlphaIdx = 255 * t | 0;
+            }
+            else
+            {
+                rightAlphaIdx = 0;
+            }
 
             gradient.addColorStop(
-                Math.min(1, Math.max(0, leftStop)),
-                "#FFFFFF"
+                clamp(leftStop, 0, 1),
+                alpha[leftAlphaIdx]
             );
 
             gradient.addColorStop(
-                Math.min(1, Math.max(0, rightStop)),
-                "#FFFFFF00"
+                clamp(rightStop, 0, 1),
+                alpha[rightAlphaIdx]
             );
 
             text.ctx.fillStyle = gradient;
@@ -192,7 +220,7 @@ export const Dialogue = {
         {
             text.canvasToTexture();
             bubble.canvasToTexture();
-            this.setScript([$.TXT_LOREM, "two", "three"]);
+            this.setScript(["hey", $.TXT_LOREM, "two", "three"]);
             this.advance();
         });
     },
@@ -297,9 +325,16 @@ let bubble;
 let dialogueScript;
 let dialogueScriptIndex;
 let textTimer = 0;
-const textFadeWidth = 0.08;
-const textFadeSpeed = 0.7;
+const textFadeWidth = 0.3;
+const textFadeSpeed = 0.75;
 
 const lines = [];
 const linesY = [];
 const linesWidth = [];
+
+const alpha = new Array(256);
+
+for (let i = 0; i < alpha.length; i++)
+{
+    alpha[i] = `#ffffff${i.toString(16).padStart(2, "0")}`;
+}
