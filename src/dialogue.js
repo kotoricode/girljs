@@ -126,64 +126,41 @@ export const Dialogue = {
         textTimer += dt * textFadeSpeed;
         let lineFadeStart = 0;
 
-        for (let i = 0; i < lines.length && textTimer >= lineFadeStart; i++)
+        for (let i = 0; i < lines.length && lineFadeStart <= textTimer; i++)
         {
             const lineTimer = textTimer - lineFadeStart;
             const lineWidth = linesWidth[i];
             const widthRatio = lineWidth / widthPx;
             lineFadeStart += widthRatio;
 
-            const leftStop = (lineTimer - textFadeWidth) / widthRatio;
+            const stopL = (lineTimer - textFadeWidth) / widthRatio;
 
-            if (leftStop > 1)
+            if (stopL > 1)
             {
+                // Line is fully shown, draw in plain color
                 text.ctx.fillStyle = alpha[255];
             }
             else
             {
-                const rightStop = lineTimer / widthRatio;
-                const gap = rightStop - leftStop;
+                // Line is being shown, draw in gradient
+                const stopR = lineTimer / widthRatio;
+                const gap = stopR - stopL;
 
-                let leftAlpha;
-                let rightAlpha;
+                const alphaL = stopL < 0
+                             ? 255 * (stopL / gap + 1) | 0
+                             : 255;
 
-                if (leftStop < 0)
-                {
-                    const t = leftStop / gap + 1;
-                    leftAlpha = 255 * t | 0;
-                }
-                else
-                {
-                    leftAlpha = 255;
-                }
-
-                if (rightStop > 1)
-                {
-                    const t = (rightStop - 1) / gap;
-                    rightAlpha = 255 * t | 0;
-                }
-                else
-                {
-                    rightAlpha = 0;
-                }
+                const alphaR = stopR > 1
+                             ? 255 * (stopR - 1) / gap | 0
+                             : 0;
 
                 const gradient = text.ctx.createLinearGradient(
-                    leftPx,
-                    0,
-                    leftPx + lineWidth,
-                    0
+                    leftPx, 0,
+                    leftPx + lineWidth, 0
                 );
 
-                gradient.addColorStop(
-                    clamp(leftStop, 0, 1),
-                    alpha[leftAlpha]
-                );
-
-                gradient.addColorStop(
-                    clamp(rightStop, 0, 1),
-                    alpha[rightAlpha]
-                );
-
+                gradient.addColorStop(clamp(stopL), alpha[alphaL]);
+                gradient.addColorStop(clamp(stopR), alpha[alphaR]);
                 text.ctx.fillStyle = gradient;
             }
 

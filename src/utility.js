@@ -8,7 +8,9 @@ export const SIZEOF_FLOAT32 = 4;
 
 export const SIZEOF_UINT16 = 2;
 
-export const clamp = (value, min, max) => Math.max(min, Math.min(max, value));
+export const clamp = (value, min=0, max=1) => (
+    Math.max(min, Math.min(max, value))
+);
 
 export const getElement = (elemId) => window.document.getElementById(elemId);
 
