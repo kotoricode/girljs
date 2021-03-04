@@ -61,44 +61,40 @@ export const Dialogue = {
         else
         {
             const str = dialogueScript[dialogueScriptIndex++];
+            if (!str) throw Error;
             const words = str.split(/(?=\s)/);
 
             lines.length = 0;
-            let line = null;
-            let word;
-            let testLine = STR_EMPTY;
+            let line;
+            let testLine = "";
             const { ctx } = text;
 
-            for (let i = 0; i < words.length;)
+            for (let i = 0; i < words.length; i++)
             {
-                word = words[i++];
+                const word = words[i];
                 testLine += word;
-                const isFitting = ctx.measureText(testLine).width <= widthPx;
 
-                if (isFitting)
+                if (widthPx < ctx.measureText(testLine).width)
                 {
-                    line = testLine;
-
-                    if (i < words.length)
+                    if (!line)
                     {
-                        continue;
+                        console.warn(`Word too long: ${testLine}`);
+                        line = testLine;
                     }
-                }
 
-                if (!line)
-                {
-                    console.warn(`Word too long: ${testLine}`);
-                    line = testLine;
-                    testLine = STR_EMPTY;
+                    lines.push(line);
+                    line = null;
+                    testLine = word.trimStart();
                 }
                 else
                 {
-                    testLine = word;
+                    line = testLine;
                 }
+            }
 
-                const trimmed = line.trimStart();
-                lines.push(trimmed);
-                line = null;
+            if (testLine)
+            {
+                lines.push(testLine);
             }
 
             const yOffset = 0.5 * lines.length;
@@ -200,7 +196,7 @@ export const Dialogue = {
         {
             text.canvasToTexture();
             bubble.canvasToTexture();
-            this.setScript(["one", "two", "three"]);
+            this.setScript([$.TXT_LOREM, "two", "three"]);
             this.advance();
         });
     },
@@ -254,4 +250,3 @@ let dialogueScript;
 let dialogueScriptIndex;
 
 const lines = [];
-const STR_EMPTY = "";
