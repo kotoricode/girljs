@@ -185,12 +185,16 @@ const printDialogue = () =>
             if (!line)
             {
                 console.warn(`Word too long: ${testLine}`);
-                line = testLine;
+                lines.push(testLine);
+                testLine = "";
+            }
+            else
+            {
+                lines.push(line);
+                testLine = word.trimStart();
             }
 
-            lines.push(line);
             line = null;
-            testLine = word.trimStart();
         }
         else
         {
