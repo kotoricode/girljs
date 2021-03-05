@@ -7,7 +7,7 @@ import { Texture } from "./gl/texture";
 import { Program } from "./gl/program";
 import { Renderer } from "./gl/renderer";
 import { Camera } from "./camera";
-import { Dialogue } from "./dialogue";
+import { Dialogue } from "./ui";
 
 import { Scene } from "./scene";
 import { Model } from "./gl/model";

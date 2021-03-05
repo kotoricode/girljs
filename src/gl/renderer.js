@@ -12,7 +12,7 @@ import { Program } from "./program";
 import { Drawable } from "../components/drawable";
 import { Ground } from "../components/ground";
 
-import { Dialogue } from "../dialogue";
+import { Dialogue } from "../ui";
 import { Scene } from "../scene";
 import { HitBox } from "../components/hitbox";
 

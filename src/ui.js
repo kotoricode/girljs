@@ -59,21 +59,77 @@ export const Dialogue = {
 
             bubble.canvasToTexture();
             text.canvasToTexture();
+
+            return;
         }
-        else
+
+        dialogueTimer = 0;
+
+        const str = dialogueScript[dialogueScriptIndex++];
+        const words = str.split(/(?=\s)/);
+
+        lines.length = 0;
+        let line;
+        let testLine = "";
+        const { ctx } = text;
+
+        for (const word of words)
         {
-            setLines();
-            dialogueTimer = 0;
+            testLine += word;
+
+            if (widthPx < ctx.measureText(testLine).width)
+            {
+                if (!line)
+                {
+                    console.warn(`Word too long: ${testLine}`);
+                    line = testLine;
+                    testLine = "";
+                }
+                else
+                {
+                    testLine = word.trimStart();
+                }
+
+                lines.push(line);
+                line = null;
+            }
+            else
+            {
+                line = testLine;
+            }
+        }
+
+        if (line)
+        {
+            lines.push(line);
+        }
+
+        const yOffset = 0.5 * lines.length;
+        let fadeStart = 0;
+
+        for (let i = 0; i < lines.length; i++)
+        {
+            const lineWidth = ctx.measureText(lines[i]).width;
+            const widthRatio = lineWidth / widthPx;
+
+            linesY[i] = midYPx + fontSizePx * (i - yOffset);
+            linesWidthRatio[i] = widthRatio;
+            linesGradientWidth[i] = leftPx + lineWidth;
+            linesFadeStart[i] = fadeStart;
+
+            fadeStart += widthRatio;
         }
     },
     drawBubble()
     {
         bubble.clear();
-
         const { ctx } = bubble;
-
         Camera.worldToScreen(1.09704, 0.76, -3.02629, point);
+        ctx.beginPath();
 
+        /*----------------------------------------------------------------------
+            Arrow
+        ----------------------------------------------------------------------*/
         const arrowLeft = clamp(
             point.x - arrowHalfSize,
             leftPx,
@@ -92,11 +148,13 @@ export const Dialogue = {
             Math.min(1, arrowSize / (topPx - point.y))
         );
 
-        ctx.beginPath();
         ctx.moveTo(arrowLeft, topPx);
         ctx.lineTo(arrowTipX, arrowTopPx);
         ctx.lineTo(arrowRight, topPx);
 
+        /*----------------------------------------------------------------------
+            Bubble
+        ----------------------------------------------------------------------*/
         ctx.lineTo(bezierSpeech0.x, bezierSpeech0.y);
 
         ctx.bezierCurveTo(
@@ -121,7 +179,7 @@ export const Dialogue = {
     },
     drawText(dt)
     {
-        dialogueTimer += dt * textFadeSpeed;
+        dialogueTimer += dt * lineFadeSpeed;
 
         text.clear();
 
@@ -136,7 +194,7 @@ export const Dialogue = {
             }
 
             const widthRatio = linesWidthRatio[i];
-            const stopL = (lineTimer - textFadeWidth) / widthRatio;
+            const stopL = (lineTimer - lineFadeWidth) / widthRatio;
 
             if (stopL > 1)
             {
@@ -150,8 +208,8 @@ export const Dialogue = {
                 const gap = stopR - stopL;
 
                 // Colorstop has to be in range [0.0, 1.0] else error is thrown
-                // If the stop should be outside the range, clamp and adjust its
-                // alpha instead to preserve the slope
+                // If the stop should be outside the range, cap it and adjust
+                // its alpha instead to preserve the slope
                 const alphaL = stopL < 0
                              ? 255 * (stopL / gap + 1) | 0
                              : 255;
@@ -219,64 +277,6 @@ export const Dialogue = {
     }
 };
 
-const setLines = () =>
-{
-    const str = dialogueScript[dialogueScriptIndex++];
-    const words = str.split(/(?=\s)/);
-
-    lines.length = 0;
-    let line;
-    let testLine = "";
-    const { ctx } = text;
-
-    for (const word of words)
-    {
-        testLine += word;
-
-        if (widthPx < ctx.measureText(testLine).width)
-        {
-            if (!line)
-            {
-                console.warn(`Word too long: ${testLine}`);
-                line = testLine;
-                testLine = "";
-            }
-            else
-            {
-                testLine = word.trimStart();
-            }
-
-            lines.push(line);
-            line = null;
-        }
-        else
-        {
-            line = testLine;
-        }
-    }
-
-    if (line)
-    {
-        lines.push(line);
-    }
-
-    const yOffset = 0.5 * lines.length;
-    let fadeStart = 0;
-
-    for (let i = 0; i < lines.length; i++)
-    {
-        const lineWidth = ctx.measureText(lines[i]).width;
-        const widthRatio = lineWidth / widthPx;
-
-        linesY[i] = midYPx + fontSizePx * (i - yOffset);
-        linesWidthRatio[i] = widthRatio;
-        linesGradientWidth[i] = leftPx + lineWidth;
-        linesFadeStart[i] = fadeStart;
-
-        fadeStart += widthRatio;
-    }
-};
-
 /*------------------------------------------------------------------------------
     Draw area
 ------------------------------------------------------------------------------*/
@@ -315,9 +315,9 @@ let bubble;
 let dialogueScript;
 let dialogueScriptIndex;
 let dialogueTimer = 0;
-const textFadeWidth = 0.1;
-const textFadeSpeed = 0.75;
 
+const lineFadeWidth = 0.1;
+const lineFadeSpeed = 0.75;
 const lines = [];
 const linesY = [];
 const linesWidthRatio = [];

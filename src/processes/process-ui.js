@@ -1,4 +1,4 @@
-import { Dialogue } from "../dialogue";
+import { Dialogue } from "../ui";
 import { Mouse } from "../main";
 import { Scene } from "../scene";
 
