@@ -48,36 +48,36 @@ class UiCanvas
 export const Dialogue = {
     advance()
     {
-        if (!dialogueScript) throw Error;
+        if (!dlgScript) throw Error;
 
-        if (dialogueScriptIndex === dialogueScript.length)
+        if (dlgScriptIdx === dlgScript.length)
         {
-            dialogueScript = null;
+            dlgScript = null;
 
-            bubble.clear();
-            text.clear();
+            dlgBub.clear();
+            dlbTxt.clear();
 
-            bubble.canvasToTexture();
-            text.canvasToTexture();
+            dlgBub.canvasToTexture();
+            dlbTxt.canvasToTexture();
 
             return;
         }
 
-        dialogueTimer = 0;
+        dlgTimer = 0;
 
-        const str = dialogueScript[dialogueScriptIndex++];
+        const str = dlgScript[dlgScriptIdx++];
         const words = str.split(/(?=\s)/);
 
-        lines.length = 0;
+        dlgLines.length = 0;
         let line;
         let testLine = "";
-        const { ctx } = text;
+        const { ctx } = dlbTxt;
 
         for (const word of words)
         {
             testLine += word;
 
-            if (widthPx < ctx.measureText(testLine).width)
+            if (bubW < ctx.measureText(testLine).width)
             {
                 if (!line)
                 {
@@ -90,7 +90,7 @@ export const Dialogue = {
                     testLine = word.trimStart();
                 }
 
-                lines.push(line);
+                dlgLines.push(line);
                 line = null;
             }
             else
@@ -101,91 +101,91 @@ export const Dialogue = {
 
         if (line)
         {
-            lines.push(line);
+            dlgLines.push(line);
         }
 
-        const yOffset = 0.5 * lines.length;
+        const yOffset = 0.5 * dlgLines.length;
         let fadeStart = 0;
 
-        for (let i = 0; i < lines.length; i++)
+        for (let i = 0; i < dlgLines.length; i++)
         {
-            const lineWidth = ctx.measureText(lines[i]).width;
-            const widthRatio = lineWidth / widthPx;
+            const lineWidth = ctx.measureText(dlgLines[i]).width;
+            const widthRatio = lineWidth / bubW;
 
-            linesY[i] = midYPx + fontSizePx * (i - yOffset);
-            linesWidthRatio[i] = widthRatio;
-            linesGradientWidth[i] = leftPx + lineWidth;
-            linesFadeStart[i] = fadeStart;
+            dlgLinesY[i] = bubMidY + dlgFontPx * (i - yOffset);
+            dlsLinesWidthRatio[i] = widthRatio;
+            dlgLinesGradientR[i] = bubL + lineWidth;
+            dlgLinesFadeStart[i] = fadeStart;
 
             fadeStart += widthRatio;
         }
     },
     drawBubble()
     {
-        bubble.clear();
-        const { ctx } = bubble;
-        Camera.worldToScreen(1.09704, 0.76, -3.02629, point);
+        dlgBub.clear();
+        const { ctx } = dlgBub;
+        Camera.worldToScreen(1.09704, 0.76, -3.02629, bubArrowPoint);
         ctx.beginPath();
 
         /*----------------------------------------------------------------------
             Arrow
         ----------------------------------------------------------------------*/
         const arrowLeft = clamp(
-            point.x - arrowHalfSize,
-            leftPx,
-            arrowLeftMax
+            bubArrowPoint.x - bubArrowHalfSize,
+            bubL,
+            bubArrowLMax
         );
 
         const arrowRight = clamp(
-            point.x + arrowHalfSize,
-            arrowRightMin,
-            rightPx
+            bubArrowPoint.x + bubArrowHalfSize,
+            bubArrowRMin,
+            bubR
         );
 
         const arrowTipX = lerp(
-            arrowRight - arrowHalfSize,
-            point.x,
-            Math.min(1, arrowSize / (topPx - point.y))
+            arrowRight - bubArrowHalfSize,
+            bubArrowPoint.x,
+            Math.min(1, bubArrowSize / (bubT - bubArrowPoint.y))
         );
 
-        ctx.moveTo(arrowLeft, topPx);
-        ctx.lineTo(arrowTipX, arrowTopPx);
-        ctx.lineTo(arrowRight, topPx);
+        ctx.moveTo(arrowLeft, bubT);
+        ctx.lineTo(arrowTipX, bubArrowT);
+        ctx.lineTo(arrowRight, bubT);
 
         /*----------------------------------------------------------------------
             Bubble
         ----------------------------------------------------------------------*/
-        ctx.lineTo(bezierSpeech0.x, bezierSpeech0.y);
+        ctx.lineTo(bubBez0.x, bubBez0.y);
 
         ctx.bezierCurveTo(
-            bezierSpeech0.cpOutX, bezierSpeech0.cpOutY,
-            bezierSpeech1.cpInX, bezierSpeech1.cpInY,
-            bezierSpeech1.x, bezierSpeech1.y
+            bubBez0.cpOutX, bubBez0.cpOutY,
+            bubBez1.cpInX, bubBez1.cpInY,
+            bubBez1.x, bubBez1.y
         );
 
-        ctx.lineTo(bezierSpeech2.x, bezierSpeech2.y);
+        ctx.lineTo(bubBez2.x, bubBez2.y);
 
         ctx.bezierCurveTo(
-            bezierSpeech2.cpOutX, bezierSpeech2.cpOutY,
-            bezierSpeech3.cpInX, bezierSpeech3.cpInY,
-            bezierSpeech3.x, bezierSpeech3.y
+            bubBez2.cpOutX, bubBez2.cpOutY,
+            bubBez3.cpInX, bubBez3.cpInY,
+            bubBez3.x, bubBez3.y
         );
 
         ctx.closePath();
         ctx.fill();
         ctx.stroke();
 
-        bubble.canvasToTexture();
+        dlgBub.canvasToTexture();
     },
     drawText(dt)
     {
-        dialogueTimer += dt * lineFadeSpeed;
+        dlgTimer += dt * dlgFadeSpeed;
 
-        text.clear();
+        dlbTxt.clear();
 
-        for (let i = 0; i < lines.length; i++)
+        for (let i = 0; i < dlgLines.length; i++)
         {
-            const lineTimer = dialogueTimer - linesFadeStart[i];
+            const lineTimer = dlgTimer - dlgLinesFadeStart[i];
 
             if (lineTimer < 0)
             {
@@ -193,13 +193,13 @@ export const Dialogue = {
                 break;
             }
 
-            const widthRatio = linesWidthRatio[i];
-            const stopL = (lineTimer - lineFadeWidth) / widthRatio;
+            const widthRatio = dlsLinesWidthRatio[i];
+            const stopL = (lineTimer - dlgFadeWidth) / widthRatio;
 
             if (stopL > 1)
             {
                 // Line is fully shown, draw in plain color
-                text.ctx.fillStyle = alpha[255];
+                dlbTxt.ctx.fillStyle = dlgLineAlpha[255];
             }
             else
             {
@@ -218,115 +218,108 @@ export const Dialogue = {
                              ? 255 * (stopR - 1) / gap | 0
                              : 0;
 
-                const gradient = text.ctx.createLinearGradient(
-                    leftPx, 0,
-                    linesGradientWidth[i], 0
+                const gradient = dlbTxt.ctx.createLinearGradient(
+                    bubL, 0,
+                    dlgLinesGradientR[i], 0
                 );
 
-                gradient.addColorStop(Math.max(0, stopL), alpha[alphaL]);
-                gradient.addColorStop(Math.min(1, stopR), alpha[alphaR]);
-                text.ctx.fillStyle = gradient;
+                gradient.addColorStop(Math.max(0, stopL), dlgLineAlpha[alphaL]);
+                gradient.addColorStop(Math.min(1, stopR), dlgLineAlpha[alphaR]);
+                dlbTxt.ctx.fillStyle = gradient;
             }
 
-            text.ctx.fillText(lines[i], leftPx, linesY[i]);
+            dlbTxt.ctx.fillText(dlgLines[i], bubL, dlgLinesY[i]);
         }
 
-        text.canvasToTexture();
+        dlbTxt.canvasToTexture();
     },
     getTextProgram()
     {
-        return text.program;
+        return dlbTxt.program;
     },
     getBubbleProgram()
     {
-        return bubble.program;
+        return dlgBub.program;
     },
     hasScript()
     {
-        return isSet(dialogueScript);
+        return isSet(dlgScript);
     },
     init()
     {
-        text = new UiCanvas($.MDL_TEXT, [0.2, 0.2, 0.2, 1]);
-        text.ctx.textAlign = "left";
-        text.ctx.textBaseline = "top";
-        text.ctx.font = `${fontSizePx}px Cuprum`;
-        text.ctx.fillStyle = alpha[255];
+        dlbTxt = new UiCanvas($.MDL_TEXT, [0.2, 0.2, 0.2, 1]);
+        dlbTxt.ctx.textAlign = "left";
+        dlbTxt.ctx.textBaseline = "top";
+        dlbTxt.ctx.font = `${dlgFontPx}px Cuprum`;
+        dlbTxt.ctx.fillStyle = dlgLineAlpha[255];
 
-        bubble = new UiCanvas($.MDL_BUBBLE, [0.95, 0.95, 0.95, 1]);
-        bubble.ctx.fillStyle = alpha[255];
-        bubble.ctx.strokeStyle = "#333333";
-        bubble.ctx.lineWidth = 2;
+        dlgBub = new UiCanvas($.MDL_BUBBLE, [0.95, 0.95, 0.95, 1]);
+        dlgBub.ctx.fillStyle = dlgLineAlpha[255];
+        dlgBub.ctx.strokeStyle = "#333333";
+        dlgBub.ctx.lineWidth = 2;
 
         Model.load().then(() =>
         {
-            text.canvasToTexture();
-            bubble.canvasToTexture();
+            dlbTxt.canvasToTexture();
+            dlgBub.canvasToTexture();
             this.setScript(["hey", $.TXT_LOREM, "two", "three"]);
             this.advance();
         });
     },
     isActive()
     {
-        return isSet(dialogueScript);
+        return isSet(dlgScript);
     },
     setScript(script)
     {
-        dialogueScript = script;
-        dialogueScriptIndex = 0;
+        dlgScript = script;
+        dlgScriptIdx = 0;
     }
 };
 
-/*------------------------------------------------------------------------------
-    Draw area
-------------------------------------------------------------------------------*/
-const fontSizePx = 36;
+const dlgFontPx = 36;
 
-const left = 0.23;
-const right = 0.77;
-const top = 0.73;
-const bottom = 0.98;
+const bubLRel = 0.23;
+const bubRRel = 0.77;
+const bubTRel = 0.73;
+const bubBRel = 0.98;
 
-const point = new Vector();
+const bubL = bubLRel * $.RES_WIDTH;
+const bubR = bubRRel * $.RES_WIDTH;
+const bubW = bubR - bubL;
+const bubT = bubTRel * $.RES_HEIGHT;
 
-const leftPx = left * $.RES_WIDTH;
-const rightPx = right * $.RES_WIDTH;
-const widthPx = rightPx - leftPx;
-const topPx = top * $.RES_HEIGHT;
+const bubMidY = (bubBRel + bubTRel) / 2 * $.RES_HEIGHT;
 
-const midYPx = (bottom - (bottom - top) / 2) * $.RES_HEIGHT;
+const bubArrowSize = 50;
+const bubArrowHalfSize = bubArrowSize / 2;
+const bubArrowT = bubT - bubArrowSize;
 
-const arrowSize = 50;
-const arrowHalfSize = arrowSize / 2;
-const arrowTopPx = topPx - arrowSize;
+const bubArrowPoint = new Vector();
+const bubArrowLMax = bubR - bubArrowSize;
+const bubArrowRMin = bubL + bubArrowSize;
 
-const arrowLeftMax = rightPx - arrowSize;
-const arrowRightMin = leftPx + arrowSize;
+const bubBez0 = new SmoothBezier(bubRRel, bubTRel, 0, 110, 180);
+const bubBez1 = new SmoothBezier(bubRRel, bubBRel, 110, 110, 0);
+const bubBez2 = new SmoothBezier(bubLRel, bubBRel, 110, 110, 0);
+const bubBez3 = new SmoothBezier(bubLRel, bubTRel, 110, 0, 180);
 
-const boxCpDist = 100;
+let dlbTxt;
+let dlgBub;
+let dlgScript;
+let dlgScriptIdx;
+let dlgTimer;
 
-const bezierSpeech0 = new SmoothBezier(right, top, boxCpDist, boxCpDist, 180);
-const bezierSpeech1 = new SmoothBezier(right, bottom, boxCpDist, boxCpDist, 0);
-const bezierSpeech2 = new SmoothBezier(left, bottom, boxCpDist, boxCpDist, 0);
-const bezierSpeech3 = new SmoothBezier(left, top, boxCpDist, boxCpDist, 180);
+const dlgFadeWidth = 0.1;
+const dlgFadeSpeed = 0.75;
+const dlgLines = [];
+const dlgLinesY = [];
+const dlsLinesWidthRatio = [];
+const dlgLinesGradientR = [];
+const dlgLinesFadeStart = [];
+const dlgLineAlpha = new Array(256);
 
-let text;
-let bubble;
-let dialogueScript;
-let dialogueScriptIndex;
-let dialogueTimer = 0;
-
-const lineFadeWidth = 0.1;
-const lineFadeSpeed = 0.75;
-const lines = [];
-const linesY = [];
-const linesWidthRatio = [];
-const linesGradientWidth = [];
-const linesFadeStart = [];
-
-const alpha = new Array(256);
-
-for (let i = 0; i < alpha.length; i++)
+for (let i = 0; i < dlgLineAlpha.length; i++)
 {
-    alpha[i] = `#ffffff${i.toString(16).padStart(2, "0")}`;
+    dlgLineAlpha[i] = `#ffffff${i.toString(16).padStart(2, "0")}`;
 }
