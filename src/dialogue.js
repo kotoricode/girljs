@@ -63,7 +63,7 @@ export const Dialogue = {
         else
         {
             setLines();
-            textTimer = 0;
+            dialogueTimer = 0;
         }
     },
     drawBubble()
@@ -121,18 +121,21 @@ export const Dialogue = {
     },
     drawText(dt)
     {
+        dialogueTimer += dt * textFadeSpeed;
+
         text.clear();
 
-        textTimer += dt * textFadeSpeed;
-        let lineFadeStart = 0;
-
-        for (let i = 0; i < lines.length && lineFadeStart <= textTimer; i++)
+        for (let i = 0; i < lines.length; i++)
         {
-            const lineTimer = textTimer - lineFadeStart;
-            const lineWidth = linesWidth[i];
-            const widthRatio = lineWidth / widthPx;
-            lineFadeStart += widthRatio;
+            const lineTimer = dialogueTimer - linesFadeStart[i];
 
+            if (lineTimer < 0)
+            {
+                // This line and lines after it are not yet shown
+                break;
+            }
+
+            const widthRatio = linesWidthRatio[i];
             const stopL = (lineTimer - textFadeWidth) / widthRatio;
 
             if (stopL > 1)
@@ -146,6 +149,9 @@ export const Dialogue = {
                 const stopR = lineTimer / widthRatio;
                 const gap = stopR - stopL;
 
+                // Colorstop has to be in range [0.0, 1.0] else error is thrown
+                // If the stop should be outside the range, clamp and adjust its
+                // alpha instead to preserve the slope
                 const alphaL = stopL < 0
                              ? 255 * (stopL / gap + 1) | 0
                              : 255;
@@ -156,11 +162,11 @@ export const Dialogue = {
 
                 const gradient = text.ctx.createLinearGradient(
                     leftPx, 0,
-                    leftPx + lineWidth, 0
+                    linesGradientWidth[i], 0
                 );
 
-                gradient.addColorStop(clamp(stopL), alpha[alphaL]);
-                gradient.addColorStop(clamp(stopR), alpha[alphaR]);
+                gradient.addColorStop(Math.max(0, stopL), alpha[alphaL]);
+                gradient.addColorStop(Math.min(1, stopR), alpha[alphaR]);
                 text.ctx.fillStyle = gradient;
             }
 
@@ -254,14 +260,20 @@ const setLines = () =>
         lines.push(line);
     }
 
-    linesY.length = lines.length;
-    linesWidth.length = lines.length;
     const yOffset = 0.5 * lines.length;
+    let fadeStart = 0;
 
     for (let i = 0; i < lines.length; i++)
     {
+        const lineWidth = ctx.measureText(lines[i]).width;
+        const widthRatio = lineWidth / widthPx;
+
         linesY[i] = midYPx + fontSizePx * (i - yOffset);
-        linesWidth[i] = text.ctx.measureText(lines[i]).width;
+        linesWidthRatio[i] = widthRatio;
+        linesGradientWidth[i] = leftPx + lineWidth;
+        linesFadeStart[i] = fadeStart;
+
+        fadeStart += widthRatio;
     }
 };
 
@@ -302,13 +314,15 @@ let text;
 let bubble;
 let dialogueScript;
 let dialogueScriptIndex;
-let textTimer = 0;
+let dialogueTimer = 0;
 const textFadeWidth = 0.1;
 const textFadeSpeed = 0.75;
 
 const lines = [];
 const linesY = [];
-const linesWidth = [];
+const linesWidthRatio = [];
+const linesGradientWidth = [];
+const linesFadeStart = [];
 
 const alpha = new Array(256);
 

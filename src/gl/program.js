@@ -124,27 +124,11 @@ export class Program
             ])
         );
 
-        compiledPrograms.clear();
-
-        compiledPrograms.set(
-            $.PRG_DEBUG,
-            new Compiled(VS_DEBUG, FS_DEBUG)
-        );
-
-        compiledPrograms.set(
-            $.PRG_IMAGE,
-            new Compiled(VS_UI, FS_LUMA)
-        );
-
-        compiledPrograms.set(
-            $.PRG_UI,
-            new Compiled(VS_UI, FS_TEXTURED)
-        );
-
-        compiledPrograms.set(
-            $.PRG_WORLD,
-            new Compiled(VS_WORLD, FS_TEXTURED)
-        );
+        compiled.clear();
+        compiled.set($.PRG_DEBUG, new Compiled(VS_DEBUG, FS_DEBUG));
+        compiled.set($.PRG_IMAGE, new Compiled(VS_UI, FS_LUMA));
+        compiled.set($.PRG_UI, new Compiled(VS_UI, FS_TEXTURED));
+        compiled.set($.PRG_WORLD, new Compiled(VS_WORLD, FS_TEXTURED));
     }
 
     activate()
@@ -165,7 +149,7 @@ export class Program
 
     getCompiled()
     {
-        return compiledPrograms.get(this.programId);
+        return compiled.get(this.programId);
     }
 
     getDynamicIndex()
@@ -363,7 +347,7 @@ class Compiled
     }
 }
 
-const compiledPrograms = new SafeMap();
+const compiled = new SafeMap();
 let activeGlProgram;
 
 const U_TYPE_2F = "U_TYPE_2F";
