@@ -30,8 +30,7 @@ html, body
     z-index: 33;
     font-size: 2vw;
     color: white;
-    font-family: "Jost";
-    font-size: 40px;
+    font-family: "Jost", "sans-serif";
 }
 
 @font-face
