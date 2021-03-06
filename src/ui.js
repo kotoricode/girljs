@@ -52,6 +52,7 @@ export const Dialogue = {
 
         if (dlgScriptIdx === dlgScript.length)
         {
+            // Dialogue script end
             dlgScript = null;
 
             dlgBub.clear();
@@ -65,6 +66,9 @@ export const Dialogue = {
 
         dlgTimer = 0;
 
+        /*----------------------------------------------------------------------
+            Split string into lines
+        ----------------------------------------------------------------------*/
         const str = dlgScript[dlgScriptIdx++];
         const words = str.split(/(?=\s)/);
 
@@ -104,20 +108,23 @@ export const Dialogue = {
             dlgLines.push(line);
         }
 
+        /*----------------------------------------------------------------------
+            Line-specific properties
+        ----------------------------------------------------------------------*/
         const yOffset = 0.5 * dlgLines.length;
-        let fadeStart = 0;
+        let lineStart = 0;
 
         for (let i = 0; i < dlgLines.length; i++)
         {
-            const lineWidth = ctx.measureText(dlgLines[i]).width;
-            const widthRatio = lineWidth / bubW;
+            const width = ctx.measureText(dlgLines[i]).width;
+            const relWidth = width / bubW;
 
             dlgLinesY[i] = bubMidY + dlgFontPx * (i - yOffset);
-            dlsLinesWidthRatio[i] = widthRatio;
-            dlgLinesGradientR[i] = bubL + lineWidth;
-            dlgLinesFadeStart[i] = fadeStart;
+            dlsLinesRelWidth[i] = relWidth;
+            dlgLinesR[i] = bubL + width;
+            dlgLinesStart[i] = lineStart;
 
-            fadeStart += widthRatio;
+            lineStart += relWidth;
         }
     },
     drawBubble()
@@ -131,21 +138,21 @@ export const Dialogue = {
             Arrow
         ----------------------------------------------------------------------*/
         const arrowLeft = clamp(
-            bubArrowPoint.x - bubArrowHalfSize,
+            bubArrowPoint.x - bubArrowHalfWidth,
             bubL,
             bubArrowLMax
         );
 
         const arrowRight = clamp(
-            bubArrowPoint.x + bubArrowHalfSize,
+            bubArrowPoint.x + bubArrowHalfWidth,
             bubArrowRMin,
             bubR
         );
 
         const arrowTipX = lerp(
-            arrowRight - bubArrowHalfSize,
+            arrowRight - bubArrowHalfWidth,
             bubArrowPoint.x,
-            Math.min(1, bubArrowSize / (bubT - bubArrowPoint.y))
+            Math.min(1, bubArrowLen / (bubT - bubArrowPoint.y))
         );
 
         ctx.moveTo(arrowLeft, bubT);
@@ -185,7 +192,7 @@ export const Dialogue = {
 
         for (let i = 0; i < dlgLines.length; i++)
         {
-            const lineTimer = dlgTimer - dlgLinesFadeStart[i];
+            const lineTimer = dlgTimer - dlgLinesStart[i];
 
             if (lineTimer < 0)
             {
@@ -193,7 +200,7 @@ export const Dialogue = {
                 break;
             }
 
-            const widthRatio = dlsLinesWidthRatio[i];
+            const widthRatio = dlsLinesRelWidth[i];
             const stopL = (lineTimer - dlgFadeWidth) / widthRatio;
 
             if (stopL > 1)
@@ -220,7 +227,7 @@ export const Dialogue = {
 
                 const gradient = dlbTxt.ctx.createLinearGradient(
                     bubL, 0,
-                    dlgLinesGradientR[i], 0
+                    dlgLinesR[i], 0
                 );
 
                 gradient.addColorStop(Math.max(0, stopL), dlgLineAlpha[alphaL]);
@@ -266,10 +273,6 @@ export const Dialogue = {
             this.advance();
         });
     },
-    isActive()
-    {
-        return isSet(dlgScript);
-    },
     setScript(script)
     {
         dlgScript = script;
@@ -291,13 +294,14 @@ const bubT = bubTRel * $.RES_HEIGHT;
 
 const bubMidY = (bubBRel + bubTRel) / 2 * $.RES_HEIGHT;
 
-const bubArrowSize = 50;
-const bubArrowHalfSize = bubArrowSize / 2;
-const bubArrowT = bubT - bubArrowSize;
+const bubArrowLen = 50;
+const bubArrowWidth = 40;
+const bubArrowHalfWidth = bubArrowWidth / 2;
+const bubArrowT = bubT - bubArrowLen;
 
 const bubArrowPoint = new Vector();
-const bubArrowLMax = bubR - bubArrowSize;
-const bubArrowRMin = bubL + bubArrowSize;
+const bubArrowLMax = bubR - bubArrowWidth;
+const bubArrowRMin = bubL + bubArrowWidth;
 
 const bubBez0 = new SmoothBezier(bubRRel, bubTRel, 0, 110, 180);
 const bubBez1 = new SmoothBezier(bubRRel, bubBRel, 110, 110, 0);
@@ -314,9 +318,9 @@ const dlgFadeWidth = 0.1;
 const dlgFadeSpeed = 0.75;
 const dlgLines = [];
 const dlgLinesY = [];
-const dlsLinesWidthRatio = [];
-const dlgLinesGradientR = [];
-const dlgLinesFadeStart = [];
+const dlsLinesRelWidth = [];
+const dlgLinesR = [];
+const dlgLinesStart = [];
 const dlgLineAlpha = new Array(256);
 
 for (let i = 0; i < dlgLineAlpha.length; i++)
