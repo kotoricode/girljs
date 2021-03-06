@@ -10,7 +10,7 @@ export const processUi = () =>
         Dialogue.drawBubble();
         Dialogue.drawText(dt);
 
-        if (Mouse.isClicked())
+        if (Mouse.isClick())
         {
             Dialogue.advance();
         }

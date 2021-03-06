@@ -29,11 +29,22 @@ canvasDiv.addEventListener("mousedown", () =>
             if (!e.button)
             {
                 mouseEvent = e;
-                isClickedPending = true;
+                isMouseDownPending = true;
                 e.preventDefault();
             }
         });
+
+        canvas.addEventListener("mouseup", (e) =>
+        {
+            if (!e.button)
+            {
+                isMouseUpPending = true;
+                e.preventDefault();
+            }
+        });
+
         canvas.addEventListener("mousemove", (e) => mouseEvent = e);
+
         Scene.setPendingLoad($.SCN_TEST);
         isReady = true;
 
@@ -45,23 +56,37 @@ canvasDiv.addEventListener("mousedown", () =>
     Mouse
 ------------------------------------------------------------------------------*/
 export const Mouse = {
-    consumeClick()
+    consume()
     {
-        isMouseClicked = false;
+        isMouseConsumed = true;
     },
     getClip()
     {
         return mouseClip;
     },
-    isClicked()
+    isClick()
     {
-        return isMouseClicked;
+        return !isMouseConsumed && mouseState === MOUSE_STATE_CLICK;
+    },
+    isDown()
+    {
+        return !isMouseConsumed && mouseState === MOUSE_STATE_DOWN;
     },
     update()
     {
-        isMouseClicked = false;
+        isMouseConsumed = false;
 
-        if (mouseEvent || isClickedPending)
+        if (isMouseUpPending)
+        {
+            mouseState = MOUSE_STATE_NONE;
+            isMouseUpPending = false;
+        }
+        else if (mouseState === MOUSE_STATE_CLICK)
+        {
+            mouseState = MOUSE_STATE_DOWN;
+        }
+
+        if (mouseEvent)
         {
             const x = (mouseEvent.clientX-canvasRect.left) / canvas.clientWidth;
             const y = (mouseEvent.clientY-canvasRect.top) / canvas.clientHeight;
@@ -70,19 +95,26 @@ export const Mouse = {
             mouseClip.y = 1 - 2 * y;
             mouseEvent = null;
 
-            if (isClickedPending)
+            if (isMouseDownPending)
             {
-                isMouseClicked = true;
-                isClickedPending = false;
+                mouseState = MOUSE_STATE_CLICK;
+                isMouseDownPending = false;
             }
         }
     },
 };
 
-let isMouseClicked = false;
-let isClickedPending = false;
+let isMouseDownPending = false;
+let isMouseUpPending = false;
+
 const mouseClip = new Vector();
 let mouseEvent;
+let isMouseConsumed = false;
+
+const MOUSE_STATE_NONE = 0;
+const MOUSE_STATE_CLICK = 1;
+const MOUSE_STATE_DOWN = 2;
+let mouseState = MOUSE_STATE_NONE;
 
 /*------------------------------------------------------------------------------
     Resize

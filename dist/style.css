@@ -30,5 +30,12 @@ html, body
     z-index: 33;
     font-size: 2vw;
     color: white;
-    font-family: "Lucida Console", "Courier New", monospace;
+    font-family: "Jost";
+    font-size: 40px;
+}
+
+@font-face
+{
+    font-family: "Jost";
+    src: url(./fnt/jost.woff2) format('woff2');
 }

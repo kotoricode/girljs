@@ -251,7 +251,7 @@ export const Dialogue = {
         const { ctx: txtCtx } = dlgTxt;
         txtCtx.textAlign = "left";
         txtCtx.textBaseline = "top";
-        txtCtx.font = `${dlgFontPx}px Cuprum`;
+        txtCtx.font = `${dlgFontPx}px Jost`;
         txtCtx.fillStyle = alpha[255];
 
         dlgBub = new UiCanvas($.MDL_BUBBLE, [0.95, 0.95, 0.95, 1]);
@@ -321,7 +321,7 @@ const dlgLinesStart = [];
     Bubble
 ------------------------------------------------------------------------------*/
 const bubLRel = 0.23;
-const bubRRel = 0.77;
+const bubRRel = 1 - bubLRel;
 const bubTRel = 0.73;
 const bubBRel = 0.98;
 

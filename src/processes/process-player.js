@@ -6,9 +6,9 @@ import { Scene } from "../scene";
 
 export const processPlayer = () =>
 {
-    if (Mouse.isClicked())
+    if (Mouse.isClick())
     {
-        Mouse.consumeClick();
+        Mouse.consume();
 
         const ray = Camera.getRay();
 
