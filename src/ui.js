@@ -56,10 +56,10 @@ export const Dialogue = {
             dlgScript = null;
 
             dlgBub.clear();
-            dlbTxt.clear();
+            dlgTxt.clear();
 
             dlgBub.canvasToTexture();
-            dlbTxt.canvasToTexture();
+            dlgTxt.canvasToTexture();
 
             return;
         }
@@ -74,19 +74,22 @@ export const Dialogue = {
 
         dlgLines.length = 0;
         let line;
+        let lineWidth;
         let testLine = "";
-        const { ctx } = dlbTxt;
+        const { ctx } = dlgTxt;
 
         for (const word of words)
         {
             testLine += word;
+            const testLineWidth = ctx.measureText(testLine).width;
 
-            if (bubW < ctx.measureText(testLine).width)
+            if (bubW < testLineWidth)
             {
                 if (!line)
                 {
                     console.warn(`Word too long: ${testLine}`);
                     line = testLine;
+                    lineWidth = testLineWidth;
                     testLine = "";
                 }
                 else
@@ -94,37 +97,29 @@ export const Dialogue = {
                     testLine = word.trimStart();
                 }
 
-                dlgLines.push(line);
+                dlgPrepareLine(line, lineWidth);
                 line = null;
             }
             else
             {
                 line = testLine;
+                lineWidth = testLineWidth;
             }
         }
 
         if (line)
         {
-            dlgLines.push(line);
+            dlgPrepareLine(line, lineWidth);
         }
 
         /*----------------------------------------------------------------------
-            Line-specific properties
+            Line Y offsets
         ----------------------------------------------------------------------*/
         const yOffset = 0.5 * dlgLines.length;
-        let lineStart = 0;
 
         for (let i = 0; i < dlgLines.length; i++)
         {
-            const width = ctx.measureText(dlgLines[i]).width;
-            const relWidth = width / bubW;
-
             dlgLinesY[i] = bubMidY + dlgFontPx * (i - yOffset);
-            dlsLinesRelWidth[i] = relWidth;
-            dlgLinesR[i] = bubL + width;
-            dlgLinesStart[i] = lineStart;
-
-            lineStart += relWidth;
         }
     },
     drawBubble()
@@ -188,7 +183,7 @@ export const Dialogue = {
     {
         dlgTimer += dt * dlgFadeSpeed;
 
-        dlbTxt.clear();
+        dlgTxt.clear();
 
         for (let i = 0; i < dlgLines.length; i++)
         {
@@ -200,13 +195,13 @@ export const Dialogue = {
                 break;
             }
 
-            const widthRatio = dlsLinesRelWidth[i];
+            const widthRatio = dlgLinesRelWidth[i];
             const stopL = (lineTimer - dlgFadeWidth) / widthRatio;
 
             if (stopL > 1)
             {
                 // Line is fully shown, draw in plain color
-                dlbTxt.ctx.fillStyle = dlgLineAlpha[255];
+                dlgTxt.ctx.fillStyle = dlgLineAlpha[255];
             }
             else
             {
@@ -225,24 +220,24 @@ export const Dialogue = {
                              ? 255 * (stopR - 1) / gap | 0
                              : 0;
 
-                const gradient = dlbTxt.ctx.createLinearGradient(
+                const gradient = dlgTxt.ctx.createLinearGradient(
                     bubL, 0,
                     dlgLinesR[i], 0
                 );
 
                 gradient.addColorStop(Math.max(0, stopL), dlgLineAlpha[alphaL]);
                 gradient.addColorStop(Math.min(1, stopR), dlgLineAlpha[alphaR]);
-                dlbTxt.ctx.fillStyle = gradient;
+                dlgTxt.ctx.fillStyle = gradient;
             }
 
-            dlbTxt.ctx.fillText(dlgLines[i], bubL, dlgLinesY[i]);
+            dlgTxt.ctx.fillText(dlgLines[i], bubL, dlgLinesY[i]);
         }
 
-        dlbTxt.canvasToTexture();
+        dlgTxt.canvasToTexture();
     },
     getTextProgram()
     {
-        return dlbTxt.program;
+        return dlgTxt.program;
     },
     getBubbleProgram()
     {
@@ -254,20 +249,22 @@ export const Dialogue = {
     },
     init()
     {
-        dlbTxt = new UiCanvas($.MDL_TEXT, [0.2, 0.2, 0.2, 1]);
-        dlbTxt.ctx.textAlign = "left";
-        dlbTxt.ctx.textBaseline = "top";
-        dlbTxt.ctx.font = `${dlgFontPx}px Cuprum`;
-        dlbTxt.ctx.fillStyle = dlgLineAlpha[255];
+        dlgTxt = new UiCanvas($.MDL_TEXT, [0.2, 0.2, 0.2, 1]);
+        const { ctx: txtCtx } = dlgTxt;
+        txtCtx.textAlign = "left";
+        txtCtx.textBaseline = "top";
+        txtCtx.font = `${dlgFontPx}px Cuprum`;
+        txtCtx.fillStyle = dlgLineAlpha[255];
 
         dlgBub = new UiCanvas($.MDL_BUBBLE, [0.95, 0.95, 0.95, 1]);
-        dlgBub.ctx.fillStyle = dlgLineAlpha[255];
-        dlgBub.ctx.strokeStyle = "#333333";
-        dlgBub.ctx.lineWidth = 2;
+        const { ctx: bubCtx } = dlgBub;
+        bubCtx.fillStyle = dlgLineAlpha[255];
+        bubCtx.strokeStyle = "#333333";
+        bubCtx.lineWidth = 2;
 
         Model.load().then(() =>
         {
-            dlbTxt.canvasToTexture();
+            dlgTxt.canvasToTexture();
             dlgBub.canvasToTexture();
             this.setScript(["hey", $.TXT_LOREM, "two", "three"]);
             this.advance();
@@ -278,6 +275,23 @@ export const Dialogue = {
         dlgScript = script;
         dlgScriptIdx = 0;
     }
+};
+
+const dlgPrepareLine = (line, width) =>
+{
+    const idx = dlgLines.length;
+    dlgLinesRelWidth[idx] = width / bubW;
+    dlgLinesR[idx] = bubL + width;
+
+    let start = 0;
+
+    for (let i = 0; i < dlgLines.length; i++)
+    {
+        start += dlgLinesRelWidth[i];
+    }
+
+    dlgLinesStart[idx] = start;
+    dlgLines.push(line);
 };
 
 const dlgFontPx = 36;
@@ -308,7 +322,7 @@ const bubBez1 = new SmoothBezier(bubRRel, bubBRel, 110, 110, 0);
 const bubBez2 = new SmoothBezier(bubLRel, bubBRel, 110, 110, 0);
 const bubBez3 = new SmoothBezier(bubLRel, bubTRel, 110, 0, 180);
 
-let dlbTxt;
+let dlgTxt;
 let dlgBub;
 let dlgScript;
 let dlgScriptIdx;
@@ -318,7 +332,7 @@ const dlgFadeWidth = 0.1;
 const dlgFadeSpeed = 0.75;
 const dlgLines = [];
 const dlgLinesY = [];
-const dlsLinesRelWidth = [];
+const dlgLinesRelWidth = [];
 const dlgLinesR = [];
 const dlgLinesStart = [];
 const dlgLineAlpha = new Array(256);
