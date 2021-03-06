@@ -50,7 +50,7 @@ export const Dialogue = {
     {
         if (!dlgScript) throw Error;
 
-        if (dlgScriptIdx === dlgScript.length)
+        if (++dlgScriptIdx === dlgScript.length)
         {
             // Dialogue script end
             dlgScript = null;
@@ -69,8 +69,10 @@ export const Dialogue = {
         /*----------------------------------------------------------------------
             Split string into lines
         ----------------------------------------------------------------------*/
-        const str = dlgScript[dlgScriptIdx++];
-        const words = str.split(/(?=\s)/);
+        const str = dlgScript[dlgScriptIdx];
+
+        // Word boundary positive lookahead whitespace
+        const words = str.split(/\b(?=\s)/);
 
         dlgLines.length = 0;
         let line;
@@ -182,6 +184,7 @@ export const Dialogue = {
     drawText(dt)
     {
         dlgTimer += dt * dlgFadeSpeed;
+        const { ctx } = dlgTxt;
 
         dlgTxt.clear();
 
@@ -191,46 +194,41 @@ export const Dialogue = {
 
             if (lineTimer < 0)
             {
-                // This line and lines after it are not yet shown
+                // Line isn't shown yet (and neither are lines after it)
                 break;
             }
 
             const widthRatio = dlgLinesRelWidth[i];
+
+            // Left colorstop, marks alpha 255
             const stopL = (lineTimer - dlgFadeWidth) / widthRatio;
 
             if (stopL > 1)
             {
                 // Line is fully shown, draw in plain color
-                dlgTxt.ctx.fillStyle = dlgLineAlpha[255];
+                ctx.fillStyle = alpha[255];
             }
             else
             {
-                // Line is being shown, draw in gradient
+                // Right colorstop, marks alpha 0
                 const stopR = lineTimer / widthRatio;
+
+                // Gradient between the stops, alpha falls linearly
                 const gap = stopR - stopL;
 
-                // Colorstop has to be in range [0.0, 1.0] else error is thrown
-                // If the stop should be outside the range, cap it and adjust
-                // its alpha instead to preserve the slope
-                const alphaL = stopL < 0
-                             ? 255 * (stopL / gap + 1) | 0
-                             : 255;
+                // Colorstop must be in range [0.0, 1.0]
+                // Slope is kept consistent by adjusting colorstop alpha,
+                // to simulate colorstop values outside the range
+                const alphaL = alpha[255 * Math.min(1, stopL / gap + 1) | 0];
+                const alphaR = alpha[255 * Math.max(0, (stopR - 1) / gap) | 0];
 
-                const alphaR = stopR > 1
-                             ? 255 * (stopR - 1) / gap | 0
-                             : 0;
-
-                const gradient = dlgTxt.ctx.createLinearGradient(
-                    bubL, 0,
-                    dlgLinesR[i], 0
-                );
-
-                gradient.addColorStop(Math.max(0, stopL), dlgLineAlpha[alphaL]);
-                gradient.addColorStop(Math.min(1, stopR), dlgLineAlpha[alphaR]);
-                dlgTxt.ctx.fillStyle = gradient;
+                const grad = ctx.createLinearGradient(bubL, 0, dlgLinesR[i], 0);
+                grad.addColorStop(Math.max(0, stopL), alphaL);
+                grad.addColorStop(Math.min(1, stopR), alphaR);
+                ctx.fillStyle = grad;
             }
 
-            dlgTxt.ctx.fillText(dlgLines[i], bubL, dlgLinesY[i]);
+            ctx.fillText(dlgLines[i], bubL, dlgLinesY[i]);
         }
 
         dlgTxt.canvasToTexture();
@@ -254,11 +252,11 @@ export const Dialogue = {
         txtCtx.textAlign = "left";
         txtCtx.textBaseline = "top";
         txtCtx.font = `${dlgFontPx}px Cuprum`;
-        txtCtx.fillStyle = dlgLineAlpha[255];
+        txtCtx.fillStyle = alpha[255];
 
         dlgBub = new UiCanvas($.MDL_BUBBLE, [0.95, 0.95, 0.95, 1]);
         const { ctx: bubCtx } = dlgBub;
-        bubCtx.fillStyle = dlgLineAlpha[255];
+        bubCtx.fillStyle = alpha[255];
         bubCtx.strokeStyle = "#333333";
         bubCtx.lineWidth = 2;
 
@@ -273,7 +271,7 @@ export const Dialogue = {
     setScript(script)
     {
         dlgScript = script;
-        dlgScriptIdx = 0;
+        dlgScriptIdx = -1;
     }
 };
 
@@ -285,7 +283,7 @@ const dlgPrepareLine = (line, width) =>
 
     let start = 0;
 
-    for (let i = 0; i < dlgLines.length; i++)
+    for (let i = 0; i < idx; i++)
     {
         start += dlgLinesRelWidth[i];
     }
@@ -294,8 +292,34 @@ const dlgPrepareLine = (line, width) =>
     dlgLines.push(line);
 };
 
-const dlgFontPx = 36;
+const alpha = new Array(256);
 
+for (let i = 0; i < alpha.length; i++)
+{
+    alpha[i] = `#ffffff${i.toString(16).padStart(2, "0")}`;
+}
+
+/*------------------------------------------------------------------------------
+    Dialogue
+------------------------------------------------------------------------------*/
+let dlgTxt;
+let dlgBub;
+let dlgScript;
+let dlgScriptIdx;
+let dlgTimer;
+
+const dlgFontPx = 36;
+const dlgFadeWidth = 0.1;
+const dlgFadeSpeed = 0.6;
+const dlgLines = [];
+const dlgLinesY = [];
+const dlgLinesRelWidth = [];
+const dlgLinesR = [];
+const dlgLinesStart = [];
+
+/*------------------------------------------------------------------------------
+    Bubble
+------------------------------------------------------------------------------*/
 const bubLRel = 0.23;
 const bubRRel = 0.77;
 const bubTRel = 0.73;
@@ -321,23 +345,3 @@ const bubBez0 = new SmoothBezier(bubRRel, bubTRel, 0, 110, 180);
 const bubBez1 = new SmoothBezier(bubRRel, bubBRel, 110, 110, 0);
 const bubBez2 = new SmoothBezier(bubLRel, bubBRel, 110, 110, 0);
 const bubBez3 = new SmoothBezier(bubLRel, bubTRel, 110, 0, 180);
-
-let dlgTxt;
-let dlgBub;
-let dlgScript;
-let dlgScriptIdx;
-let dlgTimer;
-
-const dlgFadeWidth = 0.1;
-const dlgFadeSpeed = 0.75;
-const dlgLines = [];
-const dlgLinesY = [];
-const dlgLinesRelWidth = [];
-const dlgLinesR = [];
-const dlgLinesStart = [];
-const dlgLineAlpha = new Array(256);
-
-for (let i = 0; i < dlgLineAlpha.length; i++)
-{
-    dlgLineAlpha[i] = `#ffffff${i.toString(16).padStart(2, "0")}`;
-}
