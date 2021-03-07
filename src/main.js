@@ -7,7 +7,7 @@ import { Texture } from "./gl/texture";
 import { Program } from "./gl/program";
 import { Renderer } from "./gl/renderer";
 import { Camera } from "./camera";
-import { Dialogue } from "./ui";
+import { Ui } from "./ui";
 
 import { Scene } from "./scene";
 import { Model } from "./gl/model";
@@ -175,7 +175,7 @@ const init = () =>
     Buffer.init();
     Texture.init();
     Program.init();
-    Dialogue.init();
+    Ui.init();
     Renderer.init();
     Camera.init();
 };

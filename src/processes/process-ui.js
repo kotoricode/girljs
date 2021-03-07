@@ -7,7 +7,7 @@ export const processUi = () =>
     if (Dialogue.hasScript())
     {
         const dt = Scene.getDeltaTime();
-        Dialogue.draw(dt);
+        Dialogue.draw(dt, "#333333");
 
         if (Mouse.isClick())
         {

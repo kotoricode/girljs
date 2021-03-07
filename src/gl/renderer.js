@@ -12,7 +12,7 @@ import { Program } from "./program";
 import { Drawable } from "../components/drawable";
 import { Ground } from "../components/ground";
 
-import { Dialogue } from "../ui";
+import { Ui } from "../ui";
 import { Scene } from "../scene";
 import { HitBox } from "../components/hitbox";
 
@@ -28,7 +28,7 @@ export const Renderer = {
 
         imageProgram.stageUniformIndexed($.U_TRANSFORM, 1, Matrix.identity());
 
-        const dialogueProgram = Dialogue.getProgram();
+        const dialogueProgram = Ui.getProgram();
 
         uiPrograms.clear();
         uiPrograms.add(imageProgram);

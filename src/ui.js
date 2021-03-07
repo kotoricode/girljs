@@ -2,11 +2,46 @@ import * as $ from "./const";
 import { Model } from "./gl/model";
 import { Program } from "./gl/program";
 import { Texture } from "./gl/texture";
-import { SmoothBezier } from "./math/smooth-bezier";
 import { Matrix } from "./math/matrix";
-import { isSet, clamp, lerp } from "./utility";
+import { isSet, clamp, lerp, HALF_PI } from "./utility";
 import { Camera } from "./camera";
 import { Vector } from "./math/vector";
+
+export const Ui = {
+    getProgram()
+    {
+        return program;
+    },
+    async init()
+    {
+        program = new Program($.PRG_UI, $.MDL_TEXT);
+        program.stageUniform($.U_COLOR, [1, 1, 1, 1]);
+        program.stageUniformIndexed(
+            $.U_TRANSFORM,
+            1,
+            Matrix.identity()
+        );
+
+        canvas = window.document.createElement("canvas");
+        canvas.width = $.RES_WIDTH;
+        canvas.height = $.RES_HEIGHT;
+
+        ctx = canvas.getContext("2d");
+        ctx.textAlign = "left";
+        ctx.textBaseline = "top";
+        ctx.font = `${dlgFontPx}px Jost`;
+        ctx.fillStyle = "#333333";
+
+        if (!Model.isLoaded())
+        {
+            await Model.load();
+        }
+
+        canvasToTexture();
+        Dialogue.setScript(["hey", $.TXT_LOREM, "two", "three"]);
+        Dialogue.advance();
+    }
+};
 
 export const Dialogue = {
     advance()
@@ -16,7 +51,7 @@ export const Dialogue = {
         if (++dlgScriptIdx === dlgScript.length)
         {
             dlgScript = null;
-            clear();
+            Dialogue.clear();
             canvasToTexture();
 
             return;
@@ -72,7 +107,7 @@ export const Dialogue = {
         }
 
         /*----------------------------------------------------------------------
-            Line Y offsets
+            Line Y positions
         ----------------------------------------------------------------------*/
         const yOffset = 0.5 * dlgLines.length;
 
@@ -81,22 +116,22 @@ export const Dialogue = {
             dlgLinesY[i] = bubMidY + dlgFontPx * (i - yOffset);
         }
     },
-    draw(dt)
+    clear()
     {
-        clear();
-        ctx.fillStyle = "#ffffff";
-        ctx.strokeStyle = "#333333";
-        ctx.lineWidth = 2;
+        ctx.clearRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+    },
+    draw(dt, textColor)
+    {
+        this.clear();
 
         /*----------------------------------------------------------------------
             Bubble
         ----------------------------------------------------------------------*/
+        ctx.fillStyle = "#ffffff";
+        ctx.strokeStyle = "#333333";
+        ctx.lineWidth = 2;
         Camera.worldToScreen(1.09704, 0.76, -3.02629, bubArrowPoint);
-        ctx.beginPath();
 
-        /*----------------------------------------------------------------------
-            Arrow
-        ----------------------------------------------------------------------*/
         const arrowLeft = clamp(
             bubArrowPoint.x - bubArrowHalfWidth,
             bubL,
@@ -115,27 +150,28 @@ export const Dialogue = {
             Math.min(1, bubArrowLen / (bubT - bubArrowPoint.y))
         );
 
+        ctx.beginPath();
         ctx.moveTo(arrowLeft, bubT);
         ctx.lineTo(arrowTipX, bubArrowT);
         ctx.lineTo(arrowRight, bubT);
+        ctx.lineTo(bubR, bubT);
 
-        /*----------------------------------------------------------------------
-            Bubble
-        ----------------------------------------------------------------------*/
-        ctx.lineTo(bubBez0.x, bubBez0.y);
-
-        ctx.bezierCurveTo(
-            bubBez0.cpOutX, bubBez0.cpOutY,
-            bubBez1.cpInX, bubBez1.cpInY,
-            bubBez1.x, bubBez1.y
+        ctx.ellipse(
+            bubR, bubMidY,
+            bubEllX, bubEllY,
+            0,
+            -HALF_PI,
+            HALF_PI
         );
 
-        ctx.lineTo(bubBez2.x, bubBez2.y);
+        ctx.lineTo(bubL, bubB);
 
-        ctx.bezierCurveTo(
-            bubBez2.cpOutX, bubBez2.cpOutY,
-            bubBez3.cpInX, bubBez3.cpInY,
-            bubBez3.x, bubBez3.y
+        ctx.ellipse(
+            bubL, bubMidY,
+            bubEllX, bubEllY,
+            0,
+            HALF_PI,
+            -HALF_PI
         );
 
         ctx.closePath();
@@ -165,7 +201,7 @@ export const Dialogue = {
             if (stopL > 1)
             {
                 // Line is fully shown, draw in plain color
-                ctx.fillStyle = alpha[255];
+                ctx.fillStyle = textColor;
             }
             else
             {
@@ -178,13 +214,21 @@ export const Dialogue = {
                 // Colorstop must be in range [0.0, 1.0]
                 // Slope is kept consistent by adjusting colorstop alpha,
                 // to simulate colorstop values outside the range
-                const alphaL = alpha[255 * Math.min(1, stopL / gap + 1) | 0];
-                const alphaR = alpha[255 * Math.max(0, (stopR - 1) / gap) | 0];
+                const alphaL = 255 * Math.min(1, stopL / gap + 1) | 0;
+                const alphaR = 255 * Math.max(0, (stopR - 1) / gap) | 0;
 
                 const grad = ctx.createLinearGradient(bubL, 0, dlgLinesR[i], 0);
 
-                grad.addColorStop(Math.max(0, stopL), alphaL);
-                grad.addColorStop(Math.min(1, stopR), alphaR);
+                grad.addColorStop(
+                    Math.max(0, stopL),
+                    textColor + byteToHex[alphaL]
+                );
+
+                grad.addColorStop(
+                    Math.min(1, stopR),
+                    textColor + byteToHex[alphaR]
+                );
+
                 ctx.fillStyle = grad;
             }
 
@@ -193,42 +237,9 @@ export const Dialogue = {
 
         canvasToTexture();
     },
-    getProgram()
-    {
-        return program;
-    },
     hasScript()
     {
         return isSet(dlgScript);
-    },
-    async init()
-    {
-        program = new Program($.PRG_UI, $.MDL_TEXT);
-        program.stageUniform($.U_COLOR, [1, 1, 1, 1]);
-        program.stageUniformIndexed(
-            $.U_TRANSFORM,
-            1,
-            Matrix.identity()
-        );
-
-        canvas = window.document.createElement("canvas");
-        canvas.width = $.RES_WIDTH;
-        canvas.height = $.RES_HEIGHT;
-
-        ctx = canvas.getContext("2d");
-        ctx.textAlign = "left";
-        ctx.textBaseline = "top";
-        ctx.font = `${dlgFontPx}px Jost`;
-        ctx.fillStyle = alpha[255];
-
-        if (!Model.isLoaded())
-        {
-            await Model.load();
-        }
-
-        canvasToTexture();
-        this.setScript(["hey", $.TXT_LOREM, "two", "three"]);
-        this.advance();
     },
     setScript(script)
     {
@@ -236,8 +247,6 @@ export const Dialogue = {
         dlgScriptIdx = -1;
     }
 };
-
-const clear = () => ctx.clearRect(0, 0, canvas.width, canvas.height);
 
 const canvasToTexture = () =>
 {
@@ -268,11 +277,11 @@ const dlgPrepareLine = (line, width) =>
     dlgLines.push(line);
 };
 
-const alpha = new Array(256);
+const byteToHex = new Array(256);
 
-for (let i = 0; i < alpha.length; i++)
+for (let i = 0; i < byteToHex.length; i++)
 {
-    alpha[i] = `#ff0000${i.toString(16).padStart(2, "0")}`;
+    byteToHex[i] = i.toString(16).padStart(2, "0");
 }
 
 let program;
@@ -307,9 +316,12 @@ const bubL = bubLRel * $.RES_WIDTH;
 const bubR = bubRRel * $.RES_WIDTH;
 const bubW = bubR - bubL;
 const bubT = bubTRel * $.RES_HEIGHT;
+const bubB = bubBRel * $.RES_HEIGHT;
 
-const bubMidY = (bubBRel + bubTRel) / 2 * $.RES_HEIGHT;
+const bubMidY = (bubB + bubT) / 2;
 
+const bubEllX = 82;
+const bubEllY = bubB - bubMidY;
 const bubArrowLen = 50;
 const bubArrowWidth = 40;
 const bubArrowHalfWidth = bubArrowWidth / 2;
@@ -318,8 +330,3 @@ const bubArrowT = bubT - bubArrowLen;
 const bubArrowPoint = new Vector();
 const bubArrowLMax = bubR - bubArrowWidth;
 const bubArrowRMin = bubL + bubArrowWidth;
-
-const bubBez0 = new SmoothBezier(bubRRel, bubTRel, 0, 110, 180);
-const bubBez1 = new SmoothBezier(bubRRel, bubBRel, 110, 110, 0);
-const bubBez2 = new SmoothBezier(bubLRel, bubBRel, 110, 110, 0);
-const bubBez3 = new SmoothBezier(bubLRel, bubTRel, 110, 0, 180);
