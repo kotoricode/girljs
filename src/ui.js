@@ -118,10 +118,12 @@ export const Dialogue = {
     },
     clear()
     {
-        ctx.clearRect(0, canvas.height / 2, canvas.width, canvas.height / 2);
+        ctx.clearRect(bubClearX, bubClearY, bubClearW, bubClearH);
     },
-    draw(dt, textColor)
+    draw(dt, textRgb)
     {
+        if (!textRgb || textRgb.length !== 7) throw textRgb;
+
         this.clear();
 
         /*----------------------------------------------------------------------
@@ -201,7 +203,7 @@ export const Dialogue = {
             if (stopL > 1)
             {
                 // Line is fully shown, draw in plain color
-                ctx.fillStyle = textColor;
+                ctx.fillStyle = textRgb;
             }
             else
             {
@@ -221,12 +223,12 @@ export const Dialogue = {
 
                 grad.addColorStop(
                     Math.max(0, stopL),
-                    textColor + byteToHex[alphaL]
+                    textRgb + byteToHex[alphaL]
                 );
 
                 grad.addColorStop(
                     Math.min(1, stopR),
-                    textColor + byteToHex[alphaR]
+                    textRgb + byteToHex[alphaR]
                 );
 
                 ctx.fillStyle = grad;
@@ -303,6 +305,7 @@ const dlgLinesY = [];
 const dlgLinesRelWidth = [];
 const dlgLinesR = [];
 const dlgLinesStart = [];
+const dlgClearMargin = 8;
 
 /*------------------------------------------------------------------------------
     Bubble
@@ -324,3 +327,8 @@ const bubArrowT = bubT - bubArrowHeight;
 const bubArrowPoint = new Vector();
 const bubArrowLMax = bubR - bubArrowWidth;
 const bubArrowRMin = bubL + bubArrowWidth;
+
+const bubClearX = bubL - bubEllX - dlgClearMargin;
+const bubClearY = bubArrowT - dlgClearMargin;
+const bubClearW = $.RES_WIDTH - 2 * bubClearX;
+const bubClearH = $.RES_HEIGHT - bubClearY - dlgClearMargin;
