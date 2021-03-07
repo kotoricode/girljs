@@ -124,12 +124,15 @@ export const Dialogue = {
             dlgLinesY[i] = bubMidY + dlgFontPx * (i - yOffset);
         }
     },
-    drawBubble()
+    draw(dt)
     {
+        /*----------------------------------------------------------------------
+            Bubble
+        ----------------------------------------------------------------------*/
         dlgBub.clear();
-        const { ctx } = dlgBub;
+        const { ctx: bubCtx } = dlgBub;
         Camera.worldToScreen(1.09704, 0.76, -3.02629, bubArrowPoint);
-        ctx.beginPath();
+        bubCtx.beginPath();
 
         /*----------------------------------------------------------------------
             Arrow
@@ -152,39 +155,40 @@ export const Dialogue = {
             Math.min(1, bubArrowLen / (bubT - bubArrowPoint.y))
         );
 
-        ctx.moveTo(arrowLeft, bubT);
-        ctx.lineTo(arrowTipX, bubArrowT);
-        ctx.lineTo(arrowRight, bubT);
+        bubCtx.moveTo(arrowLeft, bubT);
+        bubCtx.lineTo(arrowTipX, bubArrowT);
+        bubCtx.lineTo(arrowRight, bubT);
 
         /*----------------------------------------------------------------------
             Bubble
         ----------------------------------------------------------------------*/
-        ctx.lineTo(bubBez0.x, bubBez0.y);
+        bubCtx.lineTo(bubBez0.x, bubBez0.y);
 
-        ctx.bezierCurveTo(
+        bubCtx.bezierCurveTo(
             bubBez0.cpOutX, bubBez0.cpOutY,
             bubBez1.cpInX, bubBez1.cpInY,
             bubBez1.x, bubBez1.y
         );
 
-        ctx.lineTo(bubBez2.x, bubBez2.y);
+        bubCtx.lineTo(bubBez2.x, bubBez2.y);
 
-        ctx.bezierCurveTo(
+        bubCtx.bezierCurveTo(
             bubBez2.cpOutX, bubBez2.cpOutY,
             bubBez3.cpInX, bubBez3.cpInY,
             bubBez3.x, bubBez3.y
         );
 
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
+        bubCtx.closePath();
+        bubCtx.fill();
+        bubCtx.stroke();
 
         dlgBub.canvasToTexture();
-    },
-    drawText(dt)
-    {
+
+        /*----------------------------------------------------------------------
+            Text
+        ----------------------------------------------------------------------*/
         dlgTimer += dt * dlgFadeSpeed;
-        const { ctx } = dlgTxt;
+        const { ctx: txtCtx } = dlgTxt;
 
         dlgTxt.clear();
 
@@ -206,7 +210,7 @@ export const Dialogue = {
             if (stopL > 1)
             {
                 // Line is fully shown, draw in plain color
-                ctx.fillStyle = alpha[255];
+                txtCtx.fillStyle = alpha[255];
             }
             else
             {
@@ -222,13 +226,16 @@ export const Dialogue = {
                 const alphaL = alpha[255 * Math.min(1, stopL / gap + 1) | 0];
                 const alphaR = alpha[255 * Math.max(0, (stopR - 1) / gap) | 0];
 
-                const grad = ctx.createLinearGradient(bubL, 0, dlgLinesR[i], 0);
+                const grad = txtCtx.createLinearGradient(
+                    bubL, 0, dlgLinesR[i], 0
+                );
+
                 grad.addColorStop(Math.max(0, stopL), alphaL);
                 grad.addColorStop(Math.min(1, stopR), alphaR);
-                ctx.fillStyle = grad;
+                txtCtx.fillStyle = grad;
             }
 
-            ctx.fillText(dlgLines[i], bubL, dlgLinesY[i]);
+            txtCtx.fillText(dlgLines[i], bubL, dlgLinesY[i]);
         }
 
         dlgTxt.canvasToTexture();
