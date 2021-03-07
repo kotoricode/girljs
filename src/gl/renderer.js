@@ -28,11 +28,11 @@ export const Renderer = {
 
         imageProgram.stageUniformIndexed($.U_TRANSFORM, 1, Matrix.identity());
 
-        uiPrograms.clear();
+        const dialogueProgram = Dialogue.getProgram();
 
+        uiPrograms.clear();
         uiPrograms.add(imageProgram);
-        uiPrograms.add(Dialogue.getBubbleProgram());
-        uiPrograms.add(Dialogue.getTextProgram());
+        uiPrograms.add(dialogueProgram);
         uiPrograms.add(debugProgram);
 
         /*----------------------------------------------------------------------
