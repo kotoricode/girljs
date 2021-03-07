@@ -147,7 +147,7 @@ export const Dialogue = {
         const arrowTipX = lerp(
             arrowRight - bubArrowHalfWidth,
             bubArrowPoint.x,
-            Math.min(1, bubArrowLen / (bubT - bubArrowPoint.y))
+            Math.min(1, bubArrowHeight / (bubT - bubArrowPoint.y))
         );
 
         ctx.beginPath();
@@ -307,25 +307,27 @@ const dlgLinesStart = [];
 /*------------------------------------------------------------------------------
     Bubble
 ------------------------------------------------------------------------------*/
-const bubLRel = 0.23;
+const bubLRel = 0.225;
 const bubRRel = 1 - bubLRel;
-const bubTRel = 0.73;
-const bubBRel = 0.98;
+const bubTRel = 0.725;
+const bubBRel = 0.975;
+const bubArrowWidthRel = 0.03125;
+const bubArrowHeightRel = 0.0390625;
 
 const bubL = bubLRel * $.RES_WIDTH;
 const bubR = bubRRel * $.RES_WIDTH;
-const bubW = bubR - bubL;
 const bubT = bubTRel * $.RES_HEIGHT;
 const bubB = bubBRel * $.RES_HEIGHT;
+const bubW = bubR - bubL;
 
 const bubMidY = (bubB + bubT) / 2;
 
 const bubEllX = 82;
 const bubEllY = bubB - bubMidY;
-const bubArrowLen = 50;
-const bubArrowWidth = 40;
+const bubArrowHeight = bubArrowHeightRel * $.RES_WIDTH;
+const bubArrowWidth = bubArrowWidthRel * $.RES_WIDTH;
 const bubArrowHalfWidth = bubArrowWidth / 2;
-const bubArrowT = bubT - bubArrowLen;
+const bubArrowT = bubT - bubArrowHeight;
 
 const bubArrowPoint = new Vector();
 const bubArrowLMax = bubR - bubArrowWidth;
