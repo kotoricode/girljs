@@ -16,40 +16,42 @@ import { AudioPlayer } from "./audio-player";
 const canvasDiv = getElement("canvasDiv");
 canvasDiv.innerText = "Click to start";
 
-canvasDiv.addEventListener("mousedown", () =>
+canvasDiv.addEventListener("mousedown", async() =>
 {
     canvasDiv.innerText = "Loading...";
     AudioPlayer.init();
     init();
 
-    Model.load().then(() =>
+    if (!Model.isLoaded())
     {
-        canvas.addEventListener("mousedown", (e) =>
+        await Model.load();
+    }
+
+    canvas.addEventListener("mousedown", (e) =>
+    {
+        if (!e.button)
         {
-            if (!e.button)
-            {
-                mouseEvent = e;
-                isMouseDownPending = true;
-                e.preventDefault();
-            }
-        });
-
-        canvas.addEventListener("mouseup", (e) =>
-        {
-            if (!e.button)
-            {
-                isMouseUpPending = true;
-                e.preventDefault();
-            }
-        });
-
-        canvas.addEventListener("mousemove", (e) => mouseEvent = e);
-
-        Scene.setPendingLoad($.SCN_TEST);
-        isReady = true;
-
-        canvasDiv.style.display = "none";
+            mouseEvent = e;
+            isMouseDownPending = true;
+            e.preventDefault();
+        }
     });
+
+    canvas.addEventListener("mouseup", (e) =>
+    {
+        if (!e.button)
+        {
+            isMouseUpPending = true;
+            e.preventDefault();
+        }
+    });
+
+    canvas.addEventListener("mousemove", (e) => mouseEvent = e);
+
+    Scene.setPendingLoad($.SCN_TEST);
+    isReady = true;
+
+    canvasDiv.style.display = "none";
 }, LISTENER_ONCE);
 
 /*------------------------------------------------------------------------------

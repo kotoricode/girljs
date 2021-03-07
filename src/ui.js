@@ -245,7 +245,7 @@ export const Dialogue = {
     {
         return isSet(dlgScript);
     },
-    init()
+    async init()
     {
         dlgTxt = new UiCanvas($.MDL_TEXT, [0.2, 0.2, 0.2, 1]);
         const { ctx: txtCtx } = dlgTxt;
@@ -260,13 +260,15 @@ export const Dialogue = {
         bubCtx.strokeStyle = "#333333";
         bubCtx.lineWidth = 2;
 
-        Model.load().then(() =>
+        if (!Model.isLoaded())
         {
-            dlgTxt.canvasToTexture();
-            dlgBub.canvasToTexture();
-            this.setScript(["hey", $.TXT_LOREM, "two", "three"]);
-            this.advance();
-        });
+            await Model.load();
+        }
+
+        dlgTxt.canvasToTexture();
+        dlgBub.canvasToTexture();
+        this.setScript(["hey", $.TXT_LOREM, "two", "three"]);
+        this.advance();
     },
     setScript(script)
     {
