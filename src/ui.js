@@ -295,7 +295,7 @@ let dlgScript;
 let dlgScriptIdx;
 let dlgTimer;
 
-const dlgFontPx = 36;
+const dlgFontPx = 0.05 * $.RES_HEIGHT;
 const dlgFadeWidth = 0.1;
 const dlgFadeSpeed = 0.6;
 const dlgLines = [];
