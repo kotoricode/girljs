@@ -307,25 +307,17 @@ const dlgLinesStart = [];
 /*------------------------------------------------------------------------------
     Bubble
 ------------------------------------------------------------------------------*/
-const bubLRel = 0.225;
-const bubRRel = 1 - bubLRel;
-const bubTRel = 0.725;
-const bubBRel = 0.975;
-const bubArrowWidthRel = 0.03125;
-const bubArrowHeightRel = 0.0390625;
-
-const bubL = bubLRel * $.RES_WIDTH;
-const bubR = bubRRel * $.RES_WIDTH;
-const bubT = bubTRel * $.RES_HEIGHT;
-const bubB = bubBRel * $.RES_HEIGHT;
+const bubL = 0.225 * $.RES_WIDTH;
+const bubR = $.RES_WIDTH - bubL;
+const bubT = 0.725 * $.RES_HEIGHT;
+const bubB = 0.975 * $.RES_HEIGHT;
 const bubW = bubR - bubL;
-
 const bubMidY = (bubB + bubT) / 2;
 
-const bubEllX = 82;
+const bubEllX = 0.0640625 * $.RES_WIDTH;
 const bubEllY = bubB - bubMidY;
-const bubArrowHeight = bubArrowHeightRel * $.RES_WIDTH;
-const bubArrowWidth = bubArrowWidthRel * $.RES_WIDTH;
+const bubArrowHeight = 0.0390625 * $.RES_WIDTH;
+const bubArrowWidth = 0.03125 * $.RES_WIDTH;
 const bubArrowHalfWidth = bubArrowWidth / 2;
 const bubArrowT = bubT - bubArrowHeight;
 
