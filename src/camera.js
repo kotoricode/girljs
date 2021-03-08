@@ -81,12 +81,12 @@ const transform = new Transform(0, 2.75, 6);
 const viewProjection = new Matrix();
 const invViewProjection = new Matrix();
 
-const tan = Math.tan(DEG_TO_RAD * fov * 0.5);
+const invTan = 1 / Math.tan(DEG_TO_RAD * fov * 0.5);
 const dist = far - near;
 
 const projection = new Matrix(
-    1/($.RES_ASPECT * tan), 0, 0, 0,
-    0, 1/tan, 0, 0,
+    invTan / $.RES_ASPECT, 0, 0, 0,
+    0, invTan, 0, 0,
     0, 0, -(far+near) / dist, -1,
     0, 0, -2*far*near / dist, 0
 );

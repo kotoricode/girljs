@@ -133,6 +133,13 @@ export const
     TXT_CATCALL_01 = "milk truk just arive";
 
 /*------------------------------------------------------------------------------
+    DOM text --- DO NOT MODIFY
+------------------------------------------------------------------------------*/
+export const
+    DOM_CLICK_TO_START = "Click to start",
+    DOM_LOADING = "Loading...";
+
+/*------------------------------------------------------------------------------
     GL enums --- DO NOT MODIFY
     https://www.khronos.org/registry/webgl/specs/latest/1.0/
     https://www.khronos.org/registry/webgl/specs/latest/2.0/

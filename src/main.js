@@ -14,11 +14,11 @@ import { Model } from "./gl/model";
 import { AudioPlayer } from "./audio-player";
 
 const canvasDiv = getElement("canvasDiv");
-canvasDiv.innerText = "Click to start";
+canvasDiv.innerText = $.DOM_CLICK_TO_START;
 
 canvasDiv.addEventListener("mousedown", async() =>
 {
-    canvasDiv.innerText = "Loading...";
+    canvasDiv.innerText = $.DOM_LOADING;
     AudioPlayer.init();
     init();
 

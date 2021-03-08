@@ -32,17 +32,11 @@ export const Scene = {
 
             if (entity.has(Drawable))
             {
-                const drawable = entity.get(Drawable);
-
-                const { program } = drawable;
+                const { program } = entity.get(Drawable);
 
                 if (program.hasStagingUniform($.U_TRANSFORM))
                 {
-                    program.stageUniformIndexed(
-                        $.U_TRANSFORM,
-                        1,
-                        space.matrix
-                    );
+                    program.stageUniformIndexed($.U_TRANSFORM, 1, space.matrix);
                 }
             }
 
