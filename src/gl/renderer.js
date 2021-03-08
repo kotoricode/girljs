@@ -93,10 +93,9 @@ export const Renderer = {
         gl.enable($.DEPTH_TEST);
         gl.enable($.CULL_FACE);
         drawQueue($.QUE_BACKGROUND);
-
-        gl.disable($.DEPTH_TEST);
         gl.disable($.CULL_FACE);
         drawQueue($.QUE_SPRITE);
+        gl.disable($.DEPTH_TEST);
         drawQueue($.QUE_UI);
 
         unbindFb();

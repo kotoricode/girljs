@@ -38,7 +38,7 @@ const createPlayer = () => [$.ENT_PLAYER, new SafeMap([
         )
     ])],
     [$.BLU_CHILD_ENTITIES, new SafeMap([
-        createMonkey()
+        //createMonkey()
     ])]
 ])];
 
@@ -47,7 +47,7 @@ const createHome = () => [$.ENT_GROUND, new SafeMap([
         new Space(),
         new Drawable($.PRG_WORLD, $.QUE_BACKGROUND, $.MDL_HOME),
         new HitBox(-0.5, 0.5, 0, 2, -0.5, 0.5),
-        new Ground(-3, 3, -2.6, 0),
+        new Ground(-3 + 0.375, 3 - 0.375, -2.6, 0),
     ])],
     [$.BLU_CHILD_ENTITIES, new SafeMap()]
 ])];
