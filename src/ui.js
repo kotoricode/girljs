@@ -94,7 +94,8 @@ export const Dialogue = {
         }
         else
         {
-            dlgDrawLineGradient(dt, textRgb);
+            dlgTimer += dt * dlgFadeSpeed;
+            dlgDrawLineGradient(textRgb);
         }
 
         canvasToTexture();
@@ -176,10 +177,8 @@ const dlgDrawBubble = () =>
     ctx.stroke();
 };
 
-const dlgDrawLineGradient = (dt, textRgb) =>
+const dlgDrawLineGradient = (textRgb) =>
 {
-    dlgTimer += dt * dlgFadeSpeed;
-
     for (let i = 0; i < dlgLines.length; i++)
     {
         const lineTimer = dlgTimer - dlgLinesStart[i];
