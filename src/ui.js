@@ -16,11 +16,7 @@ export const Ui = {
     {
         program = new Program($.PRG_UI, $.MDL_TEXT);
         program.stageUniform($.U_COLOR, [1, 1, 1, 1]);
-        program.stageUniformIndexed(
-            $.U_TRANSFORM,
-            1,
-            Matrix.identity()
-        );
+        program.stageUniformIndexed($.U_TRANSFORM, 1, Matrix.identity());
 
         canvas = window.document.createElement("canvas");
         canvas.width = $.RES_WIDTH;
@@ -38,7 +34,17 @@ export const Ui = {
         }
 
         canvasToTexture();
-        Dialogue.setScript(["hey", $.TXT_LOREM, "two", "three"]);
+
+        /* eslint-disable max-len */
+        Dialogue.setScript([
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+            "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+            "Duis aute irure dolor in reprehenderit in voluptate velit....",
+            "four",
+            "final five"
+        ]);
+        /* eslint-enable max-len */
+
         Dialogue.advance();
     }
 };
@@ -46,74 +52,22 @@ export const Ui = {
 export const Dialogue = {
     advance()
     {
-        if (!dlgScript) throw Error;
+        if (!dlgScript || !dlgScript.length) throw Error;
 
-        if (++dlgScriptIdx === dlgScript.length)
+        if (dlgScriptIdx > -1 && !dlgIsFullyShown)
+        {
+            dlgIsFullyShown = true;
+        }
+        else if (++dlgScriptIdx === dlgScript.length)
         {
             dlgScript = null;
+            dlgScriptIdx = -1;
             Dialogue.clear();
             canvasToTexture();
-
-            return;
         }
-
-        dlgTimer = 0;
-
-        /*----------------------------------------------------------------------
-            Split string into lines
-        ----------------------------------------------------------------------*/
-        const str = dlgScript[dlgScriptIdx];
-
-        // Word boundary positive lookahead whitespace
-        const words = str.split(/\b(?=\s)/);
-
-        dlgLines.length = 0;
-        let line;
-        let lineWidth;
-        let testLine = "";
-
-        for (const word of words)
+        else
         {
-            testLine += word;
-            const testLineWidth = ctx.measureText(testLine).width;
-
-            if (bubW < testLineWidth)
-            {
-                if (!line)
-                {
-                    console.warn(`Word too long: ${testLine}`);
-                    line = testLine;
-                    lineWidth = testLineWidth;
-                    testLine = "";
-                }
-                else
-                {
-                    testLine = word.trimStart();
-                }
-
-                dlgPrepareLine(line, lineWidth);
-                line = null;
-            }
-            else
-            {
-                line = testLine;
-                lineWidth = testLineWidth;
-            }
-        }
-
-        if (line)
-        {
-            dlgPrepareLine(line, lineWidth);
-        }
-
-        /*----------------------------------------------------------------------
-            Line Y positions
-        ----------------------------------------------------------------------*/
-        const yOffset = 0.5 * dlgLines.length;
-
-        for (let i = 0; i < dlgLines.length; i++)
-        {
-            dlgLinesY[i] = bubMidY + dlgFontPx * (i - yOffset);
+            dlgNext();
         }
     },
     clear()
@@ -126,115 +80,21 @@ export const Dialogue = {
 
         this.clear();
 
-        /*----------------------------------------------------------------------
-            Bubble
-        ----------------------------------------------------------------------*/
-        ctx.fillStyle = "#ffffff";
-        ctx.strokeStyle = "#333333";
-        ctx.lineWidth = 2;
-        Camera.worldToScreen(1.09704, 0.76, -3.02629, bubArrowPoint);
+        dlgDrawBubble();
 
-        const arrowLeft = clamp(
-            bubArrowPoint.x - bubArrowHalfWidth,
-            bubL,
-            bubArrowLMax
-        );
-
-        const arrowRight = clamp(
-            bubArrowPoint.x + bubArrowHalfWidth,
-            bubArrowRMin,
-            bubR
-        );
-
-        const arrowTipX = lerp(
-            arrowRight - bubArrowHalfWidth,
-            bubArrowPoint.x,
-            Math.min(1, bubArrowHeight / (bubT - bubArrowPoint.y))
-        );
-
-        ctx.beginPath();
-        ctx.moveTo(arrowLeft, bubT);
-        ctx.lineTo(arrowTipX, bubArrowT);
-        ctx.lineTo(arrowRight, bubT);
-        ctx.lineTo(bubR, bubT);
-
-        ctx.ellipse(
-            bubR, bubMidY,
-            bubEllX, bubEllY,
-            0,
-            -HALF_PI,
-            HALF_PI
-        );
-
-        ctx.lineTo(bubL, bubB);
-
-        ctx.ellipse(
-            bubL, bubMidY,
-            bubEllX, bubEllY,
-            0,
-            HALF_PI,
-            -HALF_PI
-        );
-
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
-
-        /*----------------------------------------------------------------------
-            Text
-        ----------------------------------------------------------------------*/
-        dlgTimer += dt * dlgFadeSpeed;
-
-        for (let i = 0; i < dlgLines.length; i++)
+        if (dlgIsFullyShown || dlgTimer >= dlgEndTime)
         {
-            const lineTimer = dlgTimer - dlgLinesStart[i];
+            dlgIsFullyShown = true;
+            ctx.fillStyle = textRgb;
 
-            if (lineTimer < 0)
+            for (let i = 0; i < dlgLines.length; i++)
             {
-                // Line isn't shown yet (and neither are lines after it)
-                break;
+                ctx.fillText(dlgLines[i], bubL, dlgLinesY[i]);
             }
-
-            const widthRatio = dlgLinesRelWidth[i];
-
-            // Left colorstop, marks alpha 255
-            const stopL = (lineTimer - dlgFadeWidth) / widthRatio;
-
-            if (stopL > 1)
-            {
-                // Line is fully shown, draw in plain color
-                ctx.fillStyle = textRgb;
-            }
-            else
-            {
-                // Right colorstop, marks alpha 0
-                const stopR = lineTimer / widthRatio;
-
-                // Gradient between the stops, alpha falls linearly
-                const gap = stopR - stopL;
-
-                // Colorstop must be in range [0.0, 1.0]
-                // Slope is kept consistent by adjusting colorstop alpha,
-                // to simulate colorstop values outside the range
-                const alphaL = 255 * Math.min(1, stopL / gap + 1) | 0;
-                const alphaR = 255 * Math.max(0, (stopR - 1) / gap) | 0;
-
-                const grad = ctx.createLinearGradient(bubL, 0, dlgLinesR[i], 0);
-
-                grad.addColorStop(
-                    Math.max(0, stopL),
-                    textRgb + byteToHex[alphaL]
-                );
-
-                grad.addColorStop(
-                    Math.min(1, stopR),
-                    textRgb + byteToHex[alphaR]
-                );
-
-                ctx.fillStyle = grad;
-            }
-
-            ctx.fillText(dlgLines[i], bubL, dlgLinesY[i]);
+        }
+        else
+        {
+            dlgDrawLineGradient(dt, textRgb);
         }
 
         canvasToTexture();
@@ -262,20 +122,172 @@ const canvasToTexture = () =>
     Texture.flip(false);
 };
 
+const dlgDrawBubble = () =>
+{
+    ctx.fillStyle = "#ffffff";
+    ctx.strokeStyle = "#333333";
+    ctx.lineWidth = 2;
+    Camera.worldToScreen(1.09704, 0.76, -3.02629, bubArrowPoint);
+
+    const arrowLeft = clamp(
+        bubArrowPoint.x - bubArrowHalfWidth,
+        bubL,
+        bubArrowLMax
+    );
+
+    const arrowRight = clamp(
+        bubArrowPoint.x + bubArrowHalfWidth,
+        bubArrowRMin,
+        bubR
+    );
+
+    const arrowTipX = lerp(
+        arrowRight - bubArrowHalfWidth,
+        bubArrowPoint.x,
+        Math.min(1, bubArrowHeight / (bubT - bubArrowPoint.y))
+    );
+
+    ctx.beginPath();
+    ctx.moveTo(arrowLeft, bubT);
+    ctx.lineTo(arrowTipX, bubArrowT);
+    ctx.lineTo(arrowRight, bubT);
+    ctx.lineTo(bubR, bubT);
+
+    ctx.ellipse(
+        bubR, bubMidY,
+        bubEllX, bubEllY,
+        0,
+        -HALF_PI,
+        HALF_PI
+    );
+
+    ctx.lineTo(bubL, bubB);
+
+    ctx.ellipse(
+        bubL, bubMidY,
+        bubEllX, bubEllY,
+        0,
+        HALF_PI,
+        -HALF_PI
+    );
+
+    ctx.closePath();
+    ctx.fill();
+    ctx.stroke();
+};
+
+const dlgDrawLineGradient = (dt, textRgb) =>
+{
+    dlgTimer += dt * dlgFadeSpeed;
+
+    for (let i = 0; i < dlgLines.length; i++)
+    {
+        const lineTimer = dlgTimer - dlgLinesStart[i];
+
+        if (lineTimer < 0)
+        {
+            // Line isn't shown yet (and neither are lines after it)
+            break;
+        }
+
+        const widthRatio = dlgLinesRelWidth[i];
+
+        // Left colorstop, marks alpha 255
+        const stopL = (lineTimer - dlgFadeWidth) / widthRatio;
+
+        if (stopL > 1)
+        {
+            // Line is fully shown, draw in plain color
+            ctx.fillStyle = textRgb;
+        }
+        else
+        {
+            // Right colorstop, marks alpha 0
+            const stopR = lineTimer / widthRatio;
+
+            // Gradient between the stops, alpha falls linearly
+            const gap = stopR - stopL;
+
+            // Colorstop must be in range [0.0, 1.0]
+            // Slope is kept consistent by adjusting colorstop alpha,
+            // to simulate colorstop values outside the range
+            const alphaL = 255 * Math.min(1, stopL / gap + 1) | 0;
+            const alphaR = 255 * Math.max(0, (stopR - 1) / gap) | 0;
+
+            const grad = ctx.createLinearGradient(bubL, 0, dlgLinesR[i], 0);
+            grad.addColorStop(Math.max(0, stopL), textRgb + byteToHex[alphaL]);
+            grad.addColorStop(Math.min(1, stopR), textRgb + byteToHex[alphaR]);
+
+            ctx.fillStyle = grad;
+        }
+
+        ctx.fillText(dlgLines[i], bubL, dlgLinesY[i]);
+    }
+};
+
+const dlgNext = () =>
+{
+    // Word boundary positive lookahead whitespace
+    const words = dlgScript[dlgScriptIdx].split(/\b(?=\s)/);
+
+    dlgLines.length = 0;
+    let line;
+    let lineWidth;
+    let testLine = "";
+
+    for (const word of words)
+    {
+        testLine += word;
+        const testLineWidth = ctx.measureText(testLine).width;
+
+        if (bubW < testLineWidth)
+        {
+            if (!line)
+            {
+                console.warn(`Word too long: ${testLine}`);
+                line = testLine;
+                lineWidth = testLineWidth;
+                testLine = "";
+            }
+            else
+            {
+                testLine = word.trimStart();
+            }
+
+            dlgPrepareLine(line, lineWidth);
+            line = null;
+        }
+        else
+        {
+            line = testLine;
+            lineWidth = testLineWidth;
+        }
+    }
+
+    if (line)
+    {
+        dlgPrepareLine(line, lineWidth);
+    }
+
+    const yOffset = 0.5 * dlgLines.length;
+    dlgEndTime = dlgFadeWidth;
+    dlgIsFullyShown = false;
+    dlgTimer = 0;
+
+    for (let i = 0; i < dlgLines.length; i++)
+    {
+        dlgLinesY[i] = bubMidY + dlgFontPx * (i - yOffset);
+        const width = dlgLinesRelWidth[i];
+        dlgLinesStart[i] = dlgEndTime;
+        dlgEndTime += width;
+    }
+};
+
 const dlgPrepareLine = (line, width) =>
 {
     const idx = dlgLines.length;
     dlgLinesRelWidth[idx] = width / bubW;
     dlgLinesR[idx] = bubL + width;
-
-    let start = 0;
-
-    for (let i = 0; i < idx; i++)
-    {
-        start += dlgLinesRelWidth[i];
-    }
-
-    dlgLinesStart[idx] = start;
     dlgLines.push(line);
 };
 
@@ -296,10 +308,12 @@ let ctx;
 let dlgScript;
 let dlgScriptIdx;
 let dlgTimer;
+let dlgEndTime;
+let dlgIsFullyShown;
 
 const dlgFontPx = 0.05 * $.RES_HEIGHT;
 const dlgFadeWidth = 0.1;
-const dlgFadeSpeed = 0.6;
+const dlgFadeSpeed = 0.65;
 const dlgLines = [];
 const dlgLinesY = [];
 const dlgLinesRelWidth = [];
