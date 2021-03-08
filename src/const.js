@@ -4,8 +4,6 @@ export const
     RES_HEIGHT = 720,
     RES_ASPECT = RES_WIDTH / RES_HEIGHT;
 
-let i = 0;
-
 export const
     ENT_AV_PLAYER = Symbol(),
     ENT_GROUND = Symbol(),
@@ -13,43 +11,43 @@ export const
     ENT_ROOT = Symbol();
 
 export const
-    SCN_TEST = i++,
-    SCN_HOME = i++;
+    SCN_TEST = Symbol(),
+    SCN_HOME = Symbol();
 
 export const
-    BLU_CHILD_ENTITIES = i++,
-    BLU_COMPONENTS = i++,
-    BLU_PROCESSES = i++;
+    BLU_CHILD_ENTITIES = Symbol(),
+    BLU_COMPONENTS = Symbol(),
+    BLU_PROCESSES = Symbol();
 
 export const
-    AUD_MUSIC = i++,
-    AUD_SOUND = i++,
-    AUD_SOUND_LOOP = i++;
+    AUD_MUSIC = Symbol(),
+    AUD_SOUND = Symbol(),
+    AUD_SOUND_LOOP = Symbol();
 
 export const
-    ANI_IDLE = i++,
-    ANI_MOVE = i++;
+    ANI_IDLE = Symbol(),
+    ANI_MOVE = Symbol();
 
 /*------------------------------------------------------------------------------
     GL
 ------------------------------------------------------------------------------*/
 export const
-    PRG_DEBUG = i++,
-    PRG_IMAGE = i++,
-    PRG_WORLD = i++,
-    PRG_UI = i++;
+    PRG_DEBUG = Symbol(),
+    PRG_IMAGE = Symbol(),
+    PRG_WORLD = Symbol(),
+    PRG_UI = Symbol();
 
 export const
-    QUE_BACKGROUND = i++,
-    QUE_SPRITE = i++,
-    QUE_UI = i++;
+    QUE_BACKGROUND = Symbol(),
+    QUE_SPRITE = Symbol(),
+    QUE_UI = Symbol();
 
 export const
-    BUF_UNI_CAMERA = i++,
-    BUF_ARR_DYNAMIC = i++,
-    BUF_ARR_TEXTURED = i++,
-    BUF_ELEM_INDEX = i++,
-    BUF_ELEM_INDEX_DYNAMIC = i++;
+    BUF_UNI_CAMERA = Symbol(),
+    BUF_ARR_DYNAMIC = Symbol(),
+    BUF_ARR_TEXTURED = Symbol(),
+    BUF_ELEM_INDEX = Symbol(),
+    BUF_ELEM_INDEX_DYNAMIC = Symbol();
 
 export const
     MDL_MONKEY = Symbol(),
@@ -74,14 +72,14 @@ export const
     TEX_WOOD = Symbol();
 
 export const
-    DLG_LEFT_AVATAR = i++,
-    DLG_RIGHT_AVATAR = i++,
-    DLG_LEFT_NAME = i++,
-    DLG_RIGHT_NAME = i++,
-    DLG_ACTIVE_LEFT = i++,
-    DLG_ACTIVE_RIGHT = i++,
-    DLG_TYPE_SPEAK = i++,
-    DLG_TYPE_THINK = i++;
+    DLG_LEFT_AVATAR = Symbol(),
+    DLG_RIGHT_AVATAR = Symbol(),
+    DLG_LEFT_NAME = Symbol(),
+    DLG_RIGHT_NAME = Symbol(),
+    DLG_ACTIVE_LEFT = Symbol(),
+    DLG_ACTIVE_RIGHT = Symbol(),
+    DLG_TYPE_SPEAK = Symbol(),
+    DLG_TYPE_THINK = Symbol();
 
 /*------------------------------------------------------------------------------
     Program --- DO NOT MODIFY
