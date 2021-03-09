@@ -80,11 +80,10 @@ export const Dialogue = {
 
         this.clear();
 
-        dlgDrawBubble();
+        dlgDrawBubble(new Vector(1, 0.2, -0.3));
 
-        if (dlgIsFullyShown || dlgTimer >= dlgEndTime)
+        if (dlgIsFullyShown)
         {
-            dlgIsFullyShown = true;
             ctx.fillStyle = textRgb;
 
             for (let i = 0; i < dlgLines.length; i++)
@@ -95,6 +94,7 @@ export const Dialogue = {
         else
         {
             dlgTimer += dt * dlgFadeSpeed;
+            dlgIsFullyShown = dlgTimer >= dlgEndTime;
             dlgDrawLineGradient(textRgb);
         }
 
@@ -123,35 +123,43 @@ const canvasToTexture = () =>
     Texture.flip(false);
 };
 
-const dlgDrawBubble = () =>
+const dlgDrawBubble = (vecSpeaker) =>
 {
     ctx.fillStyle = "#ffffff";
     ctx.strokeStyle = "#333333";
     ctx.lineWidth = 2;
-    Camera.worldToScreen(1.09704, 0.76, -3.02629, bubArrowPoint);
-
-    const arrowLeft = clamp(
-        bubArrowPoint.x - bubArrowHalfWidth,
-        bubL,
-        bubArrowLMax
-    );
-
-    const arrowRight = clamp(
-        bubArrowPoint.x + bubArrowHalfWidth,
-        bubArrowRMin,
-        bubR
-    );
-
-    const arrowTipX = lerp(
-        arrowRight - bubArrowHalfWidth,
-        bubArrowPoint.x,
-        Math.min(1, bubArrowHeight / (bubT - bubArrowPoint.y))
-    );
 
     ctx.beginPath();
-    ctx.moveTo(arrowLeft, bubT);
-    ctx.lineTo(arrowTipX, bubArrowT);
-    ctx.lineTo(arrowRight, bubT);
+
+    if (vecSpeaker)
+    {
+        bubArrowPoint.copy(vecSpeaker);
+        Camera.worldToScreen(vecSpeaker);
+
+        const arrowLeft = clamp(
+            bubArrowPoint.x - bubArrowHalfWidth,
+            bubL,
+            bubArrowLMax
+        );
+
+        const arrowRight = clamp(
+            bubArrowPoint.x + bubArrowHalfWidth,
+            bubArrowRMin,
+            bubR
+        );
+
+        const arrowTipX = lerp(
+            arrowRight - bubArrowHalfWidth,
+            bubArrowPoint.x,
+            Math.min(1, bubArrowHeight / (bubT - bubArrowPoint.y))
+        );
+
+        ctx.moveTo(arrowLeft, bubT);
+        ctx.lineTo(arrowTipX, bubArrowT);
+        ctx.lineTo(arrowRight, bubT);
+
+    }
+
     ctx.lineTo(bubR, bubT);
 
     ctx.ellipse(
@@ -312,7 +320,7 @@ let dlgIsFullyShown;
 
 const dlgFontPx = 0.05 * $.RES_HEIGHT;
 const dlgFadeWidth = 0.1;
-const dlgFadeSpeed = 0.65;
+const dlgFadeSpeed = 1;
 const dlgLines = [];
 const dlgLinesY = [];
 const dlgLinesRelWidth = [];

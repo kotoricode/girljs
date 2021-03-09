@@ -12,7 +12,7 @@ export const processUi = () =>
         if (Mouse.isClick())
         {
             Dialogue.advance();
+            Mouse.consume();
         }
     }
 };
-

@@ -35,8 +35,10 @@ export const Camera = {
             updateViewProjection();
         }
     },
-    worldToScreen(x, y, z, vec)
+    worldToScreen(vec)
     {
+        const { x, y, z } = vec;
+
         const [
             L0, L1, , L3,
             L4, L5, , L7,
