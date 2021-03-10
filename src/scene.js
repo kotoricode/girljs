@@ -214,11 +214,14 @@ const createBlueprintEntities = (bpEntities, parentId) =>
         entity.set(...components);
         Scene.addEntity(entity, parentId);
 
-        const children = entityBp.get($.BLU_CHILD_ENTITIES);
-
-        if (children.size)
+        if (entityBp.has($.BLU_ENTITIES))
         {
-            createBlueprintEntities(children, entityId);
+            const children = entityBp.get($.BLU_ENTITIES);
+
+            if (children.size)
+            {
+                createBlueprintEntities(children, entityId);
+            }
         }
     }
 };
@@ -270,7 +273,7 @@ const load = (sceneId) =>
 
     const bp = blueprint.get(sceneId)();
     const bpProcesses = bp.get($.BLU_PROCESSES);
-    const bpEntities = bp.get($.BLU_CHILD_ENTITIES);
+    const bpEntities = bp.get($.BLU_ENTITIES);
 
     for (const process of bpProcesses)
     {

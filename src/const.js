@@ -15,7 +15,7 @@ export const
     SCN_HOME = Symbol();
 
 export const
-    BLU_CHILD_ENTITIES = Symbol(),
+    BLU_ENTITIES = Symbol(),
     BLU_COMPONENTS = Symbol(),
     BLU_PROCESSES = Symbol();
 
