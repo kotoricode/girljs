@@ -23,38 +23,33 @@ const createEntity = (entityId, ...components) => [
     ])
 ];
 
-const createEntityHierarchy = (parent, ...children) =>
-{
-    parent[1].set($.BLU_ENTITIES, new Map(children));
+const createEntityChildren = (entityId, children, ...components) => [
+    entityId,
+    new Map([
+        [$.BLU_COMPONENTS, new Set(components)],
+        [$.BLU_ENTITIES, new Set(children)]
+    ])
+];
 
-    return parent;
-};
-
-const createPlayer = () => createEntityHierarchy(
-    createEntity(
-        $.ENT_PLAYER,
-        new Space(0, 0, -1),
-        new Drawable($.PRG_WORLD, $.QUE_SPRITE, $.MDL_GIRL_IDLE_00),
-        new HitBox(-0.375, 0.375, 0, 1.5, -0.1, 0.1),
-        new Motion(3),
-        new Player(),
-        new Anim(
-            new Map([
-                [$.ANI_IDLE, [$.MDL_GIRL_IDLE_00]],
-                [$.ANI_MOVE, [
-                    $.MDL_GIRL_MOVE_00, $.MDL_GIRL_MOVE_01
-                ]],
-            ]),
-            new Map([
-                [$.ANI_IDLE, [Infinity]],
-                [$.ANI_MOVE, [0.07]],
-            ])
-        )
-    ),
-    createEntity(
-        Symbol(),
-        new Space(0, 0, 0),
-        new Drawable($.PRG_WORLD, $.QUE_BACKGROUND, $.MDL_MONKEY)
+const createPlayer = () => createEntityChildren(
+    $.ENT_PLAYER,
+    [createMonkey],
+    new Space(0, 0, -1),
+    new Drawable($.PRG_WORLD, $.QUE_SPRITE, $.MDL_GIRL_IDLE_00),
+    new HitBox(-0.375, 0.375, 0, 1.5, -0.1, 0.1),
+    new Motion(3),
+    new Player(),
+    new Anim(
+        new Map([
+            [$.ANI_IDLE, [$.MDL_GIRL_IDLE_00]],
+            [$.ANI_MOVE, [
+                $.MDL_GIRL_MOVE_00, $.MDL_GIRL_MOVE_01
+            ]],
+        ]),
+        new Map([
+            [$.ANI_IDLE, [Infinity]],
+            [$.ANI_MOVE, [0.07]],
+        ])
     )
 );
 
@@ -73,12 +68,19 @@ const createWaypoint = () => createEntity(
     new Drawable($.PRG_WORLD, $.QUE_BACKGROUND, $.MDL_MONKEY)
 );
 
+const createMonkey = () => createEntity(
+    Symbol(),
+    new Space(0, 0, 0),
+    new Drawable($.PRG_WORLD, $.QUE_BACKGROUND, $.MDL_MONKEY)
+);
+
 export const blueprint = new Map([
-    [$.SCN_TEST, () => new Map([
-        [$.BLU_ENTITIES, new Map([
-            createPlayer(),
-            createWaypoint(),
-            createHome()
+    [$.SCN_TEST, new Map([
+        [$.BLU_ENTITIES, new Set([
+            createPlayer,
+            createMonkey,
+            createWaypoint,
+            createHome
         ])],
         [$.BLU_PROCESSES, new Set([
             processUi,

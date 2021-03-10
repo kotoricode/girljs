@@ -207,20 +207,23 @@ const cleanSpace = (space, isWorldUpdate) =>
 
 const createBlueprintEntities = (bpEntities, parentId) =>
 {
-    for (const [entityId, entityBp] of bpEntities)
+    for (const entityFunc of bpEntities)
     {
-        const components = entityBp.get($.BLU_COMPONENTS);
-        const entity = new Entity(entityId);
+        const [id, map] = entityFunc();
+        const entity = new Entity(id);
+
+        const components = map.get($.BLU_COMPONENTS);
         entity.set(...components);
+
         Scene.addEntity(entity, parentId);
 
-        if (entityBp.has($.BLU_ENTITIES))
+        if (map.has($.BLU_ENTITIES))
         {
-            const children = entityBp.get($.BLU_ENTITIES);
+            const children = map.get($.BLU_ENTITIES);
 
             if (children.size)
             {
-                createBlueprintEntities(children, entityId);
+                createBlueprintEntities(children, id);
             }
         }
     }
@@ -271,16 +274,16 @@ const load = (sceneId) =>
     ----------------------------------------------------------------------*/
     entities.set(root.id, root);
 
-    const bp = blueprint.get(sceneId)();
-    const bpProcesses = bp.get($.BLU_PROCESSES);
+    const bp = blueprint.get(sceneId);
     const bpEntities = bp.get($.BLU_ENTITIES);
+    const bpProcesses = bp.get($.BLU_PROCESSES);
+
+    createBlueprintEntities(bpEntities, root.id);
 
     for (const process of bpProcesses)
     {
         processes.add(process);
     }
-
-    createBlueprintEntities(bpEntities, root.id);
 };
 
 function* yieldComponents(entity, components)
