@@ -1,6 +1,5 @@
 import * as $ from "./const";
 import { Prefs } from "./save";
-import { SafeMap } from "./utility";
 
 export const AudioPlayer = {
     init()
@@ -82,11 +81,11 @@ class AudioElement
     }
 }
 
-const audio = new SafeMap([
+const audio = new Map([
     [$.AUD_MUSIC, new AudioElement($.PREF_MUSIC, true, $.AUD_OMOIDE)],
     [$.AUD_SOUND, new AudioElement($.PREF_SOUND, false)],
     [$.AUD_SOUND_LOOP, new AudioElement($.PREF_SOUND, true)],
 ]);
 
-const gains = new SafeMap();
+const gains = new Map();
 let ctx;

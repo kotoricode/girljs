@@ -10,8 +10,9 @@ export const SIZEOF_FLOAT32 = 4;
 
 export const SIZEOF_UINT16 = 2;
 
-export const clamp = (value, min=0, max=1) => (
-    Math.max(min, Math.min(max, value))
+export const clamp = (value, min=0, max=1) => Math.max(
+    min,
+    Math.min(max, value)
 );
 
 export const getElement = (elemId) => window.document.getElementById(elemId);
@@ -43,15 +44,11 @@ export const hsvToRgb = (h, s, v, rgbArray) =>
     rgbArray[2] = b + m;
 };
 
-export const isNumber = (value) => typeof value === "number";
-
-export const isSet = (value) => value !== null && value !== undefined;
-
 export const lerp = (start, end, amount) => start*(1-amount) + end*amount;
 
 export const setArrayValues = (array, offset, ...values) =>
 {
-    const newOffset = offset + values.length;
+    const newOffset = values.length + offset;
 
     if (array.length < newOffset) throw values;
 
@@ -63,78 +60,11 @@ export const setArrayValues = (array, offset, ...values) =>
     return newOffset;
 };
 
-export class SafeMap extends Map
-{
-    constructor(...params)
-    {
-        super(...params);
-    }
-
-    delete(key)
-    {
-        if (!isSet(key)) throw key;
-        if (!super.delete(key)) throw key;
-    }
-
-    get(key)
-    {
-        if (!isSet(key)) throw key;
-        if (!this.has(key)) throw key;
-
-        return super.get(key);
-    }
-
-    replace(key, value)
-    {
-        if (!isSet(key)) throw key;
-        if (!isSet(value)) throw value;
-        if (!this.has(key)) throw key;
-
-        return super.set(key, value);
-    }
-
-    set(key, value)
-    {
-        if (!isSet(key)) throw key;
-        if (!isSet(value)) throw value;
-        if (this.has(key)) throw key;
-
-        return super.set(key, value);
-    }
-}
-
-export class SafeSet extends Set
-{
-    constructor(...params)
-    {
-        super(...params);
-    }
-
-    add(value)
-    {
-        if (!isSet(value)) throw value;
-        if (this.has(value)) throw value;
-
-        return super.add(value);
-    }
-
-    delete(value)
-    {
-        if (!isSet(value)) throw value;
-        if (!super.delete(value)) throw value;
-    }
-}
-
 export class SettableArray extends Array
 {
     constructor(...params)
     {
         super(...params);
-    }
-
-    from(array)
-    {
-        this.setValues(...array);
     }
 
     setValues(...values)
@@ -167,7 +97,7 @@ export const Publisher = {
 
         if (!eventSubs.has(event))
         {
-            eventSubs.set(event, new SafeSet());
+            eventSubs.set(event, new Set());
         }
 
         const subs = eventSubs.get(event);
@@ -206,4 +136,4 @@ export const Storage = {
     }
 };
 
-const eventSubs = new SafeMap();
+const eventSubs = new Map();

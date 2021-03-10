@@ -37,7 +37,7 @@ module.exports = {
         "newline-before-return": 2,
         "no-alert": 2,
         "no-caller": 2,
-        "no-constant-condition": 0,
+        "no-constant-condition": [2, { "checkLoops": false }],
         "no-constructor-return": 2,
         "no-empty-function": 2,
         "no-eval": 2,

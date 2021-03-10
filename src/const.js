@@ -50,25 +50,24 @@ export const
     BUF_ELEM_INDEX_DYNAMIC = Symbol();
 
 export const
-    MDL_MONKEY = Symbol(),
-    MDL_BUBBLE = Symbol(),
-    MDL_TEXT = Symbol(),
     MDL_DEBUG = Symbol(),
-    MDL_GROUND = Symbol(),
-    MDL_FB = Symbol(),
-    MDL_PLAYER = Symbol(),
-    MDL_HOME = Symbol(),
+    MDL_FRAMEBUFFER = Symbol(),
     MDL_GIRL_IDLE_00 = Symbol(),
     MDL_GIRL_MOVE_00 = Symbol(),
-    MDL_GIRL_MOVE_01 = Symbol();
+    MDL_GIRL_MOVE_01 = Symbol(),
+    MDL_GROUND = Symbol(),
+    MDL_HOME = Symbol(),
+    MDL_MONKEY = Symbol(),
+    MDL_PLAYER = Symbol(),
+    MDL_UI = Symbol(),
+    MDL_WAYPOINT = Symbol();
 
 export const
+    TEX_FRAMEBUFFER = Symbol(),
     TEX_GIRL = Symbol(),
     TEX_GROUND = Symbol(),
-    TEX_FB = Symbol(),
     TEX_HOME = Symbol(),
-    TEX_UI_TEXT = Symbol(),
-    TEX_UI_BUBBLE = Symbol(),
+    TEX_UI = Symbol(),
     TEX_WOOD = Symbol();
 
 export const

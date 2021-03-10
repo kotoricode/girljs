@@ -3,7 +3,7 @@ import { Model } from "./gl/model";
 import { Program } from "./gl/program";
 import { Texture } from "./gl/texture";
 import { Matrix } from "./math/matrix";
-import { isSet, clamp, lerp, HALF_PI } from "./utility";
+import { clamp, lerp, HALF_PI } from "./utility";
 import { Camera } from "./camera";
 import { Vector } from "./math/vector";
 
@@ -14,7 +14,7 @@ export const Ui = {
     },
     async init()
     {
-        program = new Program($.PRG_UI, $.MDL_TEXT);
+        program = new Program($.PRG_UI, $.MDL_UI);
         program.stageUniform($.U_COLOR, [1, 1, 1, 1]);
         program.stageUniformIndexed($.U_TRANSFORM, 1, Matrix.identity());
 
@@ -102,7 +102,7 @@ export const Dialogue = {
     },
     hasScript()
     {
-        return isSet(dlgScript);
+        return !!dlgScript;
     },
     setScript(script)
     {

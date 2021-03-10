@@ -1,6 +1,5 @@
 import * as $ from "../const";
 import { gl } from "../main";
-import { isSet, SafeMap, SafeSet } from "../utility";
 import { Model } from "./model";
 import { Buffer } from "./buffer";
 import { Matrix } from "../math/matrix";
@@ -21,7 +20,7 @@ export class Program
     {
         this.programId = programId;
         this.modelId = modelId;
-        this.uStaging = new SafeMap();
+        this.uStaging = new Map();
 
         const { uDefaults } = this.getCompiled();
 
@@ -68,7 +67,7 @@ export class Program
 
         const VS_DEBUG = new VShader(
             vsDebugSrc,
-            new SafeMap([
+            new Map([
                 [$.A_POSITION, 3]
             ]),
             [$.UB_CAMERA]
@@ -76,13 +75,13 @@ export class Program
 
         const VS_UI = new VShader(
             vsUiSrc,
-            new SafeMap([
+            new Map([
                 [$.A_POSITION, 3],
                 [$.A_TEXCOORD, 2]
             ]),
             null,
             new Map([
-                [U_TYPE_M4FV, new SafeMap([
+                [U_TYPE_M4FV, new Map([
                     [$.U_TRANSFORM, [0, 0]]
                 ])]
             ])
@@ -90,13 +89,13 @@ export class Program
 
         const VS_WORLD = new VShader(
             vsWorldSrc,
-            new SafeMap([
+            new Map([
                 [$.A_POSITION, 3],
                 [$.A_TEXCOORD, 2]
             ]),
             [$.UB_CAMERA],
             new Map([
-                [U_TYPE_M4FV, new SafeMap([
+                [U_TYPE_M4FV, new Map([
                     [$.U_TRANSFORM, [0, 0]]
                 ])]
             ])
@@ -106,7 +105,7 @@ export class Program
             fsColorSrc,
             null,
             new Map([
-                [U_TYPE_4F, new SafeMap([
+                [U_TYPE_4F, new Map([
                     [$.U_COLOR, [1, 1, 1, 1]]
                 ])]
             ])
@@ -118,7 +117,7 @@ export class Program
             fsTexturedSrc,
             null,
             new Map([
-                [U_TYPE_4F, new SafeMap([
+                [U_TYPE_4F, new Map([
                     [$.U_COLOR, [1, 1, 1, 1]]
                 ])]
             ])
@@ -187,7 +186,7 @@ export class Program
     {
         const model = this.getModel();
 
-        return isSet(model.textureId);
+        return !!model.textureId;
     }
 
     async setModel(modelId)
@@ -215,7 +214,7 @@ export class Program
     {
         if (!Array.isArray(value)) throw value;
 
-        this.uStaging.replace(key, value);
+        this.uStaging.set(key, value);
     }
 
     stageUniformIndexed(key, index, value)
@@ -232,9 +231,9 @@ class Compiled
 {
     constructor(vert, frag)
     {
-        this.uBlocks = new SafeSet();
-        this.uSetters = new SafeMap();
-        this.uDefaults = new SafeMap();
+        this.uBlocks = new Set();
+        this.uSetters = new Map();
+        this.uDefaults = new Map();
 
         this.createGlProgram(vert, frag);
 
@@ -346,7 +345,7 @@ class Compiled
     }
 }
 
-const compiled = new SafeMap();
+const compiled = new Map();
 let activeGlProgram;
 
 const U_TYPE_2F = "U_TYPE_2F";

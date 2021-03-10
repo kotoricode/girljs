@@ -3,7 +3,6 @@ import { Drawable } from "./components/drawable";
 import { Space } from "./components/space";
 import { Entity } from "./entity";
 import { Renderer } from "./gl/renderer";
-import { isSet, SafeMap, SafeSet } from "./utility";
 import { blueprint } from "./blueprint";
 import { Mouse } from "./main";
 
@@ -129,7 +128,7 @@ export const Scene = {
 
         Mouse.update();
 
-        if (isSet(nextScene))
+        if (nextScene)
         {
             previousScene = currentScene;
             currentScene = nextScene;
@@ -158,7 +157,7 @@ const getEntitiesWith = (components) =>
 
     if (!cached.has(flags))
     {
-        const cache = new SafeSet();
+        const cache = new Set();
 
         for (const entity of entities.values())
         {
@@ -295,11 +294,11 @@ let nextScene;
 let currentScene;
 let previousScene;
 
-const cached = new SafeMap();
-const dirty = new SafeSet();
+const cached = new Map();
+const dirty = new Set();
 
-const entities = new SafeMap();
-const processes = new SafeSet();
+const entities = new Map();
+const processes = new Set();
 
 const rootSpace = new Space();
 const root = new Entity($.ENT_ROOT);

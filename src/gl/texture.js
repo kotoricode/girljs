@@ -1,6 +1,6 @@
 import * as $ from "../const";
 import { gl } from "../main";
-import { SafeMap, LISTENER_ONCE } from "../utility";
+import { LISTENER_ONCE } from "../utility";
 
 export const Texture = {
     bind(texture)
@@ -30,9 +30,8 @@ export const Texture = {
         textures.set($.TEX_GIRL, createImageTexture("girl.png"));
         textures.set($.TEX_HOME, createImageTexture("home.png"));
         textures.set($.TEX_WOOD, createImageTexture("wood.jpg"));
-        textures.set($.TEX_FB, createFbTexture());
-        textures.set($.TEX_UI_TEXT, createTexture());
-        textures.set($.TEX_UI_BUBBLE, createTexture());
+        textures.set($.TEX_FRAMEBUFFER, createFbTexture());
+        textures.set($.TEX_UI, createTexture());
     },
     parami(key, value)
     {
@@ -81,4 +80,4 @@ const createFbTexture = () =>
     Textures
 ------------------------------------------------------------------------------*/
 let activeTexture;
-const textures = new SafeMap();
+const textures = new Map();

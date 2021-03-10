@@ -1,6 +1,5 @@
 import * as $ from "../const";
 import { gl } from "../main";
-import { SafeMap } from "../utility";
 
 class BufferData
 {
@@ -84,10 +83,10 @@ export const Buffer = {
     }
 };
 
-const buffers = new SafeMap();
+const buffers = new Map();
 
-const blockBuffers = new SafeMap([
+const blockBuffers = new Map([
     [$.UB_CAMERA, $.BUF_UNI_CAMERA]
 ]);
 
-const uBufferBindings = new SafeMap();
+const uBufferBindings = new Map();

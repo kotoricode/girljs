@@ -1,6 +1,4 @@
-import { SafeSet } from "../utility";
-
-const flagged = new SafeSet();
+const flagged = new Set();
 
 export class Component
 {

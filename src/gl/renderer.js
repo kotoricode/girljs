@@ -1,7 +1,7 @@
 import * as $ from "../const";
 import { gl } from "../main";
 
-import { hsvToRgb, SafeMap, SafeSet, setArrayValues } from "../utility";
+import { hsvToRgb, setArrayValues } from "../utility";
 import { Matrix } from "../math/matrix";
 
 import { Vao } from "./vao";
@@ -22,7 +22,7 @@ export const Renderer = {
         gl.enable($.BLEND);
         gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
-        const imageProgram = new Program($.PRG_IMAGE, $.MDL_FB);
+        const imageProgram = new Program($.PRG_IMAGE, $.MDL_FRAMEBUFFER);
         debugProgram = new Program($.PRG_DEBUG, $.MDL_DEBUG);
         debugProgram.stageUniform($.U_COLOR, debugColor);
 
@@ -40,7 +40,7 @@ export const Renderer = {
         ----------------------------------------------------------------------*/
         fbo = gl.createFramebuffer();
         rboDepth = gl.createRenderbuffer();
-        fbTexture = Texture.get($.TEX_FB);
+        fbTexture = Texture.get($.TEX_FRAMEBUFFER);
 
         bindFb();
 
@@ -228,13 +228,13 @@ let fbo;
 let rboDepth;
 let fbTexture;
 
-const queues = new SafeMap([
-    [$.QUE_BACKGROUND, new SafeSet()],
-    [$.QUE_SPRITE, new SafeSet()],
-    [$.QUE_UI, new SafeSet()]
+const queues = new Map([
+    [$.QUE_BACKGROUND, new Set()],
+    [$.QUE_SPRITE, new Set()],
+    [$.QUE_UI, new Set()]
 ]);
 
-const uiPrograms = new SafeSet();
+const uiPrograms = new Set();
 
 let debugProgram;
 const debugColor = [0, 0, 0, 1];

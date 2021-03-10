@@ -1,6 +1,5 @@
 import * as $ from "../const";
 import { gl } from "../main";
-import { isSet, SafeMap } from "../utility";
 import { Buffer } from "./buffer";
 
 export const Vao = {
@@ -30,9 +29,9 @@ export const Vao = {
     {
         for (const [program, vao] of vaos)
         {
-            if (!isSet(vao))
+            if (!vao)
             {
-                vaos.replace(program, create());
+                vaos.set(program, create());
                 this.prepareModel(program);
             }
         }
@@ -74,5 +73,5 @@ export const Vao = {
 
 const create = () => gl.createVertexArray();
 
-const vaos = new SafeMap();
+const vaos = new Map();
 let activeVao;

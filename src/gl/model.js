@@ -1,9 +1,5 @@
 import * as $ from "../const";
-import {
-    SIZEOF_FLOAT32,
-    SIZEOF_UINT16,
-    SafeMap
-} from "../utility";
+import { SIZEOF_FLOAT32, SIZEOF_UINT16 } from "../utility";
 import { Buffer } from "./buffer";
 
 /*------------------------------------------------------------------------------
@@ -129,6 +125,19 @@ class DynamicModel extends Model
     }
 }
 
+class ExternalModel
+{
+    constructor(fileName, meshId, uvId, indexId)
+    {
+        this.url = `/mdl/${fileName}.glb`;
+        this.meshId = meshId;
+        this.uvId = uvId;
+        this.indexId = indexId;
+
+        Object.freeze(this);
+    }
+}
+
 const glbFetch = async(extModel, meshes, uvs, indices) =>
 {
     /*--------------------------------------------------------------------------
@@ -221,38 +230,25 @@ const buildModels = async() =>
     /*--------------------------------------------------------------------------
         Internal models
     --------------------------------------------------------------------------*/
-    const meshes = new SafeMap([
+    const meshes = new Map([
         [MSH_PLAYER, meshXy(-0.375, 0.375, 0, 1.5)],
         [MSH_SCREEN, meshXyScreen($.RES_WIDTH, $.RES_HEIGHT)],
     ]);
 
-    const uvs = new SafeMap([
+    const uvs = new Map([
         [UV_GIRL_IDLE_00, uvRect(0, 0, 123, 286, 1024, 1024)],
         [UV_GIRL_MOVE_00, uvRect(123, 0, 123, 286, 1024, 1024)],
         [UV_GIRL_MOVE_01, uvRect(246, 0, 123, 286, 1024, 1024)],
         [UV_SCREEN, [0, 0, 1, 0, 0, 1, 1, 1]],
     ]);
 
-    const indices = new SafeMap([
+    const indices = new Map([
         [IDX_SPRITE, [0, 1, 2, 2, 1, 3]],
     ]);
 
     /*--------------------------------------------------------------------------
         Fetch external models
     --------------------------------------------------------------------------*/
-    class ExternalModel
-    {
-        constructor(fileName, meshId, uvId, indexId)
-        {
-            this.url = `/mdl/${fileName}.glb`;
-            this.meshId = meshId;
-            this.uvId = uvId;
-            this.indexId = indexId;
-
-            Object.freeze(this);
-        }
-    }
-
     const externalModels = [
         new ExternalModel("monkey", MSH_MONKEY, UV_MONKEY, IDX_MONKEY),
         new ExternalModel("home", MSH_HOME, UV_HOME, IDX_HOME)
@@ -267,39 +263,24 @@ const buildModels = async() =>
     /*--------------------------------------------------------------------------
         Process models
     --------------------------------------------------------------------------*/
-    const modelData = [];
-    const indexData = [];
-
     /* eslint-disable max-len */
     const modelDef = [
     //  MODEL ID            MESH ID     UV ID            INDEX ID    TEXTURE ID
         $.MDL_GIRL_IDLE_00, MSH_PLAYER, UV_GIRL_IDLE_00, IDX_SPRITE, $.TEX_GIRL,
         $.MDL_GIRL_MOVE_00, MSH_PLAYER, UV_GIRL_MOVE_00, IDX_SPRITE, $.TEX_GIRL,
         $.MDL_GIRL_MOVE_01, MSH_PLAYER, UV_GIRL_MOVE_01, IDX_SPRITE, $.TEX_GIRL,
-        $.MDL_FB,           MSH_SCREEN, UV_SCREEN,       IDX_SPRITE, $.TEX_FB,
-        $.MDL_TEXT,         MSH_SCREEN, UV_SCREEN,       IDX_SPRITE, $.TEX_UI_TEXT,
-        $.MDL_BUBBLE,       MSH_SCREEN, UV_SCREEN,       IDX_SPRITE, $.TEX_UI_BUBBLE,
+        $.MDL_FRAMEBUFFER,  MSH_SCREEN, UV_SCREEN,       IDX_SPRITE, $.TEX_FRAMEBUFFER,
         $.MDL_HOME,         MSH_HOME,   UV_HOME,         IDX_HOME,   $.TEX_HOME,
         $.MDL_MONKEY,       MSH_MONKEY, UV_MONKEY,       IDX_MONKEY, $.TEX_WOOD,
+        $.MDL_UI,           MSH_SCREEN, UV_SCREEN,       IDX_SPRITE, $.TEX_UI,
     ];
     /* eslint-enable max-len */
 
-    const pushData = (data, dst, byteSize) =>
-    {
-        const offset = dst.length;
-        dst.length += data.length;
-
-        for (let i = 0; i < data.length; i++)
-        {
-            dst[offset + i] = data[i];
-        }
-
-        return offset * byteSize;
-    };
-
-    const meshOffsets = new SafeMap();
-    const uvOffsets = new SafeMap();
-    const indexOffsets = new SafeMap();
+    const meshOffsets = new Map();
+    const uvOffsets = new Map();
+    const indexOffsets = new Map();
+    const modelData = [];
+    const indexData = [];
 
     for (let i = 0; i < modelDef.length;)
     {
@@ -345,7 +326,7 @@ const buildModels = async() =>
             );
         }
 
-        const aOffsets = new SafeMap([
+        const aOffsets = new Map([
             [$.A_POSITION, meshOffsets.get(meshId)],
             [$.A_TEXCOORD, uvOffsets.get(uvId)]
         ]);
@@ -364,7 +345,7 @@ const buildModels = async() =>
     /*--------------------------------------------------------------------------
         Debug
     --------------------------------------------------------------------------*/
-    const debugAttrib = new SafeMap([
+    const debugAttrib = new Map([
         [$.A_POSITION, 0]
     ]);
 
@@ -386,20 +367,33 @@ const buildModels = async() =>
     isLoaded = true;
 };
 
+const pushData = (data, dst, byteSize) =>
+{
+    const offset = dst.length;
+    dst.length += data.length;
+
+    for (let i = 0; i < data.length; i++)
+    {
+        dst[offset + i] = data[i];
+    }
+
+    return offset * byteSize;
+};
+
 /*------------------------------------------------------------------------------
     Init
 ------------------------------------------------------------------------------*/
-const models = new SafeMap();
+const models = new Map();
 let isLoaded = false;
 let loadPromise;
 
 const MSH_DEBUG = Symbol();
 const IDX_DEBUG = Symbol();
 
-const dynamicMeshes = new SafeMap([
+const dynamicMeshes = new Map([
     [MSH_DEBUG, new Float32Array(3 * 100)],
 ]);
 
-const dynamicIndices = new SafeMap([
+const dynamicIndices = new Map([
     [IDX_DEBUG, new Uint16Array(3 * 1000)],
 ]);

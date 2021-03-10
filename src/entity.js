@@ -1,7 +1,6 @@
 import { Component } from "./components/component";
-import { SafeMap } from "./utility";
 
-export class Entity extends SafeMap
+export class Entity extends Map
 {
     constructor(id)
     {
