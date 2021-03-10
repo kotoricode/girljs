@@ -1,5 +1,6 @@
 import * as $ from "./const";
 
+import { Ground }   from "./components/ground";
 import { Space }    from "./components/space";
 import { Motion }   from "./components/motion";
 import { Player }   from "./components/player";
@@ -7,14 +8,13 @@ import { Drawable } from "./components/drawable";
 import { HitBox }   from "./components/hitbox";
 import { Anim }     from "./components/anim";
 
-import { processMotion }    from "./processes/process-motion";
-import { processCameraPosition }    from "./processes/process-camera-position";
-import { processAnimation } from "./processes/process-animation";
-import { processPlayer }    from "./processes/process-player";
-import { Ground } from "./components/ground";
-import { processHitboxes } from "./processes/process-hitboxes";
-import { processCameraRay } from "./processes/process-camera-ray";
-import { processUi } from "./processes/process-ui";
+import { processMotion }         from "./processes/process-motion";
+import { processCameraPosition } from "./processes/process-camera-position";
+import { processAnimation }      from "./processes/process-animation";
+import { processPlayer }         from "./processes/process-player";
+import { processHitboxes }       from "./processes/process-hitboxes";
+import { processCameraRay }      from "./processes/process-camera-ray";
+import { processUi }             from "./processes/process-ui";
 
 const createEntity = (entityId, ...components) => [
     entityId,

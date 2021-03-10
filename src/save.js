@@ -46,8 +46,4 @@ const prefs = {
     [$.PREF_SOUND]: 0.66,
 };
 
-const state = {
-
-};
-
 Prefs.load();

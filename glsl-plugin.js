@@ -11,7 +11,7 @@ module.exports = {
         build.onLoad({ filter: glslFiles }, (args) =>
         {
             const fullPath = path.resolve(__dirname, args.path);
-            const str = fs.readFileSync(fullPath).toString();
+            const str = fs.readFileSync(fullPath, "utf8");
 
             return {
                 contents: str,
