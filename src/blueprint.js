@@ -33,7 +33,7 @@ const createEntityChildren = (entityId, children, ...components) => [
 
 const createPlayer = () => createEntityChildren(
     $.ENT_PLAYER,
-    [createMonkey],
+    [],//[createMonkey],
     new Space(0, 0, -1),
     new Drawable($.PRG_WORLD, $.QUE_SPRITE, $.MDL_GIRL_IDLE_00),
     new HitBox(-0.375, 0.375, 0, 1.5, -0.1, 0.1),
@@ -78,7 +78,7 @@ export const blueprint = new Map([
     [$.SCN_TEST, new Map([
         [$.BLU_ENTITIES, new Set([
             createPlayer,
-            createMonkey,
+            //createMonkey,
             createWaypoint,
             createHome
         ])],
