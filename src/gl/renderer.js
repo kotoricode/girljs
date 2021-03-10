@@ -93,6 +93,7 @@ export const Renderer = {
         gl.enable($.DEPTH_TEST);
         gl.enable($.CULL_FACE);
         drawQueue($.QUE_BACKGROUND);
+        drawQueue($.QUE_WAYPOINT);
         gl.disable($.CULL_FACE);
         drawQueue($.QUE_SPRITE);
         gl.disable($.DEPTH_TEST);
@@ -230,6 +231,7 @@ let fbTexture;
 
 const queues = new Map([
     [$.QUE_BACKGROUND, new Set()],
+    [$.QUE_WAYPOINT, new Set()],
     [$.QUE_SPRITE, new Set()],
     [$.QUE_UI, new Set()]
 ]);

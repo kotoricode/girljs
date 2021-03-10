@@ -4,8 +4,6 @@ export const DEG_TO_RAD = Math.PI / 180;
 
 export const HALF_PI = Math.PI / 2;
 
-export const FLOAT32_EPSILON = 2 ** -23;
-
 export const SIZEOF_FLOAT32 = 4;
 
 export const SIZEOF_UINT16 = 2;

@@ -215,6 +215,7 @@ const buildModels = async() =>
     const MSH_SCREEN = Symbol();
     const MSH_MONKEY = Symbol();
     const MSH_HOME = Symbol();
+    const MSH_WAYPOINT = Symbol();
 
     const UV_HOME = Symbol();
     const UV_SCREEN = Symbol();
@@ -222,6 +223,7 @@ const buildModels = async() =>
     const UV_GIRL_MOVE_00 = Symbol();
     const UV_GIRL_MOVE_01 = Symbol();
     const UV_MONKEY = Symbol();
+    const UV_WAYPOINT = Symbol();
 
     const IDX_SPRITE = Symbol();
     const IDX_MONKEY = Symbol();
@@ -233,6 +235,12 @@ const buildModels = async() =>
     const meshes = new Map([
         [MSH_PLAYER, meshXy(-0.375, 0.375, 0, 1.5)],
         [MSH_SCREEN, meshXyScreen($.RES_WIDTH, $.RES_HEIGHT)],
+        [MSH_WAYPOINT, [
+            -0.25, 0.001, 0.25,
+            0.25, 0.001, 0.25,
+            -0.25, 0.001, -0.25,
+            0.25, 0.001, -0.25,
+        ]]
     ]);
 
     const uvs = new Map([
@@ -240,6 +248,7 @@ const buildModels = async() =>
         [UV_GIRL_MOVE_00, uvRect(123, 0, 123, 286, 1024, 1024)],
         [UV_GIRL_MOVE_01, uvRect(246, 0, 123, 286, 1024, 1024)],
         [UV_SCREEN, [0, 0, 1, 0, 0, 1, 1, 1]],
+        [UV_WAYPOINT, uvRect(0, 960, 64, 64, 1024, 1024)]
     ]);
 
     const indices = new Map([
@@ -265,14 +274,15 @@ const buildModels = async() =>
     --------------------------------------------------------------------------*/
     /* eslint-disable max-len */
     const modelDef = [
-    //  MODEL ID            MESH ID     UV ID            INDEX ID    TEXTURE ID
-        $.MDL_GIRL_IDLE_00, MSH_PLAYER, UV_GIRL_IDLE_00, IDX_SPRITE, $.TEX_GIRL,
-        $.MDL_GIRL_MOVE_00, MSH_PLAYER, UV_GIRL_MOVE_00, IDX_SPRITE, $.TEX_GIRL,
-        $.MDL_GIRL_MOVE_01, MSH_PLAYER, UV_GIRL_MOVE_01, IDX_SPRITE, $.TEX_GIRL,
-        $.MDL_FRAMEBUFFER,  MSH_SCREEN, UV_SCREEN,       IDX_SPRITE, $.TEX_FRAMEBUFFER,
-        $.MDL_HOME,         MSH_HOME,   UV_HOME,         IDX_HOME,   $.TEX_HOME,
-        $.MDL_MONKEY,       MSH_MONKEY, UV_MONKEY,       IDX_MONKEY, $.TEX_WOOD,
-        $.MDL_UI,           MSH_SCREEN, UV_SCREEN,       IDX_SPRITE, $.TEX_UI,
+    //  MODEL ID            MESH ID       UV ID            INDEX ID    TEXTURE ID
+        $.MDL_GIRL_IDLE_00, MSH_PLAYER,   UV_GIRL_IDLE_00, IDX_SPRITE, $.TEX_GIRL,
+        $.MDL_GIRL_MOVE_00, MSH_PLAYER,   UV_GIRL_MOVE_00, IDX_SPRITE, $.TEX_GIRL,
+        $.MDL_GIRL_MOVE_01, MSH_PLAYER,   UV_GIRL_MOVE_01, IDX_SPRITE, $.TEX_GIRL,
+        $.MDL_FRAMEBUFFER,  MSH_SCREEN,   UV_SCREEN,       IDX_SPRITE, $.TEX_FRAMEBUFFER,
+        $.MDL_HOME,         MSH_HOME,     UV_HOME,         IDX_HOME,   $.TEX_HOME,
+        $.MDL_MONKEY,       MSH_MONKEY,   UV_MONKEY,       IDX_MONKEY, $.TEX_WOOD,
+        $.MDL_UI,           MSH_SCREEN,   UV_SCREEN,       IDX_SPRITE, $.TEX_UI,
+        $.MDL_WAYPOINT,     MSH_WAYPOINT, UV_WAYPOINT,     IDX_SPRITE, $.TEX_GIRL
     ];
     /* eslint-enable max-len */
 
