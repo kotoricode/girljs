@@ -28,15 +28,15 @@ export class Motion extends Component
         return this.index > -1;
     }
 
-    nextTarget()
-    {
-        this.index++;
+    // nextTarget()
+    // {
+    //     this.index++;
 
-        if (this.index > this.maxIndex)
-        {
-            this.stop();
-        }
-    }
+    //     if (this.index > this.maxIndex)
+    //     {
+    //         this.stop();
+    //     }
+    // }
 
     setMainTarget(vec)
     {

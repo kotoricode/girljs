@@ -60,10 +60,20 @@ const createMonkey = () => [Symbol(), new SafeMap([
     [$.BLU_CHILD_ENTITIES, new SafeMap()]
 ])];
 
+const createWaypoint = () => [$.ENT_WAYPOINT, new SafeMap([
+    [$.BLU_COMPONENTS, new SafeSet([
+        new Space(),
+        new Motion(Infinity),
+        new Drawable($.PRG_WORLD, $.QUE_BACKGROUND, $.MDL_MONKEY)
+    ])],
+    [$.BLU_CHILD_ENTITIES, new SafeMap()]
+])];
+
 export const blueprint = new SafeMap([
     [$.SCN_TEST, () => new SafeMap([
         [$.BLU_CHILD_ENTITIES, new SafeMap([
             createPlayer(),
+            createWaypoint(),
             createHome()
         ])],
         [$.BLU_PROCESSES, new SafeSet([

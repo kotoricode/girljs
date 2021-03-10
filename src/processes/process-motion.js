@@ -10,42 +10,48 @@ export const processMotion = () =>
     {
         if (motion.hasTarget())
         {
-            Scene.markDirty(space);
-
             const { direction } = motion;
+            const { local, world } = space;
             let step = motion.speed * dt;
-            let isMoving = true;
+            let hasStep = true;
 
-            while (isMoving)
+            while (hasStep)
             {
                 const target = motion.getTarget();
                 direction.copy(target);
-                direction.subtract(space.world.translation);
+                direction.subtract(world.translation);
                 const distance = direction.magnitude();
 
                 if (step < distance)
                 {
                     direction.normalize(step);
-                    isMoving = false;
+                    local.translation.add(direction);
+                    hasStep = false;
                 }
                 else
                 {
-                    step -= distance;
-                    motion.nextTarget();
-                    isMoving = motion.hasTarget() && step > 0;
-                }
+                    local.translation.add(direction);
 
-                space.local.translation.add(direction);
+                    if (++motion.index > motion.maxIndex)
+                    {
+                        motion.stop();
+                        hasStep = false;
+                    }
+                    else
+                    {
+                        step -= distance;
+                        hasStep = step > 0;
+                    }
+                }
             }
 
             if (direction.x)
             {
-                space.local.rotation.euler(
-                    0,
-                    90 + Math.sign(direction.x) * 90,
-                    0
-                );
+                const y = 90 + Math.sign(direction.x) * 90;
+                local.rotation.euler(0, y, 0);
             }
+
+            Scene.markDirty(space);
         }
     }
 

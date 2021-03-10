@@ -15,7 +15,9 @@ export const processPlayer = () =>
         if (ray.isHit)
         {
             const [playerMotion] = Scene.one($.ENT_PLAYER, Motion);
+            const [wayMotion] = Scene.one($.ENT_WAYPOINT, Motion);
             playerMotion.setMainTarget(ray.hitPoint);
+            wayMotion.setMainTarget(ray.hitPoint);
         }
     }
 };

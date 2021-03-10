@@ -5,10 +5,10 @@ export const
     RES_ASPECT = RES_WIDTH / RES_HEIGHT;
 
 export const
-    ENT_AV_PLAYER = Symbol(),
     ENT_GROUND = Symbol(),
     ENT_PLAYER = Symbol(),
-    ENT_ROOT = Symbol();
+    ENT_ROOT = Symbol(),
+    ENT_WAYPOINT = Symbol();
 
 export const
     SCN_TEST = Symbol(),
