@@ -28,16 +28,6 @@ export class Motion extends Component
         return this.index > -1;
     }
 
-    // nextTarget()
-    // {
-    //     this.index++;
-
-    //     if (this.index > this.maxIndex)
-    //     {
-    //         this.stop();
-    //     }
-    // }
-
     setMainTarget(vec)
     {
         this.waypoints[0].copy(vec);
