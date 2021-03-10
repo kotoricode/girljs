@@ -33,10 +33,4 @@ export class Motion extends Component
         this.waypoints[0].copy(vec);
         this.index = this.maxIndex = 0;
     }
-
-    stop()
-    {
-        this.direction.setValues(0, 0, 0);
-        this.index = this.maxIndex = -1;
-    }
 }

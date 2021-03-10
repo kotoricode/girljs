@@ -30,7 +30,7 @@ export const moveTowardsTarget = (motion, space, dt) =>
     const { direction } = motion;
     let step = motion.speed * dt;
 
-    while (step > 0)
+    while (true)
     {
         const target = motion.getTarget();
         direction.copy(target);
@@ -39,21 +39,27 @@ export const moveTowardsTarget = (motion, space, dt) =>
 
         if (step < distance)
         {
+            // Can't reach target, move full step and stop
             direction.normalize(step);
             space.local.translation.add(direction);
 
-            return;
+            break;
         }
 
+        // Reach target
         space.local.translation.add(direction);
 
-        if (++motion.index > motion.maxIndex)
+        if (motion.index === motion.maxIndex)
         {
-            motion.stop();
+            // No more targets after this, stop
+            motion.direction.setValues(0, 0, 0);
+            motion.index = motion.maxIndex = -1;
 
-            return;
+            break;
         }
 
+        // Proceed to next target
+        motion.index++;
         step -= distance;
     }
 };
