@@ -136,8 +136,7 @@ const glbFetch = async(extModel, meshes, uvs, indices) =>
     --------------------------------------------------------------------------*/
     const response = await window.fetch(extModel.url);
     const blob = await response.blob();
-    const stream = blob.stream();
-    const reader = stream.getReader();
+    const reader = blob.stream().getReader();
     const data = new Uint8Array(blob.size);
     const dataView = new DataView(data.buffer);
 
@@ -155,7 +154,7 @@ const glbFetch = async(extModel, meshes, uvs, indices) =>
     --------------------------------------------------------------------------*/
     const jsonLen = dataView.getUint32(12, true);
 
-    const jsonStart = 20; // skip header 4 bytes
+    const jsonStart = 20;
     const jsonEnd = jsonStart + jsonLen;
     const json = data.subarray(jsonStart, jsonEnd);
 
@@ -166,7 +165,7 @@ const glbFetch = async(extModel, meshes, uvs, indices) =>
     /*--------------------------------------------------------------------------
         Process binary
     --------------------------------------------------------------------------*/
-    const binStart = jsonEnd + 8; // skip header 4 bytes
+    const binStart = jsonEnd + 8;
     const [viewMesh, viewUv, viewIndex] = meta.bufferViews;
 
     const getFloat32 = dataView.getFloat32.bind(dataView);
@@ -220,7 +219,7 @@ const buildModels = async() =>
     const IDX_HOME = Symbol();
 
     /*--------------------------------------------------------------------------
-        Internal meshes, UVs
+        Internal models
     --------------------------------------------------------------------------*/
     const meshes = new SafeMap([
         [MSH_PLAYER, meshXy(-0.375, 0.375, 0, 1.5)],
@@ -239,7 +238,7 @@ const buildModels = async() =>
     ]);
 
     /*--------------------------------------------------------------------------
-        Download external models
+        Fetch external models
     --------------------------------------------------------------------------*/
     class ExternalModel
     {
@@ -266,7 +265,7 @@ const buildModels = async() =>
     );
 
     /*--------------------------------------------------------------------------
-        Build models from mesh + UV + texture information
+        Process models
     --------------------------------------------------------------------------*/
     const modelData = [];
     const indexData = [];
@@ -298,7 +297,6 @@ const buildModels = async() =>
         return offset * byteSize;
     };
 
-    // Local build caches
     const meshOffsets = new SafeMap();
     const uvOffsets = new SafeMap();
     const indexOffsets = new SafeMap();
@@ -313,35 +311,38 @@ const buildModels = async() =>
 
         if (!meshOffsets.has(meshId))
         {
-            const meshOffset = pushData(
-                meshes.get(meshId),
-                modelData,
-                SIZEOF_FLOAT32
+            meshOffsets.set(
+                meshId,
+                pushData(
+                    meshes.get(meshId),
+                    modelData,
+                    SIZEOF_FLOAT32
+                )
             );
-
-            meshOffsets.set(meshId, meshOffset);
         }
 
         if (!uvOffsets.has(uvId))
         {
-            const uvOffset = pushData(
-                uvs.get(uvId),
-                modelData,
-                SIZEOF_FLOAT32
+            uvOffsets.set(
+                uvId,
+                pushData(
+                    uvs.get(uvId),
+                    modelData,
+                    SIZEOF_FLOAT32
+                )
             );
-
-            uvOffsets.set(uvId, uvOffset);
         }
 
         if (!indexOffsets.has(indexId))
         {
-            const indexOffset = pushData(
-                indices.get(indexId),
-                indexData,
-                SIZEOF_UINT16
+            indexOffsets.set(
+                indexId,
+                pushData(
+                    indices.get(indexId),
+                    indexData,
+                    SIZEOF_UINT16
+                )
             );
-
-            indexOffsets.set(indexId, indexOffset);
         }
 
         const aOffsets = new SafeMap([

@@ -296,8 +296,7 @@ class Compiled
 
         if (!gl.getProgramParameter(this.glProgram, $.LINK_STATUS))
         {
-            console.log(gl.getError());
-            throw this.glProgram;
+            throw gl.getError();
         }
 
         this.detachDeleteShader(vs);

@@ -146,14 +146,7 @@ const draw = (program) =>
     const vao = Vao.get(program);
     Vao.bind(vao);
     Buffer.bind(indexBufferId);
-
-    gl.drawElements(
-        drawMode,
-        drawSize,
-        $.UNSIGNED_SHORT,
-        drawOffset
-    );
-
+    gl.drawElements(drawMode, drawSize, $.UNSIGNED_SHORT, drawOffset);
     Buffer.unbind(indexBufferId);
     Vao.unbind();
 };
@@ -170,14 +163,8 @@ const drawQueue = (queueId) =>
 
 const debugSetGroundBuffer = () =>
 {
-    const debugMesh = debugProgram.getDynamicMesh();
-    const debugIndex = debugProgram.getDynamicIndex();
-    const model = debugProgram.getModel();
-    const { aBufferId, indexBufferId } = model;
-    const [ground] = Scene.one($.ENT_GROUND, Ground);
-
-    let meshOffset = 0;
     let indexOffset = 0;
+    const debugIndex = debugProgram.getDynamicIndex();
 
     indexOffset = setArrayValues(debugIndex, indexOffset,
         0, 1,
@@ -186,14 +173,18 @@ const debugSetGroundBuffer = () =>
         3, 0,
     );
 
+    let meshOffset = 0;
+    const debugMesh = debugProgram.getDynamicMesh();
+    const [{ minx, maxx, minz, maxz }] = Scene.one($.ENT_GROUND, Ground);
+
     meshOffset = setArrayValues(debugMesh, meshOffset,
-        ground.minx, 0, ground.maxz,
-        ground.maxx, 0, ground.maxz,
-        ground.maxx, 0, ground.minz,
-        ground.minx, 0, ground.minz
+        minx, 0, maxz,
+        maxx, 0, maxz,
+        maxx, 0, minz,
+        minx, 0, minz
     );
 
-    for (const [hitbox] of Scene.all(HitBox))
+    for (const [{ min, max }] of Scene.all(HitBox))
     {
         const i = meshOffset / 3;
 
@@ -215,22 +206,22 @@ const debugSetGroundBuffer = () =>
         );
 
         meshOffset = setArrayValues(debugMesh, meshOffset,
-            hitbox.min.x, hitbox.min.y, hitbox.min.z,
-            hitbox.min.x, hitbox.min.y, hitbox.max.z,
-            hitbox.max.x, hitbox.min.y, hitbox.max.z,
-            hitbox.max.x, hitbox.min.y, hitbox.min.z,
+            min.x, min.y, min.z,
+            min.x, min.y, max.z,
+            max.x, min.y, max.z,
+            max.x, min.y, min.z,
 
-            hitbox.min.x, hitbox.max.y, hitbox.min.z,
-            hitbox.min.x, hitbox.max.y, hitbox.max.z,
-            hitbox.max.x, hitbox.max.y, hitbox.max.z,
-            hitbox.max.x, hitbox.max.y, hitbox.min.z,
+            min.x, max.y, min.z,
+            min.x, max.y, max.z,
+            max.x, max.y, max.z,
+            max.x, max.y, min.z,
         );
     }
 
+    const model = debugProgram.getModel();
     model.drawSize = indexOffset;
-
-    Buffer.setDataBind(aBufferId, debugMesh);
-    Buffer.setDataBind(indexBufferId, debugIndex);
+    Buffer.setDataBind(model.aBufferId, debugMesh);
+    Buffer.setDataBind(model.indexBufferId, debugIndex);
 };
 
 let fbo;
