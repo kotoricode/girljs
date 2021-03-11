@@ -20,12 +20,12 @@ const meshXyScreen = (width, height) =>
     return meshXy(-x, x, -y, y);
 };
 
-const uvRect = (x, y, width, height, baseWidth, baseHeight) =>
+const uvRect1024 = (x, y, width, height) =>
 {
-    const minX = x / baseWidth;
-    const maxX = (x + width) / baseWidth;
-    const minY = y / baseHeight;
-    const maxY = (y + height) / baseHeight;
+    const minX = x / 1024;
+    const maxX = (x + width) / 1024;
+    const minY = y / 1024;
+    const maxY = (y + height) / 1024;
 
     return [
         minX, maxY,
@@ -236,19 +236,19 @@ const buildModels = async() =>
         [MSH_PLAYER, meshXy(-0.375, 0.375, 0, 1.5)],
         [MSH_SCREEN, meshXyScreen($.RES_WIDTH, $.RES_HEIGHT)],
         [MSH_WAYPOINT, [
-            -0.25, 0.001, 0.25,
-            0.25, 0.001, 0.25,
-            -0.25, 0.001, -0.25,
-            0.25, 0.001, -0.25,
+            -0.375, 0.001, 0.375,
+            0.375, 0.001, 0.375,
+            -0.375, 0.001, -0.375,
+            0.375, 0.001, -0.375,
         ]]
     ]);
 
     const uvs = new Map([
-        [UV_GIRL_IDLE_00, uvRect(0, 0, 123, 286, 1024, 1024)],
-        [UV_GIRL_MOVE_00, uvRect(123, 0, 123, 286, 1024, 1024)],
-        [UV_GIRL_MOVE_01, uvRect(246, 0, 123, 286, 1024, 1024)],
+        [UV_GIRL_IDLE_00, uvRect1024(0, 0, 123, 286)],
+        [UV_GIRL_MOVE_00, uvRect1024(123, 0, 123, 286)],
+        [UV_GIRL_MOVE_01, uvRect1024(246, 0, 123, 286)],
         [UV_SCREEN, [0, 0, 1, 0, 0, 1, 1, 1]],
-        [UV_WAYPOINT, uvRect(0, 1024-256, 256, 256, 1024, 1024)]
+        [UV_WAYPOINT, uvRect1024(0, 1024-128-20, 128+20, 128+20)]
     ]);
 
     const indices = new Map([
