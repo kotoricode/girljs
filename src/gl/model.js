@@ -248,7 +248,7 @@ const buildModels = async() =>
         [UV_GIRL_MOVE_00, uvRect(123, 0, 123, 286, 1024, 1024)],
         [UV_GIRL_MOVE_01, uvRect(246, 0, 123, 286, 1024, 1024)],
         [UV_SCREEN, [0, 0, 1, 0, 0, 1, 1, 1]],
-        [UV_WAYPOINT, uvRect(0, 960, 64, 64, 1024, 1024)]
+        [UV_WAYPOINT, uvRect(0, 1024-256, 256, 256, 1024, 1024)]
     ]);
 
     const indices = new Map([

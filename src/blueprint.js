@@ -8,13 +8,12 @@ import { Drawable } from "./components/drawable";
 import { HitBox }   from "./components/hitbox";
 import { Anim }     from "./components/anim";
 
-import { processMotion }         from "./processes/process-motion";
-import { processCameraPosition } from "./processes/process-camera-position";
-import { processAnimation }      from "./processes/process-animation";
-import { processPlayer }         from "./processes/process-player";
-import { processHitboxes }       from "./processes/process-hitboxes";
-import { processCameraRay }      from "./processes/process-camera-ray";
-import { processUi }             from "./processes/process-ui";
+import { processMotion }    from "./processes/process-motion";
+import { processCamera }    from "./processes/process-camera";
+import { processAnimation } from "./processes/process-animation";
+import { processPlayer }    from "./processes/process-player";
+import { processHitboxes }  from "./processes/process-hitboxes";
+import { processUi }        from "./processes/process-ui";
 
 const createEntity = (entityId, ...components) => [
     entityId,
@@ -84,12 +83,11 @@ export const blueprint = new Map([
         ])],
         [$.BLU_PROCESSES, new Set([
             processUi,
-            processMotion,
-            processCameraPosition,
-            processHitboxes,
-            processCameraRay,
-            processAnimation,
             processPlayer,
+            processMotion,
+            processHitboxes,
+            processAnimation,
+            processCamera,
         ])]
     ])]
 ]);
