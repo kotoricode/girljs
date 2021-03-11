@@ -30,8 +30,8 @@ html, body
     z-index: 33;
     font-size: min(
         10vh,
-        calc(10vw * 9/16),
-        calc(10 * 720px/100)
+        calc(10vw * 9 / 16),
+        calc(10 * 720px / 100)
     );
     color: white;
     font-family: "Jost", sans-serif;
