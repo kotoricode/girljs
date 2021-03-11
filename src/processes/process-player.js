@@ -13,12 +13,12 @@ export const processPlayer = () =>
     if (Mouse.isClick())
     {
         Mouse.consume();
-        const ray = Camera.getRay();
+        const { isHit, hitPoint } = Camera.getRay();
 
-        if (ray.isHit)
+        if (isHit)
         {
-            pMotion.setMainTarget(ray.hitPoint);
-            wMotion.setMainTarget(ray.hitPoint);
+            pMotion.setMainTarget(hitPoint);
+            wMotion.setMainTarget(hitPoint);
         }
     }
 
