@@ -31,8 +31,16 @@ export const processUi = () =>
         Area.activate("moi");
     }
 
-    Area.clear();
-    Area.draw(dt);
+    if (Area.isActive())
+    {
+        Area.clear();
+        Area.update(dt);
+
+        if (Area.isActive())
+        {
+            Area.draw();
+        }
+    }
 
     Ui.canvasToTexture();
 };

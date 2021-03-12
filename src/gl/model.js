@@ -46,7 +46,10 @@ export class Model
         indexBufferId,
         drawMode,
         drawOffset,
-        drawSize
+        drawSize,
+        textureId,
+        meshId,
+        indexId
     )
     {
         this.aOffsets = aOffsets;
@@ -55,6 +58,9 @@ export class Model
         this.drawMode = drawMode;
         this.drawOffset = drawOffset;
         this.drawSize = drawSize;
+        this.textureId = textureId;
+        this.meshId = meshId;
+        this.indexId = indexId;
     }
 
     static get(modelId)
@@ -87,41 +93,6 @@ export class Model
         }
 
         return loadPromise;
-    }
-}
-
-class TexturedModel extends Model
-{
-    constructor(aOffsets, textureId, drawOffset, drawSize)
-    {
-        super(
-            aOffsets,
-            $.BUF_ARR_TEXTURED,
-            $.BUF_ELEM_INDEX,
-            $.TRIANGLES,
-            drawOffset,
-            drawSize
-        );
-
-        this.textureId = textureId;
-    }
-}
-
-class DynamicModel extends Model
-{
-    constructor(aOffsets, meshId, indexId)
-    {
-        super(
-            aOffsets,
-            $.BUF_ARR_DYNAMIC,
-            $.BUF_ELEM_INDEX_DYNAMIC,
-            $.LINES,
-            0,
-            -1
-        );
-
-        this.meshId = meshId;
-        this.indexId = indexId;
     }
 }
 
@@ -343,11 +314,14 @@ const buildModels = async() =>
 
         models.set(
             modelId,
-            new TexturedModel(
+            new Model(
                 aOffsets,
-                textureId,
+                $.BUF_ARR_TEXTURED,
+                $.BUF_ELEM_INDEX,
+                $.TRIANGLES,
                 indexOffsets.get(indexId),
-                indices.get(indexId).length
+                indices.get(indexId).length,
+                textureId
             )
         );
     }
@@ -361,8 +335,14 @@ const buildModels = async() =>
 
     models.set(
         $.MDL_DEBUG,
-        new DynamicModel(
+        new Model(
             debugAttrib,
+            $.BUF_ARR_DYNAMIC,
+            $.BUF_ELEM_INDEX_DYNAMIC,
+            $.LINES,
+            0,
+            -1,
+            null,
             MSH_DEBUG,
             IDX_DEBUG
         )

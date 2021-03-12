@@ -37,7 +37,6 @@ export const Ui = {
         ctx.textAlign = "left";
         ctx.textBaseline = "top";
         ctx.font = `${dlgFontPx}px Jost`;
-        ctx.fillStyle = "#333333";
 
         if (!Model.isLoaded())
         {
@@ -68,10 +67,8 @@ export const Area = {
     {
         ctx.clearRect(0, areaClearY, areaClearW, areaClearH);
     },
-    draw(dt)
+    draw()
     {
-        areaTimer += dt;
-
         ctx.fillStyle = "#fff";
         ctx.fillText(areaName, areaTextX, areaClearY);
     },
@@ -82,6 +79,10 @@ export const Area = {
     isStarted()
     {
         return areaTimer > 0;
+    },
+    update(dt)
+    {
+        areaTimer += dt;
     }
 };
 
@@ -299,9 +300,8 @@ const dlgProcessNextLine = () =>
     for (let i = 0; i < dlgLines.length; i++)
     {
         dlgLinesY[i] = bubMidY + dlgFontPx * (i - yOffset);
-        const width = dlgLinesRelWidth[i];
         dlgLinesStart[i] = dlgEndTime;
-        dlgEndTime += width;
+        dlgEndTime += dlgLinesRelWidth[i];
     }
 
     dlgEndTime += dlgFadeWidth;
@@ -383,7 +383,7 @@ let areaName;
 
 const areaTimerMax = 5;
 
-const areaTextX = $.RES_WIDTH * 0.02;
+const areaTextX = $.RES_WIDTH * 0.01953125;
 
 const areaClearY = $.RES_HEIGHT * 0.075;
 const areaClearW = $.RES_WIDTH * 0.3;
