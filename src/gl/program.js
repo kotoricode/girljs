@@ -153,16 +153,12 @@ export class Program
 
     getDynamicIndex()
     {
-        const model = this.getModel();
-
-        return Model.getDynamicIndex(model.indexId);
+        return Model.getDynamicIndex(this.modelId);
     }
 
     getDynamicMesh()
     {
-        const model = this.getModel();
-
-        return Model.getDynamicMesh(model.meshId);
+        return Model.getDynamicMesh(this.modelId);
     }
 
     getModel()
@@ -172,9 +168,9 @@ export class Program
 
     getTexture()
     {
-        const model = this.getModel();
+        const textureId = Model.getTextureId(this.modelId);
 
-        return Texture.get(model.textureId);
+        return Texture.get(textureId);
     }
 
     hasStagingUniform(uId)
@@ -184,9 +180,7 @@ export class Program
 
     isTextured()
     {
-        const model = this.getModel();
-
-        return !!model.textureId;
+        return Model.isTextured(this.modelId);
     }
 
     async setModel(modelId)

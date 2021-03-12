@@ -46,10 +46,7 @@ export class Model
         indexBufferId,
         drawMode,
         drawOffset,
-        drawSize,
-        textureId,
-        meshId,
-        indexId
+        drawSize
     )
     {
         this.aOffsets = aOffsets;
@@ -58,9 +55,6 @@ export class Model
         this.drawMode = drawMode;
         this.drawOffset = drawOffset;
         this.drawSize = drawSize;
-        this.textureId = textureId;
-        this.meshId = meshId;
-        this.indexId = indexId;
     }
 
     static get(modelId)
@@ -70,19 +64,33 @@ export class Model
         return models.get(modelId);
     }
 
-    static getDynamicMesh(meshId)
+    static getDynamicMesh(modelId)
     {
+        const meshId = meshIds.get(modelId);
+
         return dynamicMeshes.get(meshId);
     }
 
-    static getDynamicIndex(indexId)
+    static getDynamicIndex(modelId)
     {
+        const indexId = indexIds.get(modelId);
+
         return dynamicIndices.get(indexId);
+    }
+
+    static getTextureId(modelId)
+    {
+        return textureIds.get(modelId);
     }
 
     static isLoaded()
     {
         return isLoaded;
+    }
+
+    static isTextured(modelId)
+    {
+        return textureIds.has(modelId);
     }
 
     static load()
@@ -320,10 +328,11 @@ const buildModels = async() =>
                 $.BUF_ELEM_INDEX,
                 $.TRIANGLES,
                 indexOffsets.get(indexId),
-                indices.get(indexId).length,
-                textureId
+                indices.get(indexId).length
             )
         );
+
+        textureIds.set(modelId, textureId);
     }
 
     /*--------------------------------------------------------------------------
@@ -341,12 +350,12 @@ const buildModels = async() =>
             $.BUF_ELEM_INDEX_DYNAMIC,
             $.LINES,
             0,
-            -1,
-            null,
-            MSH_DEBUG,
-            IDX_DEBUG
+            -1
         )
     );
+
+    meshIds.set($.MDL_DEBUG, MSH_DEBUG);
+    indexIds.set($.MDL_DEBUG, IDX_DEBUG);
 
     /*--------------------------------------------------------------------------
         Push to buffer and finish
@@ -374,6 +383,11 @@ const pushData = (data, dst, byteSize) =>
     Init
 ------------------------------------------------------------------------------*/
 const models = new Map();
+
+const meshIds = new Map();
+const indexIds = new Map();
+const textureIds = new Map();
+
 let isLoaded = false;
 let loadPromise;
 
