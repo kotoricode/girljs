@@ -36,7 +36,6 @@ export const Ui = {
         ctx = canvas.getContext("2d");
         ctx.textAlign = "left";
         ctx.textBaseline = "top";
-        ctx.font = `${dlgFontPx}px Jost`;
 
         if (!Model.isLoaded())
         {
@@ -69,23 +68,43 @@ export const Area = {
     },
     draw()
     {
-        ctx.fillStyle = "#FFFFFF";
-        const areaPopup = 0.25;
+        const areaPopup = 0.6;
         const areaFadeStart = 4;
 
         if (areaTimer < areaPopup)
         {
-            const offset = 1000 * (areaPopup - areaTimer);
-            ctx.fillText(areaName, areaTextX - offset, areaClearY);
+            const offset = -areaClearW * (areaPopup - areaTimer) / areaPopup;
+
+            ctx.fillStyle = "#000000";
+            ctx.fillRect(
+                offset,
+                areaClearY,
+                areaClearW,
+                areaClearH
+            );
+
+            ctx.fillStyle = "#FFFFFF";
+            ctx.fillText(
+                areaName,
+                areaTextX + offset,
+                areaClearY
+            );
+        }
+        else if (areaTimer > areaFadeStart)
+        {
+            ctx.fillStyle = "#000000";
+            ctx.fillRect(0, areaClearY, areaClearW, areaClearH);
+
+            const alpha = (areaTimerMax - areaTimer) * 255 | 0;
+            ctx.fillStyle = "#FFFFFF" + byteToHex[alpha];
+            ctx.fillText(areaName, areaTextX, areaClearY);
         }
         else
         {
-            if (areaTimer > areaFadeStart)
-            {
-                const alpha = (areaTimerMax - areaTimer) * 255 | 0;
-                ctx.fillStyle += byteToHex[alpha];
-            }
+            ctx.fillStyle = "#000000";
+            ctx.fillRect(0, areaClearY, areaClearW, areaClearH);
 
+            ctx.fillStyle = "#FFFFFF";
             ctx.fillText(areaName, areaTextX, areaClearY);
         }
     },
@@ -198,6 +217,8 @@ export const Dialogue = {
     {
         if (!textRgb || textRgb.length !== 7) throw textRgb;
 
+        ctx.font = dlgFont;
+
         if (dlgIsFullyShown)
         {
             ctx.fillStyle = textRgb;
@@ -270,6 +291,9 @@ const dlgDrawLineGradient = (textRgb) =>
 
 const dlgProcessNextLine = () =>
 {
+    // Set correct font for calculating widths
+    ctx.font = dlgFont;
+
     // Word boundary positive lookahead whitespace
     const words = dlgScript[dlgScriptIdx].split(/\b(?=\s)/);
 
@@ -354,6 +378,7 @@ let dlgEndTime;
 let dlgIsFullyShown;
 
 const dlgFontPx = 0.05 * $.RES_HEIGHT;
+const dlgFont = `${dlgFontPx}px Jost`;
 const dlgFadeWidth = 0.33;
 const dlgFadeSpeed = 1.05;
 const dlgLines = [];

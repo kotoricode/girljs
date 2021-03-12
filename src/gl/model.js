@@ -108,7 +108,7 @@ class ExternalModel
 {
     constructor(fileName, meshId, uvId, indexId)
     {
-        this.url = `/mdl/${fileName}.glb`;
+        this.url = `./mdl/${fileName}.glb`;
         this.meshId = meshId;
         this.uvId = uvId;
         this.indexId = indexId;
@@ -283,11 +283,7 @@ const buildModels = async() =>
         {
             meshOffsets.set(
                 meshId,
-                pushData(
-                    meshes.get(meshId),
-                    modelData,
-                    SIZEOF_FLOAT32
-                )
+                pushData(meshes.get(meshId), modelData, SIZEOF_FLOAT32)
             );
         }
 
@@ -295,11 +291,7 @@ const buildModels = async() =>
         {
             uvOffsets.set(
                 uvId,
-                pushData(
-                    uvs.get(uvId),
-                    modelData,
-                    SIZEOF_FLOAT32
-                )
+                pushData(uvs.get(uvId), modelData, SIZEOF_FLOAT32)
             );
         }
 
@@ -307,11 +299,7 @@ const buildModels = async() =>
         {
             indexOffsets.set(
                 indexId,
-                pushData(
-                    indices.get(indexId),
-                    indexData,
-                    SIZEOF_UINT16
-                )
+                pushData(indices.get(indexId), indexData, SIZEOF_UINT16)
             );
         }
 
