@@ -192,8 +192,8 @@ export const Dialogue = {
         }
         else
         {
-            dlgTimer += dt * dlgFadeSpeed;
-            dlgIsFullyShown = dlgTimer >= dlgEndTime;
+            dlgTimer += dt;
+            dlgIsFullyShown = (dlgTimer * dlgFadeSpeed) >= dlgEndTime;
             dlgDrawLineGradient(textRgb);
         }
     },
@@ -207,7 +207,7 @@ const dlgDrawLineGradient = (textRgb) =>
 {
     for (let i = 0; i < dlgLines.length; i++)
     {
-        const lineTimer = dlgTimer - dlgLinesStart[i];
+        const lineTimer = (dlgTimer * dlgFadeSpeed) - dlgLinesStart[i];
 
         if (lineTimer < 0)
         {
@@ -336,8 +336,8 @@ let dlgEndTime;
 let dlgIsFullyShown;
 
 const dlgFontPx = 0.05 * $.RES_HEIGHT;
-const dlgFadeWidth = 0.1;
-const dlgFadeSpeed = 0.3;
+const dlgFadeWidth = 1 / 3;
+const dlgFadeSpeed = 4 / 3;
 const dlgLines = [];
 const dlgLinesY = [];
 const dlgLinesRelWidth = [];
