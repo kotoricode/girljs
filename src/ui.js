@@ -102,6 +102,8 @@ export const Dialogue = {
         }
         else if (++dlgScriptIdx < dlgScript.length)
         {
+            dlgTimer = 0;
+            dlgIsFullyShown = false;
             dlgProcessNextLine();
         }
         else
@@ -292,9 +294,7 @@ const dlgProcessNextLine = () =>
     }
 
     const yOffset = 0.5 * dlgLines.length;
-    dlgEndTime = dlgFadeWidth;
-    dlgIsFullyShown = false;
-    dlgTimer = 0;
+    dlgEndTime = 0;
 
     for (let i = 0; i < dlgLines.length; i++)
     {
@@ -303,6 +303,8 @@ const dlgProcessNextLine = () =>
         dlgLinesStart[i] = dlgEndTime;
         dlgEndTime += width;
     }
+
+    dlgEndTime += dlgFadeWidth;
 };
 
 const dlgPrepareLine = (line, width) =>
@@ -335,7 +337,7 @@ let dlgIsFullyShown;
 
 const dlgFontPx = 0.05 * $.RES_HEIGHT;
 const dlgFadeWidth = 0.1;
-const dlgFadeSpeed = 1;
+const dlgFadeSpeed = 0.3;
 const dlgLines = [];
 const dlgLinesY = [];
 const dlgLinesRelWidth = [];
