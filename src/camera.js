@@ -83,7 +83,7 @@ const transform = new Transform(0, 2.75, 6);
 const viewProjection = new Matrix();
 const invViewProjection = new Matrix();
 
-const invTan = 1 / Math.tan(DEG_TO_RAD * fov * 0.5);
+const invTan = 1 / Math.tan(DEG_TO_RAD * fov / 2);
 const dist = far - near;
 
 const projection = new Matrix(

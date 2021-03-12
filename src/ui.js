@@ -69,8 +69,25 @@ export const Area = {
     },
     draw()
     {
-        ctx.fillStyle = "#fff";
-        ctx.fillText(areaName, areaTextX, areaClearY);
+        ctx.fillStyle = "#FFFFFF";
+        const areaPopup = 0.25;
+        const areaFadeStart = 4;
+
+        if (areaTimer < areaPopup)
+        {
+            const offset = 1000 * (areaPopup - areaTimer);
+            ctx.fillText(areaName, areaTextX - offset, areaClearY);
+        }
+        else
+        {
+            if (areaTimer > areaFadeStart)
+            {
+                const alpha = (areaTimerMax - areaTimer) * 255 | 0;
+                ctx.fillStyle += byteToHex[alpha];
+            }
+
+            ctx.fillText(areaName, areaTextX, areaClearY);
+        }
     },
     isActive()
     {
@@ -216,7 +233,7 @@ const dlgDrawLineGradient = (textRgb) =>
         }
 
         const lineProgress = (dlgTimer - start) * dlgFadeSpeed;
-        const widthRatio = dlgLinesRelWidth[i];
+        const widthRatio = dlgLinesWidth[i];
 
         // Left colorstop, marks alpha 255
         const stopL = (lineProgress - dlgFadeWidth) / widthRatio;
@@ -301,9 +318,8 @@ const dlgProcessNextLine = () =>
     for (let i = 0; i < dlgLines.length; i++)
     {
         dlgLinesY[i] = bubMidY + dlgFontPx * (i - yOffset);
-        const lineTime = dlgLinesRelWidth[i] / dlgFadeSpeed;
         dlgLinesStart[i] = dlgEndTime;
-        dlgEndTime += lineTime;
+        dlgEndTime += dlgLinesWidth[i] / dlgFadeSpeed;
     }
 
     dlgEndTime += dlgFadeWidth / dlgFadeSpeed;
@@ -312,7 +328,7 @@ const dlgProcessNextLine = () =>
 const dlgPrepareLine = (line, width) =>
 {
     const idx = dlgLines.length;
-    dlgLinesRelWidth[idx] = width / bubW;
+    dlgLinesWidth[idx] = width / bubW;
     dlgLinesR[idx] = bubL + width;
     dlgLines.push(line);
 };
@@ -338,11 +354,11 @@ let dlgEndTime;
 let dlgIsFullyShown;
 
 const dlgFontPx = 0.05 * $.RES_HEIGHT;
-const dlgFadeWidth = 1 / 3;
-const dlgFadeSpeed = 1 / 4;
+const dlgFadeWidth = 0.33;
+const dlgFadeSpeed = 1.05;
 const dlgLines = [];
 const dlgLinesY = [];
-const dlgLinesRelWidth = [];
+const dlgLinesWidth = [];
 const dlgLinesR = [];
 const dlgLinesStart = [];
 const dlgClearMargin = 8;
