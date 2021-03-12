@@ -8,6 +8,17 @@ import { Camera } from "./camera";
 import { Vector } from "./math/vector";
 
 export const Ui = {
+    canvasToTexture()
+    {
+        const texture = program.getTexture();
+
+        Texture.flip(true);
+        Texture.bind(texture);
+        Texture.from(canvas);
+        Texture.parami($.TEXTURE_MIN_FILTER, $.LINEAR);
+        Texture.unbind();
+        Texture.flip(false);
+    },
     getProgram()
     {
         return program;
@@ -33,10 +44,10 @@ export const Ui = {
             await Model.load();
         }
 
-        canvasToTexture();
+        this.canvasToTexture();
 
         /* eslint-disable max-len */
-        Dialogue.setScript([
+        Dialogue.activate([
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
             "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
             "Duis aute irure dolor in reprehenderit in voluptate velit....",
@@ -44,43 +55,128 @@ export const Ui = {
             "final five"
         ]);
         /* eslint-enable max-len */
+    }
+};
 
-        Dialogue.advance();
+export const Area = {
+    activate(newAreaName)
+    {
+        areaTimer = 0;
+        areaName = newAreaName;
+    },
+    clear()
+    {
+        ctx.clearRect(0, areaClearY, areaClearW, areaClearH);
+    },
+    draw(dt)
+    {
+        areaTimer += dt;
+
+        ctx.fillStyle = "#fff";
+        ctx.fillText(areaName, areaTextX, areaClearY);
+    },
+    isActive()
+    {
+        return areaTimer <= areaTimerMax;
+    },
+    isStarted()
+    {
+        return areaTimer > 0;
     }
 };
 
 export const Dialogue = {
+    activate(script)
+    {
+        dlgScript = script;
+        dlgScriptIdx = -1;
+        this.advance();
+    },
     advance()
     {
         if (!dlgScript || !dlgScript.length) throw Error;
 
-        if (dlgScriptIdx > -1 && !dlgIsFullyShown)
+        if (this.isActive() && !dlgIsFullyShown)
         {
             dlgIsFullyShown = true;
         }
-        else if (++dlgScriptIdx === dlgScript.length)
+        else if (++dlgScriptIdx < dlgScript.length)
         {
-            dlgScript = null;
-            dlgScriptIdx = -1;
-            Dialogue.clear();
-            canvasToTexture();
+            dlgProcessNextLine();
         }
         else
         {
-            dlgNext();
+            dlgScript = null;
+            dlgScriptIdx = -1;
         }
     },
     clear()
     {
         ctx.clearRect(bubClearX, bubClearY, bubClearW, bubClearH);
     },
-    draw(dt, textRgb)
+    drawBubble(x, y, z)
+    {
+        ctx.fillStyle = bubFillStyle;
+        ctx.strokeStyle = bubStrokeStyle;
+        ctx.lineWidth = bubLineWidth;
+
+        ctx.beginPath();
+
+        if (x !== undefined)
+        {
+            bubArrowPoint.setValues(x, y, z);
+            Camera.worldToScreen(bubArrowPoint);
+
+            const arrowLeft = clamp(
+                bubArrowPoint.x - bubArrowHalfWidth,
+                bubL,
+                bubArrowLMax
+            );
+
+            const arrowRight = clamp(
+                bubArrowPoint.x + bubArrowHalfWidth,
+                bubArrowRMin,
+                bubR
+            );
+
+            const arrowTipX = lerp(
+                arrowRight - bubArrowHalfWidth,
+                bubArrowPoint.x,
+                Math.min(1, bubArrowHeight / Math.abs(bubT - bubArrowPoint.y))
+            );
+
+            ctx.moveTo(arrowLeft, bubT);
+            ctx.lineTo(arrowTipX, bubArrowT);
+            ctx.lineTo(arrowRight, bubT);
+        }
+
+        ctx.lineTo(bubR, bubT);
+
+        ctx.ellipse(
+            bubR, bubMidY,
+            bubEllX, bubEllY,
+            0,
+            -HALF_PI,
+            HALF_PI
+        );
+
+        ctx.lineTo(bubL, bubB);
+
+        ctx.ellipse(
+            bubL, bubMidY,
+            bubEllX, bubEllY,
+            0,
+            HALF_PI,
+            -HALF_PI
+        );
+
+        ctx.closePath();
+        ctx.fill();
+        ctx.stroke();
+    },
+    drawText(dt, textRgb)
     {
         if (!textRgb || textRgb.length !== 7) throw textRgb;
-
-        this.clear();
-
-        dlgDrawBubble(new Vector(1, 0.2, -0.3));
 
         if (dlgIsFullyShown)
         {
@@ -97,92 +193,11 @@ export const Dialogue = {
             dlgIsFullyShown = dlgTimer >= dlgEndTime;
             dlgDrawLineGradient(textRgb);
         }
-
-        canvasToTexture();
     },
-    hasScript()
+    isActive()
     {
-        return !!dlgScript;
-    },
-    setScript(script)
-    {
-        dlgScript = script;
-        dlgScriptIdx = -1;
+        return dlgScriptIdx >= 0;
     }
-};
-
-const canvasToTexture = () =>
-{
-    const texture = program.getTexture();
-
-    Texture.flip(true);
-    Texture.bind(texture);
-    Texture.from(canvas);
-    Texture.parami($.TEXTURE_MIN_FILTER, $.LINEAR);
-    Texture.unbind();
-    Texture.flip(false);
-};
-
-const dlgDrawBubble = (vecSpeaker) =>
-{
-    ctx.fillStyle = "#ffffff";
-    ctx.strokeStyle = "#333333";
-    ctx.lineWidth = 2;
-
-    ctx.beginPath();
-
-    if (vecSpeaker)
-    {
-        bubArrowPoint.copy(vecSpeaker);
-        Camera.worldToScreen(vecSpeaker);
-
-        const arrowLeft = clamp(
-            bubArrowPoint.x - bubArrowHalfWidth,
-            bubL,
-            bubArrowLMax
-        );
-
-        const arrowRight = clamp(
-            bubArrowPoint.x + bubArrowHalfWidth,
-            bubArrowRMin,
-            bubR
-        );
-
-        const arrowTipX = lerp(
-            arrowRight - bubArrowHalfWidth,
-            bubArrowPoint.x,
-            Math.min(1, bubArrowHeight / (bubT - bubArrowPoint.y))
-        );
-
-        ctx.moveTo(arrowLeft, bubT);
-        ctx.lineTo(arrowTipX, bubArrowT);
-        ctx.lineTo(arrowRight, bubT);
-
-    }
-
-    ctx.lineTo(bubR, bubT);
-
-    ctx.ellipse(
-        bubR, bubMidY,
-        bubEllX, bubEllY,
-        0,
-        -HALF_PI,
-        HALF_PI
-    );
-
-    ctx.lineTo(bubL, bubB);
-
-    ctx.ellipse(
-        bubL, bubMidY,
-        bubEllX, bubEllY,
-        0,
-        HALF_PI,
-        -HALF_PI
-    );
-
-    ctx.closePath();
-    ctx.fill();
-    ctx.stroke();
 };
 
 const dlgDrawLineGradient = (textRgb) =>
@@ -232,7 +247,7 @@ const dlgDrawLineGradient = (textRgb) =>
     }
 };
 
-const dlgNext = () =>
+const dlgProcessNextLine = () =>
 {
     // Word boundary positive lookahead whitespace
     const words = dlgScript[dlgScriptIdx].split(/\b(?=\s)/);
@@ -331,6 +346,10 @@ const dlgClearMargin = 8;
 /*------------------------------------------------------------------------------
     Bubble
 ------------------------------------------------------------------------------*/
+const bubFillStyle = "#ffffff";
+const bubStrokeStyle = "#333333";
+const bubLineWidth = 2;
+
 const bubL = 0.225 * $.RES_WIDTH;
 const bubR = $.RES_WIDTH - bubL;
 const bubT = 0.725 * $.RES_HEIGHT;
@@ -353,3 +372,17 @@ const bubClearX = bubL - bubEllX - dlgClearMargin;
 const bubClearY = bubArrowT - dlgClearMargin;
 const bubClearW = $.RES_WIDTH - 2 * bubClearX;
 const bubClearH = $.RES_HEIGHT - bubClearY - dlgClearMargin;
+
+/*------------------------------------------------------------------------------
+    Area
+------------------------------------------------------------------------------*/
+let areaTimer;
+let areaName;
+
+const areaTimerMax = 5;
+
+const areaTextX = $.RES_WIDTH * 0.02;
+
+const areaClearY = $.RES_HEIGHT * 0.075;
+const areaClearW = $.RES_WIDTH * 0.3;
+const areaClearH = $.RES_HEIGHT * 0.3;

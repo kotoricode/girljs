@@ -128,7 +128,9 @@ export const
     TXT_LOREM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     TXT_HELLO = "Hello world!",
     TXT_CATCALL_00 = "Nice ass, baby!",
-    TXT_CATCALL_01 = "milk truk just arive";
+    TXT_CATCALL_01 = "milk truk just arive",
+    TXT_AREA_HOME = "Home",
+    TXT_AUD_OMOIDE = "Rengoku Teien - Omoide Loft";
 
 /*------------------------------------------------------------------------------
     DOM text --- DO NOT MODIFY
