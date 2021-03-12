@@ -12,12 +12,12 @@ export const Ui = {
     {
         const texture = program.getTexture();
 
-        Texture.flip(true);
         Texture.bind(texture);
+        Texture.flip(true);
         Texture.from(canvas);
         Texture.parami($.TEXTURE_MIN_FILTER, $.LINEAR);
-        Texture.unbind();
         Texture.flip(false);
+        Texture.unbind();
     },
     getProgram()
     {
