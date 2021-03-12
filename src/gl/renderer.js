@@ -70,11 +70,6 @@ export const Renderer = {
     },
     render()
     {
-        const dt = Scene.getDeltaTime();
-
-        debugHue = (debugHue + dt * 120) % 360;
-        hsvToRgb(debugHue, 1, 1, debugColor);
-
         for (const [drawable] of Scene.all(Drawable))
         {
             if (drawable.isVisible)
@@ -83,7 +78,7 @@ export const Renderer = {
             }
         }
 
-        debugSetGroundBuffer();
+        setDebugLines();
 
         bindFb();
 
@@ -94,8 +89,10 @@ export const Renderer = {
         gl.enable($.CULL_FACE);
         drawQueue($.QUE_BACKGROUND);
         drawQueue($.QUE_WAYPOINT);
+
         gl.disable($.CULL_FACE);
         drawQueue($.QUE_SPRITE);
+
         gl.disable($.DEPTH_TEST);
         drawQueue($.QUE_UI);
 
@@ -162,8 +159,12 @@ const drawQueue = (queueId) =>
     }
 };
 
-const debugSetGroundBuffer = () =>
+const setDebugLines = () =>
 {
+    const dt = Scene.getDeltaTime();
+    debugHue = (debugHue + dt * 120) % 360;
+    hsvToRgb(debugHue, 1, 1, debugColor);
+
     let indexOffset = 0;
     const debugIndex = debugProgram.getDynamicIndex();
 
