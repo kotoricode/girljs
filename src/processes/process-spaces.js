@@ -3,7 +3,7 @@ import { Space } from "../components/space";
 
 import { Scene } from "../scene";
 
-export const processHitboxes = () =>
+export const processSpaces = () =>
 {
     for (const [space, hitbox] of Scene.all(Space, HitBox))
     {

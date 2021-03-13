@@ -4,12 +4,6 @@ import { Drawable } from "../components/drawable";
 import { Anim } from "../components/anim";
 import { Scene } from "../scene";
 
-const setModelFromAnim = (anim, drawable) =>
-{
-    const modelId = anim.getModelId();
-    drawable.program.setModel(modelId);
-};
-
 export const processAnimation = () =>
 {
     /*--------------------------------------------------------------------------
@@ -55,4 +49,10 @@ export const processAnimation = () =>
             setModelFromAnim(anim, drawable);
         }
     }
+};
+
+const setModelFromAnim = (anim, drawable) =>
+{
+    const modelId = anim.getModelId();
+    drawable.program.setModel(modelId);
 };

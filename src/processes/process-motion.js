@@ -6,11 +6,11 @@ export const processMotion = () =>
 {
     const dt = Scene.getDeltaTime();
 
-    for (const [motion, space] of Scene.all(Motion, Space))
+    for (const [space, motion] of Scene.all(Space, Motion))
     {
         if (motion.hasTarget())
         {
-            moveTowardsTarget(motion, space, dt);
+            moveTowardsTarget(space, motion, dt);
 
             if (motion.direction.x)
             {
@@ -25,7 +25,7 @@ export const processMotion = () =>
     Scene.clean();
 };
 
-export const moveTowardsTarget = (motion, space, dt) =>
+const moveTowardsTarget = (space, motion, dt) =>
 {
     const { direction } = motion;
     let step = motion.speed * dt;
@@ -43,7 +43,7 @@ export const moveTowardsTarget = (motion, space, dt) =>
             direction.normalize(step);
             space.local.translation.add(direction);
 
-            break;
+            return;
         }
 
         // Reach target
@@ -55,7 +55,7 @@ export const moveTowardsTarget = (motion, space, dt) =>
             motion.direction.setValues(0, 0, 0);
             motion.index = motion.maxIndex = -1;
 
-            break;
+            return;
         }
 
         // Proceed to next target

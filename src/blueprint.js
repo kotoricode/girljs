@@ -12,7 +12,7 @@ import { processMotion }    from "./processes/process-motion";
 import { processCamera }    from "./processes/process-camera";
 import { processAnimation } from "./processes/process-animation";
 import { processPlayer }    from "./processes/process-player";
-import { processHitboxes }  from "./processes/process-hitboxes";
+import { processSpaces }    from "./processes/process-spaces";
 import { processUi }        from "./processes/process-ui";
 
 const createEntity = (entityId, ...components) => [
@@ -85,7 +85,7 @@ export const blueprint = new Map([
             processUi,
             processPlayer,
             processMotion,
-            processHitboxes,
+            processSpaces,
             processAnimation,
             processCamera,
         ])]

@@ -247,7 +247,7 @@ const dlgProcessNextLine = () =>
     ctx2d.font = dlgFont;
 
     // Word boundary positive lookahead whitespace
-    const words = dlgScript[dlgScriptIdx].split(/\b(?=\s)/);
+    const words = dlgScript[dlgScriptIdx].split(/\b(?=\s)/u);
 
     dlgLines.length = 0;
     let line;
