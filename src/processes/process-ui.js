@@ -1,4 +1,4 @@
-import { Area, Dialogue, Ui } from "../ui";
+import { UiArea, UiDialogue } from "../ui";
 import { Mouse } from "../main";
 import { Scene } from "../scene";
 
@@ -6,16 +6,16 @@ export const processUi = () =>
 {
     const dt = Scene.getDeltaTime();
 
-    if (Dialogue.isActive())
+    if (UiDialogue.isActive())
     {
-        Dialogue.clear();
+        UiDialogue.clear();
 
         if (Mouse.isClick())
         {
             Mouse.consume();
-            Dialogue.advance();
+            UiDialogue.advance();
 
-            if (Dialogue.isActive())
+            if (UiDialogue.isActive())
             {
                 drawDialogue(dt);
             }
@@ -26,27 +26,32 @@ export const processUi = () =>
         }
     }
 
-    if (!Area.isStarted())
+    if (!UiArea.isStarted())
     {
-        Area.activate("moi");
+        UiArea.activate("moi");
+        UiDialogue.activate([
+            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
+            "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
+            "Duis aute irure dolor in reprehenderit in voluptate velit....",
+            "four",
+            "final five"
+        ]);
     }
 
-    if (Area.isActive())
+    if (UiArea.isActive())
     {
-        Area.clear();
-        Area.update(dt);
+        UiArea.clear();
+        UiArea.update(dt);
 
-        if (Area.isActive())
+        if (UiArea.isActive())
         {
-            Area.draw();
+            UiArea.draw();
         }
     }
-
-    Ui.canvasToTexture();
 };
 
 const drawDialogue = (dt) =>
 {
-    Dialogue.drawBubble(3, 1.5, -0.3);
-    Dialogue.drawText(dt, "#333333");
+    UiDialogue.drawBubble(3, 1.5, -0.3);
+    UiDialogue.drawText(dt, "#333333");
 };

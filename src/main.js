@@ -7,7 +7,6 @@ import { Texture } from "./gl/texture";
 import { Program } from "./gl/program";
 import { Renderer } from "./gl/renderer";
 import { Camera } from "./camera";
-import { Ui } from "./ui";
 
 import { Scene } from "./scene";
 import { Model } from "./gl/model";
@@ -135,18 +134,27 @@ const onResize = () =>
 
         canvasWidth = width;
 
-        canvas.style.width = width + "px";
-        canvas.style.height = height + "px";
+        const cssWidth = width + "px";
+        const cssHeight = height + "px";
+
+        canvas.style.width = cssWidth;
+        canvas.style.height = cssHeight;
+        uiCanvas.style.width = cssWidth;
+        uiCanvas.style.height = cssHeight;
     }
 
     canvasRect = canvas.getBoundingClientRect();
 };
 
-const canvas = getElement("canvas");
+const canvas = getElement("canvasGl");
 let canvasRect = canvas.getBoundingClientRect();
 let canvasWidth = $.RES_WIDTH;
 canvas.width = $.RES_WIDTH;
 canvas.height = $.RES_HEIGHT;
+
+const uiCanvas = getElement("canvas2d");
+uiCanvas.width = $.RES_WIDTH;
+uiCanvas.height = $.RES_HEIGHT;
 
 window.addEventListener("DOMContentLoaded", onResize, LISTENER_ONCE);
 window.addEventListener("load", onResize, LISTENER_ONCE);
@@ -154,6 +162,10 @@ window.addEventListener("resize", onResize);
 
 export const gl = canvas.getContext("webgl2", { alpha: false });
 gl.viewport(0, 0, $.RES_WIDTH, $.RES_HEIGHT);
+
+export const ctx2d = uiCanvas.getContext("2d");
+ctx2d.textAlign = "left";
+ctx2d.textBaseline = "top";
 
 const mainLoop = (timestamp) =>
 {
@@ -175,7 +187,6 @@ const init = () =>
     Buffer.init();
     Texture.init();
     Program.init();
-    Ui.init();
     Renderer.init();
     Camera.init();
 };

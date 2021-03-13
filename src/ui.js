@@ -1,62 +1,10 @@
 import * as $ from "./const";
-import { Model } from "./gl/model";
-import { Program } from "./gl/program";
-import { Texture } from "./gl/texture";
-import { Matrix } from "./math/matrix";
 import { clamp, lerp, HALF_PI } from "./utility";
 import { Camera } from "./camera";
 import { Vector } from "./math/vector";
+import { ctx2d } from "./main";
 
-export const Ui = {
-    canvasToTexture()
-    {
-        const texture = program.getTexture();
-
-        Texture.bind(texture);
-        Texture.flip(true);
-        Texture.from(canvas);
-        Texture.parami($.TEXTURE_MIN_FILTER, $.LINEAR);
-        Texture.flip(false);
-        Texture.unbind();
-    },
-    getProgram()
-    {
-        return program;
-    },
-    async init()
-    {
-        program = new Program($.PRG_UI, $.MDL_UI);
-        program.stageUniform($.U_COLOR, [1, 1, 1, 1]);
-        program.stageUniformIndexed($.U_TRANSFORM, 1, Matrix.identity());
-
-        canvas = window.document.createElement("canvas");
-        canvas.width = $.RES_WIDTH;
-        canvas.height = $.RES_HEIGHT;
-
-        ctx = canvas.getContext("2d");
-        ctx.textAlign = "left";
-        ctx.textBaseline = "top";
-
-        if (!Model.isLoaded())
-        {
-            await Model.load();
-        }
-
-        this.canvasToTexture();
-
-        /* eslint-disable max-len */
-        Dialogue.activate([
-            "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
-            "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
-            "Duis aute irure dolor in reprehenderit in voluptate velit....",
-            "four",
-            "final five"
-        ]);
-        /* eslint-enable max-len */
-    }
-};
-
-export const Area = {
+export const UiArea = {
     activate(newAreaName)
     {
         areaTimer = 0;
@@ -64,7 +12,7 @@ export const Area = {
     },
     clear()
     {
-        ctx.clearRect(0, areaClearY, areaClearW, areaClearH);
+        ctx2d.clearRect(0, areaClearY, areaClearW, areaClearH);
     },
     draw()
     {
@@ -75,16 +23,16 @@ export const Area = {
         {
             const offset = -areaClearW * (areaPopup - areaTimer) / areaPopup;
 
-            ctx.fillStyle = "#000000";
-            ctx.fillRect(
+            ctx2d.fillStyle = "#000000";
+            ctx2d.fillRect(
                 offset,
                 areaClearY,
                 areaClearW,
                 areaClearH
             );
 
-            ctx.fillStyle = "#FFFFFF";
-            ctx.fillText(
+            ctx2d.fillStyle = "#FFFFFF";
+            ctx2d.fillText(
                 areaName,
                 areaTextX + offset,
                 areaClearY
@@ -92,20 +40,20 @@ export const Area = {
         }
         else if (areaTimer > areaFadeStart)
         {
-            ctx.fillStyle = "#000000";
-            ctx.fillRect(0, areaClearY, areaClearW, areaClearH);
+            ctx2d.fillStyle = "#000000";
+            ctx2d.fillRect(0, areaClearY, areaClearW, areaClearH);
 
             const alpha = (areaTimerMax - areaTimer) * 255 | 0;
-            ctx.fillStyle = "#FFFFFF" + byteToHex[alpha];
-            ctx.fillText(areaName, areaTextX, areaClearY);
+            ctx2d.fillStyle = "#FFFFFF" + byteToHex[alpha];
+            ctx2d.fillText(areaName, areaTextX, areaClearY);
         }
         else
         {
-            ctx.fillStyle = "#000000";
-            ctx.fillRect(0, areaClearY, areaClearW, areaClearH);
+            ctx2d.fillStyle = "#000000";
+            ctx2d.fillRect(0, areaClearY, areaClearW, areaClearH);
 
-            ctx.fillStyle = "#FFFFFF";
-            ctx.fillText(areaName, areaTextX, areaClearY);
+            ctx2d.fillStyle = "#FFFFFF";
+            ctx2d.fillText(areaName, areaTextX, areaClearY);
         }
     },
     isActive()
@@ -122,7 +70,7 @@ export const Area = {
     }
 };
 
-export const Dialogue = {
+export const UiDialogue = {
     activate(script)
     {
         dlgScript = script;
@@ -151,15 +99,15 @@ export const Dialogue = {
     },
     clear()
     {
-        ctx.clearRect(bubClearX, bubClearY, bubClearW, bubClearH);
+        ctx2d.clearRect(bubClearX, bubClearY, bubClearW, bubClearH);
     },
     drawBubble(x, y, z)
     {
-        ctx.fillStyle = bubFillStyle;
-        ctx.strokeStyle = bubStrokeStyle;
-        ctx.lineWidth = bubLineWidth;
+        ctx2d.fillStyle = bubFillStyle;
+        ctx2d.strokeStyle = bubStrokeStyle;
+        ctx2d.lineWidth = bubLineWidth;
 
-        ctx.beginPath();
+        ctx2d.beginPath();
 
         if (x !== undefined)
         {
@@ -184,14 +132,14 @@ export const Dialogue = {
                 Math.min(1, bubArrowHeight / Math.abs(bubT - bubArrowPoint.y))
             );
 
-            ctx.moveTo(arrowLeft, bubT);
-            ctx.lineTo(arrowTipX, bubArrowT);
-            ctx.lineTo(arrowRight, bubT);
+            ctx2d.moveTo(arrowLeft, bubT);
+            ctx2d.lineTo(arrowTipX, bubArrowT);
+            ctx2d.lineTo(arrowRight, bubT);
         }
 
-        ctx.lineTo(bubR, bubT);
+        ctx2d.lineTo(bubR, bubT);
 
-        ctx.ellipse(
+        ctx2d.ellipse(
             bubR, bubMidY,
             bubEllX, bubEllY,
             0,
@@ -199,9 +147,9 @@ export const Dialogue = {
             HALF_PI
         );
 
-        ctx.lineTo(bubL, bubB);
+        ctx2d.lineTo(bubL, bubB);
 
-        ctx.ellipse(
+        ctx2d.ellipse(
             bubL, bubMidY,
             bubEllX, bubEllY,
             0,
@@ -209,23 +157,23 @@ export const Dialogue = {
             -HALF_PI
         );
 
-        ctx.closePath();
-        ctx.fill();
-        ctx.stroke();
+        ctx2d.closePath();
+        ctx2d.fill();
+        ctx2d.stroke();
     },
     drawText(dt, textRgb)
     {
         if (!textRgb || textRgb.length !== 7) throw textRgb;
 
-        ctx.font = dlgFont;
+        ctx2d.font = dlgFont;
 
         if (dlgIsFullyShown)
         {
-            ctx.fillStyle = textRgb;
+            ctx2d.fillStyle = textRgb;
 
             for (let i = 0; i < dlgLines.length; i++)
             {
-                ctx.fillText(dlgLines[i], bubL, dlgLinesY[i]);
+                ctx2d.fillText(dlgLines[i], bubL, dlgLinesY[i]);
             }
         }
         else
@@ -262,7 +210,7 @@ const dlgDrawLineGradient = (textRgb) =>
         if (stopL > 1)
         {
             // Line is fully shown, draw in plain color
-            ctx.fillStyle = textRgb;
+            ctx2d.fillStyle = textRgb;
         }
         else
         {
@@ -278,21 +226,21 @@ const dlgDrawLineGradient = (textRgb) =>
             const alphaL = 255 * Math.min(1, stopL / gap + 1) | 0;
             const alphaR = 255 * Math.max(0, (stopR - 1) / gap) | 0;
 
-            const grad = ctx.createLinearGradient(bubL, 0, dlgLinesR[i], 0);
+            const grad = ctx2d.createLinearGradient(bubL, 0, dlgLinesR[i], 0);
             grad.addColorStop(Math.max(0, stopL), textRgb + byteToHex[alphaL]);
             grad.addColorStop(Math.min(1, stopR), textRgb + byteToHex[alphaR]);
 
-            ctx.fillStyle = grad;
+            ctx2d.fillStyle = grad;
         }
 
-        ctx.fillText(dlgLines[i], bubL, dlgLinesY[i]);
+        ctx2d.fillText(dlgLines[i], bubL, dlgLinesY[i]);
     }
 };
 
 const dlgProcessNextLine = () =>
 {
     // Set correct font for calculating widths
-    ctx.font = dlgFont;
+    ctx2d.font = dlgFont;
 
     // Word boundary positive lookahead whitespace
     const words = dlgScript[dlgScriptIdx].split(/\b(?=\s)/);
@@ -305,7 +253,7 @@ const dlgProcessNextLine = () =>
     for (const word of words)
     {
         testLine += word;
-        const testLineWidth = ctx.measureText(testLine).width;
+        const testLineWidth = ctx2d.measureText(testLine).width;
 
         if (bubW < testLineWidth)
         {
@@ -363,10 +311,6 @@ for (let i = 0; i < byteToHex.length; i++)
 {
     byteToHex[i] = i.toString(16).padStart(2, "0");
 }
-
-let program;
-let canvas;
-let ctx;
 
 /*------------------------------------------------------------------------------
     Dialogue
