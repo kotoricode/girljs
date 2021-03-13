@@ -22,7 +22,7 @@ html, body
     grid-area: 1 / 1;
 }
 
-#canvasDiv
+#divMsg
 {
     display: flex;
     align-items: center;

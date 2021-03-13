@@ -12,12 +12,14 @@ import { Scene } from "./scene";
 import { Model } from "./gl/model";
 import { AudioPlayer } from "./audio-player";
 
-const canvasDiv = getElement("canvasDiv");
-canvasDiv.innerText = $.DOM_CLICK_TO_START;
+const group = getElement("group");
 
-canvasDiv.addEventListener("mousedown", async() =>
+const divMsg = getElement("divMsg");
+divMsg.innerText = $.DOM_CLICK_TO_START;
+
+group.addEventListener("mousedown", async() =>
 {
-    canvasDiv.innerText = $.DOM_LOADING;
+    divMsg.innerText = $.DOM_LOADING;
     AudioPlayer.init();
     init();
 
@@ -26,7 +28,7 @@ canvasDiv.addEventListener("mousedown", async() =>
         await Model.load();
     }
 
-    canvas.addEventListener("mousedown", (e) =>
+    group.addEventListener("mousedown", (e) =>
     {
         if (!e.button)
         {
@@ -36,7 +38,7 @@ canvasDiv.addEventListener("mousedown", async() =>
         }
     });
 
-    canvas.addEventListener("mouseup", (e) =>
+    group.addEventListener("mouseup", (e) =>
     {
         if (!e.button)
         {
@@ -45,12 +47,12 @@ canvasDiv.addEventListener("mousedown", async() =>
         }
     });
 
-    canvas.addEventListener("mousemove", (e) => mouseEvent = e);
+    group.addEventListener("mousemove", (e) => mouseEvent = e);
 
     Scene.setPendingLoad($.SCN_TEST);
     isReady = true;
 
-    canvasDiv.style.display = "none";
+    divMsg.style.display = "none";
 }, LISTENER_ONCE);
 
 /*------------------------------------------------------------------------------
@@ -89,8 +91,8 @@ export const Mouse = {
 
         if (mouseEvent)
         {
-            const x = (mouseEvent.clientX-canvasRect.left) / canvas.clientWidth;
-            const y = (mouseEvent.clientY-canvasRect.top) / canvas.clientHeight;
+            const x = (mouseEvent.clientX-rect.left) / canvas.clientWidth;
+            const y = (mouseEvent.clientY-rect.top) / canvas.clientHeight;
 
             mouseClip.x = 2 * x - 1;
             mouseClip.y = 1 - 2 * y;
@@ -130,40 +132,32 @@ const onResize = () =>
 
     if (width !== canvasWidth)
     {
+        canvasWidth = width;
         const height = width / $.RES_ASPECT;
 
-        canvasWidth = width;
-
-        const cssWidth = width + "px";
-        const cssHeight = height + "px";
-
-        canvas.style.width = cssWidth;
-        canvas.style.height = cssHeight;
-        uiCanvas.style.width = cssWidth;
-        uiCanvas.style.height = cssHeight;
+        canvas.style.width = uiCanvas.style.width = width + "px";
+        canvas.style.height = uiCanvas.style.height = height + "px";
     }
 
-    canvasRect = canvas.getBoundingClientRect();
+    rect = group.getBoundingClientRect();
 };
 
 const canvas = getElement("canvasGl");
-let canvasRect = canvas.getBoundingClientRect();
-let canvasWidth = $.RES_WIDTH;
-canvas.width = $.RES_WIDTH;
-canvas.height = $.RES_HEIGHT;
-
 const uiCanvas = getElement("canvas2d");
-uiCanvas.width = $.RES_WIDTH;
-uiCanvas.height = $.RES_HEIGHT;
+canvas.width = uiCanvas.width = $.RES_WIDTH;
+canvas.height = uiCanvas.height = $.RES_HEIGHT;
+
+let rect = group.getBoundingClientRect();
+let canvasWidth = $.RES_WIDTH;
 
 window.addEventListener("DOMContentLoaded", onResize, LISTENER_ONCE);
 window.addEventListener("load", onResize, LISTENER_ONCE);
 window.addEventListener("resize", onResize);
 
 export const gl = canvas.getContext("webgl2", { alpha: false });
-gl.viewport(0, 0, $.RES_WIDTH, $.RES_HEIGHT);
-
 export const ctx2d = uiCanvas.getContext("2d");
+
+gl.viewport(0, 0, $.RES_WIDTH, $.RES_HEIGHT);
 ctx2d.textAlign = "left";
 ctx2d.textBaseline = "top";
 

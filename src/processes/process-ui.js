@@ -29,6 +29,8 @@ export const processUi = () =>
     if (!UiArea.isStarted())
     {
         UiArea.activate("moi");
+
+        /* eslint-disable max-len */
         UiDialogue.activate([
             "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
             "Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat.",
@@ -36,6 +38,7 @@ export const processUi = () =>
             "four",
             "final five"
         ]);
+        /* eslint-enable max-len */
     }
 
     if (UiArea.isActive())
