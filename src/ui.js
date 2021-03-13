@@ -101,8 +101,13 @@ export const UiDialogue = {
     {
         ctx2d.clearRect(bubClearX, bubClearY, bubClearW, bubClearH);
     },
-    drawBubble(x, y, z)
+    draw(dt, textRgb, x, y, z)
     {
+        if (!textRgb || textRgb.length !== 7) throw textRgb;
+
+        /*----------------------------------------------------------------------
+            Bubble
+        ----------------------------------------------------------------------*/
         ctx2d.fillStyle = bubFillStyle;
         ctx2d.strokeStyle = bubStrokeStyle;
         ctx2d.lineWidth = bubLineWidth;
@@ -132,39 +137,38 @@ export const UiDialogue = {
                 Math.min(1, bubArrowHeight / Math.abs(bubT - bubArrowPoint.y))
             );
 
+            // arrow
             ctx2d.moveTo(arrowLeft, bubT);
             ctx2d.lineTo(arrowTipX, bubArrowT);
             ctx2d.lineTo(arrowRight, bubT);
+
+            // top-right corner
+            ctx2d.lineTo(bubR, bubT);
+        }
+        else
+        {
+            // top-right corner
+            ctx2d.moveTo(bubR, bubT);
         }
 
-        ctx2d.lineTo(bubR, bubT);
+        // right curve
+        ctx2d.ellipse(bubR, bubMidY, bubEllX, bubEllY, 0, -HALF_PI, HALF_PI);
 
-        ctx2d.ellipse(
-            bubR, bubMidY,
-            bubEllX, bubEllY,
-            0,
-            -HALF_PI,
-            HALF_PI
-        );
-
+        // bottom line
         ctx2d.lineTo(bubL, bubB);
 
-        ctx2d.ellipse(
-            bubL, bubMidY,
-            bubEllX, bubEllY,
-            0,
-            HALF_PI,
-            -HALF_PI
-        );
+        // left curve
+        ctx2d.ellipse(bubL, bubMidY, bubEllX, bubEllY, 0, HALF_PI, -HALF_PI);
 
+        // top line
         ctx2d.closePath();
+
         ctx2d.fill();
         ctx2d.stroke();
-    },
-    drawText(dt, textRgb)
-    {
-        if (!textRgb || textRgb.length !== 7) throw textRgb;
 
+        /*----------------------------------------------------------------------
+            Text
+        ----------------------------------------------------------------------*/
         ctx2d.font = dlgFont;
 
         if (dlgIsFullyShown)

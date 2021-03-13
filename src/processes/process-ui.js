@@ -55,6 +55,5 @@ export const processUi = () =>
 
 const drawDialogue = (dt) =>
 {
-    UiDialogue.drawBubble(3, 1.5, -0.3);
-    UiDialogue.drawText(dt, "#333333");
+    UiDialogue.draw(dt, "#333333", 3, 1.5, -0.3);
 };
