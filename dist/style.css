@@ -20,6 +20,7 @@ html, body
 #group *
 {
     grid-area: 1 / 1;
+    pointer-events: none;
 }
 
 #divMsg

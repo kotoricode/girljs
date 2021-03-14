@@ -16,49 +16,27 @@ export const UiArea = {
     },
     draw()
     {
-        const areaPopup = 0.6;
-        const areaFadeStart = 4;
+        let offset = 0;
 
-        if (areaTimer < areaPopup)
+        if (areaTimer < areaShow)
         {
-            const offset = -areaClearW * (areaPopup - areaTimer) / areaPopup;
-
-            ctx2d.fillStyle = "#000000";
-            ctx2d.fillRect(
-                offset,
-                areaClearY,
-                areaClearW,
-                areaClearH
-            );
-
-            ctx2d.fillStyle = "#FFFFFF";
-            ctx2d.fillText(
-                areaName,
-                areaTextX + offset,
-                areaClearY
-            );
+            offset = (areaShow - areaTimer) * areaOffsetMul;
         }
-        else if (areaTimer > areaFadeStart)
+        else if (areaTimer > areaHide)
         {
-            ctx2d.fillStyle = "#000000";
-            ctx2d.fillRect(0, areaClearY, areaClearW, areaClearH);
-
-            const alpha = (areaTimerMax - areaTimer) * 255 | 0;
-            ctx2d.fillStyle = "#FFFFFF" + byteToHex[alpha];
-            ctx2d.fillText(areaName, areaTextX, areaClearY);
+            offset = (areaTimer - areaHide) * areaOffsetMul;
         }
-        else
-        {
-            ctx2d.fillStyle = "#000000";
-            ctx2d.fillRect(0, areaClearY, areaClearW, areaClearH);
 
-            ctx2d.fillStyle = "#FFFFFF";
-            ctx2d.fillText(areaName, areaTextX, areaClearY);
-        }
+        ctx2d.fillStyle = "#0008";
+        ctx2d.fillRect(offset, areaClearY, areaClearW, areaClearH);
+
+        ctx2d.font = areaFont;
+        ctx2d.fillStyle = "#fff";
+        ctx2d.fillText(areaName, areaTextX + offset, areaClearY);
     },
     isActive()
     {
-        return areaTimer <= areaTimerMax;
+        return areaTimer < areaTimerMax;
     },
     isStarted()
     {
@@ -169,23 +147,13 @@ export const UiDialogue = {
         /*----------------------------------------------------------------------
             Text
         ----------------------------------------------------------------------*/
-        ctx2d.font = dlgFont;
-
-        if (dlgIsFullyShown)
-        {
-            ctx2d.fillStyle = textRgb;
-
-            for (let i = 0; i < dlgLines.length; i++)
-            {
-                ctx2d.fillText(dlgLines[i], bubL, dlgLinesY[i]);
-            }
-        }
-        else
+        if (!dlgIsFullyShown)
         {
             dlgTimer += dt;
             dlgIsFullyShown = dlgTimer >= dlgEndTime;
-            dlgDrawLineGradient(textRgb);
         }
+
+        dlgDrawText(textRgb);
     },
     isActive()
     {
@@ -193,48 +161,67 @@ export const UiDialogue = {
     }
 };
 
-const dlgDrawLineGradient = (textRgb) =>
+const dlgDrawText = (textRgb) =>
 {
+    ctx2d.font = dlgFont;
+
     for (let i = 0; i < dlgLines.length; i++)
     {
-        const start = dlgLinesStart[i];
-
-        if (dlgTimer < start)
+        if (dlgIsFullyShown)
         {
-            // Line isn't shown yet (and neither are lines after it)
-            break;
-        }
-
-        const lineProgress = (dlgTimer - start) * dlgFadeSpeed;
-        const widthRatio = dlgLinesWidth[i];
-
-        // Left colorstop, marks alpha 255
-        const stopL = (lineProgress - dlgFadeWidth) / widthRatio;
-
-        if (stopL > 1)
-        {
-            // Line is fully shown, draw in plain color
             ctx2d.fillStyle = textRgb;
         }
         else
         {
-            // Right colorstop, marks alpha 0
-            const stopR = lineProgress / widthRatio;
+            const start = dlgLinesStart[i];
 
-            // Gradient between the stops, alpha falls linearly
-            const gap = stopR - stopL;
+            if (dlgTimer < start)
+            {
+                // Line isn't shown yet (and neither are lines after it)
+                break;
+            }
 
-            // Colorstop must be in range [0.0, 1.0]
-            // Slope is kept consistent by adjusting colorstop alpha,
-            // to simulate colorstop values outside the range
-            const alphaL = 255 * Math.min(1, stopL / gap + 1) | 0;
-            const alphaR = 255 * Math.max(0, (stopR - 1) / gap) | 0;
+            const lineProgress = (dlgTimer - start) * dlgFadeSpeed;
+            const widthRatio = dlgLinesWidth[i];
 
-            const grad = ctx2d.createLinearGradient(bubL, 0, dlgLinesR[i], 0);
-            grad.addColorStop(Math.max(0, stopL), textRgb + byteToHex[alphaL]);
-            grad.addColorStop(Math.min(1, stopR), textRgb + byteToHex[alphaR]);
+            // Left colorstop, marks alpha 255
+            const stopL = (lineProgress - dlgFadeWidth) / widthRatio;
 
-            ctx2d.fillStyle = grad;
+            if (stopL > 1)
+            {
+                // Line is fully shown, draw in plain color
+                ctx2d.fillStyle = textRgb;
+            }
+            else
+            {
+                // Right colorstop, marks alpha 0
+                const stopR = lineProgress / widthRatio;
+
+                // Gradient between the stops, alpha falls linearly
+                const gap = stopR - stopL;
+
+                // Colorstop must be in range [0.0, 1.0]
+                // Slope is kept consistent by adjusting colorstop alpha,
+                // to simulate colorstop values outside the range
+                const alphaL = 255 * Math.min(1, stopL / gap + 1) | 0;
+                const alphaR = 255 * Math.max(0, (stopR - 1) / gap) | 0;
+
+                const grad = ctx2d.createLinearGradient(
+                    bubL, 0, dlgLinesR[i], 0
+                );
+
+                grad.addColorStop(
+                    Math.max(0, stopL),
+                    textRgb + byteToHex[alphaL]
+                );
+
+                grad.addColorStop(
+                    Math.min(1, stopR),
+                    textRgb + byteToHex[alphaR]
+                );
+
+                ctx2d.fillStyle = grad;
+            }
         }
 
         ctx2d.fillText(dlgLines[i], bubL, dlgLinesY[i]);
@@ -372,10 +359,17 @@ const bubClearH = $.RES_HEIGHT - bubClearY - dlgClearMargin;
 let areaTimer;
 let areaName;
 
+const areaFontPx = 0.05 * $.RES_HEIGHT;
+const areaFont = `${areaFontPx}px Jost`;
+
 const areaTimerMax = 5;
 
 const areaTextX = $.RES_WIDTH * 0.01953125;
 
 const areaClearY = $.RES_HEIGHT * 0.075;
 const areaClearW = $.RES_WIDTH * 0.3;
-const areaClearH = $.RES_HEIGHT * 0.3;
+const areaClearH = areaFontPx;
+
+const areaShow = 0.5;
+const areaHide = 5 - areaShow;
+const areaOffsetMul = -areaClearW / areaShow;
