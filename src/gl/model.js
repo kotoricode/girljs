@@ -244,7 +244,7 @@ const buildModels = async() =>
 
     await Promise.all(
         externalModels.map(
-            extModel => glbFetch(extModel, meshes, uvs, indices)
+            (extModel) => glbFetch(extModel, meshes, uvs, indices)
         )
     );
 

@@ -1,4 +1,4 @@
-import { UiArea, UiDialogue } from "../ui";
+import { UiNotification, UiDialogue } from "../ui";
 import { Mouse } from "../main";
 import { Scene } from "../scene";
 
@@ -26,9 +26,9 @@ export const processUi = () =>
         }
     }
 
-    if (!UiArea.isStarted())
+    if (!UiNotification.isStarted())
     {
-        UiArea.activate(Scene.getName());
+        UiNotification.activate(Scene.getName());
 
         /* eslint-disable max-len */
         UiDialogue.activate([
@@ -41,14 +41,14 @@ export const processUi = () =>
         /* eslint-enable max-len */
     }
 
-    if (UiArea.isActive())
+    if (UiNotification.isActive())
     {
-        UiArea.clear();
-        UiArea.update(dt);
+        UiNotification.clear();
+        UiNotification.update(dt);
 
-        if (UiArea.isActive())
+        if (UiNotification.isActive())
         {
-            UiArea.draw();
+            UiNotification.draw();
         }
     }
 };

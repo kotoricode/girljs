@@ -43,7 +43,7 @@ export const Buffer = {
         }
 
         /*----------------------------------------------------------------------
-            Assign sequential binding points for uniform buffers
+            Assign sequential binding points to uniform buffers
         ----------------------------------------------------------------------*/
         uBufferBindings.clear();
 

@@ -11,10 +11,6 @@ export const Texture = {
             activeTexture = texture;
         }
     },
-    flip(state)
-    {
-        gl.pixelStorei($.UNPACK_FLIP_Y_WEBGL, state);
-    },
     from(src)
     {
         gl.texImage2D($.TEXTURE_2D, 0, $.RGBA, $.RGBA, $.UNSIGNED_BYTE, src);
@@ -43,9 +39,6 @@ export const Texture = {
     }
 };
 
-/*------------------------------------------------------------------------------
-    Image
-------------------------------------------------------------------------------*/
 const createTexture = () => gl.createTexture();
 
 const createImageTexture = (src) =>
@@ -78,8 +71,5 @@ const createFbTexture = () =>
     return texture;
 };
 
-/*------------------------------------------------------------------------------
-    Textures
-------------------------------------------------------------------------------*/
 let activeTexture;
 const textures = new Map();

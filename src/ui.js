@@ -4,47 +4,47 @@ import { Camera } from "./camera";
 import { Vector } from "./math/vector";
 import { ctx2d } from "./main";
 
-export const UiArea = {
+export const UiNotification = {
     activate(newAreaName)
     {
-        areaTimer = 0;
-        areaName = newAreaName;
+        notifTimer = 0;
+        notifName = newAreaName;
     },
     clear()
     {
-        ctx2d.clearRect(0, areaY, areaW, areaH);
+        ctx2d.clearRect(0, notifY, notifW, notifH);
     },
     draw()
     {
         let offset = 0;
 
-        if (areaTimer < areaShow)
+        if (notifTimer < notifShow)
         {
-            offset = (areaShow - areaTimer) * areaOffsetMul;
+            offset = (notifShow - notifTimer) * notifOffsetMul;
         }
-        else if (areaTimer > areaHide)
+        else if (notifTimer > notifHide)
         {
-            offset = (areaTimer - areaHide) * areaOffsetMul;
+            offset = (notifTimer - notifHide) * notifOffsetMul;
         }
 
-        ctx2d.fillStyle = "#0008";
-        ctx2d.fillRect(offset, areaY, areaW, areaH);
+        ctx2d.fillStyle = notifBgColor;
+        ctx2d.fillRect(offset, notifY, notifW, notifH);
 
-        ctx2d.font = areaFont;
-        ctx2d.fillStyle = "#fff";
-        ctx2d.fillText(areaName, offset + areaPad, areaY + areaPad);
+        ctx2d.font = notifFont;
+        ctx2d.fillStyle = notifTextColor;
+        ctx2d.fillText(notifName, offset + notifPad, notifY + notifPad);
     },
     isActive()
     {
-        return areaTimer < areaTimerMax;
+        return notifTimer < notifTimerMax;
     },
     isStarted()
     {
-        return areaTimer > 0;
+        return notifTimer > 0;
     },
     update(dt)
     {
-        areaTimer += dt;
+        notifTimer += dt;
     }
 };
 
@@ -326,8 +326,8 @@ const dlgClearMargin = 8;
 /*------------------------------------------------------------------------------
     Bubble
 ------------------------------------------------------------------------------*/
-const bubFillStyle = "#ffffff";
-const bubStrokeStyle = "#333333";
+const bubFillStyle = "#fff";
+const bubStrokeStyle = "#333";
 const bubLineWidth = 2;
 
 const bubL = 0.225 * $.RES_WIDTH;
@@ -354,20 +354,23 @@ const bubClearW = $.RES_WIDTH - 2 * bubClearX;
 const bubClearH = $.RES_HEIGHT - bubClearY - dlgClearMargin;
 
 /*------------------------------------------------------------------------------
-    Area
+    Notif
 ------------------------------------------------------------------------------*/
-let areaTimer;
-let areaName;
+let notifTimer;
+let notifName;
 
-const areaFontPx = 0.05 * $.RES_HEIGHT;
-const areaFont = `${areaFontPx}px Jost`;
-const areaPad = 0.0125 * $.RES_HEIGHT;
+const notifBgColor = "#0008";
+const notifTextColor = "#fff";
 
-const areaY = $.RES_HEIGHT * 0.075;
-const areaW = $.RES_WIDTH * 0.25;
-const areaH = areaFontPx + areaPad * 2;
+const notifFontPx = 0.05 * $.RES_HEIGHT;
+const notifFont = `${notifFontPx}px Jost`;
+const notifPad = 0.0125 * $.RES_HEIGHT;
 
-const areaShow = 0.66;
-const areaTimerMax = 6;
-const areaHide = areaTimerMax - areaShow;
-const areaOffsetMul = -areaW / areaShow;
+const notifY = $.RES_HEIGHT * 0.075;
+const notifW = $.RES_WIDTH * 0.25;
+const notifH = notifFontPx + notifPad * 2;
+
+const notifShow = 0.25;
+const notifTimerMax = 5;
+const notifHide = notifTimerMax - notifShow;
+const notifOffsetMul = -notifW / notifShow;

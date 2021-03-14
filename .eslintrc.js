@@ -13,6 +13,7 @@ module.exports = {
     },
     rules: {
         "array-callback-return": 2,
+        "arrow-parens": [2, "always"],
         "block-spacing": 2,
         "brace-style": [2, "allman"],
         "class-methods-use-this": 2,
