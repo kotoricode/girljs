@@ -12,7 +12,7 @@ export const UiArea = {
     },
     clear()
     {
-        ctx2d.clearRect(0, areaClearY, areaClearW, areaClearH);
+        ctx2d.clearRect(0, areaY, areaW, areaH);
     },
     draw()
     {
@@ -28,11 +28,11 @@ export const UiArea = {
         }
 
         ctx2d.fillStyle = "#0008";
-        ctx2d.fillRect(offset, areaClearY, areaClearW, areaClearH);
+        ctx2d.fillRect(offset, areaY, areaW, areaH);
 
         ctx2d.font = areaFont;
         ctx2d.fillStyle = "#fff";
-        ctx2d.fillText(areaName, areaTextX + offset, areaClearY);
+        ctx2d.fillText(areaName, offset + areaPad, areaY + areaPad);
     },
     isActive()
     {
@@ -67,7 +67,7 @@ export const UiDialogue = {
         {
             dlgTimer = 0;
             dlgIsFullyShown = false;
-            dlgProcessNextLine();
+            dlgPrepareLines();
         }
         else
         {
@@ -228,7 +228,7 @@ const dlgDrawText = (textRgb) =>
     }
 };
 
-const dlgProcessNextLine = () =>
+const dlgPrepareLines = () =>
 {
     // Set correct font for calculating widths
     ctx2d.font = dlgFont;
@@ -361,15 +361,13 @@ let areaName;
 
 const areaFontPx = 0.05 * $.RES_HEIGHT;
 const areaFont = `${areaFontPx}px Jost`;
+const areaPad = 0.0125 * $.RES_HEIGHT;
 
-const areaTimerMax = 5;
+const areaY = $.RES_HEIGHT * 0.075;
+const areaW = $.RES_WIDTH * 0.25;
+const areaH = areaFontPx + areaPad * 2;
 
-const areaTextX = $.RES_WIDTH * 0.01953125;
-
-const areaClearY = $.RES_HEIGHT * 0.075;
-const areaClearW = $.RES_WIDTH * 0.3;
-const areaClearH = areaFontPx;
-
-const areaShow = 0.5;
-const areaHide = 5 - areaShow;
-const areaOffsetMul = -areaClearW / areaShow;
+const areaShow = 0.66;
+const areaTimerMax = 6;
+const areaHide = areaTimerMax - areaShow;
+const areaOffsetMul = -areaW / areaShow;

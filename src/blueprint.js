@@ -74,7 +74,7 @@ const createMonkey = () => createEntity(
 );
 
 export const blueprint = new Map([
-    [$.SCN_TEST, new Map([
+    [$.SCN_HOME, new Map([
         [$.BLU_ENTITIES, new Set([
             createPlayer,
             //createMonkey,

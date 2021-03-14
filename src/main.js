@@ -49,7 +49,7 @@ group.addEventListener("mousedown", async() =>
 
     group.addEventListener("mousemove", (e) => mouseEvent = e);
 
-    Scene.setPendingLoad($.SCN_TEST);
+    Scene.setPendingLoad($.SCN_HOME);
     isReady = true;
 
     divMsg.style.display = "none";

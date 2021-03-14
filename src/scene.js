@@ -100,6 +100,10 @@ export const Scene = {
     {
         return entities.get(entityId);
     },
+    getName()
+    {
+        return sceneNames.get(currentScene);
+    },
     getPreviousScene()
     {
         return previousScene;
@@ -309,3 +313,7 @@ const processes = new Set();
 const rootSpace = new Space();
 const root = new Entity($.ENT_ROOT);
 root.set(rootSpace);
+
+const sceneNames = new Map([
+    [$.SCN_HOME, $.TXT_SCN_HOME]
+]);

@@ -28,7 +28,7 @@ export const processUi = () =>
 
     if (!UiArea.isStarted())
     {
-        UiArea.activate("moi");
+        UiArea.activate(Scene.getName());
 
         /* eslint-disable max-len */
         UiDialogue.activate([

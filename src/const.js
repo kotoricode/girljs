@@ -11,7 +11,6 @@ export const
     ENT_WAYPOINT = Symbol();
 
 export const
-    SCN_TEST = Symbol(),
     SCN_HOME = Symbol();
 
 export const
@@ -125,11 +124,11 @@ export const
     Dialogue --- DO NOT MODIFY
 ------------------------------------------------------------------------------*/
 export const
+    TXT_SCN_HOME = "Home",
     TXT_LOREM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     TXT_HELLO = "Hello world!",
     TXT_CATCALL_00 = "Nice ass, baby!",
     TXT_CATCALL_01 = "milk truk just arive",
-    TXT_AREA_HOME = "Home",
     TXT_AUD_OMOIDE = "Rengoku Teien - Omoide Loft";
 
 /*------------------------------------------------------------------------------
