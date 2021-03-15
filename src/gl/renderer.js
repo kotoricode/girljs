@@ -34,7 +34,7 @@ export const Renderer = {
         rboDepth = gl.createRenderbuffer();
         fbTexture = Texture.get($.TEX_FRAMEBUFFER);
 
-        bindFb();
+        gl.bindFramebuffer($.FRAMEBUFFER, fbo);
 
         gl.framebufferTexture2D(
             $.FRAMEBUFFER,
@@ -44,11 +44,13 @@ export const Renderer = {
             0
         );
 
+        gl.bindRenderbuffer($.RENDERBUFFER, rboDepth);
+
         gl.renderbufferStorage(
             $.RENDERBUFFER,
             $.DEPTH_COMPONENT16,
-            gl.canvas.width,
-            gl.canvas.height
+            $.RES_WIDTH,
+            $.RES_HEIGHT
         );
 
         gl.framebufferRenderbuffer(
@@ -58,7 +60,8 @@ export const Renderer = {
             rboDepth
         );
 
-        unbindFb();
+        gl.bindRenderbuffer($.RENDERBUFFER, null);
+        gl.bindFramebuffer($.FRAMEBUFFER, null);
     },
     render()
     {
@@ -78,7 +81,9 @@ export const Renderer = {
         /*----------------------------------------------------------------------
             Render
         ----------------------------------------------------------------------*/
-        bindFb();
+        gl.bindFramebuffer($.FRAMEBUFFER, fbo);
+        gl.bindRenderbuffer($.RENDERBUFFER, rboDepth);
+
         gl.depthMask(true);
         gl.clearColor(0.15, 0.15, 0.15, 1);
         gl.clear($.COLOR_BUFFER_BIT | $.DEPTH_BUFFER_BIT);
@@ -90,7 +95,9 @@ export const Renderer = {
         gl.disable($.CULL_FACE);
         drawQueue($.QUE_SPRITE);
 
-        unbindFb();
+        gl.bindRenderbuffer($.RENDERBUFFER, null);
+        gl.bindFramebuffer($.FRAMEBUFFER, null);
+
         gl.depthMask(false);
         gl.disable($.DEPTH_TEST);
         draw(imageProgram);
@@ -104,18 +111,6 @@ export const Renderer = {
             queue.clear();
         }
     }
-};
-
-const bindFb = () =>
-{
-    gl.bindFramebuffer($.FRAMEBUFFER, fbo);
-    gl.bindRenderbuffer($.RENDERBUFFER, rboDepth);
-};
-
-const unbindFb = () =>
-{
-    gl.bindRenderbuffer($.RENDERBUFFER, null);
-    gl.bindFramebuffer($.FRAMEBUFFER, null);
 };
 
 const draw = (program) =>

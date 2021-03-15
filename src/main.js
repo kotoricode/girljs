@@ -154,7 +154,11 @@ window.addEventListener("DOMContentLoaded", onResize, LISTENER_ONCE);
 window.addEventListener("load", onResize, LISTENER_ONCE);
 window.addEventListener("resize", onResize);
 
-export const gl = canvas.getContext("webgl2", { alpha: false });
+export const gl = canvas.getContext("webgl2", {
+    alpha: false,
+    antialias: false
+});
+
 export const ctx2d = uiCanvas.getContext("2d");
 
 gl.viewport(0, 0, $.RES_WIDTH, $.RES_HEIGHT);
