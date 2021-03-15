@@ -39,10 +39,19 @@ html, body
     font-family: "Jost", sans-serif;
 }
 
+#settings
+{
+    display: flex;
+    flex-direction: column;
+    width: 15vw;
+    background-color: lightslategrey;
+}
+
 #settings *
 {
     display: flex;
     flex-direction: row;
+    justify-content: space-between;
 }
 
 #volumeContainer

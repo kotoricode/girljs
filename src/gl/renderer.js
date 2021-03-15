@@ -21,7 +21,10 @@ export const Renderer = {
         gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
         gl.clearColor(0.15, 0.15, 0.15, 1);
 
-        const aaSamples = Math.min(8, gl.getParameter($.MAX_SAMPLES));
+        const aaSamples = Math.min(
+            gl.getParameter($.MAX_SAMPLES),
+            8
+        );
 
         imageProgram = new Program($.PRG_IMAGE, $.MDL_FRAMEBUFFER);
         imageProgram.stageUniformIndexed($.U_TRANSFORM, 1, Matrix.identity());
@@ -35,8 +38,8 @@ export const Renderer = {
         fboSrc = gl.createFramebuffer();
         gl.bindFramebuffer($.FRAMEBUFFER, fboSrc);
 
-        createRbo(aaSamples, $.RGB8, $.COLOR_ATTACHMENT0);
-        createRbo(aaSamples, $.DEPTH_COMPONENT16, $.DEPTH_ATTACHMENT);
+        createMsRbo(aaSamples, $.RGB8, $.COLOR_ATTACHMENT0);
+        createMsRbo(aaSamples, $.DEPTH_COMPONENT16, $.DEPTH_ATTACHMENT);
 
         gl.bindRenderbuffer($.RENDERBUFFER, null);
 
@@ -122,7 +125,7 @@ export const Renderer = {
     }
 };
 
-const createRbo = (aaSamples, format, attachment) =>
+const createMsRbo = (aaSamples, format, attachment) =>
 {
     const rbo = gl.createRenderbuffer();
     gl.bindRenderbuffer($.RENDERBUFFER, rbo);
