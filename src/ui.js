@@ -147,10 +147,26 @@ export const UiDialogue = {
         /*----------------------------------------------------------------------
             Text
         ----------------------------------------------------------------------*/
+        dlgTimer += dt;
+
         if (!dlgIsFullyShown)
         {
-            dlgTimer += dt;
             dlgIsFullyShown = dlgTimer >= dlgEndTime;
+        }
+
+        if (dlgIsFullyShown)
+        {
+            const elapsed = dlgTimer - dlgEndTime;
+            const alphaF = (-Math.cos(dlgAdvSpeed * elapsed) + 1) / 2;
+            const alpha = byteToHex[255 * alphaF | 0];
+
+            ctx2d.font = dlgAdvFont;
+            ctx2d.fillStyle = "#000000" + alpha;
+            ctx2d.fillText(
+                $.TXT_DLG_NEXT,
+                bubR - ctx2d.measureText($.TXT_DLG_NEXT).width,
+                bubB - dlgAdvFontPx
+            );
         }
 
         dlgDrawText(textRgb);
@@ -296,12 +312,22 @@ const dlgPrepareLine = (line, width) =>
     dlgLines.push(line);
 };
 
+const getTextWidth = (text, font) =>
+{
+    ctx2d.font = font;
+
+    return ctx2d.measureText(text).width;
+};
+
 const byteToHex = new Array(256);
 
 for (let i = 0; i < byteToHex.length; i++)
 {
     byteToHex[i] = i.toString(16).padStart(2, "0");
 }
+
+const refWidth = 1280;
+const refHeight = 720;
 
 /*------------------------------------------------------------------------------
     Dialogue
@@ -312,9 +338,9 @@ let dlgTimer;
 let dlgEndTime;
 let dlgIsFullyShown;
 
-const dlgFontPx = 0.05 * $.RES_HEIGHT;
-const dlgFont = `${dlgFontPx}px Jost`;
-const dlgFadeWidth = 0.33;
+const dlgFontPx = (36 * $.RES_HEIGHT) / refHeight;
+const dlgFont = dlgFontPx + "px Jost";
+const dlgFadeWidth = 0.17;
 const dlgFadeSpeed = 1.05;
 const dlgLines = [];
 const dlgLinesY = [];
@@ -322,6 +348,10 @@ const dlgLinesWidth = [];
 const dlgLinesR = [];
 const dlgLinesStart = [];
 const dlgClearMargin = 8;
+
+const dlgAdvFontPx = (28 * $.RES_HEIGHT) / refHeight;
+const dlgAdvFont = dlgAdvFontPx + "px Jost";
+const dlgAdvSpeed = 5.5;
 
 /*------------------------------------------------------------------------------
     Bubble
@@ -337,10 +367,10 @@ const bubB = 0.975 * $.RES_HEIGHT;
 const bubW = bubR - bubL;
 const bubMidY = (bubB + bubT) / 2;
 
-const bubEllX = 0.0640625 * $.RES_WIDTH;
+const bubEllX = (82 * $.RES_WIDTH) / refWidth;
 const bubEllY = bubB - bubMidY;
-const bubArrowHeight = 0.0390625 * $.RES_WIDTH;
-const bubArrowWidth = 0.03125 * $.RES_WIDTH;
+const bubArrowHeight = (50 * $.RES_WIDTH) / refWidth;
+const bubArrowWidth = (40 * $.RES_WIDTH) / refWidth;
 const bubArrowHalfWidth = bubArrowWidth / 2;
 const bubArrowT = bubT - bubArrowHeight;
 

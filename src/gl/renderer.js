@@ -34,8 +34,10 @@ export const Renderer = {
         ----------------------------------------------------------------------*/
         fboSrc = gl.createFramebuffer();
         gl.bindFramebuffer($.FRAMEBUFFER, fboSrc);
+
         createRbo(aaSamples, $.RGB8, $.COLOR_ATTACHMENT0);
         createRbo(aaSamples, $.DEPTH_COMPONENT16, $.DEPTH_ATTACHMENT);
+
         gl.bindRenderbuffer($.RENDERBUFFER, null);
 
         /*----------------------------------------------------------------------
@@ -45,7 +47,7 @@ export const Renderer = {
         gl.bindFramebuffer($.FRAMEBUFFER, fboDst);
 
         gl.framebufferTexture2D(
-            $.FRAMEBUFFER,
+            $.DRAW_FRAMEBUFFER,
             $.COLOR_ATTACHMENT0,
             $.TEXTURE_2D,
             Texture.get($.TEX_FRAMEBUFFER),
@@ -73,19 +75,23 @@ export const Renderer = {
             Render
         ----------------------------------------------------------------------*/
         gl.bindFramebuffer($.FRAMEBUFFER, fboSrc);
-
         gl.clear($.COLOR_BUFFER_BIT | $.DEPTH_BUFFER_BIT);
 
+        // 3D
         gl.enable($.DEPTH_TEST);
         gl.enable($.CULL_FACE);
         gl.disable($.BLEND);
+
         drawQueue($.QUE_BACKGROUND);
 
+        // Sprites
         gl.disable($.CULL_FACE);
         gl.enable($.BLEND);
+
         drawQueue($.QUE_WAYPOINT);
         drawQueue($.QUE_SPRITE);
 
+        // Src to Dst
         gl.bindFramebuffer($.READ_FRAMEBUFFER, fboSrc);
         gl.bindFramebuffer($.DRAW_FRAMEBUFFER, fboDst);
 
@@ -93,14 +99,16 @@ export const Renderer = {
             0, 0, $.RES_WIDTH, $.RES_HEIGHT,
             0, 0, $.RES_WIDTH, $.RES_HEIGHT,
             $.COLOR_BUFFER_BIT,
-            $.LINEAR
+            $.NEAREST
         );
 
         gl.bindFramebuffer($.READ_FRAMEBUFFER, null);
         gl.bindFramebuffer($.DRAW_FRAMEBUFFER, null);
 
+        // Draw screen
         gl.bindFramebuffer($.FRAMEBUFFER, null);
         gl.disable($.DEPTH_TEST);
+
         draw(imageProgram);
         draw(debugProgram);
 

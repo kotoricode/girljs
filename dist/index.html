@@ -13,6 +13,42 @@
         <canvas id="canvasGl"></canvas>
         <canvas id="canvas2d"></canvas>
       </div>
+      <div id="settings">
+
+        <div>
+          Master volume:
+          <input id="rangeMaster" type="range" min="1" max="100" value="50" id="myRange">
+          <div id="valueRangeMaster">--</div>
+        </div>
+
+        <div>
+          Music volume:
+          <input id="rangeMusic" type="range" min="1" max="100" value="50" id="myRange">
+          <div id="valueRangeMusic">--</div>
+        </div>
+
+        <div>
+          Sound volume:
+          <input id="rangeSound" type="range" min="1" max="100" value="50" id="myRange">
+          <div id="valueRangeSound">--</div>
+        </div>
+        
+        <div>
+          Anti-aliasing:
+          <select id="selectAa">
+          </select>
+        </div>
+
+        <div>
+          Show FPS:
+          <input id="checkFps" type="checkbox">
+        </div>
+
+        <div>
+          Show debug:
+          <input id="checkDebug" type="checkbox">
+        </div>
+      </div>
     </div>
   </body>
 </html>

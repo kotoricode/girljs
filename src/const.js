@@ -111,18 +111,14 @@ export const
     AUD_OMOIDE = "omoide_loft.mp3";
 
 /*------------------------------------------------------------------------------
-    Dialogue speaker tags --- DO NOT MODIFY
+    In-game text --- DO NOT MODIFY
 ------------------------------------------------------------------------------*/
 export const
-    NAME_PLAYER = "Player",
-    NAME_UNKNOWN = "???",
-    NAME_CHAD = "Chad",
-    NAME_BOAR = "Boar";
-
-/*------------------------------------------------------------------------------
-    Dialogue --- DO NOT MODIFY
-------------------------------------------------------------------------------*/
-export const
+    TXT_NAME_PLAYER = "Player",
+    TXT_NAME_UNKNOWN = "???",
+    TXT_NAME_CHAD = "Chad",
+    TXT_NAME_BOAR = "Boar",
+    TXT_DLG_NEXT = "➥",
     TXT_SCN_HOME = "Home",
     TXT_LOREM = "Lorem ipsum dolor sit amet, consectetur adipiscing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua.",
     TXT_HELLO = "Hello world!",
@@ -131,7 +127,7 @@ export const
     TXT_AUD_OMOIDE = "Rengoku Teien - Omoide Loft";
 
 /*------------------------------------------------------------------------------
-    DOM text --- DO NOT MODIFY
+    Misic --- DO NOT MODIFY
 ------------------------------------------------------------------------------*/
 export const
     DOM_CLICK_TO_START = "Click to start",
