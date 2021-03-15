@@ -15,27 +15,6 @@ import { Ground } from "../components/ground";
 import { Scene } from "../scene";
 import { HitBox } from "../components/hitbox";
 
-const createRbo = (aaSamples, format, attachment) =>
-{
-    const rbo = gl.createRenderbuffer();
-    gl.bindRenderbuffer($.RENDERBUFFER, rbo);
-
-    gl.renderbufferStorageMultisample(
-        $.RENDERBUFFER,
-        aaSamples,
-        format,
-        $.RES_WIDTH,
-        $.RES_HEIGHT
-    );
-
-    gl.framebufferRenderbuffer(
-        $.FRAMEBUFFER,
-        attachment,
-        $.RENDERBUFFER,
-        rbo
-    );
-};
-
 export const Renderer = {
     init()
     {
@@ -133,6 +112,27 @@ export const Renderer = {
             queue.clear();
         }
     }
+};
+
+const createRbo = (aaSamples, format, attachment) =>
+{
+    const rbo = gl.createRenderbuffer();
+    gl.bindRenderbuffer($.RENDERBUFFER, rbo);
+
+    gl.renderbufferStorageMultisample(
+        $.RENDERBUFFER,
+        aaSamples,
+        format,
+        $.RES_WIDTH,
+        $.RES_HEIGHT
+    );
+
+    gl.framebufferRenderbuffer(
+        $.FRAMEBUFFER,
+        attachment,
+        $.RENDERBUFFER,
+        rbo
+    );
 };
 
 const draw = (program) =>
