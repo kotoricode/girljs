@@ -18,10 +18,7 @@ import { HitBox } from "../components/hitbox";
 export const Renderer = {
     init()
     {
-        const aaSamples = Math.min(4, gl.getParameter($.MAX_SAMPLES));
-
-        gl.enable($.BLEND);
-        gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
+        const aaSamples = Math.min(8, gl.getParameter($.MAX_SAMPLES));
 
         imageProgram = new Program($.PRG_IMAGE, $.MDL_FRAMEBUFFER);
         debugProgram = new Program($.PRG_DEBUG, $.MDL_DEBUG);
@@ -118,9 +115,13 @@ export const Renderer = {
 
         gl.enable($.DEPTH_TEST);
         gl.enable($.CULL_FACE);
+        gl.disable($.BLEND);
         drawQueue($.QUE_BACKGROUND);
-        drawQueue($.QUE_WAYPOINT);
+
         gl.disable($.CULL_FACE);
+        gl.enable($.BLEND);
+        gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
+        drawQueue($.QUE_WAYPOINT);
         drawQueue($.QUE_SPRITE);
 
         gl.bindFramebuffer($.READ_FRAMEBUFFER, fboSrc);
