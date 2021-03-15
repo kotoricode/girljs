@@ -15,76 +15,61 @@ import { Ground } from "../components/ground";
 import { Scene } from "../scene";
 import { HitBox } from "../components/hitbox";
 
+const createRbo = (aaSamples, format, attachment) =>
+{
+    const rbo = gl.createRenderbuffer();
+    gl.bindRenderbuffer($.RENDERBUFFER, rbo);
+
+    gl.renderbufferStorageMultisample(
+        $.RENDERBUFFER,
+        aaSamples,
+        format,
+        $.RES_WIDTH,
+        $.RES_HEIGHT
+    );
+
+    gl.framebufferRenderbuffer(
+        $.FRAMEBUFFER,
+        attachment,
+        $.RENDERBUFFER,
+        rbo
+    );
+};
+
 export const Renderer = {
     init()
     {
+        gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
+        gl.clearColor(0.15, 0.15, 0.15, 1);
+
         const aaSamples = Math.min(8, gl.getParameter($.MAX_SAMPLES));
 
         imageProgram = new Program($.PRG_IMAGE, $.MDL_FRAMEBUFFER);
+        imageProgram.stageUniformIndexed($.U_TRANSFORM, 1, Matrix.identity());
+
         debugProgram = new Program($.PRG_DEBUG, $.MDL_DEBUG);
         debugProgram.stageUniform($.U_COLOR, debugColor);
-
-        imageProgram.stageUniformIndexed($.U_TRANSFORM, 1, Matrix.identity());
 
         /*----------------------------------------------------------------------
             Source FBO (multisample color RBO, multisample depth RBO)
         ----------------------------------------------------------------------*/
         fboSrc = gl.createFramebuffer();
         gl.bindFramebuffer($.FRAMEBUFFER, fboSrc);
-
-        // Color
-        const rboColor = gl.createRenderbuffer();
-        gl.bindRenderbuffer($.RENDERBUFFER, rboColor);
-
-        gl.renderbufferStorageMultisample(
-            $.RENDERBUFFER,
-            aaSamples,
-            $.RGB8,
-            $.RES_WIDTH,
-            $.RES_HEIGHT
-        );
-
-        gl.framebufferRenderbuffer(
-            $.FRAMEBUFFER,
-            $.COLOR_ATTACHMENT0,
-            $.RENDERBUFFER,
-            rboColor
-        );
-
-        // Depth
-        const rboDepth = gl.createRenderbuffer();
-        gl.bindRenderbuffer($.RENDERBUFFER, rboDepth);
-
-        gl.renderbufferStorageMultisample(
-            $.RENDERBUFFER,
-            aaSamples,
-            $.DEPTH_COMPONENT16,
-            $.RES_WIDTH,
-            $.RES_HEIGHT
-        );
-
-        gl.framebufferRenderbuffer(
-            $.FRAMEBUFFER,
-            $.DEPTH_ATTACHMENT,
-            $.RENDERBUFFER,
-            rboDepth
-        );
-
+        createRbo(aaSamples, $.RGB8, $.COLOR_ATTACHMENT0);
+        createRbo(aaSamples, $.DEPTH_COMPONENT16, $.DEPTH_ATTACHMENT);
         gl.bindRenderbuffer($.RENDERBUFFER, null);
 
         /*----------------------------------------------------------------------
             Destination FBO (color texture)
         ----------------------------------------------------------------------*/
         fboDst = gl.createFramebuffer();
-        fboDstTexture = Texture.get($.TEX_FRAMEBUFFER);
-
         gl.bindFramebuffer($.FRAMEBUFFER, fboDst);
 
         gl.framebufferTexture2D(
             $.FRAMEBUFFER,
             $.COLOR_ATTACHMENT0,
             $.TEXTURE_2D,
-            fboDstTexture,
+            Texture.get($.TEX_FRAMEBUFFER),
             0
         );
 
@@ -110,7 +95,6 @@ export const Renderer = {
         ----------------------------------------------------------------------*/
         gl.bindFramebuffer($.FRAMEBUFFER, fboSrc);
 
-        gl.clearColor(0.15, 0.15, 0.15, 1);
         gl.clear($.COLOR_BUFFER_BIT | $.DEPTH_BUFFER_BIT);
 
         gl.enable($.DEPTH_TEST);
@@ -120,7 +104,6 @@ export const Renderer = {
 
         gl.disable($.CULL_FACE);
         gl.enable($.BLEND);
-        gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
         drawQueue($.QUE_WAYPOINT);
         drawQueue($.QUE_SPRITE);
 
@@ -133,6 +116,9 @@ export const Renderer = {
             $.COLOR_BUFFER_BIT,
             $.LINEAR
         );
+
+        gl.bindFramebuffer($.READ_FRAMEBUFFER, null);
+        gl.bindFramebuffer($.DRAW_FRAMEBUFFER, null);
 
         gl.bindFramebuffer($.FRAMEBUFFER, null);
         gl.disable($.DEPTH_TEST);
@@ -255,7 +241,6 @@ const setDebugLines = () =>
 
 let fboSrc;
 let fboDst;
-let fboDstTexture;
 
 const queues = new Map([
     [$.QUE_BACKGROUND, new Set()],
