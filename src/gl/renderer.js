@@ -18,6 +18,8 @@ import { HitBox } from "../components/hitbox";
 export const Renderer = {
     init()
     {
+        const aaSamples = Math.min(4, gl.getParameter($.MAX_SAMPLES));
+
         gl.enable($.BLEND);
         gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
@@ -28,26 +30,37 @@ export const Renderer = {
         imageProgram.stageUniformIndexed($.U_TRANSFORM, 1, Matrix.identity());
 
         /*----------------------------------------------------------------------
-            Framebuffer
+            Source FBO (multisample color RBO, multisample depth RBO)
         ----------------------------------------------------------------------*/
-        fbo = gl.createFramebuffer();
-        fbTexture = Texture.get($.TEX_FRAMEBUFFER);
-        const rboDepth = gl.createRenderbuffer();
+        fboSrc = gl.createFramebuffer();
+        gl.bindFramebuffer($.FRAMEBUFFER, fboSrc);
 
-        gl.bindFramebuffer($.FRAMEBUFFER, fbo);
+        // Color
+        const rboColor = gl.createRenderbuffer();
+        gl.bindRenderbuffer($.RENDERBUFFER, rboColor);
 
-        gl.framebufferTexture2D(
-            $.FRAMEBUFFER,
-            $.COLOR_ATTACHMENT0,
-            $.TEXTURE_2D,
-            fbTexture,
-            0
+        gl.renderbufferStorageMultisample(
+            $.RENDERBUFFER,
+            aaSamples,
+            $.RGB8,
+            $.RES_WIDTH,
+            $.RES_HEIGHT
         );
 
+        gl.framebufferRenderbuffer(
+            $.FRAMEBUFFER,
+            $.COLOR_ATTACHMENT0,
+            $.RENDERBUFFER,
+            rboColor
+        );
+
+        // Depth
+        const rboDepth = gl.createRenderbuffer();
         gl.bindRenderbuffer($.RENDERBUFFER, rboDepth);
 
-        gl.renderbufferStorage(
+        gl.renderbufferStorageMultisample(
             $.RENDERBUFFER,
+            aaSamples,
             $.DEPTH_COMPONENT16,
             $.RES_WIDTH,
             $.RES_HEIGHT
@@ -61,6 +74,23 @@ export const Renderer = {
         );
 
         gl.bindRenderbuffer($.RENDERBUFFER, null);
+
+        /*----------------------------------------------------------------------
+            Destination FBO (color texture)
+        ----------------------------------------------------------------------*/
+        fboDst = gl.createFramebuffer();
+        fboDstTexture = Texture.get($.TEX_FRAMEBUFFER);
+
+        gl.bindFramebuffer($.FRAMEBUFFER, fboDst);
+
+        gl.framebufferTexture2D(
+            $.FRAMEBUFFER,
+            $.COLOR_ATTACHMENT0,
+            $.TEXTURE_2D,
+            fboDstTexture,
+            0
+        );
+
         gl.bindFramebuffer($.FRAMEBUFFER, null);
     },
     render()
@@ -81,9 +111,8 @@ export const Renderer = {
         /*----------------------------------------------------------------------
             Render
         ----------------------------------------------------------------------*/
-        gl.bindFramebuffer($.FRAMEBUFFER, fbo);
+        gl.bindFramebuffer($.FRAMEBUFFER, fboSrc);
 
-        gl.depthMask(true);
         gl.clearColor(0.15, 0.15, 0.15, 1);
         gl.clear($.COLOR_BUFFER_BIT | $.DEPTH_BUFFER_BIT);
 
@@ -94,9 +123,17 @@ export const Renderer = {
         gl.disable($.CULL_FACE);
         drawQueue($.QUE_SPRITE);
 
-        gl.bindFramebuffer($.FRAMEBUFFER, null);
+        gl.bindFramebuffer($.READ_FRAMEBUFFER, fboSrc);
+        gl.bindFramebuffer($.DRAW_FRAMEBUFFER, fboDst);
 
-        gl.depthMask(false);
+        gl.blitFramebuffer(
+            0, 0, $.RES_WIDTH, $.RES_HEIGHT,
+            0, 0, $.RES_WIDTH, $.RES_HEIGHT,
+            $.COLOR_BUFFER_BIT,
+            $.LINEAR
+        );
+
+        gl.bindFramebuffer($.FRAMEBUFFER, null);
         gl.disable($.DEPTH_TEST);
         draw(imageProgram);
         draw(debugProgram);
@@ -215,8 +252,9 @@ const setDebugLines = () =>
     Buffer.setDataBind(model.indexBufferId, debugIndex);
 };
 
-let fbo;
-let fbTexture;
+let fboSrc;
+let fboDst;
+let fboDstTexture;
 
 const queues = new Map([
     [$.QUE_BACKGROUND, new Set()],
