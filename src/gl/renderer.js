@@ -31,8 +31,8 @@ export const Renderer = {
             Framebuffer
         ----------------------------------------------------------------------*/
         fbo = gl.createFramebuffer();
-        rboDepth = gl.createRenderbuffer();
         fbTexture = Texture.get($.TEX_FRAMEBUFFER);
+        const rboDepth = gl.createRenderbuffer();
 
         gl.bindFramebuffer($.FRAMEBUFFER, fbo);
 
@@ -82,7 +82,6 @@ export const Renderer = {
             Render
         ----------------------------------------------------------------------*/
         gl.bindFramebuffer($.FRAMEBUFFER, fbo);
-        gl.bindRenderbuffer($.RENDERBUFFER, rboDepth);
 
         gl.depthMask(true);
         gl.clearColor(0.15, 0.15, 0.15, 1);
@@ -95,7 +94,6 @@ export const Renderer = {
         gl.disable($.CULL_FACE);
         drawQueue($.QUE_SPRITE);
 
-        gl.bindRenderbuffer($.RENDERBUFFER, null);
         gl.bindFramebuffer($.FRAMEBUFFER, null);
 
         gl.depthMask(false);
@@ -218,7 +216,6 @@ const setDebugLines = () =>
 };
 
 let fbo;
-let rboDepth;
 let fbTexture;
 
 const queues = new Map([
