@@ -21,15 +21,11 @@ export const Renderer = {
         gl.enable($.BLEND);
         gl.blendFunc($.SRC_ALPHA, $.ONE_MINUS_SRC_ALPHA);
 
-        const imageProgram = new Program($.PRG_IMAGE, $.MDL_FRAMEBUFFER);
+        imageProgram = new Program($.PRG_IMAGE, $.MDL_FRAMEBUFFER);
         debugProgram = new Program($.PRG_DEBUG, $.MDL_DEBUG);
         debugProgram.stageUniform($.U_COLOR, debugColor);
 
         imageProgram.stageUniformIndexed($.U_TRANSFORM, 1, Matrix.identity());
-
-        uiPrograms.clear();
-        uiPrograms.add(imageProgram);
-        uiPrograms.add(debugProgram);
 
         /*----------------------------------------------------------------------
             Framebuffer
@@ -66,6 +62,9 @@ export const Renderer = {
     },
     render()
     {
+        /*----------------------------------------------------------------------
+            Setup
+        ----------------------------------------------------------------------*/
         for (const [drawable] of Scene.all(Drawable))
         {
             if (drawable.isVisible)
@@ -76,29 +75,30 @@ export const Renderer = {
 
         setDebugLines();
 
+        /*----------------------------------------------------------------------
+            Render
+        ----------------------------------------------------------------------*/
         bindFb();
-
-        gl.clear($.COLOR_BUFFER_BIT | $.DEPTH_BUFFER_BIT);
+        gl.depthMask(true);
         gl.clearColor(0.15, 0.15, 0.15, 1);
+        gl.clear($.COLOR_BUFFER_BIT | $.DEPTH_BUFFER_BIT);
 
         gl.enable($.DEPTH_TEST);
         gl.enable($.CULL_FACE);
         drawQueue($.QUE_BACKGROUND);
         drawQueue($.QUE_WAYPOINT);
-
         gl.disable($.CULL_FACE);
         drawQueue($.QUE_SPRITE);
 
-        gl.disable($.DEPTH_TEST);
-        drawQueue($.QUE_UI);
-
         unbindFb();
+        gl.depthMask(false);
+        gl.disable($.DEPTH_TEST);
+        draw(imageProgram);
+        draw(debugProgram);
 
-        for (const program of uiPrograms)
-        {
-            draw(program);
-        }
-
+        /*----------------------------------------------------------------------
+            Finish
+        ----------------------------------------------------------------------*/
         for (const queue of queues.values())
         {
             queue.clear();
@@ -229,12 +229,10 @@ let fbTexture;
 const queues = new Map([
     [$.QUE_BACKGROUND, new Set()],
     [$.QUE_WAYPOINT, new Set()],
-    [$.QUE_SPRITE, new Set()],
-    [$.QUE_UI, new Set()]
+    [$.QUE_SPRITE, new Set()]
 ]);
 
-const uiPrograms = new Set();
-
+let imageProgram;
 let debugProgram;
 const debugColor = [0, 0, 0, 1];
 let debugHue = 0;

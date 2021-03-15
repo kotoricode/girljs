@@ -39,8 +39,7 @@ export const
 export const
     QUE_BACKGROUND = Symbol(),
     QUE_WAYPOINT = Symbol(),
-    QUE_SPRITE = Symbol(),
-    QUE_UI = Symbol();
+    QUE_SPRITE = Symbol();
 
 export const
     BUF_UNI_CAMERA = Symbol(),
